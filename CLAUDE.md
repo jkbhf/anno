@@ -96,4 +96,22 @@ into `GameController.playingInApp` and read from there. It also decides whether
 a `resumed` reveals the year: coming back from Spotify does, tabbing away from
 an in-app round does not.
 
+The one exception is the countdown before the round (`_runCountdown` in
+`lib/ui/game_screen.dart`), and it is one because nothing has been launched
+yet: the countdown covers the handover to Spotify, so it has to know which of
+the two ways is coming *before* the launch that could tell it. `isReady` is all
+there is at that point, and being wrong there costs a countdown rather than a
+round - the fallback still plays the song by link either way. Anything after
+the launch reads `playingInApp`.
+
 `README.md` has the setup under "Playing in the tab".
+
+## The catalog carries the autoplay
+
+`spotifyTrackId` is not a nicety. Without it the link path opens
+`open.spotify.com/search/...` and the song sits there until somebody taps it -
+a dead round on the way that most players are on. With it, the deep link
+`spotify:track:<id>` starts the song by itself on Android and iOS, and the web
+at least lands on the track instead of a result list. So an entry added by hand
+is only half an entry: run `tool/resolve_spotify_tracks.dart` over the file
+before it ships (see `README.md`, "Filling in track ids").
