@@ -1,4 +1,4 @@
-name: play
+name: anno
 description: "Music guessing game: scan a QR card, hear the song in Spotify, guess the year."
 publish_to: 'none'
 version: 0.2.0

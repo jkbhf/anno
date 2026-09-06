@@ -4,13 +4,13 @@
 // throws here.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/data/year_database.dart';
-import 'package:play/models/song_category.dart';
-import 'package:play/music/spotify_session.dart';
-import 'package:play/ui/app_scope.dart';
-import 'package:play/ui/category_screen.dart';
-import 'package:play/ui/setup_screen.dart';
-import 'package:play/ui/theme.dart';
+import 'package:anno/data/year_database.dart';
+import 'package:anno/models/song_category.dart';
+import 'package:anno/music/spotify_session.dart';
+import 'package:anno/ui/app_scope.dart';
+import 'package:anno/ui/category_screen.dart';
+import 'package:anno/ui/setup_screen.dart';
+import 'package:anno/ui/theme.dart';
 
 class FakeSession extends NoSpotifySession {
   FakeSession(this.state);

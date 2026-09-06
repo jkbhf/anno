@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/models/song.dart';
-import 'package:play/music/spotify_launcher.dart';
+import 'package:anno/models/song.dart';
+import 'package:anno/music/spotify_launcher.dart';
 
 const withTrack = Song(
   title: 'Tattoo',

@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/data/song_repository.dart';
-import 'package:play/models/song_category.dart';
+import 'package:anno/data/song_repository.dart';
+import 'package:anno/models/song_category.dart';
 
 void main() {
   test('every category in categoryAssets exists and parses', () {

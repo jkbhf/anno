@@ -349,7 +349,7 @@ class WebSpotifySession extends SpotifySession {
 
   void _buildPlayer() {
     final options = JSObject();
-    options.setProperty('name'.toJS, 'Play'.toJS);
+    options.setProperty('name'.toJS, 'Anno'.toJS);
     options.setProperty('volume'.toJS, 0.8.toJS);
     // Called by the SDK on connect and whenever its token runs out.
     options.setProperty(

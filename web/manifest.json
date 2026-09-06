@@ -1,6 +1,6 @@
 {
-    "name": "Play",
-    "short_name": "Play",
+    "name": "Anno",
+    "short_name": "Anno",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#12101A",

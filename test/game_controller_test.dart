@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/data/year_database.dart';
-import 'package:play/game/game_controller.dart';
-import 'package:play/models/player.dart';
-import 'package:play/models/song.dart';
-import 'package:play/models/song_category.dart';
-import 'package:play/music/spotify_launcher.dart';
+import 'package:anno/data/year_database.dart';
+import 'package:anno/game/game_controller.dart';
+import 'package:anno/models/player.dart';
+import 'package:anno/models/song.dart';
+import 'package:anno/models/song_category.dart';
+import 'package:anno/music/spotify_launcher.dart';
 
 class FakeLauncher implements SpotifyLauncher {
   FakeLauncher({this.opened = true});

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/data/year_database.dart';
-import 'package:play/game/game_controller.dart';
-import 'package:play/models/player.dart';
-import 'package:play/models/song.dart';
-import 'package:play/models/song_category.dart';
-import 'package:play/music/spotify_launcher.dart';
-import 'package:play/music/spotify_session.dart';
-import 'package:play/ui/app_scope.dart';
-import 'package:play/ui/game_screen.dart';
-import 'package:play/ui/theme.dart';
+import 'package:anno/data/year_database.dart';
+import 'package:anno/game/game_controller.dart';
+import 'package:anno/models/player.dart';
+import 'package:anno/models/song.dart';
+import 'package:anno/models/song_category.dart';
+import 'package:anno/music/spotify_launcher.dart';
+import 'package:anno/music/spotify_session.dart';
+import 'package:anno/ui/app_scope.dart';
+import 'package:anno/ui/game_screen.dart';
+import 'package:anno/ui/theme.dart';
 
 class SilentLauncher implements SpotifyLauncher {
   const SilentLauncher();

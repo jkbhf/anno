@@ -61,7 +61,7 @@ class PlayApp extends StatelessWidget {
       categories: categories,
       spotify: spotify,
       child: MaterialApp(
-        title: 'Play',
+        title: 'Anno',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
         home: SetupScreen(savedGame: savedGame, roster: roster),

@@ -158,7 +158,7 @@ class _SetupScreenState extends State<SetupScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Play'),
+        title: const Text('Anno'),
         actions: [
           PopupMenuButton<String>(
             tooltip: 'Menu',

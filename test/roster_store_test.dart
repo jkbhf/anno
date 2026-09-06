@@ -1,7 +1,7 @@
 // The roster outlives the saved game: GameStore is cleared when a game ends,
 // which is exactly when the names are worth keeping for the next evening.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/data/roster_store.dart';
+import 'package:anno/data/roster_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

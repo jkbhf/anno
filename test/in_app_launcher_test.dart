@@ -2,10 +2,10 @@
 // Premium, not logged in. Each of those has to end up handing the song to
 // Spotify by link instead of leaving the round without music.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:play/models/song.dart';
-import 'package:play/music/in_app_launcher.dart';
-import 'package:play/music/spotify_launcher.dart';
-import 'package:play/music/spotify_session.dart';
+import 'package:anno/models/song.dart';
+import 'package:anno/music/in_app_launcher.dart';
+import 'package:anno/music/spotify_launcher.dart';
+import 'package:anno/music/spotify_session.dart';
 
 class FakeSession extends NoSpotifySession {
   FakeSession({this.state = SpotifyConnection.ready, this.plays = true});

@@ -1,4 +1,4 @@
-# Play
+# Anno
 
 Music guessing game with QR cards. `README.md` has the flow, the data formats
 and the web specifics; this file holds the decisions that cannot be read off
