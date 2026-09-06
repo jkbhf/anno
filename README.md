@@ -253,11 +253,27 @@ dart run tool/resolve_spotify_tracks.dart            # every category
 dart run tool/resolve_spotify_tracks.dart assets/songs/esc.json
 ```
 
-It only fills empty `spotifyTrackId` fields and reports every song whose Spotify
-year differs from the catalog - usually a remaster, which would put the wrong
-year on the card. Client id and secret come from the
+It only fills empty `spotifyTrackId` fields, and it takes a hit only when
+artist and title both line up and the pressing is the recording itself - a
+karaoke, medley or nightcore version is refused. What it could not find is
+listed under "Not on Spotify": those entries get swapped for another song of
+the same year, see `CLAUDE.md`. It also reports every song whose Spotify year
+differs from the catalog - usually a remaster, which would put the wrong year
+on the card.
+
+```sh
+dart run tool/resolve_spotify_tracks.dart --recheck   # ids already in the file
+```
+
+`--recheck` reads every id back and clears the ones that turned out to be a
+different song, so the next plain run can fill them in properly.
+
+Client id and secret come from the
 [Spotify Developer Dashboard](https://developer.spotify.com/dashboard); the
-client credentials flow is enough for the search, no user login needed.
+client credentials flow is enough for the search, no user login needed. Spotify
+answers a burst of requests with a lockout of several hours for the whole app -
+the script spaces its requests out and stops on a `429` instead of waiting it
+out, so run it once and let it finish rather than restarting it.
 
 ## Layout
 
