@@ -52,6 +52,7 @@ void main() {
     ).open(song);
 
     expect(result.opened, isTrue);
+    expect(result.inApp, isTrue);
     expect(session.played, [song]);
     expect(fallback.opened, isEmpty);
   });
@@ -94,5 +95,23 @@ void main() {
     expect(result.opened, isTrue);
     expect(session.played, [song], reason: 'it was tried here first');
     expect(fallback.opened, [song]);
+    expect(
+      result.inApp,
+      isFalse,
+      reason: 'the session was ready, but the link is what played',
+    );
+  });
+
+  test('a fallback is reported as one, whatever the session says', () async {
+    for (final state in SpotifyConnection.values) {
+      final session = FakeSession(state: state, plays: false);
+
+      final result = await InAppSpotifyLauncher(
+        session,
+        fallback: FakeFallback(),
+      ).open(song);
+
+      expect(result.inApp, isFalse, reason: '$state');
+    }
   });
 }

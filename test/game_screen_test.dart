@@ -11,6 +11,7 @@ import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/game_screen.dart';
 import 'package:anno/ui/theme.dart';
 
+/// Hands the song over without a word - the link path, as on a phone.
 class SilentLauncher implements SpotifyLauncher {
   const SilentLauncher();
 
@@ -19,17 +20,29 @@ class SilentLauncher implements SpotifyLauncher {
       const SpotifyLaunchResult.ok();
 }
 
+/// The song plays in the tab, which is what a working in-app player reports.
+class InTabLauncher implements SpotifyLauncher {
+  const InTabLauncher();
+
+  @override
+  Future<SpotifyLaunchResult> open(Song song) async =>
+      const SpotifyLaunchResult.inTab();
+}
+
 const card = 'https://play-the-music.com/de/year/182ca01194a98f0b';
 
-GameController buildGame({int players = 2, List<SongCategory>? categories}) =>
-    GameController(
-      players: [
-        for (var i = 0; i < players; i++) GamePlayer(name: 'Player ${i + 1}'),
-      ],
-      categories: categories ?? [escCategory],
-      years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
-      launcher: const SilentLauncher(),
-    );
+GameController buildGame({
+  int players = 2,
+  List<SongCategory>? categories,
+  SpotifyLauncher launcher = const SilentLauncher(),
+}) => GameController(
+  players: [
+    for (var i = 0; i < players; i++) GamePlayer(name: 'Player ${i + 1}'),
+  ],
+  categories: categories ?? [escCategory],
+  years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+  launcher: launcher,
+);
 
 final escCategory = SongCategory(
   id: 'esc',
@@ -108,7 +121,7 @@ void main() {
     tester,
   ) async {
     usePhoneScreen(tester);
-    final game = buildGame();
+    final game = buildGame(launcher: const InTabLauncher());
     game.scan(card);
     await game.startPlayback();
 
@@ -172,6 +185,28 @@ void main() {
     expect(find.textContaining('Coming back'), findsOneWidget);
     expect(find.text('Reveal the year'), findsOneWidget);
     expect(find.text('Pause'), findsNothing);
+  });
+
+  testWidgets('a refused track keeps the way back to Spotify', (tester) async {
+    usePhoneScreen(tester);
+    // The session is ready and says so all round - it just did not play this
+    // track, so the link is what ran and the round has to say so.
+    final game = buildGame();
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(
+      wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+    );
+    await tester.pumpAndSettle();
+
+    // The "Open in Spotify" button itself sits behind kIsWeb and cannot
+    // render here, but it hangs off the same branch as everything below.
+    expect(find.text('The song is playing in Spotify'), findsOneWidget);
+    expect(find.textContaining('Coming back'), findsOneWidget);
+    expect(find.text('Pause'), findsNothing);
+    // Still nothing given away before the button.
+    expect(find.text('2005'), findsNothing);
   });
 
   testWidgets('eight players are scaled down, not scrolled', (tester) async {

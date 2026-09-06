@@ -94,6 +94,14 @@ class GameController extends ChangeNotifier {
   /// Note from handing over to Spotify, otherwise null.
   String? launchMessage;
 
+  /// Whether the round's song is coming out of this page instead of out of
+  /// Spotify. Set from what the launch actually did, never from what the
+  /// session claims about itself: a ready session still fails on a track the
+  /// account cannot play, and the link is what runs then. The playing screen
+  /// branches on this, so a fallback that nobody noticed would leave the round
+  /// without its way back to Spotify.
+  bool playingInApp = false;
+
   DateTime? _launchedAt;
 
   bool get isRevealed =>
@@ -127,6 +135,7 @@ class GameController extends ChangeNotifier {
   ScanOutcome scan(String rawCode) {
     lastScannedCode = rawCode;
     launchMessage = null;
+    playingInApp = false;
 
     final year = years.yearFor(rawCode);
     if (year == null) {
@@ -164,6 +173,7 @@ class GameController extends ChangeNotifier {
 
     final result = await _launcher.open(song);
     launchMessage = result.message;
+    playingInApp = result.inApp;
     if (!result.opened) {
       phase = RoundPhase.revealed;
       _launchedAt = null;
@@ -181,12 +191,17 @@ class GameController extends ChangeNotifier {
     if (song == null || phase != RoundPhase.playing) return;
     final result = await _launcher.open(song);
     launchMessage = result.message;
+    playingInApp = result.inApp;
     notifyListeners();
   }
 
   /// Coming back from Spotify: the year is revealed.
   void onAppResumed({DateTime? now}) {
     if (phase != RoundPhase.playing) return;
+    // Nothing was handed over, so a `resumed` is somebody switching away and
+    // back mid-guess - not the way back from Spotify, and no reason to spoil
+    // the year. The button is the way out of an in-app round.
+    if (playingInApp) return;
     final launchedAt = _launchedAt;
     if (launchedAt != null &&
         (now ?? DateTime.now()).difference(launchedAt) <
@@ -211,6 +226,7 @@ class GameController extends ChangeNotifier {
     currentCategory = null;
     currentYear = null;
     launchMessage = null;
+    playingInApp = false;
     _launchedAt = null;
     phase = RoundPhase.idle;
     notifyListeners();
@@ -236,6 +252,7 @@ class GameController extends ChangeNotifier {
     currentCategory = null;
     currentYear = null;
     launchMessage = null;
+    playingInApp = false;
     phase = winners.isEmpty ? RoundPhase.idle : RoundPhase.finished;
     notifyListeners();
   }
@@ -249,6 +266,7 @@ class GameController extends ChangeNotifier {
     currentCategory = null;
     currentYear = null;
     launchMessage = null;
+    playingInApp = false;
     phase = RoundPhase.idle;
     notifyListeners();
     _save();

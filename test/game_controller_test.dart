@@ -9,9 +9,10 @@ import 'package:anno/models/song_category.dart';
 import 'package:anno/music/spotify_launcher.dart';
 
 class FakeLauncher implements SpotifyLauncher {
-  FakeLauncher({this.opened = true});
+  FakeLauncher({this.opened = true, this.inApp = false});
 
   final bool opened;
+  final bool inApp;
   final List<Song> played = [];
 
   @override
@@ -20,6 +21,7 @@ class FakeLauncher implements SpotifyLauncher {
     return SpotifyLaunchResult(
       opened: opened,
       message: opened ? null : 'no Spotify',
+      inApp: inApp,
     );
   }
 }
@@ -110,6 +112,46 @@ void main() {
 
     game.onAppResumed(now: DateTime.now().add(const Duration(seconds: 20)));
     expect(game.phase, RoundPhase.revealed);
+  });
+
+  test('the round follows the way the song actually went', () async {
+    final game = buildGame();
+    game.scan(card2005);
+    await game.startPlayback();
+    expect(
+      game.playingInApp,
+      isFalse,
+      reason: 'this launcher hands the song over by link',
+    );
+
+    final inApp = buildGame(launcher: FakeLauncher(inApp: true));
+    inApp.scan(card2005);
+    await inApp.startPlayback();
+    expect(inApp.playingInApp, isTrue);
+  });
+
+  test('an in-app round is not revealed by switching away and back', () async {
+    final game = buildGame(launcher: FakeLauncher(inApp: true));
+    game.scan(card2005);
+    await game.startPlayback();
+
+    // Nothing was handed over, so this is somebody glancing at a message -
+    // not the way back from Spotify.
+    game.onAppResumed(now: DateTime.now().add(const Duration(seconds: 20)));
+
+    expect(game.phase, RoundPhase.playing);
+    game.reveal();
+    expect(game.phase, RoundPhase.revealed);
+  });
+
+  test('the next round starts out of the app again', () async {
+    final game = buildGame(launcher: FakeLauncher(inApp: true));
+    game.scan(card2005);
+    await game.startPlayback();
+    game.reveal();
+    game.nextRound();
+
+    expect(game.playingInApp, isFalse);
   });
 
   test('if Spotify fails the round reveals right away', () async {

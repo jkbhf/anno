@@ -13,12 +13,32 @@ abstract class SpotifyLauncher {
 }
 
 class SpotifyLaunchResult {
-  const SpotifyLaunchResult({required this.opened, this.message});
+  const SpotifyLaunchResult({
+    required this.opened,
+    this.message,
+    this.inApp = false,
+  });
 
-  const SpotifyLaunchResult.ok() : opened = true, message = null;
+  const SpotifyLaunchResult.ok()
+    : opened = true,
+      message = null,
+      inApp = false;
+
+  /// The song is coming out of this page - nobody left, so there is nothing to
+  /// come back from.
+  const SpotifyLaunchResult.inTab()
+    : opened = true,
+      message = null,
+      inApp = true;
 
   final bool opened;
   final String? message;
+
+  /// True only when the song really plays here. A session that reports itself
+  /// ready is not the same thing: playback still fails on a track the account
+  /// cannot play, and then it was the link that ran. Whoever branches on the
+  /// two ways has to branch on this, not on the session.
+  final bool inApp;
 }
 
 class UrlSpotifyLauncher implements SpotifyLauncher {

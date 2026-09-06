@@ -469,7 +469,12 @@ class _PlayingBody extends StatelessWidget {
 
     // Playing in the app is the good case: nobody leaves the game, so there is
     // nothing to come back from and the year waits for the button.
-    final inApp = spotify.isReady;
+    //
+    // What the session says about itself is not the question - it can be ready
+    // and still have refused the track, and then the song went out by link.
+    // The round has to follow what actually happened, or it drops the button
+    // that is the only way back to a popup the browser swallowed.
+    final inApp = game.playingInApp;
 
     return _FitBody(
       center: false,

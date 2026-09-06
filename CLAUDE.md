@@ -79,9 +79,21 @@ year that is only scanned once or twice ever gets to show. The factor is
 
 The fallback is the normal case, not an edge case: it is every Android and iOS
 build (`spotify_session_stub.dart`), every build without a client id, every
-player without Premium, and everybody who has not logged in. So a change to the
-playing screen or the round flow has to keep working without a session - the
-widget tests cover both branches. Never make the in-app player a requirement,
-and never let a failure in it end a round without music.
+player without Premium, everybody who has not logged in, and - on a deployed
+page - everybody outside the 25 accounts of Spotify's development mode. So a
+change to the playing screen or the round flow has to keep working without a
+session - the widget tests cover both branches. Never make the in-app player a
+requirement, and never let a failure in it end a round without music.
+
+**Branch on what the launch did, never on the session.** A session reports
+itself `ready` and still refuses a track - one the account cannot play, one the
+market does not carry, a device another Spotify Connect client took over. The
+song then went out by link while the session went on claiming to be fine, so
+`SpotifySession.isReady` is the wrong question on the playing screen: it would
+drop the "Open in Spotify" button, which on the web is the only way back to a
+popup the browser swallowed. `SpotifyLaunchResult.inApp` is the answer, carried
+into `GameController.playingInApp` and read from there. It also decides whether
+a `resumed` reveals the year: coming back from Spotify does, tabbing away from
+an in-app round does not.
 
 `README.md` has the setup under "Playing in the tab".

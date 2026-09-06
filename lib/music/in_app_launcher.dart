@@ -20,7 +20,7 @@ class InAppSpotifyLauncher implements SpotifyLauncher {
   @override
   Future<SpotifyLaunchResult> open(Song song) async {
     if (session.isReady && await session.play(song)) {
-      return const SpotifyLaunchResult.ok();
+      return const SpotifyLaunchResult.inTab();
     }
     return fallback.open(song);
   }
