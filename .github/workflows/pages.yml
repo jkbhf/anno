@@ -19,9 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # 3.38.6 or newer, never below: up to 3.38.5 the web engine keeps the
+      # view at the shrunken size after the on-screen keyboard closes, and an
+      # Android browser is left with a dead strip where the keyboard was -
+      # flutter/flutter#175074, fixed by flutter/flutter#179581.
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.38.3
+          flutter-version: 3.38.10
           channel: stable
           cache: true
       - run: flutter pub get
