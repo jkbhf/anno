@@ -102,6 +102,11 @@ publishes it to `https://anno.jakobhoeflich.com/`. The `github.io` address of
 the repository stays valid but only 301s there, which is why the build runs
 with `--base-href /` and not with a repository path.
 
+The Flutter version there is pinned, and **3.38.6 is the floor**: older web
+engines leave the view at the keyboard's size after the on-screen keyboard
+closes, so a player who types a name into an Android browser is left with a
+dead strip at the bottom of the page (flutter/flutter#175074).
+
 The custom domain needs two halves that are easy to have only one of: the name
 in **Settings -> Pages**, and a DNS record `anno` -> `jkbhf.github.io` at the
 registrar. `web/CNAME` carries the name into every build so a deploy cannot

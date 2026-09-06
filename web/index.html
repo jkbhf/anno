@@ -21,6 +21,16 @@
   <meta name="description" content="Music guessing game: scan a QR card, hear the song in Spotify, guess the year.">
   <meta name="theme-color" content="#12101A">
 
+  <!--
+    The page behind the app. Flutter paints its own view, not the document, so
+    everything it does not cover shows the browser's white canvas: the moment
+    before the first frame, and any strip the engine has not resized back yet.
+    Same colour as `scaffoldBackgroundColor` and the manifest background.
+  -->
+  <style>
+    html, body { background-color: #12101A; }
+  </style>
+
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
