@@ -1,4 +1,4 @@
-# Play
+# Anno
 
 A music guessing game with QR cards. Scan a card, the app looks up the year
 behind it, draws a song from that year out of the chosen category and hands it
@@ -78,10 +78,13 @@ nothing every game night - and the way back out becomes **Disconnect Spotify**
 in the app bar menu.
 
 Set the redirect URI in the dashboard to exactly what the app sends, which is
-origin plus path - `http://127.0.0.1:8080/` for the dev command above. Prefer
-the loopback IP over `localhost`: Spotify only accepts `https` and loopback
-literals, and which spelling counts has changed over the years. In production
-the page has to be on `https` anyway, both for the SDK and for the camera.
+origin plus path. Two of them are needed: `http://127.0.0.1:8080/` for the dev
+command above and `https://jkbhf.github.io/play/` for the deployed page -
+trailing slash and `/play/` included, since the path is part of what is sent.
+Prefer the loopback IP over `localhost`: Spotify only accepts `https` and
+loopback literals, and which spelling counts has changed over the years. In
+production the page has to be on `https` anyway, both for the SDK and for the
+camera.
 
 One browser caveat on top of the ones above: the SDK plays through the
 browser's DRM stack (Widevine), so a build without it - some Linux Chromium
@@ -91,6 +94,26 @@ setup screen shows the reason and the link handover keeps working.
 The catalog is not in the way here. An entry without `spotifyTrackId` is looked
 up through the Spotify search first and played from that, so a song plays even
 before the resolver has run.
+
+## Deploying to GitHub Pages
+
+`.github/workflows/pages.yml` builds the web app on every push to `main` and
+publishes it to `https://jkbhf.github.io/play/`. Three things have to be set up
+once:
+
+1. **Settings -> Pages -> Source: GitHub Actions.** Not the old branch
+   deployment; the workflow uploads an artifact.
+2. **Settings -> Secrets and variables -> Actions -> Variables**, a repository
+   variable `SPOTIFY_CLIENT_ID`. A *variable*, not a secret: the client id ends
+   up in the compiled bundle either way, so hiding it buys nothing, and a masked
+   secret only makes the build log harder to read. Without it the build still
+   succeeds and the page simply has no in-app player.
+3. **The redirect URI** `https://jkbhf.github.io/play/` in the Spotify
+   dashboard, next to the loopback one for local development.
+
+The site lives under `/play/`, hence `--base-href /play/` in the build step. On
+a custom domain that becomes `--base-href /` plus a `CNAME` file in `web/`, and
+the redirect URI in the dashboard has to follow.
 
 ## The flow
 
