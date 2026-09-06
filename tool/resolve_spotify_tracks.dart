@@ -3,16 +3,54 @@
 //   export SPOTIFY_CLIENT_ID=...
 //   export SPOTIFY_CLIENT_SECRET=...
 //   dart run tool/resolve_spotify_tracks.dart [assets/songs/esc.json ...]
+//   dart run tool/resolve_spotify_tracks.dart --recheck [files...]
 //
 // Uses the client credentials flow: that is enough for the search and needs no
-// logged in user. Songs that already carry an id are left alone. At the end the
-// script lists every hit whose Spotify year differs from the catalog - usually
-// a remaster, which would put the wrong year on the card.
+// logged in user. Songs that already carry an id are left alone, unless
+// --recheck is given - that one reads every id back and drops the ones that
+// point at the wrong song.
+//
+// A hit is only taken when artist and title both match and the pressing is the
+// song itself rather than a karaoke, tribute, medley or remix version. What is
+// left over is listed at the end: those entries have no song to play, and the
+// catalog rule for them is a swap, not a search by hand - see CLAUDE.md,
+// "What Spotify does not carry is not a card".
 
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+
+/// Spotify answers a burst with a lockout of hours, so the requests are spaced
+/// out and a 429 ends the run instead of waiting it out.
+const requestGap = Duration(milliseconds: 120);
+
+/// Album or track names that mean this is not the recording of the entry.
+const notTheSong = [
+  'karaoke',
+  'in the style of',
+  'originally performed',
+  'made famous by',
+  'as made famous',
+  'tribute',
+  'instrumental',
+  'playback',
+  'medley',
+  'remix',
+  'nightcore',
+  'cover version',
+];
+
+class RateLimited implements Exception {
+  const RateLimited(this.retryAfter);
+
+  final Duration retryAfter;
+
+  @override
+  String toString() =>
+      'Spotify is rate limiting this app for another '
+      '${retryAfter.inMinutes} minutes. Try again later.';
+}
 
 Future<String> fetchToken(String id, String secret) async {
   final response = await http.post(
@@ -31,24 +69,225 @@ Future<String> fetchToken(String id, String secret) async {
   return jsonDecode(response.body)['access_token'] as String;
 }
 
-/// Best hit for title and artist, or null when the search comes back empty.
+Future<Map<String, dynamic>?> _api(String token, String path) async {
+  await Future<void>.delayed(requestGap);
+  final response = await http.get(
+    Uri.parse('https://api.spotify.com/v1$path'),
+    headers: {'Authorization': 'Bearer $token'},
+  );
+  if (response.statusCode == 429) {
+    final seconds = int.tryParse(response.headers['retry-after'] ?? '') ?? 0;
+    throw RateLimited(Duration(seconds: seconds));
+  }
+  if (response.statusCode != 200) {
+    stderr.writeln('Request failed (${response.statusCode}): $path');
+    return null;
+  }
+  return jsonDecode(response.body) as Map<String, dynamic>;
+}
+
+/// Lowercase, without accents and without anything that only tells two
+/// spellings of the same title apart. Keeps brackets and suffixes.
+String flatten(String value) {
+  const accents = 'àáâãäåçèéêëìíîïñòóôõöøùúûüýÿšžğışłđčćř';
+  const plain = 'aaaaaaceeeeiiiinoooooouuuuyyszgisldccr';
+  final buffer = StringBuffer();
+  for (final rune in value.toLowerCase().replaceAll('ß', 'ss').runes) {
+    final char = String.fromCharCode(rune);
+    final index = accents.indexOf(char);
+    buffer.write(index == -1 ? char : plain[index]);
+  }
+  return buffer.toString();
+}
+
+/// [flatten], and additionally without brackets and without a trailing
+/// " - Remastered 2016" - what is left is the title itself.
+String normalize(String value) {
+  var out = flatten(value);
+  out = out.replaceAll(RegExp(r'\(.*?\)|\[.*?\]'), ' ');
+  out = out.replaceAll(RegExp(r' - .*$'), ' ');
+  out = out.replaceAll(RegExp('[^a-z0-9]+'), ' ');
+  return out.trim();
+}
+
+/// The single names a catalog artist string can match, so "Ell & Nikki" also
+/// matches a track credited to "Ell" alone.
+List<String> artistParts(String artist) => artist
+    .split(
+      RegExp(r'\s*(?:&|,|/|\bfeat\.?\b|\bfeaturing\b|\band\b|\bwith\b)\s*'),
+    )
+    .map(normalize)
+    .where((part) => part.isNotEmpty)
+    .toList();
+
+/// True when one name is the other, or contains it as whole words: "Max" is
+/// "Max Mutzke", but "Blue" is not "Adele" and "Vikki" is not "Vicky Leandros".
+bool _looseMatch(String a, String b) =>
+    a == b || _containsWords(a, b) || _containsWords(b, a);
+
+bool _containsWords(String haystack, String needle) =>
+    needle.isNotEmpty &&
+    (haystack.startsWith('$needle ') ||
+        haystack.endsWith(' $needle') ||
+        haystack.contains(' $needle '));
+
+bool artistMatches(String catalog, List<String> credited) {
+  final wanted = artistParts(catalog);
+  for (final part in wanted) {
+    for (final name in credited.map(normalize)) {
+      if (_looseMatch(part, name)) return true;
+    }
+  }
+  return false;
+}
+
+bool titleMatches(String catalog, String spotify) {
+  final a = normalize(catalog);
+  final b = normalize(spotify);
+  if (a.isEmpty || b.isEmpty) return false;
+  return a == b || a.contains(b) || b.contains(a);
+}
+
+/// A karaoke or nightcore version says so in a bracket, and [normalize] throws
+/// brackets away - so this one reads the name as it stands.
+bool isTheRecording(Map<String, dynamic> track) {
+  final haystack =
+      '${flatten(track['name'] as String)} '
+      '${flatten((track['album']?['name'] as String?) ?? '')}';
+  return !notTheSong.any(haystack.contains);
+}
+
+List<String> creditsOf(Map<String, dynamic> track) => [
+  for (final artist in (track['artists'] as List).cast<Map<String, dynamic>>())
+    artist['name'] as String,
+];
+
+Future<List<Map<String, dynamic>>> _search(
+  String token,
+  String query, {
+  int limit = 20,
+}) async {
+  final encoded = Uri.encodeQueryComponent(query);
+  final body = await _api(token, '/search?q=$encoded&type=track&limit=$limit');
+  if (body == null) return const [];
+  return (body['tracks']['items'] as List).cast<Map<String, dynamic>>();
+}
+
+/// The entry's own recording, or null when Spotify does not carry it.
+///
+/// The field values have to be quoted: `track:Diese Welt` searches for "Diese"
+/// and drops the rest into a free text match, which is how a search for Katja
+/// Ebstein used to come back with Fettes Brot. And the first hit is never good
+/// enough on its own - an unquoted search for Blue's "I Can" answers with
+/// Adele - so every candidate is checked against artist, title and pressing.
 Future<Map<String, dynamic>?> searchTrack(
   String token,
   String title,
   String artist,
 ) async {
-  final query = Uri.encodeQueryComponent('track:$title artist:$artist');
-  final response = await http.get(
-    Uri.parse('https://api.spotify.com/v1/search?q=$query&type=track&limit=5'),
-    headers: {'Authorization': 'Bearer $token'},
-  );
-  if (response.statusCode != 200) {
-    stderr.writeln('Search failed (${response.statusCode}): $title');
-    return null;
+  final first = artistParts(artist).isEmpty
+      ? artist
+      : artistParts(artist).first;
+  final queries = [
+    'track:"$title" artist:"$artist"',
+    'track:"$title" artist:"$first"',
+    'artist:"$artist" $title',
+    'track:"$title"',
+  ];
+
+  for (final query in queries) {
+    for (final track in await _search(token, query)) {
+      if (!isTheRecording(track)) continue;
+      if (!artistMatches(artist, creditsOf(track))) continue;
+      if (!titleMatches(title, track['name'] as String)) continue;
+      return track;
+    }
   }
-  final items = (jsonDecode(response.body)['tracks']['items'] as List)
-      .cast<Map<String, dynamic>>();
-  return items.isEmpty ? null : items.first;
+  return null;
+}
+
+Future<Map<String, dynamic>?> fetchTrack(String token, String id) =>
+    _api(token, '/tracks/$id');
+
+Future<void> _write(File file, Map<String, dynamic> catalog) async {
+  await file.writeAsString(
+    '${const JsonEncoder.withIndent('  ').convert(catalog)}\n',
+  );
+  stdout.writeln('${file.path} updated.');
+}
+
+/// Why an id that is already in the catalog cannot stay, or null when it can.
+///
+/// A wrong title or a karaoke pressing is decided here; a name that does not
+/// line up is not. Artists get renamed (Charlotte Nilsson became Charlotte
+/// Perrelli), transliterated and credited in Hebrew, and throwing those ids
+/// away would cost the game more songs than the odd wrong hit does.
+String? cannotStay(Map<String, dynamic> song, Map<String, dynamic>? track) {
+  if (track == null) return 'id points at nothing';
+  final title = song['title'] as String;
+  if (!titleMatches(title, track['name'] as String)) {
+    return 'is "${track['name']}"';
+  }
+  if (!isTheRecording(track)) {
+    return 'is "${track['name']}" / ${track['album']?['name']}';
+  }
+  return null;
+}
+
+/// Reads every id in the catalogs back, clears the ones that point at another
+/// song and reports the ones that only look odd. The next plain run fills the
+/// cleared entries in again - or, where Spotify has nothing, they get swapped.
+Future<int> recheck(String token, List<File> files) async {
+  var cleared = 0;
+  final review = <String>[];
+
+  for (final file in files) {
+    final catalog =
+        jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+    final songs = (catalog['songs'] as List).cast<Map<String, dynamic>>();
+    var changed = false;
+
+    for (final song in songs) {
+      final id = song['spotifyTrackId'];
+      if (id is! String || id.isEmpty) continue;
+
+      final Map<String, dynamic>? track;
+      try {
+        track = await fetchTrack(token, id);
+      } on RateLimited {
+        if (changed) await _write(file, catalog);
+        rethrow;
+      }
+
+      final title = song['title'] as String;
+      final artist = song['artist'] as String;
+      final reason = cannotStay(song, track);
+      if (reason != null) {
+        stdout.writeln('  cleared $title - $artist: $reason');
+        song.remove('spotifyTrackId');
+        changed = true;
+        cleared++;
+        continue;
+      }
+      if (!artistMatches(artist, creditsOf(track!))) {
+        review.add(
+          '${catalog['id']} · $title - $artist: credited to '
+          '${creditsOf(track).join(', ')} [$id]',
+        );
+      }
+    }
+
+    if (changed) await _write(file, catalog);
+  }
+
+  if (review.isNotEmpty) {
+    stdout.writeln('\nSame title, another name - check by hand:');
+    for (final line in review) {
+      stdout.writeln('  $line');
+    }
+  }
+
+  return cleared;
 }
 
 Future<void> main(List<String> args) async {
@@ -59,8 +298,9 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
 
-  final files = args.isNotEmpty
-      ? args.map(File.new).toList()
+  final paths = args.where((arg) => !arg.startsWith('--')).toList();
+  final files = paths.isNotEmpty
+      ? paths.map(File.new).toList()
       : Directory('assets/songs')
             .listSync()
             .whereType<File>()
@@ -68,60 +308,85 @@ Future<void> main(List<String> args) async {
             .toList();
 
   final token = await fetchToken(id, secret);
-  final review = <String>[];
-  var resolved = 0;
-  var missing = 0;
 
-  for (final file in files) {
-    final catalog = jsonDecode(await file.readAsString())
-        as Map<String, dynamic>;
-    final songs = (catalog['songs'] as List).cast<Map<String, dynamic>>();
-    var changed = false;
-
-    for (final song in songs) {
-      final existing = song['spotifyTrackId'];
-      if (existing is String && existing.isNotEmpty) continue;
-
-      final title = song['title'] as String;
-      final artist = song['artist'] as String;
-      final track = await searchTrack(token, title, artist);
-      if (track == null) {
-        missing++;
-        review.add('${catalog['id']} · $title - $artist: no hit');
-        continue;
-      }
-
-      song['spotifyTrackId'] = track['id'];
-      changed = true;
-      resolved++;
-
-      // The Spotify year is only a cross-check: for remasters it differs, and
-      // then the card no longer matches the song.
-      final released = (track['album']?['release_date'] as String?) ?? '';
-      final spotifyYear = int.tryParse(released.split('-').first);
-      final catalogYear = song['year'] as int;
-      if (spotifyYear != null && (spotifyYear - catalogYear).abs() > 1) {
-        review.add(
-          '${catalog['id']} · $title: catalog $catalogYear, '
-          'Spotify $spotifyYear ("${track['name']}" / '
-          '${track['album']?['name']})',
-        );
-      }
+  try {
+    if (args.contains('--recheck')) {
+      final cleared = await recheck(token, files);
+      stdout.writeln('$cleared ids cleared.');
+      return;
     }
 
-    if (changed) {
-      await file.writeAsString(
-        '${const JsonEncoder.withIndent('  ').convert(catalog)}\n',
+    final review = <String>[];
+    final swap = <String>[];
+    var resolved = 0;
+
+    for (final file in files) {
+      final catalog =
+          jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+      final songs = (catalog['songs'] as List).cast<Map<String, dynamic>>();
+      var changed = false;
+
+      for (final song in songs) {
+        final existing = song['spotifyTrackId'];
+        if (existing is String && existing.isNotEmpty) continue;
+
+        final title = song['title'] as String;
+        final artist = song['artist'] as String;
+        final Map<String, dynamic>? track;
+        try {
+          track = await searchTrack(token, title, artist);
+        } on RateLimited {
+          // Keep what this file already found before handing the run back.
+          if (changed) await _write(file, catalog);
+          rethrow;
+        }
+        if (track == null) {
+          swap.add('${catalog['id']} · ${song['year']} · $title - $artist');
+          continue;
+        }
+
+        song['spotifyTrackId'] = track['id'];
+        changed = true;
+        resolved++;
+
+        // The Spotify year is only a cross-check: for remasters it differs, and
+        // then the card no longer matches the song.
+        final released = (track['album']?['release_date'] as String?) ?? '';
+        final spotifyYear = int.tryParse(released.split('-').first);
+        final catalogYear = song['year'] as int;
+        if (spotifyYear != null && (spotifyYear - catalogYear).abs() > 1) {
+          review.add(
+            '${catalog['id']} · $title: catalog $catalogYear, '
+            'Spotify $spotifyYear ("${track['name']}" / '
+            '${track['album']?['name']})',
+          );
+        }
+      }
+
+      if (changed) await _write(file, catalog);
+    }
+
+    stdout.writeln('$resolved track ids added, ${swap.length} without a song.');
+    if (swap.isNotEmpty) {
+      stdout.writeln(
+        '\nNot on Spotify - swap each for another entry of the same year '
+        '(CLAUDE.md):',
       );
-      stdout.writeln('${file.path} updated.');
+      for (final line in swap) {
+        stdout.writeln('  $line');
+      }
     }
-  }
-
-  stdout.writeln('$resolved track ids added, $missing without a hit.');
-  if (review.isNotEmpty) {
-    stdout.writeln('\nCheck by hand:');
-    for (final line in review) {
-      stdout.writeln('  $line');
+    if (review.isNotEmpty) {
+      stdout.writeln('\nCheck the year by hand:');
+      for (final line in review) {
+        stdout.writeln('  $line');
+      }
     }
+  } on RateLimited catch (error) {
+    stderr.writeln('\n$error');
+    stderr.writeln(
+      'Everything found up to here has been written to the files.',
+    );
+    exit(2);
   }
 }

@@ -12,6 +12,7 @@ import '../music/in_app_launcher.dart';
 import '../music/spotify_session.dart';
 import 'app_scope.dart';
 import 'centered_body.dart';
+import 'countdown_screen.dart';
 import 'haptics/haptics.dart';
 import 'scanner_screen.dart';
 import 'theme.dart';
@@ -160,11 +161,33 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
         return;
       case ScanOutcome.started:
-        // Straight into the round. The screen that follows gives nothing away
-        // - it is the scoreboard with a reveal button where the song card will
-        // be - so there is nothing left for a countdown to cover.
+        if (!await _runCountdown()) {
+          _game.cancelRound();
+          return;
+        }
         await _game.startPlayback();
     }
+  }
+
+  /// The three seconds between the scan and the song. False when the round was
+  /// cancelled on them.
+  ///
+  /// Only the handover needs it. The song then comes out of Spotify, a tab or
+  /// an app away, and it starts while the room is still looking at the phone -
+  /// the countdown is what puts everybody on the same beat. A song played in
+  /// this tab has no such gap: it is there as soon as the round screen is, so
+  /// the countdown would only hold the music up.
+  ///
+  /// This is the one place that asks the session instead of the launch, and it
+  /// has to: nothing has been handed over yet, so there is no launch to ask.
+  /// Being wrong here costs a countdown, never a round - a ready session that
+  /// refuses the track still falls back to the link, and the round runs on.
+  Future<bool> _runCountdown() async {
+    if (_spotify?.isReady ?? false) return true;
+    final ran = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => const CountdownScreen()),
+    );
+    return mounted && (ran ?? false);
   }
 
   /// Ends the round and goes straight back to the camera - the scan is the
@@ -290,8 +313,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       case RoundPhase.idle:
         return _IdleBody(game: _game, onScan: _startRound);
       case RoundPhase.countdown:
-        // A single frame at most: the song is picked and playback is already
-        // starting. Drawing anything here would only flicker.
+        // Either the countdown route is up over this screen, or the song is
+        // already starting - a single frame in the in-app case. Drawing
+        // anything here would only flicker behind the one or the other.
         return const SizedBox.shrink();
       case RoundPhase.playing:
         return _PlayingBody(game: _game, spotify: AppScope.of(context).spotify);

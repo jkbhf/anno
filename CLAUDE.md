@@ -96,4 +96,55 @@ into `GameController.playingInApp` and read from there. It also decides whether
 a `resumed` reveals the year: coming back from Spotify does, tabbing away from
 an in-app round does not.
 
+The one exception is the countdown before the round (`_runCountdown` in
+`lib/ui/game_screen.dart`), and it is one because nothing has been launched
+yet: the countdown covers the handover to Spotify, so it has to know which of
+the two ways is coming *before* the launch that could tell it. `isReady` is all
+there is at that point, and being wrong there costs a countdown rather than a
+round - the fallback still plays the song by link either way. Anything after
+the launch reads `playingInApp`.
+
 `README.md` has the setup under "Playing in the tab".
+
+## What Spotify does not carry is not a card
+
+`spotifyTrackId` is not a nicety, it is what makes the round play. Without it
+the link path opens `open.spotify.com/search/...` and the song sits there until
+somebody taps it - a dead round on the way most players are on. With it, the
+deep link `spotify:track:<id>` starts the song by itself on Android and iOS,
+and the web at least lands on the track instead of a result list. So an entry
+without an id is only half an entry: run `tool/resolve_spotify_tracks.dart`
+over a file before it ships (`README.md`, "Filling in track ids").
+
+**An entry Spotify does not have gets swapped, not hunted down.** When the
+resolver ends with a song under "Not on Spotify", the fix is to replace that
+entry with another one from the *same year* that fits the curation rule above -
+the year keeps its slot, the song loses it. Then run the resolver again for the
+new entry. This is the normal case for the older years, where the catalogs
+simply stop: Katja Ebstein has three songs on Spotify and "Diese Welt" (1971,
+3rd) is not one of them, so 1971 takes another entry of that year instead.
+
+Two things follow from it:
+
+- **The winner slot is not exempt.** A winner nobody can hear is worse for the
+  evening than a year without its winner. Swap it like any other entry, and
+  where the German entry of a 2005+ year is the one missing, the slot goes to
+  the next best known entry of that year rather than staying empty.
+- **Never substitute a karaoke, tribute, medley, nightcore or remix pressing.**
+  Those are what the search offers when the real recording is absent, and the
+  room hearing a sped-up cover is a worse round than a swapped song. The
+  resolver refuses them on purpose; do not put one in by hand.
+
+**A "no hit" is only worth as much as the query behind it.** The resolver used
+to search `track:$title artist:$artist` unquoted, where Spotify takes only the
+first word of each field: that put t.A.T.u., Mia Martini and the 2011 winner on
+the miss list and answered Blue's "I Can" with Adele. It now quotes the fields,
+checks artist, title and pressing on every candidate, and `--recheck` reads the
+ids already in a file back. So before swapping a batch of entries, make sure
+the list came from the current resolver - otherwise good songs get thrown out
+for a bug.
+
+A new category is filled the same way: pick the songs by the curation rule
+first, then let the resolver decide which of them can stay.
+
+`README.md` has the commands under "Filling in track ids".

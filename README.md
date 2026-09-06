@@ -143,10 +143,18 @@ lives in the environment; a PKCE login in a browser must never carry one.
    back to the scanner. Once someone reaches the score target, the game ends
    after the current round.
 
-There is no countdown between the scan and the song. It used to cover the
-handover to Spotify, and the round screen gives nothing away on its own, so
-there is nothing left for it to cover. On Android, coming back from Spotify
-still reveals the year by itself; the button is what does it everywhere else.
+Between the scan and the song there is a three second countdown, and only on
+the way that hands the song over to Spotify. That way the music starts in
+another app or another tab, while the room is still looking at the phone - the
+countdown is what puts everybody on the same beat, and the close button on it
+drops the round before a note is played. Playing in the tab skips it: the song
+is there as soon as the round screen is, so a countdown would only hold it up.
+Which of the two is coming is the one thing the app reads off the session
+instead of off the launch - there is no launch yet at that point, and guessing
+wrong costs a countdown, not a round.
+
+On Android, coming back from Spotify still reveals the year by itself; the
+button is what does it everywhere else.
 
 The running game is saved after every score change. If Android kills the app
 while Spotify is in the foreground, it can be resumed from the setup screen.
@@ -227,7 +235,9 @@ have had their turn.
 
 `spotifyTrackId` is the last part of `https://open.spotify.com/track/<id>`.
 Without it the app opens a Spotify search for title and artist - the song then
-has to be tapped there.
+has to be tapped there, which is a round without music until somebody does. It
+is what a hand-written entry looks like until the resolver below has run over
+it, so run it before the file ships.
 
 The year is the truth of the game and deliberately comes from no API: streaming
 services report the year of the re-release for remasters.
@@ -248,11 +258,27 @@ dart run tool/resolve_spotify_tracks.dart            # every category
 dart run tool/resolve_spotify_tracks.dart assets/songs/esc.json
 ```
 
-It only fills empty `spotifyTrackId` fields and reports every song whose Spotify
-year differs from the catalog - usually a remaster, which would put the wrong
-year on the card. Client id and secret come from the
+It only fills empty `spotifyTrackId` fields, and it takes a hit only when
+artist and title both line up and the pressing is the recording itself - a
+karaoke, medley or nightcore version is refused. What it could not find is
+listed under "Not on Spotify": those entries get swapped for another song of
+the same year, see `CLAUDE.md`. It also reports every song whose Spotify year
+differs from the catalog - usually a remaster, which would put the wrong year
+on the card.
+
+```sh
+dart run tool/resolve_spotify_tracks.dart --recheck   # ids already in the file
+```
+
+`--recheck` reads every id back and clears the ones that turned out to be a
+different song, so the next plain run can fill them in properly.
+
+Client id and secret come from the
 [Spotify Developer Dashboard](https://developer.spotify.com/dashboard); the
-client credentials flow is enough for the search, no user login needed.
+client credentials flow is enough for the search, no user login needed. Spotify
+answers a burst of requests with a lockout of several hours for the whole app -
+the script spaces its requests out and stops on a `429` instead of waiting it
+out, so run it once and let it finish rather than restarting it.
 
 ## Layout
 
