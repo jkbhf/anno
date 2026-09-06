@@ -586,22 +586,28 @@ class _RevealSlot extends StatelessWidget {
                   color: theme.colorScheme.primary,
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.visibility_outlined,
-                      size: 20,
-                      color: theme.colorScheme.onPrimary,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Reveal the year',
-                      style: theme.textTheme.labelLarge?.copyWith(
+                // The label is the one thing here that cannot wrap, so on a
+                // narrow phone - or with the text scaled up - it shrinks
+                // instead of running over the edge.
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.visibility_outlined,
+                        size: 20,
                         color: theme.colorScheme.onPrimary,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        'Reveal the year',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -770,7 +776,7 @@ class _PlayerGrid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 16,
       crossAxisSpacing: 16,
-      childAspectRatio: 1.6,
+      childAspectRatio: 1.45,
       children: [
         for (final player in game.players)
           _PlayerTile(
