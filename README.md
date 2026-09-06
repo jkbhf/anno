@@ -79,9 +79,9 @@ in the app bar menu.
 
 Set the redirect URI in the dashboard to exactly what the app sends, which is
 origin plus path. Two of them are needed: `http://127.0.0.1:8080/` for the dev
-command above and `https://jkbhf.github.io/play/` for the deployed page -
-trailing slash and `/play/` included, since the path is part of what is sent.
-Prefer the loopback IP over `localhost`: Spotify only accepts `https` and
+command above and `https://anno.jakobhoeflich.com/` for the deployed page. Only
+the custom domain, not the `github.io` address - that one only redirects, so a
+login never comes back to it. Prefer the loopback IP over `localhost`: Spotify only accepts `https` and
 loopback literals, and which spelling counts has changed over the years. In
 production the page has to be on `https` anyway, both for the SDK and for the
 camera.
@@ -98,22 +98,27 @@ before the resolver has run.
 ## Deploying to GitHub Pages
 
 `.github/workflows/pages.yml` builds the web app on every push to `main` and
-publishes it to `https://jkbhf.github.io/play/`. Three things have to be set up
-once:
+publishes it to `https://anno.jakobhoeflich.com/`. The `github.io` address of
+the repository stays valid but only 301s there, which is why the build runs
+with `--base-href /` and not with a repository path.
 
-1. **Settings -> Pages -> Source: GitHub Actions.** Not the old branch
-   deployment; the workflow uploads an artifact.
-2. **Settings -> Secrets and variables -> Actions -> Variables**, a repository
-   variable `SPOTIFY_CLIENT_ID`. A *variable*, not a secret: the client id ends
-   up in the compiled bundle either way, so hiding it buys nothing, and a masked
-   secret only makes the build log harder to read. Without it the build still
-   succeeds and the page simply has no in-app player.
-3. **The redirect URI** `https://jkbhf.github.io/play/` in the Spotify
-   dashboard, next to the loopback one for local development.
+The custom domain needs two halves that are easy to have only one of: the name
+in **Settings -> Pages**, and a DNS record `anno` -> `jkbhf.github.io` at the
+registrar. `web/CNAME` carries the name into every build so a deploy cannot
+quietly drop it. Until the DNS record answers, the domain is set but nothing
+resolves.
 
-The site lives under `/play/`, hence `--base-href /play/` in the build step. On
-a custom domain that becomes `--base-href /` plus a `CNAME` file in `web/`, and
-the redirect URI in the dashboard has to follow.
+Two more things are set once and then forgotten:
+
+- **Settings -> Secrets and variables -> Actions -> Variables**, a repository
+  variable `SPOTIFY_CLIENT_ID`. A *variable*, not a secret: the client id ends
+  up in the compiled bundle either way, so hiding it buys nothing, and a masked
+  secret only makes the build log harder to read. Without it the build still
+  succeeds and the page simply has no in-app player.
+- **The redirect URI** in the Spotify dashboard, see above.
+
+The client *secret* has no business here. It belongs to the resolver script and
+lives in the environment; a PKCE login in a browser must never carry one.
 
 ## The flow
 
