@@ -1,0 +1,8 @@
+{
+  "_comment": "Bundled mapping of QR code -> year. The key is the last path segment of the scanned link, e.g. https://play-the-music.com/de/year/182ca01194a98f0b -> 182ca01194a98f0b. Years entered in the app override this file without changing it.",
+  "version": 1,
+  "years": {
+    "182ca01194a98f0b": 2005,
+    "86e8ba66ab81706c": 2023
+  }
+}

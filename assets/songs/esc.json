@@ -1,0 +1,3832 @@
+{
+  "id": "esc",
+  "name": "ESC",
+  "description": "Eurovision Song Contest - winners and classics",
+  "_comment": "year is the year of the contest, not of the release. How many entries a year gets, which ones, and how tier works: see CLAUDE.md.",
+  "songs": [
+    {
+      "year": 1956,
+      "title": "Refrain",
+      "artist": "Lys Assia",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "So geht das jede Nacht",
+      "artist": "Freddy Quinn",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "Aprite le finestre",
+      "artist": "Franca Raimondi",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Net als toen",
+      "artist": "Corry Brokken",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Telefon, Telefon",
+      "artist": "Margot Hielscher",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Skibet skal sejle i nat",
+      "artist": "Birthe Wilke & Gustav Winckler",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "Dors, mon amour",
+      "artist": "André Claveau",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "Nel blu, dipinto di blu",
+      "artist": "Domenico Modugno",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "Für zwei Groschen Musik",
+      "artist": "Margot Hielscher",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "Een beetje",
+      "artist": "Teddy Scholten",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "Heute Abend wollen wir tanzen geh'n",
+      "artist": "Alice & Ellen Kessler",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "Sing Little Birdie",
+      "artist": "Pearl Carr & Teddy Johnson",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "Tom Pillibi",
+      "artist": "Jacqueline Boyer",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "Bonne nuit ma chérie",
+      "artist": "Wyn Hoop",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "Looking High, High, High",
+      "artist": "Bryan Johnson",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Nous les amoureux",
+      "artist": "Jean-Claude Pascal",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Einmal sehen wir uns wieder",
+      "artist": "Lale Andersen",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 13,
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Are You Sure?",
+      "artist": "The Allisons",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "Un premier amour",
+      "artist": "Isabelle Aubret",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "Zwei kleine Italiener",
+      "artist": "Conny Froboess",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "Dis rien",
+      "artist": "François Deguelt",
+      "spotifyTrackId": "",
+      "country": "Monaco",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Dansevise",
+      "artist": "Grethe & Jørgen Ingmann",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "T'en vas pas",
+      "artist": "Esther Ofarim",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Marcel",
+      "artist": "Heidi Brühl",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "Non ho l'età",
+      "artist": "Gigliola Cinquetti",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "Warum nur, warum?",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "I Love the Little Things",
+      "artist": "Matt Monro",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Poupée de cire, poupée de son",
+      "artist": "France Gall",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Sag ihr, ich lass sie grüßen",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "I Belong",
+      "artist": "Kathy Kirby",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Merci, Chérie",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Die Zeiger der Uhr",
+      "artist": "Margot Eskens",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 10,
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Dio, come ti amo",
+      "artist": "Domenico Modugno",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 17,
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "Puppet on a String",
+      "artist": "Sandie Shaw",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "L'amour est bleu",
+      "artist": "Vicky Leandros",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "Hablemos del amor",
+      "artist": "Raphael",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "La, la, la",
+      "artist": "Massiel",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "Congratulations",
+      "artist": "Cliff Richard",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "Ein Hoch der Liebe",
+      "artist": "Wencke Myhre",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Boom Bang-a-Bang",
+      "artist": "Lulu",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Vivo cantando",
+      "artist": "Salomé",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Primaballerina",
+      "artist": "Siw Malmkvist",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "All Kinds of Everything",
+      "artist": "Dana",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "Wunder gibt es immer wieder",
+      "artist": "Katja Ebstein",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "Gwendolyne",
+      "artist": "Julio Iglesias",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Un banc, un arbre, une rue",
+      "artist": "Séverine",
+      "spotifyTrackId": "",
+      "country": "Monaco",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Diese Welt",
+      "artist": "Katja Ebstein",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Jack in the Box",
+      "artist": "Clodagh Rodgers",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Après toi",
+      "artist": "Vicky Leandros",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Nur die Liebe lässt uns leben",
+      "artist": "Mary Roos",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Beg, Steal or Borrow",
+      "artist": "The New Seekers",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Tu te reconnaîtras",
+      "artist": "Anne-Marie David",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Eres tú",
+      "artist": "Mocedades",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Junger Tag",
+      "artist": "Gitte Hænning",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Waterloo",
+      "artist": "ABBA",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Sì",
+      "artist": "Gigliola Cinquetti",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Long Live Love",
+      "artist": "Olivia Newton-John",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Ding-a-dong",
+      "artist": "Teach-In",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Ein Lied kann eine Brücke sein",
+      "artist": "Joy Fleming",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 17,
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Let Me Be the One",
+      "artist": "The Shadows",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Era",
+      "artist": "Wess & Dori Ghezzi",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Mikado",
+      "artist": "Simone Drexel",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Save Your Kisses for Me",
+      "artist": "Brotherhood of Man",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Sing Sang Song",
+      "artist": "Les Humphries Singers",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 15,
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "We'll Live It All Again",
+      "artist": "Al Bano & Romina Power",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "1, 2, 3",
+      "artist": "Catherine Ferry",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Djambo, Djambo",
+      "artist": "Peter, Sue & Marc",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "L'oiseau et l'enfant",
+      "artist": "Marie Myriam",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Telegram",
+      "artist": "Silver Convention",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Rock Bottom",
+      "artist": "Lynsey de Paul & Mike Moran",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Boom Boom Boomerang",
+      "artist": "Schmetterlinge",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 17,
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Une petite française",
+      "artist": "Michèle Torr",
+      "spotifyTrackId": "",
+      "country": "Monaco",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "A-Ba-Ni-Bi",
+      "artist": "Izhar Cohen & the Alphabeta",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Parlez-vous français?",
+      "artist": "Baccara",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Feuer",
+      "artist": "Ireen Sheer",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Mil etter mil",
+      "artist": "Jahn Teigen",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 20,
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "L'amour ça fait chanter la vie",
+      "artist": "Jean Vallée",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Hallelujah",
+      "artist": "Milk and Honey",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Dschinghis Khan",
+      "artist": "Dschinghis Khan",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Su canción",
+      "artist": "Betty Missiego",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Je suis l'enfant soleil",
+      "artist": "Anne-Marie David",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Mary Ann",
+      "artist": "Black Lace",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "What's Another Year",
+      "artist": "Johnny Logan",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Theater",
+      "artist": "Katja Ebstein",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Euro-Vision",
+      "artist": "Telex",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 17,
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Love Enough for Two",
+      "artist": "Prima Donna",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Cinéma",
+      "artist": "Paola",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Making Your Mind Up",
+      "artist": "Bucks Fizz",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Johnny Blue",
+      "artist": "Lena Valaitis",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Humanahum",
+      "artist": "Jean Gabilou",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Io senza te",
+      "artist": "Peter, Sue & Marc",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Fångad i en dröm",
+      "artist": "Björn Skifs",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 10,
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Ein bißchen Frieden",
+      "artist": "Nicole",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Hora",
+      "artist": "Avi Toledano",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "One Step Further",
+      "artist": "Bardo",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Amour on t'aime",
+      "artist": "Arlette Zola",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Adieu",
+      "artist": "Jahn Teigen & Anita Skorgan",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 12,
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Si la vie est cadeau",
+      "artist": "Corinne Hermès",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Rücksicht",
+      "artist": "Hoffmann & Hoffmann",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Chai",
+      "artist": "Ofra Haza",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Främling",
+      "artist": "Carola",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "¿Quién maneja mi barca?",
+      "artist": "Remedios Amaya",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 19,
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Diggi-Loo Diggi-Ley",
+      "artist": "Herreys",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Aufrecht geh'n",
+      "artist": "Mary Roos",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 13,
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "I treni di Tozeur",
+      "artist": "Alice & Franco Battiato",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Terminal 3",
+      "artist": "Linda Martin",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Lady, Lady",
+      "artist": "Bravo",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "La det swinge",
+      "artist": "Bobbysocks",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Für alle",
+      "artist": "Wind",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Magic Oh Magic",
+      "artist": "Al Bano & Romina Power",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Bra vibrationer",
+      "artist": "Kikki Danielsson",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Love Is...",
+      "artist": "Vikki",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "J'aime la vie",
+      "artist": "Sandra Kim",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Über die Brücke geh'n",
+      "artist": "Ingrid Peters",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Pas pour moi",
+      "artist": "Daniela Simons",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "L'amour de ma vie",
+      "artist": "Sherisse Laurence",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Gleðibankinn",
+      "artist": "ICY",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 16,
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Hold Me Now",
+      "artist": "Johnny Logan",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Lass die Sonne in dein Herz",
+      "artist": "Wind",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Gente di mare",
+      "artist": "Umberto Tozzi & Raf",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Amour, amour",
+      "artist": "Plastic Bertrand",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 21,
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Boogaloo",
+      "artist": "Lotta Engberg",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 12,
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Ne partez pas sans moi",
+      "artist": "Céline Dion",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Go",
+      "artist": "Scott Fitzgerald",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Croire",
+      "artist": "Lara Fabian",
+      "spotifyTrackId": "",
+      "country": "Luxembourg",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Stad i ljus",
+      "artist": "Tommy Körberg",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 12,
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Ka' du se hva' jeg sa'?",
+      "artist": "Hot Eyes",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Rock Me",
+      "artist": "Riva",
+      "spotifyTrackId": "",
+      "country": "Yugoslavia",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Flieger",
+      "artist": "Nino de Angelo",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 14,
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Why Do I Always Get It Wrong",
+      "artist": "Live Report",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Vi maler byen rød",
+      "artist": "Birthe Kjær",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "J'ai volé la vie",
+      "artist": "Nathalie Pâque",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Insieme: 1992",
+      "artist": "Toto Cutugno",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Bandido",
+      "artist": "Azúcar Moreno",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "White and Black Blues",
+      "artist": "Joëlle Ursull",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Somewhere in Europe",
+      "artist": "Liam Reilly",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Frei zu leben",
+      "artist": "Chris Kempers & Daniel Kovac",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Fångad av en stormvind",
+      "artist": "Carola",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Le dernier qui a parlé...",
+      "artist": "Amina",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Bailar pegados",
+      "artist": "Sergio Dalma",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Kan",
+      "artist": "Duo Datz",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Comme è ddoce 'o mare",
+      "artist": "Peppino di Capri",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Why Me?",
+      "artist": "Linda Martin",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "One Step Out of Time",
+      "artist": "Michael Ball",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Rapsodia",
+      "artist": "Mia Martini",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Träume sind für alle da",
+      "artist": "Wind",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 16,
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Little Child",
+      "artist": "Mary Spiteri",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "In Your Eyes",
+      "artist": "Niamh Kavanagh",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Viel zu weit",
+      "artist": "Münchener Freiheit",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 18,
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Better the Devil You Know",
+      "artist": "Sonia",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Moi, tout simplement",
+      "artist": "Annie Cotton",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Under stjernerne på himlen",
+      "artist": "Tommy Seebach",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 22,
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Rock 'n' Roll Kids",
+      "artist": "Paul Harrington & Charlie McGettigan",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "To nie ja!",
+      "artist": "Edyta Górniak",
+      "spotifyTrackId": "",
+      "country": "Poland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Wir geben 'ne Party",
+      "artist": "MeKaDo",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Kinek mondjam el vétkeimet?",
+      "artist": "Friderika Bayer",
+      "spotifyTrackId": "",
+      "country": "Hungary",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Lopšinė mylimai",
+      "artist": "Ovidijus Vyšniauskas",
+      "spotifyTrackId": "",
+      "country": "Lithuania",
+      "place": 25,
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Nocturne",
+      "artist": "Secret Garden",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Verliebt in Dich",
+      "artist": "Stone & Stone",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 23,
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Vuelve conmigo",
+      "artist": "Anabel Conde",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Se på mej",
+      "artist": "Jan Johansen",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Keep Me in Mind",
+      "artist": "Mike Spiteri",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 10,
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "The Voice",
+      "artist": "Eimear Quinn",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Planet of Blue",
+      "artist": "Leon",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Ooh Aah... Just a Little Bit",
+      "artist": "Gina G",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "I evighet",
+      "artist": "Elisabeth Andreassen",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Sveta ljubav",
+      "artist": "Maja Blagdan",
+      "spotifyTrackId": "",
+      "country": "Croatia",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Love Shine a Light",
+      "artist": "Katrina and the Waves",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Zeit",
+      "artist": "Bianca Shomburg",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 18,
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Minn hinsti dans",
+      "artist": "Paul Oscar",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 20,
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Mysterious Woman",
+      "artist": "Marc Roberts",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Dinle",
+      "artist": "Şebnem Paker",
+      "spotifyTrackId": "",
+      "country": "Turkey",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Diva",
+      "artist": "Dana International",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Guildo hat euch lieb!",
+      "artist": "Guildo Horn",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Where Are You?",
+      "artist": "Imaani",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "The One That I Love",
+      "artist": "Chiara",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Neka mi ne svane",
+      "artist": "Danijela",
+      "spotifyTrackId": "",
+      "country": "Croatia",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Take Me to Your Heaven",
+      "artist": "Charlotte Nilsson",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Reise nach Jerusalem",
+      "artist": "Sürpriz",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "All Out of Luck",
+      "artist": "Selma",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Marija Magdalena",
+      "artist": "Doris Dragović",
+      "spotifyTrackId": "",
+      "country": "Croatia",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Yom huledet",
+      "artist": "Eden",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Fly on the Wings of Love",
+      "artist": "Olsen Brothers",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Wadde hadde dudde da?",
+      "artist": "Stefan Raab",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Solo",
+      "artist": "Alsou",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "My Star",
+      "artist": "Brainstorm",
+      "spotifyTrackId": "",
+      "country": "Latvia",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Once in a Lifetime",
+      "artist": "Ines",
+      "spotifyTrackId": "",
+      "country": "Estonia",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Everybody",
+      "artist": "Tanel Padar, Dave Benton & 2XL",
+      "spotifyTrackId": "",
+      "country": "Estonia",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Wer Liebe lebt",
+      "artist": "Michelle",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Die for You",
+      "artist": "Antique",
+      "spotifyTrackId": "",
+      "country": "Greece",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Je n'ai que mon âme",
+      "artist": "Natasha St-Pier",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Never Ever Let You Go",
+      "artist": "Rollo & King",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "I Wanna",
+      "artist": "Marie N",
+      "spotifyTrackId": "",
+      "country": "Latvia",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "I Can't Live Without Music",
+      "artist": "Corinna May",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 21,
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "7th Wonder",
+      "artist": "Ira Losco",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Runaway",
+      "artist": "Sahlene",
+      "spotifyTrackId": "",
+      "country": "Estonia",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Samo ljubezen",
+      "artist": "Sestre",
+      "spotifyTrackId": "",
+      "country": "Slovenia",
+      "place": 13,
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Everyway That I Can",
+      "artist": "Sertab Erener",
+      "spotifyTrackId": "",
+      "country": "Turkey",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Ne ver', ne boysia",
+      "artist": "t.A.T.u.",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Cry Baby",
+      "artist": "Jemini",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 26,
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Sanomi",
+      "artist": "Urban Trad",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Let's Get Happy",
+      "artist": "Lou",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 11,
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Wild Dances",
+      "artist": "Ruslana",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Can't Wait Until Tonight",
+      "artist": "Max",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Lane moje",
+      "artist": "Željko Joksimović",
+      "spotifyTrackId": "",
+      "country": "Serbia and Montenegro",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Shake It",
+      "artist": "Sakis Rouvas",
+      "spotifyTrackId": "",
+      "country": "Greece",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "In the Disco",
+      "artist": "Deen",
+      "spotifyTrackId": "",
+      "country": "Bosnia and Herzegovina",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "My Number One",
+      "artist": "Helena Paparizou",
+      "spotifyTrackId": "",
+      "country": "Greece",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Run & Hide",
+      "artist": "Gracia",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 24,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Cool Vibes",
+      "artist": "Vanilla Ninja",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "In My Dreams",
+      "artist": "Wig Wam",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Angel",
+      "artist": "Chiara",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Boonika bate doba",
+      "artist": "Zdob și Zdub",
+      "spotifyTrackId": "",
+      "country": "Moldova",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Let Me Try",
+      "artist": "Luminița Anghel & Sistem",
+      "spotifyTrackId": "",
+      "country": "Romania",
+      "place": 3,
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Hasheket Shenish'ar",
+      "artist": "Shiri Maimon",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Razom nas bahato",
+      "artist": "GreenJolly",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 19,
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Forogj, világ!",
+      "artist": "NOX",
+      "spotifyTrackId": "",
+      "country": "Hungary",
+      "place": 12,
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Hard Rock Hallelujah",
+      "artist": "Lordi",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "No No Never",
+      "artist": "Texas Lightning",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 14,
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Never Let You Go",
+      "artist": "Dima Bilan",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Invincible",
+      "artist": "Carola",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Congratulations",
+      "artist": "Silvía Night",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Bloody Mary",
+      "artist": "Las Ketchup",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 21,
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Everything",
+      "artist": "Anna Vissi",
+      "spotifyTrackId": "",
+      "country": "Greece",
+      "place": 9,
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Lejla",
+      "artist": "Hari Mata Hari",
+      "spotifyTrackId": "",
+      "country": "Bosnia and Herzegovina",
+      "place": 3,
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Je t'adore",
+      "artist": "Kate Ryan",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Teenage Life",
+      "artist": "Daz Sampson",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 19,
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Molitva",
+      "artist": "Marija Šerifović",
+      "spotifyTrackId": "",
+      "country": "Serbia",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Frauen regier'n die Welt",
+      "artist": "Roger Cicero",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 19,
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Dancing Lasha Tumbai",
+      "artist": "Verka Serduchka",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Song #1",
+      "artist": "Serebro",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Vampires Are Alive",
+      "artist": "DJ BoBo",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "The Worrying Kind",
+      "artist": "The Ark",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 18,
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Work Your Magic",
+      "artist": "Dmitry Koldun",
+      "spotifyTrackId": "",
+      "country": "Belarus",
+      "place": 6,
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Shake It Up Şekerim",
+      "artist": "Kenan Doğulu",
+      "spotifyTrackId": "",
+      "country": "Turkey",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Unsubstantial Blues",
+      "artist": "Magdi Rúzsa",
+      "spotifyTrackId": "",
+      "country": "Hungary",
+      "place": 9,
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Flying the Flag (For You)",
+      "artist": "Scooch",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 22,
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Believe",
+      "artist": "Dima Bilan",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Disappear",
+      "artist": "No Angels",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 23,
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Shady Lady",
+      "artist": "Ani Lorak",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Secret Combination",
+      "artist": "Kalomira",
+      "spotifyTrackId": "",
+      "country": "Greece",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Irelande Douze Pointe",
+      "artist": "Dustin the Turkey",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Qélé, Qélé",
+      "artist": "Sirusho",
+      "spotifyTrackId": "",
+      "country": "Armenia",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Hero",
+      "artist": "Charlotte Perrelli",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 18,
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Day After Day",
+      "artist": "Elnur & Samir",
+      "spotifyTrackId": "",
+      "country": "Azerbaijan",
+      "place": 8,
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "The Fire in Your Eyes",
+      "artist": "Boaz Mauda",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 9,
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Wolves of the Sea",
+      "artist": "Pirates of the Sea",
+      "spotifyTrackId": "",
+      "country": "Latvia",
+      "place": 12,
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Fairytale",
+      "artist": "Alexander Rybak",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Miss Kiss Kiss Bang",
+      "artist": "Alex Swings Oscar Sings!",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 20,
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Is It True?",
+      "artist": "Yohanna",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Et s'il fallait le faire",
+      "artist": "Patricia Kaas",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "La voix",
+      "artist": "Malena Ernman",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 21,
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "It's My Time",
+      "artist": "Jade Ewen",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Always",
+      "artist": "AySel & Arash",
+      "spotifyTrackId": "",
+      "country": "Azerbaijan",
+      "place": 3,
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "This Is Our Night",
+      "artist": "Sakis Rouvas",
+      "spotifyTrackId": "",
+      "country": "Greece",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Be My Valentine! (Anti-Crisis Girl)",
+      "artist": "Svetlana Loboda",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 12,
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "What If We",
+      "artist": "Chiara",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 22,
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "Satellite",
+      "artist": "Lena",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "We Could Be the Same",
+      "artist": "maNga",
+      "spotifyTrackId": "",
+      "country": "Turkey",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Playing with Fire",
+      "artist": "Paula Seling & Ovi",
+      "spotifyTrackId": "",
+      "country": "Romania",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Me and My Guitar",
+      "artist": "Tom Dice",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "In a Moment Like This",
+      "artist": "Chanée & N'evergreen",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Drip Drop",
+      "artist": "Safura",
+      "spotifyTrackId": "",
+      "country": "Azerbaijan",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Milim",
+      "artist": "Harel Skaat",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 14,
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "That Sounds Good to Me",
+      "artist": "Josh Dubovie",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 25,
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "Allez ola olé",
+      "artist": "Jessy Matador",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 12,
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "My Heart Is Yours",
+      "artist": "Didrik Solli-Tangen",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 20,
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Running Scared",
+      "artist": "Ell & Nikki",
+      "spotifyTrackId": "",
+      "country": "Azerbaijan",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Taken by a Stranger",
+      "artist": "Lena",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 10,
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Madness of Love",
+      "artist": "Raphael Gualazzi",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Popular",
+      "artist": "Eric Saade",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "I Can",
+      "artist": "Blue",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 11,
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Lipstick",
+      "artist": "Jedward",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Love in Rewind",
+      "artist": "Dino Merlin",
+      "spotifyTrackId": "",
+      "country": "Bosnia and Herzegovina",
+      "place": 6,
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Rockefeller Street",
+      "artist": "Getter Jaani",
+      "spotifyTrackId": "",
+      "country": "Estonia",
+      "place": 24,
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Sognu",
+      "artist": "Amaury Vassili",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 15,
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "The Secret Is Love",
+      "artist": "Nadine Beiler",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 18,
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Euphoria",
+      "artist": "Loreen",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Standing Still",
+      "artist": "Roman Lob",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 8,
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Party for Everybody",
+      "artist": "Buranovskiye Babushki",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Love Will Set You Free",
+      "artist": "Engelbert Humperdinck",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 25,
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "L'amore è femmina",
+      "artist": "Nina Zilli",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Waterline",
+      "artist": "Jedward",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 19,
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Quédate conmigo",
+      "artist": "Pastora Soler",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 10,
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Love Me Back",
+      "artist": "Can Bonomo",
+      "spotifyTrackId": "",
+      "country": "Turkey",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "La La Love",
+      "artist": "Ivi Adamou",
+      "spotifyTrackId": "",
+      "country": "Cyprus",
+      "place": 16,
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Euro Neuro",
+      "artist": "Rambo Amadeus",
+      "spotifyTrackId": "",
+      "country": "Montenegro",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Only Teardrops",
+      "artist": "Emmelie de Forest",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Glorious",
+      "artist": "Cascada",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 21,
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Believe in Me",
+      "artist": "Bonnie Tyler",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 19,
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Marry Me",
+      "artist": "Krista Siegfrids",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 24,
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "I Feed You My Love",
+      "artist": "Margaret Berger",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "It's My Life",
+      "artist": "Cezar",
+      "spotifyTrackId": "",
+      "country": "Romania",
+      "place": 13,
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Hold Me",
+      "artist": "Farid Mammadov",
+      "spotifyTrackId": "",
+      "country": "Azerbaijan",
+      "place": 2,
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Gravity",
+      "artist": "Zlata Ognevich",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 3,
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Birds",
+      "artist": "Anouk",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 9,
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Kedvesem",
+      "artist": "ByeAlex",
+      "spotifyTrackId": "",
+      "country": "Hungary",
+      "place": 10,
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Rise Like a Phoenix",
+      "artist": "Conchita Wurst",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Is It Right",
+      "artist": "Elaiza",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 18,
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Calm After the Storm",
+      "artist": "The Common Linnets",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Undo",
+      "artist": "Sanna Nielsen",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "No Prejudice",
+      "artist": "Pollapönk",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 15,
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Cliché Love Song",
+      "artist": "Basim",
+      "spotifyTrackId": "",
+      "country": "Denmark",
+      "place": 9,
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Shine",
+      "artist": "Tolmachevy Sisters",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Not Alone",
+      "artist": "Aram MP3",
+      "spotifyTrackId": "",
+      "country": "Armenia",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Dancing in the Rain",
+      "artist": "Ruth Lorenzo",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 10,
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Moustache",
+      "artist": "Twin Twin",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 26,
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Heroes",
+      "artist": "Måns Zelmerlöw",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Black Smoke",
+      "artist": "Ann Sophie",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 27,
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Grande amore",
+      "artist": "Il Volo",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "A Million Voices",
+      "artist": "Polina Gagarina",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Rhythm Inside",
+      "artist": "Loïc Nottet",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Tonight Again",
+      "artist": "Guy Sebastian",
+      "spotifyTrackId": "",
+      "country": "Australia",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "I Am Yours",
+      "artist": "The Makemakes",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 26,
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Still in Love with You",
+      "artist": "Electro Velvet",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 24,
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "A Monster Like Me",
+      "artist": "Mørland & Debrah Scarlett",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 8,
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Warrior",
+      "artist": "Nina Sublatti",
+      "spotifyTrackId": "",
+      "country": "Georgia",
+      "place": 11,
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "1944",
+      "artist": "Jamala",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Ghost",
+      "artist": "Jamie-Lee",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 26,
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Sound of Silence",
+      "artist": "Dami Im",
+      "spotifyTrackId": "",
+      "country": "Australia",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "You Are the Only One",
+      "artist": "Sergey Lazarev",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "If I Were Sorry",
+      "artist": "Frans",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "If Love Was a Crime",
+      "artist": "Poli Genova",
+      "spotifyTrackId": "",
+      "country": "Bulgaria",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "No Degree of Separation",
+      "artist": "Francesca Michielin",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 16,
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Slow Down",
+      "artist": "Douwe Bob",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 11,
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "You're Not Alone",
+      "artist": "Joe and Jake",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 24,
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Walk on Water",
+      "artist": "Ira Losco",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 12,
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Amar pelos dois",
+      "artist": "Salvador Sobral",
+      "spotifyTrackId": "",
+      "country": "Portugal",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Perfect Life",
+      "artist": "Levina",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 25,
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Occidentali's Karma",
+      "artist": "Francesco Gabbani",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Hey Mamma",
+      "artist": "Sunstroke Project",
+      "spotifyTrackId": "",
+      "country": "Moldova",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "City Lights",
+      "artist": "Blanche",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Beautiful Mess",
+      "artist": "Kristian Kostov",
+      "spotifyTrackId": "",
+      "country": "Bulgaria",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Yodel It!",
+      "artist": "Ilinca & Alex Florea",
+      "spotifyTrackId": "",
+      "country": "Romania",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "My Friend",
+      "artist": "Jacques Houdek",
+      "spotifyTrackId": "",
+      "country": "Croatia",
+      "place": 13,
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "I Can't Go On",
+      "artist": "Robin Bengtsson",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 5,
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Do It for Your Lover",
+      "artist": "Manel Navarro",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 26,
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Toy",
+      "artist": "Netta",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "You Let Me Walk Alone",
+      "artist": "Michael Schulte",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Fuego",
+      "artist": "Eleni Foureira",
+      "spotifyTrackId": "",
+      "country": "Cyprus",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "That's How You Write a Song",
+      "artist": "Alexander Rybak",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 15,
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Nobody but You",
+      "artist": "Cesár Sampson",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Lie to Me",
+      "artist": "Mikolas Josef",
+      "spotifyTrackId": "",
+      "country": "Czech Republic",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Dance You Off",
+      "artist": "Benjamin Ingrosso",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Storm",
+      "artist": "SuRie",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 24,
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Monsters",
+      "artist": "Saara Aalto",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 25,
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Non mi avete fatto niente",
+      "artist": "Ermal Meta & Fabrizio Moro",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 5,
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Arcade",
+      "artist": "Duncan Laurence",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Sister",
+      "artist": "S!sters",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 25,
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Soldi",
+      "artist": "Mahmood",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Hatrið mun sigra",
+      "artist": "Hatari",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 10,
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "She Got Me",
+      "artist": "Luca Hänni",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Spirit in the Sky",
+      "artist": "KEiiNO",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Scream",
+      "artist": "Sergey Lazarev",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "place": 3,
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Too Late for Love",
+      "artist": "John Lundvik",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 5,
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Bigger Than Us",
+      "artist": "Michael Rice",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 26,
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Roi",
+      "artist": "Bilal Hassani",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 16,
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Uno",
+      "artist": "Little Big",
+      "spotifyTrackId": "",
+      "country": "Russia",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Violent Thing",
+      "artist": "Ben Dolic",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Think About Things",
+      "artist": "Daði Freyr",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Fai rumore",
+      "artist": "Diodato",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "On Fire",
+      "artist": "The Roop",
+      "spotifyTrackId": "",
+      "country": "Lithuania",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Release Me",
+      "artist": "Hooverphonic",
+      "spotifyTrackId": "",
+      "country": "Belgium",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Cleopatra",
+      "artist": "Efendi",
+      "spotifyTrackId": "",
+      "country": "Azerbaijan",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Répondez-moi",
+      "artist": "Gjon's Tears",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Tears Getting Sober",
+      "artist": "Victoria",
+      "spotifyTrackId": "",
+      "country": "Bulgaria",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "All of My Love",
+      "artist": "Destiny",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Zitti e buoni",
+      "artist": "Måneskin",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "I Don't Feel Hate",
+      "artist": "Jendrik",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 25,
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Voilà",
+      "artist": "Barbara Pravi",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Tout l'univers",
+      "artist": "Gjon's Tears",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "10 Years",
+      "artist": "Daði og Gagnamagnið",
+      "spotifyTrackId": "",
+      "country": "Iceland",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Shum",
+      "artist": "Go_A",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Discoteque",
+      "artist": "The Roop",
+      "spotifyTrackId": "",
+      "country": "Lithuania",
+      "place": 8,
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Dark Side",
+      "artist": "Blind Channel",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 6,
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Embers",
+      "artist": "James Newman",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 26,
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Je me casse",
+      "artist": "Destiny",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Stefania",
+      "artist": "Kalush Orchestra",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Rockstars",
+      "artist": "Malik Harris",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 25,
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Space Man",
+      "artist": "Sam Ryder",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "SloMo",
+      "artist": "Chanel",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Snap",
+      "artist": "Rosa Linn",
+      "spotifyTrackId": "",
+      "country": "Armenia",
+      "place": 20,
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Give That Wolf a Banana",
+      "artist": "Subwoolfer",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 10,
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Hold Me Closer",
+      "artist": "Cornelia Jakobs",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Brividi",
+      "artist": "Mahmood & Blanco",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 6,
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "In corpore sano",
+      "artist": "Konstrakta",
+      "spotifyTrackId": "",
+      "country": "Serbia",
+      "place": 5,
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "De diepte",
+      "artist": "S10",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 11,
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Tattoo",
+      "artist": "Loreen",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Blood & Glitter",
+      "artist": "Lord of the Lost",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 26,
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Cha Cha Cha",
+      "artist": "Käärijä",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Unicorn",
+      "artist": "Noa Kirel",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Queen of Kings",
+      "artist": "Alessandra",
+      "spotifyTrackId": "",
+      "country": "Norway",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Mama ŠČ!",
+      "artist": "Let 3",
+      "spotifyTrackId": "",
+      "country": "Croatia",
+      "place": 13,
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Due vite",
+      "artist": "Marco Mengoni",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "I Wrote a Song",
+      "artist": "Mae Muller",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 25,
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Évidemment",
+      "artist": "La Zarra",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 16,
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Heart of Steel",
+      "artist": "Tvorchi",
+      "spotifyTrackId": "",
+      "country": "Ukraine",
+      "place": 6,
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "The Code",
+      "artist": "Nemo",
+      "spotifyTrackId": "",
+      "country": "Switzerland",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Always on the Run",
+      "artist": "Isaak",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 12,
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Rim Tim Tagi Dim",
+      "artist": "Baby Lasagna",
+      "spotifyTrackId": "",
+      "country": "Croatia",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Europapa",
+      "artist": "Joost Klein",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "La noia",
+      "artist": "Angelina Mango",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 7,
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "No Rules!",
+      "artist": "Windows95man",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 19,
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Doomsday Blue",
+      "artist": "Bambie Thug",
+      "spotifyTrackId": "",
+      "country": "Ireland",
+      "place": 6,
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Mon amour",
+      "artist": "Slimane",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Dizzy",
+      "artist": "Olly Alexander",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 18,
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Zorra",
+      "artist": "Nebulossa",
+      "spotifyTrackId": "",
+      "country": "Spain",
+      "place": 22,
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Wasted Love",
+      "artist": "JJ",
+      "spotifyTrackId": "",
+      "country": "Austria",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Baller",
+      "artist": "Abor & Tynna",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 15,
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Bara bada bastu",
+      "artist": "KAJ",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 4,
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Espresso Macchiato",
+      "artist": "Tommy Cash",
+      "spotifyTrackId": "",
+      "country": "Estonia",
+      "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "New Day Will Rise",
+      "artist": "Yuval Raphael",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Ich komme",
+      "artist": "Erika Vikman",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 11,
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "maman",
+      "artist": "Louane",
+      "spotifyTrackId": "",
+      "country": "France",
+      "place": 7,
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Volevo essere un duro",
+      "artist": "Lucio Corsi",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 5,
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "C'est la vie",
+      "artist": "Claude",
+      "spotifyTrackId": "",
+      "country": "Netherlands",
+      "place": 12,
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Serving",
+      "artist": "Miriana Conte",
+      "spotifyTrackId": "",
+      "country": "Malta",
+      "place": 17,
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Bangaranga",
+      "artist": "Dara",
+      "spotifyTrackId": "",
+      "country": "Bulgaria",
+      "place": 1,
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Fire",
+      "artist": "Sarah Engels",
+      "spotifyTrackId": "",
+      "country": "Germany",
+      "place": 23,
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Per sempre sì",
+      "artist": "Sal Da Vinci",
+      "spotifyTrackId": "",
+      "country": "Italy",
+      "place": 5,
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "My System",
+      "artist": "Felicia",
+      "spotifyTrackId": "",
+      "country": "Sweden",
+      "place": 20,
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Liekinheitin",
+      "artist": "Linda Lampenius & Pete Parkkonen",
+      "spotifyTrackId": "",
+      "country": "Finland",
+      "place": 6,
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Michelle",
+      "artist": "Noam Bettan",
+      "spotifyTrackId": "",
+      "country": "Israel",
+      "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Choke Me",
+      "artist": "Alexandra Căpitănescu",
+      "spotifyTrackId": "",
+      "country": "Romania",
+      "place": 3,
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Eclipse",
+      "artist": "Delta Goodrem",
+      "spotifyTrackId": "",
+      "country": "Australia",
+      "place": 4,
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Jalla",
+      "artist": "Antigoni",
+      "spotifyTrackId": "",
+      "country": "Cyprus",
+      "place": 19,
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Eins, Zwei, Drei",
+      "artist": "Look Mum No Computer",
+      "spotifyTrackId": "",
+      "country": "United Kingdom",
+      "place": 25,
+      "tier": 2
+    }
+  ]
+}
