@@ -4,6 +4,18 @@ Music guessing game with QR cards. `README.md` has the flow, the data formats
 and the web specifics; this file holds the decisions that cannot be read off
 the code or the data.
 
+## Work on `main`
+
+Commit straight to `main` and push. No branch, no pull request, no waiting
+for a review that nobody is going to give - this is a one person repo, and
+a PR here only adds a click between a finished change and the deployed
+page. The history up to #4 was branched that way; from here it is not.
+
+That does not loosen what has to be true before a commit: `flutter test`
+green, and a data change verified against the file it came from rather
+than assumed. Pushing to `main` deploys, so the check happens before the
+push instead of in a review after it.
+
 ## How many songs a contest year gets
 
 `assets/songs/esc.json`. The size of a year is a curation rule, not something
