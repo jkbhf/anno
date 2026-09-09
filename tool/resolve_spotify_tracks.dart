@@ -4,6 +4,14 @@
 //   export SPOTIFY_CLIENT_SECRET=...
 //   dart run tool/resolve_spotify_tracks.dart [assets/songs/esc.json ...]
 //   dart run tool/resolve_spotify_tracks.dart --recheck [files...]
+//   dart run tool/resolve_spotify_tracks.dart --recheck --only=1971,Chai
+//
+// Spotify's budget for an app in development mode is small and the penalty is
+// a lockout of a day, so a run asks for as little as it can: --only narrows it
+// to the entries whose year, title or artist contains one of the given terms,
+// and every track that was ever read is kept in .spotify-cache.json next to
+// the catalogs, so a second recheck costs nothing. --refresh ignores the
+// cache.
 //
 // Uses the client credentials flow: that is enough for the search and needs no
 // logged in user. Songs that already carry an id are left alone, unless
@@ -33,6 +41,46 @@ const requestGap = Duration(milliseconds: 350);
 /// `400 Invalid limit` - the documented maximum of 50 is not what an app in
 /// development mode gets, and asking for it fails every single search.
 const searchLimit = 10;
+
+/// Track metadata that was read once, so a rerun does not pay for it again.
+///
+/// A recheck over a whole catalog is 400 requests, and running it twice in an
+/// afternoon is what bought the last lockout. Track data does not change, so
+/// the second run reads this file instead of Spotify.
+class TrackCache {
+  TrackCache(this.file, this._tracks, {this.refresh = false});
+
+  static Future<TrackCache> open(Directory dir, {bool refresh = false}) async {
+    final file = File('${dir.path}/.spotify-cache.json');
+    if (!refresh && file.existsSync()) {
+      try {
+        final body = jsonDecode(await file.readAsString());
+        return TrackCache(
+          file,
+          (body as Map<String, dynamic>).cast<String, dynamic>(),
+          refresh: refresh,
+        );
+      } on FormatException {
+        stderr.writeln('Cache unreadable, starting over: ${file.path}');
+      }
+    }
+    return TrackCache(file, <String, dynamic>{}, refresh: refresh);
+  }
+
+  final File file;
+  final Map<String, dynamic> _tracks;
+  final bool refresh;
+
+  bool has(String id) => !refresh && _tracks.containsKey(id);
+
+  /// The cached track, or null when the id is known to point at nothing.
+  Map<String, dynamic>? get(String id) =>
+      (_tracks[id] as Map<String, dynamic>?);
+
+  void put(String id, Map<String, dynamic>? track) => _tracks[id] = track;
+
+  Future<void> save() async => file.writeAsString(jsonEncode(_tracks));
+}
 
 /// Album or track names that mean this is not the recording of the entry.
 const notTheSong = [
@@ -93,8 +141,12 @@ Future<String> fetchToken(String id, String secret) async {
   return jsonDecode(response.body)['access_token'] as String;
 }
 
+/// How many requests this run has spent, for the line at the end.
+var requestCount = 0;
+
 Future<Map<String, dynamic>> _api(String token, String path) async {
   await Future<void>.delayed(requestGap);
+  requestCount++;
   final response = await http.get(
     Uri.parse('https://api.spotify.com/v1$path'),
     headers: {'Authorization': 'Bearer $token'},
@@ -301,9 +353,15 @@ String? cannotStay(Map<String, dynamic> song, Map<String, dynamic>? track) {
 /// Reads every id in the catalogs back, clears the ones that point at another
 /// song and reports the ones that only look odd. The next plain run fills the
 /// cleared entries in again - or, where Spotify has nothing, they get swapped.
-Future<int> recheck(String token, List<File> files) async {
+Future<int> recheck(
+  String token,
+  List<File> files,
+  TrackCache cache,
+  bool Function(Map<String, dynamic>) wanted,
+) async {
   var cleared = 0;
   final review = <String>[];
+  RateLimited? locked;
 
   for (final file in files) {
     final catalog =
@@ -314,13 +372,22 @@ Future<int> recheck(String token, List<File> files) async {
     for (final song in songs) {
       final id = song['spotifyTrackId'];
       if (id is! String || id.isEmpty) continue;
+      if (!wanted(song)) continue;
 
       final Map<String, dynamic>? track;
       try {
-        track = await fetchTrack(token, id);
-      } on RateLimited {
-        if (changed) await _write(file, catalog);
-        rethrow;
+        if (cache.has(id)) {
+          track = cache.get(id);
+        } else {
+          track = await fetchTrack(token, id);
+          cache.put(id, track);
+        }
+      } on RateLimited catch (error) {
+        // One entry that has to be fetched must not end a pass that the cache
+        // could have carried the rest of the way. Note it and read on.
+        locked ??= error;
+        review.add('${catalog['id']} · ${song['title']}: not read, $error');
+        continue;
       } on RequestFailed catch (error) {
         // Unknown, not wrong: leave the id where it is and say so.
         review.add('${catalog['id']} · ${song['title']}: $error');
@@ -348,11 +415,16 @@ Future<int> recheck(String token, List<File> files) async {
     if (changed) await _write(file, catalog);
   }
 
+  await cache.save();
+
   if (review.isNotEmpty) {
     stdout.writeln('\nSame title, another name - check by hand:');
     for (final line in review) {
       stdout.writeln('  $line');
     }
+  }
+  if (locked != null) {
+    stderr.writeln('\n$locked');
   }
 
   return cleared;
@@ -364,6 +436,22 @@ Future<void> main(List<String> args) async {
   if (id == null || secret == null) {
     stderr.writeln('Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.');
     exit(1);
+  }
+
+  final only = args
+      .firstWhere((arg) => arg.startsWith('--only='), orElse: () => '')
+      .replaceFirst('--only=', '')
+      .split(',')
+      .map((term) => term.trim().toLowerCase())
+      .where((term) => term.isNotEmpty)
+      .toList();
+
+  /// Which entries this run is allowed to spend requests on.
+  bool wanted(Map<String, dynamic> song) {
+    if (only.isEmpty) return true;
+    final haystack = '${song['year']} ${song['title']} ${song['artist']}'
+        .toLowerCase();
+    return only.any(haystack.contains);
   }
 
   final paths = args.where((arg) => !arg.startsWith('--')).toList();
@@ -378,9 +466,14 @@ Future<void> main(List<String> args) async {
   final token = await fetchToken(id, secret);
 
   try {
+    final cache = await TrackCache.open(
+      files.first.parent,
+      refresh: args.contains('--refresh'),
+    );
+
     if (args.contains('--recheck')) {
-      final cleared = await recheck(token, files);
-      stdout.writeln('$cleared ids cleared.');
+      final cleared = await recheck(token, files, cache, wanted);
+      stdout.writeln('$cleared ids cleared, $requestCount requests spent.');
       return;
     }
 
@@ -398,6 +491,7 @@ Future<void> main(List<String> args) async {
       for (final song in songs) {
         final existing = song['spotifyTrackId'];
         if (existing is String && existing.isNotEmpty) continue;
+        if (!wanted(song)) continue;
 
         final title = song['title'] as String;
         final artist = song['artist'] as String;
@@ -441,7 +535,10 @@ Future<void> main(List<String> args) async {
       if (changed) await _write(file, catalog);
     }
 
-    stdout.writeln('$resolved track ids added, ${swap.length} without a song.');
+    stdout.writeln(
+      '$resolved track ids added, ${swap.length} without a song, '
+      '$requestCount requests spent.',
+    );
     if (swap.isNotEmpty) {
       stdout.writeln(
         '\nNot on Spotify - swap each for another entry of the same year '

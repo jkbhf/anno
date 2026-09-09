@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Track metadata the resolver has already read (tool/resolve_spotify_tracks.dart)
+assets/songs/.spotify-cache.json
