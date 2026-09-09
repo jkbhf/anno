@@ -3800,8 +3800,22 @@
     },
     {
       "year": 2025,
+      "title": "Tau mich auf",
+      "artist": "Zartmann",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 2025,
       "title": "Wackelkontakt",
       "artist": "Oimara",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Wunder",
+      "artist": "Ayliva & Apache 207",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -3831,14 +3845,14 @@
       "title": "Shabab(e)s im VIP",
       "artist": "Pashanim & Ceren",
       "spotifyTrackId": "",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 2025,
       "title": "Wenn das Liebe ist",
       "artist": "Nina Chuba",
       "spotifyTrackId": "",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 2025,
@@ -3855,23 +3869,9 @@
       "tier": 2
     },
     {
-      "year": 2025,
-      "title": "Capri Sun",
-      "artist": "Aymen & Amo",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
-      "year": 2025,
-      "title": "Mona Lisa Motion",
-      "artist": "Zah1de",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
       "year": 2026,
-      "title": "Tau mich auf",
-      "artist": "Zartmann",
+      "title": "LDNB",
+      "artist": "AK Ausserkontrolle & Shirin David",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -3891,8 +3891,8 @@
     },
     {
       "year": 2026,
-      "title": "Wunder",
-      "artist": "Ayliva & Apache 207",
+      "title": "Killy Manjaro",
+      "artist": "Summer Cem & Billa Joe",
       "spotifyTrackId": "",
       "tier": 1
     },
