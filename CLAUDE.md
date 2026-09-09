@@ -182,6 +182,16 @@ out on its own. Leave it at that rather than forcing them in.
 single summer - Anton aus Tirol 1999, Layla 2022. The deliberately dated
 production does no harm; the room places the summer, not the sound.
 
+**The chart year beats the quota.** The table above is what a year gets while
+it is being filled, not a promise about the file. When a song turns out to
+have been a hit in another year than the one it sits on, it moves, and the
+year it leaves stays one short rather than pulling in a replacement - a card
+invented to keep a count is worse than a thin year, and every year still holds
+at least six. That is why 1990-2024 is uneven: it was derived from the
+year-end charts entry by entry, and the charts do not care about the table.
+The floor that does matter is one entry per year, because an empty year is a
+dead round.
+
 **The resolver needs German words before it runs over this deck.** `notTheSong`
 in `tool/resolve_spotify_tracks.dart` is English only (`karaoke`, `tribute`,
 `made famous by`), and the Schlager corner of Spotify announces the same thing

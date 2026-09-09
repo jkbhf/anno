@@ -6,6 +6,13 @@
   "songs": [
     {
       "year": 1950,
+      "title": "Der Theodor im Fußballtor",
+      "artist": "Theo Lingen",
+      "spotifyTrackId": "0BmjiGCi9dGgSdY3p9OI0o",
+      "tier": 1
+    },
+    {
+      "year": 1950,
       "title": "Wenn bei Capri die rote Sonne im Meer versinkt",
       "artist": "Rudi Schuricke",
       "spotifyTrackId": "",
@@ -19,10 +26,10 @@
       "tier": 1
     },
     {
-      "year": 1950,
-      "title": "Der Theodor im Fußballtor",
-      "artist": "Theo Lingen",
-      "spotifyTrackId": "0BmjiGCi9dGgSdY3p9OI0o",
+      "year": 1951,
+      "title": "Auf der Reeperbahn nachts um halb eins",
+      "artist": "Hans Albers",
+      "spotifyTrackId": "1FJVDTQQ45yLTfyqQVuCVc",
       "tier": 1
     },
     {
@@ -40,13 +47,6 @@
       "tier": 1
     },
     {
-      "year": 1951,
-      "title": "Auf der Reeperbahn nachts um halb eins",
-      "artist": "Hans Albers",
-      "spotifyTrackId": "1FJVDTQQ45yLTfyqQVuCVc",
-      "tier": 1
-    },
-    {
       "year": 1952,
       "title": "Das machen nur die Beine von Dolores",
       "artist": "Peter Alexander",
@@ -55,15 +55,15 @@
     },
     {
       "year": 1952,
-      "title": "Grün ist die Heide",
-      "artist": "Kurt Reimann",
+      "title": "Der Onkel Doktor hat gesagt",
+      "artist": "Bully Buhlan",
       "spotifyTrackId": "",
       "tier": 1
     },
     {
       "year": 1952,
-      "title": "Der Onkel Doktor hat gesagt",
-      "artist": "Bully Buhlan",
+      "title": "Grün ist die Heide",
+      "artist": "Kurt Reimann",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -90,6 +90,13 @@
     },
     {
       "year": 1954,
+      "title": "Bella Bimba",
+      "artist": "Bibi Johns",
+      "spotifyTrackId": "57UGXIvEQ27z7sflFjkX1V",
+      "tier": 1
+    },
+    {
+      "year": 1954,
       "title": "Ganz Paris träumt von der Liebe",
       "artist": "Caterina Valente",
       "spotifyTrackId": "0Q7FgdMZqsxgTl10w6uCi8",
@@ -100,13 +107,6 @@
       "title": "Heimatlos",
       "artist": "Freddy Quinn",
       "spotifyTrackId": "7j4zUEqtwj2y7wrOaWTiso",
-      "tier": 1
-    },
-    {
-      "year": 1954,
-      "title": "Bella Bimba",
-      "artist": "Bibi Johns",
-      "spotifyTrackId": "57UGXIvEQ27z7sflFjkX1V",
       "tier": 1
     },
     {
@@ -132,6 +132,13 @@
     },
     {
       "year": 1956,
+      "title": "Die süßesten Früchte",
+      "artist": "Peter Alexander",
+      "spotifyTrackId": "7b7N9vp2yCM3PvvEZe2oKp",
+      "tier": 1
+    },
+    {
+      "year": 1956,
       "title": "Heimweh",
       "artist": "Freddy Quinn",
       "spotifyTrackId": "5uyUubDkDtRqy3ixXMmTIL",
@@ -142,13 +149,6 @@
       "title": "Tiritomba",
       "artist": "Margot Eskens",
       "spotifyTrackId": "1LQhc7ajrWBJRY6K0QXBp8",
-      "tier": 1
-    },
-    {
-      "year": 1956,
-      "title": "Die süßesten Früchte",
-      "artist": "Peter Alexander",
-      "spotifyTrackId": "7b7N9vp2yCM3PvvEZe2oKp",
       "tier": 1
     },
     {
@@ -174,6 +174,13 @@
     },
     {
       "year": 1958,
+      "title": "Melodie der Nacht",
+      "artist": "Caterina Valente",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 1958,
       "title": "Sugar Baby",
       "artist": "Peter Kraus",
       "spotifyTrackId": "5dpPqhAFNRumwHqqhbZBxl",
@@ -187,10 +194,10 @@
       "tier": 1
     },
     {
-      "year": 1958,
-      "title": "Melodie der Nacht",
-      "artist": "Caterina Valente",
-      "spotifyTrackId": "",
+      "year": 1959,
+      "title": "Am Tag, als der Regen kam",
+      "artist": "Dalida",
+      "spotifyTrackId": "2NFgt9Mq8KMIaOl8Td2xPG",
       "tier": 1
     },
     {
@@ -209,9 +216,9 @@
     },
     {
       "year": 1959,
-      "title": "Am Tag, als der Regen kam",
-      "artist": "Dalida",
-      "spotifyTrackId": "2NFgt9Mq8KMIaOl8Td2xPG",
+      "title": "Mandolinen und Mondschein",
+      "artist": "Peter Alexander",
+      "spotifyTrackId": "6J7WNQLEFF4YpbecGYXXnL",
       "tier": 1
     },
     {
@@ -222,17 +229,10 @@
       "tier": 1
     },
     {
-      "year": 1959,
-      "title": "Mandolinen und Mondschein",
-      "artist": "Peter Alexander",
-      "spotifyTrackId": "6J7WNQLEFF4YpbecGYXXnL",
-      "tier": 1
-    },
-    {
       "year": 1960,
-      "title": "Seemann (Deine Heimat ist das Meer)",
-      "artist": "Lolita",
-      "spotifyTrackId": "0yENugv2EXE1wVU9gcqKdq",
+      "title": "Ein Schiff wird kommen",
+      "artist": "Lale Andersen",
+      "spotifyTrackId": "4jllSZTfLEJDqvwYv6Crrk",
       "tier": 1
     },
     {
@@ -251,16 +251,16 @@
     },
     {
       "year": 1960,
-      "title": "Wir wollen niemals auseinandergehn",
-      "artist": "Heidi Brühl",
-      "spotifyTrackId": "6A0ETDX1x56Hq7USIBk8U8",
+      "title": "Seemann (Deine Heimat ist das Meer)",
+      "artist": "Lolita",
+      "spotifyTrackId": "0yENugv2EXE1wVU9gcqKdq",
       "tier": 1
     },
     {
       "year": 1960,
-      "title": "Ein Schiff wird kommen",
-      "artist": "Lale Andersen",
-      "spotifyTrackId": "4jllSZTfLEJDqvwYv6Crrk",
+      "title": "Wir wollen niemals auseinandergehn",
+      "artist": "Heidi Brühl",
+      "spotifyTrackId": "6A0ETDX1x56Hq7USIBk8U8",
       "tier": 1
     },
     {
@@ -268,6 +268,13 @@
       "title": "La Paloma",
       "artist": "Freddy Quinn",
       "spotifyTrackId": "4Rl9e7CD7Gj7cfTWRS2HIr",
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Schwarze Rose Rosemarie",
+      "artist": "Peter Kraus",
+      "spotifyTrackId": "7bO8DWdKgTOKdcU8W74zgW",
       "tier": 1
     },
     {
@@ -286,13 +293,6 @@
     },
     {
       "year": 1961,
-      "title": "Schwarze Rose Rosemarie",
-      "artist": "Peter Kraus",
-      "spotifyTrackId": "7bO8DWdKgTOKdcU8W74zgW",
-      "tier": 1
-    },
-    {
-      "year": 1961,
       "title": "Zuckerpuppe",
       "artist": "Bill Ramsey",
       "spotifyTrackId": "6LS2Di4Qf8hBUPxk5HZFgo",
@@ -300,23 +300,9 @@
     },
     {
       "year": 1962,
-      "title": "Zwei kleine Italiener",
-      "artist": "Conny Froboess",
-      "spotifyTrackId": "2v3TG35plidR486Cltpgxs",
-      "tier": 1
-    },
-    {
-      "year": 1962,
       "title": "Junge, komm bald wieder",
       "artist": "Freddy Quinn",
       "spotifyTrackId": "",
-      "tier": 1
-    },
-    {
-      "year": 1962,
-      "title": "Tanze mit mir in den Morgen",
-      "artist": "Gerhard Wendland",
-      "spotifyTrackId": "4FxMgmacxBKE6vXI38jHBl",
       "tier": 1
     },
     {
@@ -334,24 +320,17 @@
       "tier": 1
     },
     {
-      "year": 1963,
-      "title": "Ich will 'nen Cowboy als Mann",
-      "artist": "Gitte Hænning",
-      "spotifyTrackId": "6fsTEzoIeqlkydroKJqQAc",
+      "year": 1962,
+      "title": "Tanze mit mir in den Morgen",
+      "artist": "Gerhard Wendland",
+      "spotifyTrackId": "4FxMgmacxBKE6vXI38jHBl",
       "tier": 1
     },
     {
-      "year": 1963,
-      "title": "Ich kauf mir lieber einen Tirolerhut",
-      "artist": "Billy Mo",
-      "spotifyTrackId": "1v207ZF2NQmkp1bp6ehphg",
-      "tier": 1
-    },
-    {
-      "year": 1963,
-      "title": "Schuld war nur der Bossa Nova",
-      "artist": "Manuela",
-      "spotifyTrackId": "1CvxZLhcpg33Wk892MJRUC",
+      "year": 1962,
+      "title": "Zwei kleine Italiener",
+      "artist": "Conny Froboess",
+      "spotifyTrackId": "2v3TG35plidR486Cltpgxs",
       "tier": 1
     },
     {
@@ -363,6 +342,27 @@
     },
     {
       "year": 1963,
+      "title": "Ich kauf mir lieber einen Tirolerhut",
+      "artist": "Billy Mo",
+      "spotifyTrackId": "1v207ZF2NQmkp1bp6ehphg",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Ich will 'nen Cowboy als Mann",
+      "artist": "Gitte Hænning",
+      "spotifyTrackId": "6fsTEzoIeqlkydroKJqQAc",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Schuld war nur der Bossa Nova",
+      "artist": "Manuela",
+      "spotifyTrackId": "1CvxZLhcpg33Wk892MJRUC",
+      "tier": 1
+    },
+    {
+      "year": 1963,
       "title": "Vom Stadtpark die Laternen",
       "artist": "Rex Gildo",
       "spotifyTrackId": "5m6dxTgxFjbZfCrnI2mwW8",
@@ -370,9 +370,9 @@
     },
     {
       "year": 1964,
-      "title": "Liebeskummer lohnt sich nicht",
-      "artist": "Siw Malmkvist",
-      "spotifyTrackId": "5wfSJoeeGeyovIOYHyqi2O",
+      "title": "Das ist die Frage aller Fragen",
+      "artist": "Manuela",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -384,13 +384,6 @@
     },
     {
       "year": 1964,
-      "title": "Sag mir, wo die Blumen sind",
-      "artist": "Marlene Dietrich",
-      "spotifyTrackId": "6Fhnh8rmzLcfpOmq7xa0Qr",
-      "tier": 1
-    },
-    {
-      "year": 1964,
       "title": "Ich möchte der Knopf an deiner Bluse sein",
       "artist": "Bill Ramsey",
       "spotifyTrackId": "",
@@ -398,8 +391,29 @@
     },
     {
       "year": 1964,
-      "title": "Das ist die Frage aller Fragen",
-      "artist": "Manuela",
+      "title": "Liebeskummer lohnt sich nicht",
+      "artist": "Siw Malmkvist",
+      "spotifyTrackId": "5wfSJoeeGeyovIOYHyqi2O",
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "Sag mir, wo die Blumen sind",
+      "artist": "Marlene Dietrich",
+      "spotifyTrackId": "6Fhnh8rmzLcfpOmq7xa0Qr",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "17 Jahr, blondes Haar",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "16bKwCv4I2ru13HDdliO5h",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Bleib bei mir",
+      "artist": "Rex Gildo",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -412,9 +426,9 @@
     },
     {
       "year": 1965,
-      "title": "17 Jahr, blondes Haar",
-      "artist": "Udo Jürgens",
-      "spotifyTrackId": "16bKwCv4I2ru13HDdliO5h",
+      "title": "Memories of Heidelberg",
+      "artist": "Peggy March",
+      "spotifyTrackId": "5wRvrooISLxBAhcItGwhAf",
       "tier": 1
     },
     {
@@ -425,16 +439,9 @@
       "tier": 1
     },
     {
-      "year": 1965,
-      "title": "Memories of Heidelberg",
-      "artist": "Peggy March",
-      "spotifyTrackId": "5wRvrooISLxBAhcItGwhAf",
-      "tier": 1
-    },
-    {
-      "year": 1965,
-      "title": "Bleib bei mir",
-      "artist": "Rex Gildo",
+      "year": 1966,
+      "title": "Frag den Abendwind",
+      "artist": "Ronny",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -454,13 +461,6 @@
     },
     {
       "year": 1966,
-      "title": "Monja",
-      "artist": "Roland W.",
-      "spotifyTrackId": "6XE5jOSS0EXjAGNLOmjCXC",
-      "tier": 1
-    },
-    {
-      "year": 1966,
       "title": "Mit 17 hat man noch Träume",
       "artist": "Peggy March",
       "spotifyTrackId": "17V9Hldsed4MOv9uhPu2lz",
@@ -468,16 +468,9 @@
     },
     {
       "year": 1966,
-      "title": "Frag den Abendwind",
-      "artist": "Ronny",
-      "spotifyTrackId": "",
-      "tier": 1
-    },
-    {
-      "year": 1967,
-      "title": "Du bist nicht allein",
-      "artist": "Roy Black",
-      "spotifyTrackId": "2ukIzpSbG2dZorsz9rOu5p",
+      "title": "Monja",
+      "artist": "Roland W.",
+      "spotifyTrackId": "6XE5jOSS0EXjAGNLOmjCXC",
       "tier": 1
     },
     {
@@ -485,6 +478,13 @@
       "title": "Der letzte Walzer",
       "artist": "Peter Alexander",
       "spotifyTrackId": "74CGZLcorfbOjMi02pz6xm",
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "Du bist nicht allein",
+      "artist": "Roy Black",
+      "spotifyTrackId": "2ukIzpSbG2dZorsz9rOu5p",
       "tier": 1
     },
     {
@@ -510,9 +510,16 @@
     },
     {
       "year": 1968,
-      "title": "Mama",
-      "artist": "Heintje",
-      "spotifyTrackId": "27WUGJFJngruacvu2JmHAF",
+      "title": "Anuschka",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "1qWXpeHe1qN2BMgFNRuf1W",
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "Das Mädchen Carina",
+      "artist": "Roy Black",
+      "spotifyTrackId": "3lr9IYIhu90YYJKuqBC6f3",
       "tier": 1
     },
     {
@@ -524,13 +531,6 @@
     },
     {
       "year": 1968,
-      "title": "Anuschka",
-      "artist": "Udo Jürgens",
-      "spotifyTrackId": "1qWXpeHe1qN2BMgFNRuf1W",
-      "tier": 1
-    },
-    {
-      "year": 1968,
       "title": "Harlekin",
       "artist": "Peter Alexander",
       "spotifyTrackId": "",
@@ -538,9 +538,16 @@
     },
     {
       "year": 1968,
-      "title": "Das Mädchen Carina",
+      "title": "Mama",
+      "artist": "Heintje",
+      "spotifyTrackId": "27WUGJFJngruacvu2JmHAF",
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Aber dich gibt's nur einmal für mich",
       "artist": "Roy Black",
-      "spotifyTrackId": "3lr9IYIhu90YYJKuqBC6f3",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -559,9 +566,9 @@
     },
     {
       "year": 1969,
-      "title": "Aber dich gibt's nur einmal für mich",
-      "artist": "Roy Black",
-      "spotifyTrackId": "",
+      "title": "Ich sing ein Lied für dich",
+      "artist": "Heintje",
+      "spotifyTrackId": "7v0HvcmEjornHiIxGJLm8r",
       "tier": 1
     },
     {
@@ -572,17 +579,10 @@
       "tier": 1
     },
     {
-      "year": 1969,
-      "title": "Ich sing ein Lied für dich",
-      "artist": "Heintje",
-      "spotifyTrackId": "7v0HvcmEjornHiIxGJLm8r",
-      "tier": 1
-    },
-    {
       "year": 1970,
-      "title": "Mendocino",
+      "title": "Barfuß im Regen",
       "artist": "Michael Holm",
-      "spotifyTrackId": "7lBO5RpWhr6yPUwWkXHsWf",
+      "spotifyTrackId": "3CXuSSQsRpKjmn9iFymyuq",
       "tier": 1
     },
     {
@@ -594,13 +594,6 @@
     },
     {
       "year": 1970,
-      "title": "Wunder gibt es immer wieder",
-      "artist": "Katja Ebstein",
-      "spotifyTrackId": "3BKrmS7x99qM9zVPTf0Lu2",
-      "tier": 1
-    },
-    {
-      "year": 1970,
       "title": "Er hat ein knallrotes Gummiboot",
       "artist": "Wencke Myhre",
       "spotifyTrackId": "1ewNSEjaSpjLQTgfk1JaZG",
@@ -608,30 +601,16 @@
     },
     {
       "year": 1970,
-      "title": "Barfuß im Regen",
+      "title": "Mendocino",
       "artist": "Michael Holm",
-      "spotifyTrackId": "3CXuSSQsRpKjmn9iFymyuq",
+      "spotifyTrackId": "7lBO5RpWhr6yPUwWkXHsWf",
       "tier": 1
     },
     {
-      "year": 1971,
-      "title": "Schöne Maid",
-      "artist": "Tony Marshall",
-      "spotifyTrackId": "5udRth9qdISXgpmovT3Ysc",
-      "tier": 1
-    },
-    {
-      "year": 1971,
-      "title": "Zeig mir den Platz an der Sonne",
-      "artist": "Udo Jürgens",
-      "spotifyTrackId": "1AS0XcMtcaJyCs83R2dmTf",
-      "tier": 1
-    },
-    {
-      "year": 1971,
-      "title": "Diese Welt",
+      "year": 1970,
+      "title": "Wunder gibt es immer wieder",
       "artist": "Katja Ebstein",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "3BKrmS7x99qM9zVPTf0Lu2",
       "tier": 1
     },
     {
@@ -649,17 +628,31 @@
       "tier": 1
     },
     {
-      "year": 1972,
-      "title": "Am Tag als Conny Kramer starb",
-      "artist": "Juliane Werding",
-      "spotifyTrackId": "7kTHUVnGMMOHW1CLdgvzui",
+      "year": 1971,
+      "title": "Diese Welt",
+      "artist": "Katja Ebstein",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Schöne Maid",
+      "artist": "Tony Marshall",
+      "spotifyTrackId": "5udRth9qdISXgpmovT3Ysc",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Zeig mir den Platz an der Sonne",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "1AS0XcMtcaJyCs83R2dmTf",
       "tier": 1
     },
     {
       "year": 1972,
-      "title": "Gute Nacht, Freunde",
-      "artist": "Reinhard Mey",
-      "spotifyTrackId": "2jrDH9mkZsnUUIWaTVMUdJ",
+      "title": "Am Tag als Conny Kramer starb",
+      "artist": "Juliane Werding",
+      "spotifyTrackId": "7kTHUVnGMMOHW1CLdgvzui",
       "tier": 1
     },
     {
@@ -671,15 +664,29 @@
     },
     {
       "year": 1972,
-      "title": "Zwei blaue Vergissmeinnicht",
-      "artist": "Jürgen Marcus",
-      "spotifyTrackId": "",
+      "title": "Gute Nacht, Freunde",
+      "artist": "Reinhard Mey",
+      "spotifyTrackId": "2jrDH9mkZsnUUIWaTVMUdJ",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Ich hab die Liebe geseh'n",
+      "artist": "Vicky Leandros",
+      "spotifyTrackId": "2Y5VBudYC560Hih0ya8dKi",
       "tier": 1
     },
     {
       "year": 1972,
       "title": "Sag ihr, ich lass sie grüßen",
       "artist": "Bata Illic",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Zwei blaue Vergissmeinnicht",
+      "artist": "Jürgen Marcus",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -692,9 +699,23 @@
     },
     {
       "year": 1973,
+      "title": "Du kannst nicht immer 17 sein",
+      "artist": "Chris Roberts",
+      "spotifyTrackId": "5A17EawFejwLCU9zYDG3qk",
+      "tier": 1
+    },
+    {
+      "year": 1973,
       "title": "Eviva España",
       "artist": "Hanna Aroni",
       "spotifyTrackId": "3H3lzzByDIkyTl52ht6t6C",
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Ich liebe das Leben",
+      "artist": "Vicky Leandros",
+      "spotifyTrackId": "3c12xbWbu6Xv3oeoV2upg6",
       "tier": 1
     },
     {
@@ -705,17 +726,10 @@
       "tier": 1
     },
     {
-      "year": 1973,
-      "title": "Du kannst nicht immer 17 sein",
-      "artist": "Chris Roberts",
-      "spotifyTrackId": "5A17EawFejwLCU9zYDG3qk",
-      "tier": 1
-    },
-    {
-      "year": 1973,
-      "title": "Ich liebe das Leben",
-      "artist": "Vicky Leandros",
-      "spotifyTrackId": "3c12xbWbu6Xv3oeoV2upg6",
+      "year": 1974,
+      "title": "Der Stern von Mykonos",
+      "artist": "Katja Ebstein",
+      "spotifyTrackId": "2E4W7upOjrC2LcEPg73dYL",
       "tier": 1
     },
     {
@@ -747,17 +761,10 @@
       "tier": 1
     },
     {
-      "year": 1974,
-      "title": "Der Stern von Mykonos",
-      "artist": "Katja Ebstein",
-      "spotifyTrackId": "2E4W7upOjrC2LcEPg73dYL",
-      "tier": 1
-    },
-    {
       "year": 1975,
-      "title": "Er gehört zu mir",
-      "artist": "Marianne Rosenberg",
-      "spotifyTrackId": "6COzABVCHQzyvc3rTMtrXn",
+      "title": "Ein Lied kann eine Brücke sein",
+      "artist": "Joy Fleming",
+      "spotifyTrackId": "68yLDTNBd1PZMl67k6fbY5",
       "tier": 1
     },
     {
@@ -769,16 +776,16 @@
     },
     {
       "year": 1975,
-      "title": "Wann wird's mal wieder richtig Sommer",
-      "artist": "Rudi Carrell",
-      "spotifyTrackId": "2JHRPXa7cVtsRjMb30a9KE",
+      "title": "Er gehört zu mir",
+      "artist": "Marianne Rosenberg",
+      "spotifyTrackId": "6COzABVCHQzyvc3rTMtrXn",
       "tier": 1
     },
     {
       "year": 1975,
-      "title": "Ein Lied kann eine Brücke sein",
-      "artist": "Joy Fleming",
-      "spotifyTrackId": "68yLDTNBd1PZMl67k6fbY5",
+      "title": "Wann wird's mal wieder richtig Sommer",
+      "artist": "Rudi Carrell",
+      "spotifyTrackId": "2JHRPXa7cVtsRjMb30a9KE",
       "tier": 1
     },
     {
@@ -790,23 +797,16 @@
     },
     {
       "year": 1976,
-      "title": "Ein Bett im Kornfeld",
-      "artist": "Jürgen Drews",
-      "spotifyTrackId": "7DfHmCnSLftVHPvtFPFsmA",
-      "tier": 1
-    },
-    {
-      "year": 1976,
-      "title": "Die kleine Kneipe",
-      "artist": "Peter Alexander",
-      "spotifyTrackId": "7lkm69lMX7sGuxhrncPMTW",
-      "tier": 1
-    },
-    {
-      "year": 1976,
       "title": "Aber bitte mit Sahne",
       "artist": "Udo Jürgens",
       "spotifyTrackId": "4J7EocpVLUZSU3m6E7O6re",
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Alt wie ein Baum",
+      "artist": "Puhdys",
+      "spotifyTrackId": "05MArDzHlmGFezNMU2BR3S",
       "tier": 1
     },
     {
@@ -818,23 +818,16 @@
     },
     {
       "year": 1976,
-      "title": "Alt wie ein Baum",
-      "artist": "Puhdys",
-      "spotifyTrackId": "05MArDzHlmGFezNMU2BR3S",
+      "title": "Die kleine Kneipe",
+      "artist": "Peter Alexander",
+      "spotifyTrackId": "7lkm69lMX7sGuxhrncPMTW",
       "tier": 1
     },
     {
-      "year": 1977,
-      "title": "Cello",
-      "artist": "Udo Lindenberg",
-      "spotifyTrackId": "2BRgf9SxqZng6NdGxPrMWP",
-      "tier": 1
-    },
-    {
-      "year": 1977,
-      "title": "Sieben Fässer Wein",
-      "artist": "Roberto Blanco",
-      "spotifyTrackId": "",
+      "year": 1976,
+      "title": "Ein Bett im Kornfeld",
+      "artist": "Jürgen Drews",
+      "spotifyTrackId": "7DfHmCnSLftVHPvtFPFsmA",
       "tier": 1
     },
     {
@@ -846,9 +839,23 @@
     },
     {
       "year": 1977,
+      "title": "Cello",
+      "artist": "Udo Lindenberg",
+      "spotifyTrackId": "2BRgf9SxqZng6NdGxPrMWP",
+      "tier": 1
+    },
+    {
+      "year": 1977,
       "title": "Guten Morgen Sonnenschein",
       "artist": "Nana Mouskouri",
       "spotifyTrackId": "5lpXFKgD6PeT6endUq5EX9",
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Sieben Fässer Wein",
+      "artist": "Roberto Blanco",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -874,6 +881,13 @@
     },
     {
       "year": 1978,
+      "title": "Gold in deinen Augen",
+      "artist": "Frank Schöbel",
+      "spotifyTrackId": "0sE4iJwvxcZpZZTdMfqdOS",
+      "tier": 1
+    },
+    {
+      "year": 1978,
       "title": "König der Welt",
       "artist": "Karat",
       "spotifyTrackId": "60mlA5fgRr1WPtlh8uI4aL",
@@ -887,17 +901,17 @@
       "tier": 1
     },
     {
-      "year": 1978,
-      "title": "Gold in deinen Augen",
-      "artist": "Frank Schöbel",
-      "spotifyTrackId": "0sE4iJwvxcZpZZTdMfqdOS",
-      "tier": 1
-    },
-    {
       "year": 1979,
       "title": "Dschinghis Khan",
       "artist": "Dschinghis Khan",
       "spotifyTrackId": "24g7Wa2aTohgmuJVP4Gxia",
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Josie",
+      "artist": "Peter Maffay",
+      "spotifyTrackId": "22Kw9zlfCNZe07YWvnK5Qh",
       "tier": 1
     },
     {
@@ -915,31 +929,10 @@
       "tier": 1
     },
     {
-      "year": 1979,
-      "title": "Josie",
-      "artist": "Peter Maffay",
-      "spotifyTrackId": "22Kw9zlfCNZe07YWvnK5Qh",
-      "tier": 1
-    },
-    {
-      "year": 1979,
-      "title": "Ich hab die Liebe geseh'n",
-      "artist": "Vicky Leandros",
-      "spotifyTrackId": "2Y5VBudYC560Hih0ya8dKi",
-      "tier": 1
-    },
-    {
       "year": 1980,
-      "title": "Über sieben Brücken musst du gehn",
-      "artist": "Peter Maffay",
-      "spotifyTrackId": "0hBgAs2GmvrG5yAxtBtSkF",
-      "tier": 1
-    },
-    {
-      "year": 1980,
-      "title": "Santa Maria",
-      "artist": "Roland Kaiser",
-      "spotifyTrackId": "7yUv6nCxiV1pEa5MdybU5b",
+      "title": "Deine Spuren im Sand",
+      "artist": "Howard Carpendale",
+      "spotifyTrackId": "2jCKRSodA0qDwe5Ah3tMWM",
       "tier": 1
     },
     {
@@ -958,9 +951,16 @@
     },
     {
       "year": 1980,
-      "title": "Deine Spuren im Sand",
-      "artist": "Howard Carpendale",
-      "spotifyTrackId": "2jCKRSodA0qDwe5Ah3tMWM",
+      "title": "Santa Maria",
+      "artist": "Roland Kaiser",
+      "spotifyTrackId": "7yUv6nCxiV1pEa5MdybU5b",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Über sieben Brücken musst du gehn",
+      "artist": "Peter Maffay",
+      "spotifyTrackId": "0hBgAs2GmvrG5yAxtBtSkF",
       "tier": 1
     },
     {
@@ -972,23 +972,23 @@
     },
     {
       "year": 1980,
-      "title": "So bist du",
-      "artist": "Peter Maffay",
-      "spotifyTrackId": "3a5Pk82SnxIfGbuu78jCGp",
-      "tier": 2
-    },
-    {
-      "year": 1980,
       "title": "Schwanenkönig",
       "artist": "Karat",
       "spotifyTrackId": "1xcYHxvuXpIEx7b0RvGOec",
       "tier": 2
     },
     {
+      "year": 1980,
+      "title": "So bist du",
+      "artist": "Peter Maffay",
+      "spotifyTrackId": "3a5Pk82SnxIfGbuu78jCGp",
+      "tier": 2
+    },
+    {
       "year": 1981,
-      "title": "Skandal im Sperrbezirk",
-      "artist": "Spider Murphy Gang",
-      "spotifyTrackId": "26kXONuhWX8sutaxnmcpPg",
+      "title": "Bodo mit dem Bagger",
+      "artist": "Mike Krüger",
+      "spotifyTrackId": "6Ad5UmaaLYodJfYUTauDLO",
       "tier": 1
     },
     {
@@ -1000,20 +1000,6 @@
     },
     {
       "year": 1981,
-      "title": "Johnny Blue",
-      "artist": "Lena Valaitis",
-      "spotifyTrackId": "5e6KfjLDK12b19zGnHaDf4",
-      "tier": 1
-    },
-    {
-      "year": 1981,
-      "title": "Bodo mit dem Bagger",
-      "artist": "Mike Krüger",
-      "spotifyTrackId": "6Ad5UmaaLYodJfYUTauDLO",
-      "tier": 1
-    },
-    {
-      "year": 1981,
       "title": "Hurra, hurra, die Schule brennt",
       "artist": "Extrabreit",
       "spotifyTrackId": "4LI4YCdKH2fLjyhtbtHXrY",
@@ -1021,10 +1007,17 @@
     },
     {
       "year": 1981,
-      "title": "Fred vom Jupiter",
-      "artist": "Andreas Dorau",
-      "spotifyTrackId": "7HyAIKz7frBvOVtjIUZlzA",
-      "tier": 2
+      "title": "Johnny Blue",
+      "artist": "Lena Valaitis",
+      "spotifyTrackId": "5e6KfjLDK12b19zGnHaDf4",
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Skandal im Sperrbezirk",
+      "artist": "Spider Murphy Gang",
+      "spotifyTrackId": "26kXONuhWX8sutaxnmcpPg",
+      "tier": 1
     },
     {
       "year": 1981,
@@ -1039,6 +1032,20 @@
       "artist": "Fehlfarben",
       "spotifyTrackId": "6mMUoEgOl1yuGMJ6dfHzh6",
       "tier": 2
+    },
+    {
+      "year": 1981,
+      "title": "Fred vom Jupiter",
+      "artist": "Andreas Dorau",
+      "spotifyTrackId": "7HyAIKz7frBvOVtjIUZlzA",
+      "tier": 2
+    },
+    {
+      "year": 1982,
+      "title": "Amerika",
+      "artist": "Trio",
+      "spotifyTrackId": "",
+      "tier": 1
     },
     {
       "year": 1982,
@@ -1056,9 +1063,9 @@
     },
     {
       "year": 1982,
-      "title": "Amerika",
-      "artist": "Trio",
-      "spotifyTrackId": "",
+      "title": "Nur geträumt",
+      "artist": "Nena",
+      "spotifyTrackId": "0ukySDr4uEzZE36s7t7X8E",
       "tier": 1
     },
     {
@@ -1067,20 +1074,6 @@
       "artist": "BAP",
       "spotifyTrackId": "12Gf7Ffl7pxj7mQF1ehRBy",
       "tier": 1
-    },
-    {
-      "year": 1982,
-      "title": "Nur geträumt",
-      "artist": "Nena",
-      "spotifyTrackId": "0ukySDr4uEzZE36s7t7X8E",
-      "tier": 1
-    },
-    {
-      "year": 1982,
-      "title": "Sternenhimmel",
-      "artist": "Hubert Kah",
-      "spotifyTrackId": "79hX0z70ufkP63Ocr4Jz4K",
-      "tier": 2
     },
     {
       "year": 1982,
@@ -1097,11 +1090,11 @@
       "tier": 2
     },
     {
-      "year": 1983,
-      "title": "Sonderzug nach Pankow",
-      "artist": "Udo Lindenberg",
-      "spotifyTrackId": "1vlzhoQJKTmEVDmSXcFT4a",
-      "tier": 1
+      "year": 1982,
+      "title": "Sternenhimmel",
+      "artist": "Hubert Kah",
+      "spotifyTrackId": "79hX0z70ufkP63Ocr4Jz4K",
+      "tier": 2
     },
     {
       "year": 1983,
@@ -1109,13 +1102,6 @@
       "artist": "Geier Sturzflug",
       "spotifyTrackId": "7KvP2ZTaarTcejYyR8KWPs",
       "tier": 1
-    },
-    {
-      "year": 1983,
-      "title": "Wahnsinn",
-      "artist": "Wolfgang Petry",
-      "spotifyTrackId": "7pAOcmT8XYXE40apvk9j2k",
-      "tier": 2
     },
     {
       "year": 1983,
@@ -1140,10 +1126,10 @@
     },
     {
       "year": 1983,
-      "title": "Kleine Taschenlampe brenn",
-      "artist": "Markus",
-      "spotifyTrackId": "2oLQKxSLouwatuKSl2kvBf",
-      "tier": 2
+      "title": "Sonderzug nach Pankow",
+      "artist": "Udo Lindenberg",
+      "spotifyTrackId": "1vlzhoQJKTmEVDmSXcFT4a",
+      "tier": 1
     },
     {
       "year": 1983,
@@ -1153,11 +1139,25 @@
       "tier": 2
     },
     {
-      "year": 1984,
-      "title": "Männer",
-      "artist": "Herbert Grönemeyer",
-      "spotifyTrackId": "0o8eQLFcietIkRBK0GflGZ",
-      "tier": 1
+      "year": 1983,
+      "title": "Kleine Taschenlampe brenn",
+      "artist": "Markus",
+      "spotifyTrackId": "2oLQKxSLouwatuKSl2kvBf",
+      "tier": 2
+    },
+    {
+      "year": 1983,
+      "title": "Nessaja",
+      "artist": "Peter Maffay",
+      "spotifyTrackId": "5NIl5fux02EnUJKKb8PKa0",
+      "tier": 2
+    },
+    {
+      "year": 1983,
+      "title": "Wahnsinn",
+      "artist": "Wolfgang Petry",
+      "spotifyTrackId": "7pAOcmT8XYXE40apvk9j2k",
+      "tier": 2
     },
     {
       "year": 1984,
@@ -1189,6 +1189,13 @@
     },
     {
       "year": 1984,
+      "title": "Männer",
+      "artist": "Herbert Grönemeyer",
+      "spotifyTrackId": "0o8eQLFcietIkRBK0GflGZ",
+      "tier": 1
+    },
+    {
+      "year": 1984,
       "title": "Bochum",
       "artist": "Herbert Grönemeyer",
       "spotifyTrackId": "5bvy6LcrzT7wE5tKUbxFM1",
@@ -1210,9 +1217,9 @@
     },
     {
       "year": 1985,
-      "title": "You're My Heart, You're My Soul",
-      "artist": "Modern Talking",
-      "spotifyTrackId": "0Zn63G0XTiqXwr1KSmARWz",
+      "title": "Ba-Ba-Banküberfall",
+      "artist": "Erste Allgemeine Verunsicherung",
+      "spotifyTrackId": "1LAdc8CC4UZibUnkIbVfX3",
       "tier": 1
     },
     {
@@ -1224,6 +1231,13 @@
     },
     {
       "year": 1985,
+      "title": "Feuer und Flamme",
+      "artist": "Nena",
+      "spotifyTrackId": "5ux0sAzhmcNY4Ib6lVpn1N",
+      "tier": 1
+    },
+    {
+      "year": 1985,
       "title": "Maria Magdalena",
       "artist": "Sandra",
       "spotifyTrackId": "5Njrdd3SA4fOsDMPVphxSb",
@@ -1231,17 +1245,17 @@
     },
     {
       "year": 1985,
-      "title": "Ba-Ba-Banküberfall",
-      "artist": "Erste Allgemeine Verunsicherung",
-      "spotifyTrackId": "1LAdc8CC4UZibUnkIbVfX3",
+      "title": "You're My Heart, You're My Soul",
+      "artist": "Modern Talking",
+      "spotifyTrackId": "0Zn63G0XTiqXwr1KSmARWz",
       "tier": 1
     },
     {
       "year": 1985,
-      "title": "Feuer und Flamme",
-      "artist": "Nena",
-      "spotifyTrackId": "5ux0sAzhmcNY4Ib6lVpn1N",
-      "tier": 1
+      "title": "Alkohol",
+      "artist": "Herbert Grönemeyer",
+      "spotifyTrackId": "0fEuIosdE4UTHACOrmjR1f",
+      "tier": 2
     },
     {
       "year": 1985,
@@ -1258,17 +1272,10 @@
       "tier": 2
     },
     {
-      "year": 1985,
-      "title": "Alkohol",
-      "artist": "Herbert Grönemeyer",
-      "spotifyTrackId": "0fEuIosdE4UTHACOrmjR1f",
-      "tier": 2
-    },
-    {
       "year": 1986,
-      "title": "Ohne dich (schlaf ich heut Nacht nicht ein)",
-      "artist": "Münchener Freiheit",
-      "spotifyTrackId": "7JM1dFLOa1kI5MqGnDufiY",
+      "title": "Alles hat ein Ende, nur die Wurst hat zwei",
+      "artist": "Stephan Remmler",
+      "spotifyTrackId": "5nl9DKN2UFt3cjefB0hNC8",
       "tier": 1
     },
     {
@@ -1280,16 +1287,9 @@
     },
     {
       "year": 1986,
-      "title": "Midnight Lady",
-      "artist": "Chris Norman",
-      "spotifyTrackId": "2Iwq1H1LH47WIfYs3mbYEa",
-      "tier": 1
-    },
-    {
-      "year": 1986,
-      "title": "Alles hat ein Ende, nur die Wurst hat zwei",
-      "artist": "Stephan Remmler",
-      "spotifyTrackId": "5nl9DKN2UFt3cjefB0hNC8",
+      "title": "Kinder an die Macht",
+      "artist": "Herbert Grönemeyer",
+      "spotifyTrackId": "19w8ChnDiyS5Jcj8TLBX6O",
       "tier": 1
     },
     {
@@ -1301,10 +1301,17 @@
     },
     {
       "year": 1986,
-      "title": "Zu spät",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "5FFGr69nqIPiNn9MTaHXKb",
-      "tier": 2
+      "title": "Midnight Lady",
+      "artist": "Chris Norman",
+      "spotifyTrackId": "2Iwq1H1LH47WIfYs3mbYEa",
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Ohne dich (schlaf ich heut Nacht nicht ein)",
+      "artist": "Münchener Freiheit",
+      "spotifyTrackId": "7JM1dFLOa1kI5MqGnDufiY",
+      "tier": 1
     },
     {
       "year": 1986,
@@ -1321,11 +1328,11 @@
       "tier": 2
     },
     {
-      "year": 1987,
-      "title": "Lass die Sonne in dein Herz",
-      "artist": "Wind",
-      "spotifyTrackId": "7sMd8AmgwoHgw674d2oQgB",
-      "tier": 1
+      "year": 1986,
+      "title": "Zu spät",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "5FFGr69nqIPiNn9MTaHXKb",
+      "tier": 2
     },
     {
       "year": 1987,
@@ -1343,13 +1350,6 @@
     },
     {
       "year": 1987,
-      "title": "Märchenprinz",
-      "artist": "Erste Allgemeine Verunsicherung",
-      "spotifyTrackId": "6eQoff8rrvxJVQl0uhWyJT",
-      "tier": 1
-    },
-    {
-      "year": 1987,
       "title": "Herz aus Glas",
       "artist": "Münchener Freiheit",
       "spotifyTrackId": "3tHGXFRaArjFl71kq0HppD",
@@ -1357,9 +1357,23 @@
     },
     {
       "year": 1987,
-      "title": "Sorry Little Sarah",
-      "artist": "Blue System",
-      "spotifyTrackId": "7g6lodljnajnGJQv4mArFP",
+      "title": "Lass die Sonne in dein Herz",
+      "artist": "Wind",
+      "spotifyTrackId": "7sMd8AmgwoHgw674d2oQgB",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Märchenprinz",
+      "artist": "Erste Allgemeine Verunsicherung",
+      "spotifyTrackId": "6eQoff8rrvxJVQl0uhWyJT",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Als ich fortging",
+      "artist": "Karussell",
+      "spotifyTrackId": "1WINcEKbdMkFHF1px8uzEG",
       "tier": 2
     },
     {
@@ -1371,16 +1385,16 @@
     },
     {
       "year": 1987,
-      "title": "Als ich fortging",
-      "artist": "Karussell",
-      "spotifyTrackId": "1WINcEKbdMkFHF1px8uzEG",
+      "title": "Sorry Little Sarah",
+      "artist": "Blue System",
+      "spotifyTrackId": "7g6lodljnajnGJQv4mArFP",
       "tier": 2
     },
     {
       "year": 1988,
-      "title": "Westerland",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "5aWpvFnByyWodgqYlC9kha",
+      "title": "Eisgekühlter Bommerlunder",
+      "artist": "Die Toten Hosen",
+      "spotifyTrackId": "1VvZCnaVnrJyJeNPCz0KDT",
       "tier": 1
     },
     {
@@ -1406,10 +1420,17 @@
     },
     {
       "year": 1988,
-      "title": "Eisgekühlter Bommerlunder",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "1VvZCnaVnrJyJeNPCz0KDT",
+      "title": "Westerland",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "5aWpvFnByyWodgqYlC9kha",
       "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Solang man Träume noch leben kann",
+      "artist": "Münchener Freiheit",
+      "spotifyTrackId": "0ZR87r2Dt1ZQDaMwOPojur",
+      "tier": 2
     },
     {
       "year": 1988,
@@ -1426,24 +1447,10 @@
       "tier": 2
     },
     {
-      "year": 1988,
-      "title": "Solang man Träume noch leben kann",
-      "artist": "Münchener Freiheit",
-      "spotifyTrackId": "0ZR87r2Dt1ZQDaMwOPojur",
-      "tier": 2
-    },
-    {
       "year": 1989,
-      "title": "Wunder gescheh'n",
-      "artist": "Nena",
-      "spotifyTrackId": "5PfiBaZ2e21dKtWclGRYOy",
-      "tier": 1
-    },
-    {
-      "year": 1989,
-      "title": "Weil ich dich liebe",
-      "artist": "Marius Müller-Westernhagen",
-      "spotifyTrackId": "4VnXzDpGoRISbzyIoT7o7R",
+      "title": "Bitte bitte",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "2vvSc5XQlBmjZyoUWB2p7m",
       "tier": 1
     },
     {
@@ -1455,16 +1462,16 @@
     },
     {
       "year": 1989,
-      "title": "Bitte bitte",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "2vvSc5XQlBmjZyoUWB2p7m",
+      "title": "Weil ich dich liebe",
+      "artist": "Marius Müller-Westernhagen",
+      "spotifyTrackId": "4VnXzDpGoRISbzyIoT7o7R",
       "tier": 1
     },
     {
       "year": 1989,
-      "title": "Kinder an die Macht",
-      "artist": "Herbert Grönemeyer",
-      "spotifyTrackId": "19w8ChnDiyS5Jcj8TLBX6O",
+      "title": "Wunder gescheh'n",
+      "artist": "Nena",
+      "spotifyTrackId": "5PfiBaZ2e21dKtWclGRYOy",
       "tier": 1
     },
     {
@@ -1490,20 +1497,6 @@
     },
     {
       "year": 1990,
-      "title": "Verdammt, ich lieb' dich",
-      "artist": "Matthias Reim",
-      "spotifyTrackId": "4lBBoyZgJfm0Epu4xbZisU",
-      "tier": 1
-    },
-    {
-      "year": 1990,
-      "title": "Ich hab' geträumt von dir",
-      "artist": "Matthias Reim",
-      "spotifyTrackId": "5cjBbaEfhMW5387Nl7fHzN",
-      "tier": 1
-    },
-    {
-      "year": 1990,
       "title": "Herzilein",
       "artist": "Wildecker Herzbuben",
       "spotifyTrackId": "5PTwWO6hDp9GGs4bPQFZ12",
@@ -1525,10 +1518,17 @@
     },
     {
       "year": 1990,
-      "title": "Beinhart",
-      "artist": "Torfrock",
-      "spotifyTrackId": "3nOernkswNwTfHHGya0GAk",
-      "tier": 2
+      "title": "Ich hab' geträumt von dir",
+      "artist": "Matthias Reim",
+      "spotifyTrackId": "5cjBbaEfhMW5387Nl7fHzN",
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Verdammt, ich lieb' dich",
+      "artist": "Matthias Reim",
+      "spotifyTrackId": "4lBBoyZgJfm0Epu4xbZisU",
+      "tier": 1
     },
     {
       "year": 1990,
@@ -1546,23 +1546,9 @@
     },
     {
       "year": 1991,
-      "title": "Millionär",
-      "artist": "Die Prinzen",
-      "spotifyTrackId": "6bEffssIb32Yk7HCfFn3qA",
-      "tier": 1
-    },
-    {
-      "year": 1991,
-      "title": "Mein Fahrrad",
-      "artist": "Die Prinzen",
-      "spotifyTrackId": "6L8tbaMNq3m4FykrOpQwrl",
-      "tier": 1
-    },
-    {
-      "year": 1991,
-      "title": "Seiltänzertraum",
-      "artist": "Pur",
-      "spotifyTrackId": "1GtF94xynpDFpu9rF9zHVS",
+      "title": "Ahl Männer, aalglatt",
+      "artist": "BAP",
+      "spotifyTrackId": "3b7B8jAcQgikS3EQg5YEuK",
       "tier": 1
     },
     {
@@ -1574,23 +1560,30 @@
     },
     {
       "year": 1991,
-      "title": "Ahl Männer, aalglatt",
-      "artist": "BAP",
-      "spotifyTrackId": "3b7B8jAcQgikS3EQg5YEuK",
+      "title": "Mein Fahrrad",
+      "artist": "Die Prinzen",
+      "spotifyTrackId": "6L8tbaMNq3m4FykrOpQwrl",
       "tier": 1
     },
     {
       "year": 1991,
-      "title": "Nessaja",
-      "artist": "Peter Maffay",
-      "spotifyTrackId": "5NIl5fux02EnUJKKb8PKa0",
-      "tier": 2
+      "title": "Millionär",
+      "artist": "Die Prinzen",
+      "spotifyTrackId": "6bEffssIb32Yk7HCfFn3qA",
+      "tier": 1
     },
     {
       "year": 1991,
-      "title": "Rollo der Wikinger",
+      "title": "Seiltänzertraum",
+      "artist": "Pur",
+      "spotifyTrackId": "1GtF94xynpDFpu9rF9zHVS",
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Beinhart",
       "artist": "Torfrock",
-      "spotifyTrackId": "7IVV0Y5izepk1lANcrnokJ",
+      "spotifyTrackId": "3nOernkswNwTfHHGya0GAk",
       "tier": 2
     },
     {
@@ -1598,6 +1591,13 @@
       "title": "Gabi und Klaus",
       "artist": "Die Prinzen",
       "spotifyTrackId": "3gHSe3PDjik9y93sbAVBPE",
+      "tier": 2
+    },
+    {
+      "year": 1991,
+      "title": "Rollo der Wikinger",
+      "artist": "Torfrock",
+      "spotifyTrackId": "7IVV0Y5izepk1lANcrnokJ",
       "tier": 2
     },
     {
@@ -1609,23 +1609,9 @@
     },
     {
       "year": 1992,
-      "title": "Küssen verboten",
-      "artist": "Die Prinzen",
-      "spotifyTrackId": "1Y8s5Imw2ZegCHWi8xHJGW",
-      "tier": 1
-    },
-    {
-      "year": 1992,
       "title": "Du hast mich tausendmal belogen",
       "artist": "Andrea Berg",
       "spotifyTrackId": "65wKbNqjUTmdyk47Z31Czm",
-      "tier": 1
-    },
-    {
-      "year": 1992,
-      "title": "Kein Schwein ruft mich an",
-      "artist": "Max Raabe",
-      "spotifyTrackId": "6snrhpcIeThzC82aYBvOVG",
       "tier": 1
     },
     {
@@ -1637,16 +1623,30 @@
     },
     {
       "year": 1992,
-      "title": "Verlieben, verloren, vergessen, verzeih'n",
-      "artist": "Wolfgang Petry",
-      "spotifyTrackId": "",
-      "tier": 2
+      "title": "Kein Schwein ruft mich an",
+      "artist": "Max Raabe",
+      "spotifyTrackId": "6snrhpcIeThzC82aYBvOVG",
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Küssen verboten",
+      "artist": "Die Prinzen",
+      "spotifyTrackId": "1Y8s5Imw2ZegCHWi8xHJGW",
+      "tier": 1
     },
     {
       "year": 1992,
       "title": "Hausmeister Thomas D.",
       "artist": "Die Fantastischen Vier",
       "spotifyTrackId": "46KPiBu4bmw8u6DbU7jNMy",
+      "tier": 2
+    },
+    {
+      "year": 1992,
+      "title": "Verlieben, verloren, vergessen, verzeih'n",
+      "artist": "Wolfgang Petry",
+      "spotifyTrackId": "",
       "tier": 2
     },
     {
@@ -1658,23 +1658,16 @@
     },
     {
       "year": 1993,
-      "title": "Alles nur geklaut",
-      "artist": "Die Prinzen",
-      "spotifyTrackId": "6X1mehC9bJ1ExEip4HB79W",
-      "tier": 1
-    },
-    {
-      "year": 1993,
-      "title": "Schrei nach Liebe",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "4P4PHxZQ1FcwQKKnfEPsAZ",
-      "tier": 1
-    },
-    {
-      "year": 1993,
       "title": "Alles aus Liebe",
       "artist": "Die Toten Hosen",
       "spotifyTrackId": "1MDUhJgzfYnYd8U1AytwFv",
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Alles nur geklaut",
+      "artist": "Die Prinzen",
+      "spotifyTrackId": "6X1mehC9bJ1ExEip4HB79W",
       "tier": 1
     },
     {
@@ -1693,6 +1686,13 @@
     },
     {
       "year": 1993,
+      "title": "Bronze, Silber und Gold",
+      "artist": "Wolfgang Petry",
+      "spotifyTrackId": "6AAfe5lGMWBGYqKsU35Srd",
+      "tier": 2
+    },
+    {
+      "year": 1993,
       "title": "Kauf mich!",
       "artist": "Die Toten Hosen",
       "spotifyTrackId": "1PeuYo95u9KfbjRoY6BdtX",
@@ -1706,31 +1706,10 @@
       "tier": 2
     },
     {
-      "year": 1993,
-      "title": "Bronze, Silber und Gold",
-      "artist": "Wolfgang Petry",
-      "spotifyTrackId": "6AAfe5lGMWBGYqKsU35Srd",
-      "tier": 2
-    },
-    {
       "year": 1994,
-      "title": "Katzeklo",
+      "title": "Es gibt Reis, Baby",
       "artist": "Helge Schneider",
-      "spotifyTrackId": "45P5X44bMEMZUsSU4Ij7GE",
-      "tier": 1
-    },
-    {
-      "year": 1994,
-      "title": "Zu geil für diese Welt",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "",
-      "tier": 1
-    },
-    {
-      "year": 1994,
-      "title": "Somewhere Over the Rainbow",
-      "artist": "Marusha",
-      "spotifyTrackId": "6WK2R6UwBGMxiu7qrT72kj",
+      "spotifyTrackId": "5LJAGrNqu3zyr9rLzgm7vP",
       "tier": 1
     },
     {
@@ -1742,16 +1721,37 @@
     },
     {
       "year": 1994,
-      "title": "Es gibt Reis, Baby",
+      "title": "Katzeklo",
       "artist": "Helge Schneider",
-      "spotifyTrackId": "5LJAGrNqu3zyr9rLzgm7vP",
+      "spotifyTrackId": "45P5X44bMEMZUsSU4Ij7GE",
       "tier": 1
     },
     {
       "year": 1994,
-      "title": "Wahre Liebe",
-      "artist": "Pur",
+      "title": "Schrei nach Liebe",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "4P4PHxZQ1FcwQKKnfEPsAZ",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Somewhere Over the Rainbow",
+      "artist": "Marusha",
+      "spotifyTrackId": "6WK2R6UwBGMxiu7qrT72kj",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Zu geil für diese Welt",
+      "artist": "Die Ärzte",
       "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Populär",
+      "artist": "Die Fantastischen Vier",
+      "spotifyTrackId": "5wN0lvpZL0UCVQ0iaUbRV2",
       "tier": 2
     },
     {
@@ -1763,24 +1763,10 @@
     },
     {
       "year": 1994,
-      "title": "Populär",
-      "artist": "Die Fantastischen Vier",
-      "spotifyTrackId": "5wN0lvpZL0UCVQ0iaUbRV2",
+      "title": "Wahre Liebe",
+      "artist": "Pur",
+      "spotifyTrackId": "",
       "tier": 2
-    },
-    {
-      "year": 1995,
-      "title": "Nordisch by Nature",
-      "artist": "Fettes Brot",
-      "spotifyTrackId": "6NYZ0wmDmpMe8NBQcttXKY",
-      "tier": 1
-    },
-    {
-      "year": 1995,
-      "title": "Sie ist weg",
-      "artist": "Die Fantastischen Vier",
-      "spotifyTrackId": "3rTSoSOTvOebYMy2kzKvkJ",
-      "tier": 1
     },
     {
       "year": 1995,
@@ -1798,10 +1784,31 @@
     },
     {
       "year": 1995,
+      "title": "Nordisch by Nature",
+      "artist": "Fettes Brot",
+      "spotifyTrackId": "6NYZ0wmDmpMe8NBQcttXKY",
+      "tier": 1
+    },
+    {
+      "year": 1995,
       "title": "Ohne dich",
       "artist": "Selig",
       "spotifyTrackId": "2s7u4PaLDp2I2PUNImjUW2",
       "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Sie ist weg",
+      "artist": "Die Fantastischen Vier",
+      "spotifyTrackId": "3rTSoSOTvOebYMy2kzKvkJ",
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Ein graues Haar",
+      "artist": "Pur",
+      "spotifyTrackId": "20CWZbDSUjG9lHuMUosvb7",
+      "tier": 2
     },
     {
       "year": 1995,
@@ -1812,30 +1819,23 @@
     },
     {
       "year": 1995,
+      "title": "Was geht",
+      "artist": "Die Fantastischen Vier",
+      "spotifyTrackId": "2AhdS52IBINqnz06LPWfke",
+      "tier": 2
+    },
+    {
+      "year": 1995,
       "title": "Wenn ich wollte",
       "artist": "Selig",
       "spotifyTrackId": "39opb3rnAtbxgTz3FlVVYt",
       "tier": 2
     },
     {
-      "year": 1995,
-      "title": "Ein graues Haar",
-      "artist": "Pur",
-      "spotifyTrackId": "20CWZbDSUjG9lHuMUosvb7",
-      "tier": 2
-    },
-    {
       "year": 1996,
-      "title": "Zehn kleine Jägermeister",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "4wNsh8RqG6bvwuUNaX18pT",
-      "tier": 1
-    },
-    {
-      "year": 1996,
-      "title": "Verpiss dich",
-      "artist": "Tic Tac Toe",
-      "spotifyTrackId": "0hWaBqfcddUlqOk33fpx3G",
+      "title": "Herz an Herz",
+      "artist": "Blümchen",
+      "spotifyTrackId": "1X7654uBsdVKnZAqyIJT7y",
       "tier": 1
     },
     {
@@ -1854,10 +1854,17 @@
     },
     {
       "year": 1996,
-      "title": "Herz an Herz",
-      "artist": "Blümchen",
-      "spotifyTrackId": "1X7654uBsdVKnZAqyIJT7y",
+      "title": "Zehn kleine Jägermeister",
+      "artist": "Die Toten Hosen",
+      "spotifyTrackId": "4wNsh8RqG6bvwuUNaX18pT",
       "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Bonnie & Clyde",
+      "artist": "Die Toten Hosen",
+      "spotifyTrackId": "2hZAJcLnFGk6V50TiD7yzm",
+      "tier": 2
     },
     {
       "year": 1996,
@@ -1874,11 +1881,11 @@
       "tier": 2
     },
     {
-      "year": 1996,
-      "title": "Bonnie & Clyde",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "2hZAJcLnFGk6V50TiD7yzm",
-      "tier": 2
+      "year": 1997,
+      "title": "A-N-N-A (Immer wenn es regnet)",
+      "artist": "Freundeskreis",
+      "spotifyTrackId": "6EWtkdeKmVtRjmydTfIR0S",
+      "tier": 1
     },
     {
       "year": 1997,
@@ -1889,9 +1896,16 @@
     },
     {
       "year": 1997,
-      "title": "A-N-N-A (Immer wenn es regnet)",
-      "artist": "Freundeskreis",
-      "spotifyTrackId": "6EWtkdeKmVtRjmydTfIR0S",
+      "title": "Steh auf, wenn du am Boden bist",
+      "artist": "Die Toten Hosen",
+      "spotifyTrackId": "2xSTNXJaxrZSw536qlCr34",
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Verpiss dich",
+      "artist": "Tic Tac Toe",
+      "spotifyTrackId": "0hWaBqfcddUlqOk33fpx3G",
       "tier": 1
     },
     {
@@ -1899,13 +1913,6 @@
       "title": "Warum?",
       "artist": "Tic Tac Toe",
       "spotifyTrackId": "39Qd2qBDQdREL3aLTb9F0d",
-      "tier": 1
-    },
-    {
-      "year": 1997,
-      "title": "Steh auf, wenn du am Boden bist",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "2xSTNXJaxrZSw536qlCr34",
       "tier": 1
     },
     {
@@ -1938,30 +1945,16 @@
     },
     {
       "year": 1998,
-      "title": "Guildo hat euch lieb",
-      "artist": "Guildo Horn",
-      "spotifyTrackId": "6TU1XF376ykPceVnK24OOK",
-      "tier": 1
-    },
-    {
-      "year": 1998,
-      "title": "Männer sind Schweine",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "3oTqsRhrOvnUEavb1NQIWa",
-      "tier": 1
-    },
-    {
-      "year": 1998,
-      "title": "Sie sieht mich nicht",
-      "artist": "Xavier Naidoo",
-      "spotifyTrackId": "3a3PdavN2xzZTe9TtmnNyE",
-      "tier": 1
-    },
-    {
-      "year": 1998,
       "title": "Bleibt alles anders",
       "artist": "Herbert Grönemeyer",
       "spotifyTrackId": "4l9frV4SKEPn6JGy84UhKm",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Guildo hat euch lieb",
+      "artist": "Guildo Horn",
+      "spotifyTrackId": "6TU1XF376ykPceVnK24OOK",
       "tier": 1
     },
     {
@@ -1973,10 +1966,17 @@
     },
     {
       "year": 1998,
-      "title": "Wieder hier",
-      "artist": "Marius Müller-Westernhagen",
-      "spotifyTrackId": "1DJJoaqjXO1XvEFoj9QnOt",
-      "tier": 2
+      "title": "Können diese Augen lügen",
+      "artist": "Fettes Brot",
+      "spotifyTrackId": "2bU7uVB9QQ0nT7TswpV2fc",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Männer sind Schweine",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "3oTqsRhrOvnUEavb1NQIWa",
+      "tier": 1
     },
     {
       "year": 1998,
@@ -1993,10 +1993,17 @@
       "tier": 2
     },
     {
+      "year": 1998,
+      "title": "Wieder hier",
+      "artist": "Marius Müller-Westernhagen",
+      "spotifyTrackId": "1DJJoaqjXO1XvEFoj9QnOt",
+      "tier": 2
+    },
+    {
       "year": 1999,
-      "title": "Anton aus Tirol",
-      "artist": "DJ Ötzi",
-      "spotifyTrackId": "2YuKyP77pidQlkxm8PuyJj",
+      "title": "Du trägst keine Liebe in dir",
+      "artist": "Echt",
+      "spotifyTrackId": "21aT5lIYHjyBIFrXNbNY5U",
       "tier": 1
     },
     {
@@ -2008,16 +2015,9 @@
     },
     {
       "year": 1999,
-      "title": "Du trägst keine Liebe in dir",
-      "artist": "Echt",
-      "spotifyTrackId": "21aT5lIYHjyBIFrXNbNY5U",
-      "tier": 1
-    },
-    {
-      "year": 1999,
-      "title": "Wo willst du hin",
+      "title": "Sie sieht mich nicht",
       "artist": "Xavier Naidoo",
-      "spotifyTrackId": "3tPoDyHhd5h9xUSQ5w3NR7",
+      "spotifyTrackId": "3a3PdavN2xzZTe9TtmnNyE",
       "tier": 1
     },
     {
@@ -2026,13 +2026,6 @@
       "artist": "Echt",
       "spotifyTrackId": "",
       "tier": 1
-    },
-    {
-      "year": 1999,
-      "title": "Schön sein",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "1AJgiTWqhqlEmWynMzVtt6",
-      "tier": 2
     },
     {
       "year": 1999,
@@ -2049,24 +2042,31 @@
       "tier": 2
     },
     {
+      "year": 1999,
+      "title": "Mit Dir",
+      "artist": "Freundeskreis",
+      "spotifyTrackId": "5EX0HiIyvhavnpjgbwDCeL",
+      "tier": 2
+    },
+    {
+      "year": 1999,
+      "title": "Schön sein",
+      "artist": "Die Toten Hosen",
+      "spotifyTrackId": "1AJgiTWqhqlEmWynMzVtt6",
+      "tier": 2
+    },
+    {
       "year": 2000,
-      "title": "Wadde hadde dudde da?",
-      "artist": "Stefan Raab",
-      "spotifyTrackId": "7AJkCOIlPI68oDMrWNgt20",
+      "title": "Amo Vitam",
+      "artist": "Rosenstolz",
+      "spotifyTrackId": "0RYlK1tzt0LesCzBGa4tCk",
       "tier": 1
     },
     {
       "year": 2000,
-      "title": "Maschendrahtzaun",
-      "artist": "Stefan Raab",
-      "spotifyTrackId": "5qaiqhAVc9kXzASSfJcoDu",
-      "tier": 1
-    },
-    {
-      "year": 2000,
-      "title": "Manchmal haben Frauen …",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "7mSIm0LzfRp4P8OxtJfwdA",
+      "title": "Anton aus Tirol",
+      "artist": "DJ Ötzi",
+      "spotifyTrackId": "2YuKyP77pidQlkxm8PuyJj",
       "tier": 1
     },
     {
@@ -2078,6 +2078,27 @@
     },
     {
       "year": 2000,
+      "title": "Manchmal haben Frauen …",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "7mSIm0LzfRp4P8OxtJfwdA",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Maschendrahtzaun",
+      "artist": "Stefan Raab",
+      "spotifyTrackId": "5qaiqhAVc9kXzASSfJcoDu",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Wadde hadde dudde da?",
+      "artist": "Stefan Raab",
+      "spotifyTrackId": "7AJkCOIlPI68oDMrWNgt20",
+      "tier": 1
+    },
+    {
+      "year": 2000,
       "title": "Was wir alleine nicht schaffen",
       "artist": "Xavier Naidoo",
       "spotifyTrackId": "3WfGJJVdlbZXfvuIggD1aO",
@@ -2085,16 +2106,9 @@
     },
     {
       "year": 2000,
-      "title": "Amo Vitam",
-      "artist": "Rosenstolz",
-      "spotifyTrackId": "0RYlK1tzt0LesCzBGa4tCk",
-      "tier": 1
-    },
-    {
-      "year": 2000,
-      "title": "Was geht",
-      "artist": "Die Fantastischen Vier",
-      "spotifyTrackId": "2AhdS52IBINqnz06LPWfke",
+      "title": "Halt dich fest an deinem Glauben",
+      "artist": "Freundeskreis",
+      "spotifyTrackId": "",
       "tier": 2
     },
     {
@@ -2112,31 +2126,10 @@
       "tier": 2
     },
     {
-      "year": 2000,
-      "title": "Halt dich fest an deinem Glauben",
-      "artist": "Freundeskreis",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
-      "year": 2001,
-      "title": "Und wenn ein Lied",
-      "artist": "Söhne Mannheims",
-      "spotifyTrackId": "4xPQmpR7fqVzfT1yHq1e98",
-      "tier": 1
-    },
-    {
       "year": 2001,
       "title": "Deutschland",
       "artist": "Die Prinzen",
       "spotifyTrackId": "0xe5e0PndDrrRqCvV5dUkS",
-      "tier": 1
-    },
-    {
-      "year": 2001,
-      "title": "Können diese Augen lügen",
-      "artist": "Fettes Brot",
-      "spotifyTrackId": "2bU7uVB9QQ0nT7TswpV2fc",
       "tier": 1
     },
     {
@@ -2162,16 +2155,9 @@
     },
     {
       "year": 2001,
-      "title": "Geh davon aus",
-      "artist": "Söhne Mannheims",
-      "spotifyTrackId": "6hgxv3XfR0iG2g1Mw58LKr",
-      "tier": 2
-    },
-    {
-      "year": 2001,
-      "title": "Mit Dir",
-      "artist": "Freundeskreis",
-      "spotifyTrackId": "5EX0HiIyvhavnpjgbwDCeL",
+      "title": "Dickes B",
+      "artist": "Seeed",
+      "spotifyTrackId": "4eRmCZWJoEtLl0wy7EJPwd",
       "tier": 2
     },
     {
@@ -2183,6 +2169,13 @@
     },
     {
       "year": 2001,
+      "title": "Geh davon aus",
+      "artist": "Söhne Mannheims",
+      "spotifyTrackId": "6hgxv3XfR0iG2g1Mw58LKr",
+      "tier": 2
+    },
+    {
+      "year": 2001,
       "title": "Wellenreiten '54",
       "artist": "Sportfreunde Stiller",
       "spotifyTrackId": "1gWIlQfhDmGxSw4e6JUMZ2",
@@ -2190,37 +2183,9 @@
     },
     {
       "year": 2002,
-      "title": "Mensch",
-      "artist": "Herbert Grönemeyer",
-      "spotifyTrackId": "2urspvjqMlyq8JVAudN3DK",
-      "tier": 1
-    },
-    {
-      "year": 2002,
       "title": "Ein Kompliment",
       "artist": "Sportfreunde Stiller",
       "spotifyTrackId": "5QRkWkMabF6HJmQQm2HBVX",
-      "tier": 1
-    },
-    {
-      "year": 2002,
-      "title": "Nur zu Besuch",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "54wROe2gNU8EMxCme0lprb",
-      "tier": 1
-    },
-    {
-      "year": 2002,
-      "title": "Der Steuersong",
-      "artist": "Die Gerd Show",
-      "spotifyTrackId": "",
-      "tier": 1
-    },
-    {
-      "year": 2002,
-      "title": "Olli Kahn",
-      "artist": "Die Prinzen",
-      "spotifyTrackId": "7zOD6wngnD0kR9KL6UqTbi",
       "tier": 1
     },
     {
@@ -2232,10 +2197,31 @@
     },
     {
       "year": 2002,
-      "title": "Erwin",
-      "artist": "Sportfreunde Stiller",
-      "spotifyTrackId": "",
-      "tier": 2
+      "title": "Mensch",
+      "artist": "Herbert Grönemeyer",
+      "spotifyTrackId": "2urspvjqMlyq8JVAudN3DK",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Nur zu Besuch",
+      "artist": "Die Toten Hosen",
+      "spotifyTrackId": "54wROe2gNU8EMxCme0lprb",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Olli Kahn",
+      "artist": "Die Prinzen",
+      "spotifyTrackId": "7zOD6wngnD0kR9KL6UqTbi",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Wo willst du hin",
+      "artist": "Xavier Naidoo",
+      "spotifyTrackId": "3tPoDyHhd5h9xUSQ5w3NR7",
+      "tier": 1
     },
     {
       "year": 2002,
@@ -2246,9 +2232,9 @@
     },
     {
       "year": 2002,
-      "title": "Liebe ist",
-      "artist": "Nena",
-      "spotifyTrackId": "6Y7JUV3nBBfUkhAo3PnkC9",
+      "title": "Erwin",
+      "artist": "Sportfreunde Stiller",
+      "spotifyTrackId": "",
       "tier": 2
     },
     {
@@ -2260,36 +2246,15 @@
     },
     {
       "year": 2003,
-      "title": "Guten Tag",
-      "artist": "Wir sind Helden",
-      "spotifyTrackId": "5YVAa5A1w987AIeCn6I0UI",
-      "tier": 1
-    },
-    {
-      "year": 2003,
-      "title": "Unrockbar",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "517vCkYwqxHJCDnPIDQv7P",
-      "tier": 1
-    },
-    {
-      "year": 2003,
-      "title": "Für dich",
-      "artist": "Yvonne Catterfeld",
-      "spotifyTrackId": "3QYi6nQ5sDi4eNh0DHZujh",
-      "tier": 1
-    },
-    {
-      "year": 2003,
-      "title": "Viva Colonia",
-      "artist": "Höhner",
-      "spotifyTrackId": "4tNwc7jQ5eqWFGDlX8YBtT",
-      "tier": 1
-    },
-    {
-      "year": 2003,
       "title": "Anyplace, Anywhere, Anytime",
       "artist": "Nena & Kim Wilde",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Der Steuersong",
+      "artist": "Die Gerd Show",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -2302,10 +2267,38 @@
     },
     {
       "year": 2003,
-      "title": "Denkmal",
+      "title": "Für dich",
+      "artist": "Yvonne Catterfeld",
+      "spotifyTrackId": "3QYi6nQ5sDi4eNh0DHZujh",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Guten Tag",
       "artist": "Wir sind Helden",
-      "spotifyTrackId": "58zHoX9U5VlSXLUUmWTfe2",
-      "tier": 2
+      "spotifyTrackId": "5YVAa5A1w987AIeCn6I0UI",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Ich kenne nichts (das so schön ist wie du)",
+      "artist": "Xavier Naidoo & RZA",
+      "spotifyTrackId": "1E3HbBRkIbgmgPYNQANDQQ",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Unrockbar",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "517vCkYwqxHJCDnPIDQv7P",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Viva Colonia",
+      "artist": "Höhner",
+      "spotifyTrackId": "4tNwc7jQ5eqWFGDlX8YBtT",
+      "tier": 1
     },
     {
       "year": 2003,
@@ -2313,34 +2306,6 @@
       "artist": "Die Ärzte",
       "spotifyTrackId": "",
       "tier": 2
-    },
-    {
-      "year": 2003,
-      "title": "Du hast mein Herz gebrochen",
-      "artist": "Yvonne Catterfeld",
-      "spotifyTrackId": "5JGxicqcoSQcsxRgnDaJel",
-      "tier": 2
-    },
-    {
-      "year": 2003,
-      "title": "Dickes B",
-      "artist": "Seeed",
-      "spotifyTrackId": "4eRmCZWJoEtLl0wy7EJPwd",
-      "tier": 2
-    },
-    {
-      "year": 2004,
-      "title": "Perfekte Welle",
-      "artist": "Juli",
-      "spotifyTrackId": "2LV5joNDrsyuXEh4FBARVK",
-      "tier": 1
-    },
-    {
-      "year": 2004,
-      "title": "Geile Zeit",
-      "artist": "Juli",
-      "spotifyTrackId": "3hT1h7FiFFxoLqiTMJM7Ew",
-      "tier": 1
     },
     {
       "year": 2004,
@@ -2358,9 +2323,9 @@
     },
     {
       "year": 2004,
-      "title": "Wir sind wir",
-      "artist": "Paul van Dyk & Peter Heppner",
-      "spotifyTrackId": "",
+      "title": "Perfekte Welle",
+      "artist": "Juli",
+      "spotifyTrackId": "2LV5joNDrsyuXEh4FBARVK",
       "tier": 1
     },
     {
@@ -2369,6 +2334,27 @@
       "artist": "Silbermond",
       "spotifyTrackId": "7mOD9NFyZhC8PtW4joWDWT",
       "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Wir sind wir",
+      "artist": "Paul van Dyk & Peter Heppner",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Denkmal",
+      "artist": "Wir sind Helden",
+      "spotifyTrackId": "58zHoX9U5VlSXLUUmWTfe2",
+      "tier": 2
+    },
+    {
+      "year": 2004,
+      "title": "Du hast mein Herz gebrochen",
+      "artist": "Yvonne Catterfeld",
+      "spotifyTrackId": "5JGxicqcoSQcsxRgnDaJel",
+      "tier": 2
     },
     {
       "year": 2004,
@@ -2386,24 +2372,17 @@
     },
     {
       "year": 2004,
-      "title": "Vielleicht",
-      "artist": "Söhne Mannheims",
-      "spotifyTrackId": "5yHYnusUmVL6OqlqEve0GN",
-      "tier": 2
-    },
-    {
-      "year": 2004,
       "title": "Mein Block",
       "artist": "Sido",
       "spotifyTrackId": "4T1tVhQahmAOvTF65lKq4o",
       "tier": 2
     },
     {
-      "year": 2005,
-      "title": "Nur ein Wort",
-      "artist": "Wir sind Helden",
-      "spotifyTrackId": "4hYinIaRxdaoEFSQni6K6I",
-      "tier": 1
+      "year": 2004,
+      "title": "Vielleicht",
+      "artist": "Söhne Mannheims",
+      "spotifyTrackId": "5yHYnusUmVL6OqlqEve0GN",
+      "tier": 2
     },
     {
       "year": 2005,
@@ -2421,9 +2400,30 @@
     },
     {
       "year": 2005,
-      "title": "Ich kenne nichts (das so schön ist wie du)",
-      "artist": "Xavier Naidoo & RZA",
-      "spotifyTrackId": "1E3HbBRkIbgmgPYNQANDQQ",
+      "title": "Emanuela",
+      "artist": "Fettes Brot",
+      "spotifyTrackId": "6MKo8Y901o7FYfWYIDYOZa",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Geile Zeit",
+      "artist": "Juli",
+      "spotifyTrackId": "3hT1h7FiFFxoLqiTMJM7Ew",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Nur ein Wort",
+      "artist": "Wir sind Helden",
+      "spotifyTrackId": "4hYinIaRxdaoEFSQni6K6I",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Und wenn ein Lied",
+      "artist": "Söhne Mannheims",
+      "spotifyTrackId": "4xPQmpR7fqVzfT1yHq1e98",
       "tier": 1
     },
     {
@@ -2435,30 +2435,9 @@
     },
     {
       "year": 2005,
-      "title": "Ding",
-      "artist": "Seeed",
-      "spotifyTrackId": "4i4RFXGR8LjhBjgmIsczzo",
-      "tier": 1
-    },
-    {
-      "year": 2005,
-      "title": "Schrei",
-      "artist": "Tokio Hotel",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
-      "year": 2005,
       "title": "Aufstehn!",
       "artist": "Seeed feat. Cee-Lo",
       "spotifyTrackId": "1a2OetShjC5XxrNN7uUTvP",
-      "tier": 2
-    },
-    {
-      "year": 2005,
-      "title": "Wenn du lachst",
-      "artist": "Silbermond",
-      "spotifyTrackId": "",
       "tier": 2
     },
     {
@@ -2469,11 +2448,25 @@
       "tier": 2
     },
     {
-      "year": 2006,
-      "title": "Zeit, dass sich was dreht",
-      "artist": "Herbert Grönemeyer",
-      "spotifyTrackId": "1NifMX1JqCz9caJowG8dxq",
-      "tier": 1
+      "year": 2005,
+      "title": "Liebe ist",
+      "artist": "Nena",
+      "spotifyTrackId": "6Y7JUV3nBBfUkhAo3PnkC9",
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Schrei",
+      "artist": "Tokio Hotel",
+      "spotifyTrackId": "",
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Wenn du lachst",
+      "artist": "Silbermond",
+      "spotifyTrackId": "",
+      "tier": 2
     },
     {
       "year": 2006,
@@ -2491,9 +2484,9 @@
     },
     {
       "year": 2006,
-      "title": "Emanuela",
-      "artist": "Fettes Brot",
-      "spotifyTrackId": "6MKo8Y901o7FYfWYIDYOZa",
+      "title": "Ding",
+      "artist": "Seeed",
+      "spotifyTrackId": "4i4RFXGR8LjhBjgmIsczzo",
       "tier": 1
     },
     {
@@ -2512,16 +2505,23 @@
     },
     {
       "year": 2006,
-      "title": "Wir beide",
-      "artist": "Juli",
-      "spotifyTrackId": "059vqesASfCCpWPabAngNE",
-      "tier": 2
+      "title": "Klar",
+      "artist": "Jan Delay",
+      "spotifyTrackId": "01y4v0GVDAFwj9hjxTMshg",
+      "tier": 1
     },
     {
       "year": 2006,
-      "title": "Sonnenbank Flavour",
-      "artist": "Bushido",
-      "spotifyTrackId": "1S0Bs64Lu2tRbAoRLc7crq",
+      "title": "Zeit, dass sich was dreht",
+      "artist": "Herbert Grönemeyer",
+      "spotifyTrackId": "1NifMX1JqCz9caJowG8dxq",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Danke",
+      "artist": "Xavier Naidoo",
+      "spotifyTrackId": "5M1Coybff67lURqcwEQZeb",
       "tier": 2
     },
     {
@@ -2539,24 +2539,24 @@
       "tier": 2
     },
     {
+      "year": 2006,
+      "title": "Sonnenbank Flavour",
+      "artist": "Bushido",
+      "spotifyTrackId": "1S0Bs64Lu2tRbAoRLc7crq",
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Wir beide",
+      "artist": "Juli",
+      "spotifyTrackId": "059vqesASfCCpWPabAngNE",
+      "tier": 2
+    },
+    {
       "year": 2007,
       "title": "Das Beste",
       "artist": "Silbermond",
       "spotifyTrackId": "3FEhbAkm1Dy21UvhbYhFM3",
-      "tier": 1
-    },
-    {
-      "year": 2007,
-      "title": "Junge",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "10waMsh44ojvTwXAIy213n",
-      "tier": 1
-    },
-    {
-      "year": 2007,
-      "title": "Ein Stern (der deinen Namen trägt)",
-      "artist": "DJ Ötzi & Nik P.",
-      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -2568,24 +2568,17 @@
     },
     {
       "year": 2007,
+      "title": "Junge",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "10waMsh44ojvTwXAIy213n",
+      "tier": 1
+    },
+    {
+      "year": 2007,
       "title": "Vom selben Stern",
       "artist": "Ich + Ich",
       "spotifyTrackId": "4kCYJigsNQJqs6kpMSlsmL",
       "tier": 1
-    },
-    {
-      "year": 2007,
-      "title": "Stark",
-      "artist": "Ich + Ich",
-      "spotifyTrackId": "4BH3bwOLMm7VLqMNuU5VT6",
-      "tier": 1
-    },
-    {
-      "year": 2007,
-      "title": "Zieh die Schuhe aus",
-      "artist": "Roger Cicero",
-      "spotifyTrackId": "2mFaAyxMvTr9q2Na0A0TLC",
-      "tier": 2
     },
     {
       "year": 2007,
@@ -2596,31 +2589,10 @@
     },
     {
       "year": 2007,
-      "title": "Ich lass für dich das Licht an",
-      "artist": "Revolverheld",
-      "spotifyTrackId": "55VQvOY6dT63vHmYlWJDpG",
+      "title": "Zieh die Schuhe aus",
+      "artist": "Roger Cicero",
+      "spotifyTrackId": "2mFaAyxMvTr9q2Na0A0TLC",
       "tier": 2
-    },
-    {
-      "year": 2007,
-      "title": "Danke",
-      "artist": "Die Fantastischen Vier",
-      "spotifyTrackId": "5M1Coybff67lURqcwEQZeb",
-      "tier": 2
-    },
-    {
-      "year": 2008,
-      "title": "Haus am See",
-      "artist": "Peter Fox",
-      "spotifyTrackId": "7A4KdLy1DXOOC5fhIdDuHz",
-      "tier": 1
-    },
-    {
-      "year": 2008,
-      "title": "Schwarz zu Blau",
-      "artist": "Peter Fox",
-      "spotifyTrackId": "1Fjz0ME9pzk553wH86m3ZZ",
-      "tier": 1
     },
     {
       "year": 2008,
@@ -2631,9 +2603,9 @@
     },
     {
       "year": 2008,
-      "title": "Pflaster",
-      "artist": "Ich + Ich",
-      "spotifyTrackId": "2y9woPM180Da3Tgf1bBE2K",
+      "title": "Ein Stern (der deinen Namen trägt)",
+      "artist": "DJ Ötzi & Nik P.",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -2645,6 +2617,13 @@
     },
     {
       "year": 2008,
+      "title": "Stark",
+      "artist": "Ich + Ich",
+      "spotifyTrackId": "4BH3bwOLMm7VLqMNuU5VT6",
+      "tier": 1
+    },
+    {
+      "year": 2008,
       "title": "Steh wieder auf",
       "artist": "Die Toten Hosen",
       "spotifyTrackId": "",
@@ -2652,9 +2631,9 @@
     },
     {
       "year": 2008,
-      "title": "Schüttel deinen Speck",
-      "artist": "Peter Fox",
-      "spotifyTrackId": "4zAV2pS81cE30xhBHwG9Pf",
+      "title": "Gib mir Sonne",
+      "artist": "Rosenstolz",
+      "spotifyTrackId": "3sfKfoEJp8uR7syEMze89R",
       "tier": 2
     },
     {
@@ -2666,17 +2645,24 @@
     },
     {
       "year": 2008,
-      "title": "Gib mir Sonne",
-      "artist": "Rosenstolz",
-      "spotifyTrackId": "3sfKfoEJp8uR7syEMze89R",
+      "title": "Schüttel deinen Speck",
+      "artist": "Peter Fox",
+      "spotifyTrackId": "4zAV2pS81cE30xhBHwG9Pf",
       "tier": 2
     },
     {
-      "year": 2008,
-      "title": "Berlin City Girl",
-      "artist": "Culcha Candela",
-      "spotifyTrackId": "007iBVyzpG54jM8zQiHHAO",
-      "tier": 2
+      "year": 2009,
+      "title": "Alles kann besser werden",
+      "artist": "Xavier Naidoo",
+      "spotifyTrackId": "5CdzkWPqvSbpz4kFD5jFWg",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Haus am See",
+      "artist": "Peter Fox",
+      "spotifyTrackId": "7A4KdLy1DXOOC5fhIdDuHz",
+      "tier": 1
     },
     {
       "year": 2009,
@@ -2687,23 +2673,9 @@
     },
     {
       "year": 2009,
-      "title": "Disco Pogo",
-      "artist": "Die Atzen",
-      "spotifyTrackId": "1v5ux3K8vE1CWxDa0PVyGu",
-      "tier": 1
-    },
-    {
-      "year": 2009,
-      "title": "Monsta",
-      "artist": "Culcha Candela",
-      "spotifyTrackId": "3RM5RpRDDdST1njqOMG141",
-      "tier": 1
-    },
-    {
-      "year": 2009,
-      "title": "Alles kann besser werden",
-      "artist": "Xavier Naidoo",
-      "spotifyTrackId": "5CdzkWPqvSbpz4kFD5jFWg",
+      "title": "Schwarz zu Blau",
+      "artist": "Peter Fox",
+      "spotifyTrackId": "1Fjz0ME9pzk553wH86m3ZZ",
       "tier": 1
     },
     {
@@ -2715,10 +2687,10 @@
     },
     {
       "year": 2009,
-      "title": "Klar",
-      "artist": "Jan Delay",
-      "spotifyTrackId": "01y4v0GVDAFwj9hjxTMshg",
-      "tier": 1
+      "title": "Bitte hör nicht auf zu träumen",
+      "artist": "Xavier Naidoo",
+      "spotifyTrackId": "51BQw1LVS3JNoItGGwunU0",
+      "tier": 2
     },
     {
       "year": 2009,
@@ -2735,31 +2707,24 @@
       "tier": 2
     },
     {
-      "year": 2009,
-      "title": "Das geht ab (Wir feiern die ganze Nacht)",
-      "artist": "Die Atzen",
-      "spotifyTrackId": "",
-      "tier": 2
+      "year": 2010,
+      "title": "Der Himmel soll warten",
+      "artist": "Sido & Adel Tawil",
+      "spotifyTrackId": "6Fgk8pBAmzx0RBLaoSoX9L",
+      "tier": 1
     },
     {
-      "year": 2009,
-      "title": "Bitte hör nicht auf zu träumen",
-      "artist": "Xavier Naidoo",
-      "spotifyTrackId": "51BQw1LVS3JNoItGGwunU0",
-      "tier": 2
+      "year": 2010,
+      "title": "Disco Pogo",
+      "artist": "Die Atzen",
+      "spotifyTrackId": "1v5ux3K8vE1CWxDa0PVyGu",
+      "tier": 1
     },
     {
       "year": 2010,
       "title": "Geboren um zu leben",
       "artist": "Unheilig",
       "spotifyTrackId": "1VU8t2MpJRLG5iFEIxqq7z",
-      "tier": 1
-    },
-    {
-      "year": 2010,
-      "title": "Halt dich an mir fest",
-      "artist": "Revolverheld",
-      "spotifyTrackId": "4nAD2BvDZhbA9gdwde6qON",
       "tier": 1
     },
     {
@@ -2771,9 +2736,23 @@
     },
     {
       "year": 2010,
-      "title": "Zeiten ändern dich",
-      "artist": "Bushido",
-      "spotifyTrackId": "4YZxwEHbmwwgdvhAUDwFXz",
+      "title": "Monsta",
+      "artist": "Culcha Candela",
+      "spotifyTrackId": "3RM5RpRDDdST1njqOMG141",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Pflaster",
+      "artist": "Ich + Ich",
+      "spotifyTrackId": "2y9woPM180Da3Tgf1bBE2K",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Unter deiner Flagge",
+      "artist": "Unheilig",
+      "spotifyTrackId": "5fTz6JhIQKlodMXoanbJNI",
       "tier": 1
     },
     {
@@ -2785,10 +2764,17 @@
     },
     {
       "year": 2010,
-      "title": "Unter deiner Flagge",
-      "artist": "Unheilig",
-      "spotifyTrackId": "5fTz6JhIQKlodMXoanbJNI",
+      "title": "Zeiten ändern dich",
+      "artist": "Bushido",
+      "spotifyTrackId": "4YZxwEHbmwwgdvhAUDwFXz",
       "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Das geht ab (Wir feiern die ganze Nacht)",
+      "artist": "Die Atzen",
+      "spotifyTrackId": "",
+      "tier": 2
     },
     {
       "year": 2010,
@@ -2806,13 +2792,6 @@
     },
     {
       "year": 2010,
-      "title": "Von Allein",
-      "artist": "Culcha Candela",
-      "spotifyTrackId": "4llQorteAcXVpDfRh0QXex",
-      "tier": 2
-    },
-    {
-      "year": 2010,
       "title": "Wahre Werte",
       "artist": "Frei.Wild",
       "spotifyTrackId": "1QTQmlfOmUTfe53Xd3YQwg",
@@ -2820,23 +2799,16 @@
     },
     {
       "year": 2011,
+      "title": "Halt dich an mir fest",
+      "artist": "Revolverheld",
+      "spotifyTrackId": "4nAD2BvDZhbA9gdwde6qON",
+      "tier": 1
+    },
+    {
+      "year": 2011,
       "title": "Nur noch kurz die Welt retten",
       "artist": "Tim Bendzko",
       "spotifyTrackId": "0Wq6whEjKeAAUi4nEim1DA",
-      "tier": 1
-    },
-    {
-      "year": 2011,
-      "title": "Wovon sollen wir träumen",
-      "artist": "Frida Gold",
-      "spotifyTrackId": "1uKubXaFxoYl5KYiLAa0aw",
-      "tier": 1
-    },
-    {
-      "year": 2011,
-      "title": "Amoi seg' ma uns wieder",
-      "artist": "Andreas Gabalier",
-      "spotifyTrackId": "1s9Iij8FwCbeyxDCBdlz9P",
       "tier": 1
     },
     {
@@ -2862,16 +2834,23 @@
     },
     {
       "year": 2011,
-      "title": "So perfekt",
-      "artist": "Casper",
-      "spotifyTrackId": "2xWEfTSpapoxnmkeSb0hHf",
+      "title": "Wovon sollen wir träumen",
+      "artist": "Frida Gold",
+      "spotifyTrackId": "1uKubXaFxoYl5KYiLAa0aw",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Berlin City Girl",
+      "artist": "Culcha Candela",
+      "spotifyTrackId": "007iBVyzpG54jM8zQiHHAO",
       "tier": 2
     },
     {
       "year": 2011,
-      "title": "Nur in meinem Kopf",
-      "artist": "Andreas Bourani",
-      "spotifyTrackId": "6sJqyTUtxpzdISd2iYVAPT",
+      "title": "Echt",
+      "artist": "Glasperlenspiel",
+      "spotifyTrackId": "3zvnqac9doHz3NlmO5DGoV",
       "tier": 2
     },
     {
@@ -2883,9 +2862,16 @@
     },
     {
       "year": 2011,
-      "title": "Echt",
-      "artist": "Glasperlenspiel",
-      "spotifyTrackId": "3zvnqac9doHz3NlmO5DGoV",
+      "title": "Nur in meinem Kopf",
+      "artist": "Andreas Bourani",
+      "spotifyTrackId": "6sJqyTUtxpzdISd2iYVAPT",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "So perfekt",
+      "artist": "Casper",
+      "spotifyTrackId": "2xWEfTSpapoxnmkeSb0hHf",
       "tier": 2
     },
     {
@@ -2897,9 +2883,16 @@
     },
     {
       "year": 2012,
-      "title": "Lila Wolken",
-      "artist": "Marteria, Yasha & Miss Platnum",
-      "spotifyTrackId": "0c6EzAElZrC62yj80FLmpP",
+      "title": "Ich will nicht nach Berlin",
+      "artist": "Kraftklub",
+      "spotifyTrackId": "0XcC71H8QAjrW0NUqXHX1A",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Leider geil",
+      "artist": "Deichkind",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -2911,24 +2904,10 @@
     },
     {
       "year": 2012,
-      "title": "Ich will nicht nach Berlin",
-      "artist": "Kraftklub",
-      "spotifyTrackId": "0XcC71H8QAjrW0NUqXHX1A",
-      "tier": 1
-    },
-    {
-      "year": 2012,
-      "title": "Bilder im Kopf",
-      "artist": "Sido",
-      "spotifyTrackId": "3AzVdNe7tCYbjjRzQyVLbN",
-      "tier": 1
-    },
-    {
-      "year": 2012,
-      "title": "Leider geil",
-      "artist": "Deichkind",
-      "spotifyTrackId": "",
-      "tier": 1
+      "title": "Du",
+      "artist": "Cro",
+      "spotifyTrackId": "5BsSzjNVJBj3jZj6npj0So",
+      "tier": 2
     },
     {
       "year": 2012,
@@ -2946,16 +2925,16 @@
     },
     {
       "year": 2012,
-      "title": "Du",
-      "artist": "Cro",
-      "spotifyTrackId": "5BsSzjNVJBj3jZj6npj0So",
+      "title": "So wie du warst",
+      "artist": "Unheilig",
+      "spotifyTrackId": "7o6MC3gIIjI1NskrCuJabI",
       "tier": 2
     },
     {
       "year": 2012,
-      "title": "So wie du warst",
-      "artist": "Unheilig",
-      "spotifyTrackId": "7o6MC3gIIjI1NskrCuJabI",
+      "title": "Von Allein",
+      "artist": "Culcha Candela",
+      "spotifyTrackId": "4llQorteAcXVpDfRh0QXex",
       "tier": 2
     },
     {
@@ -2967,16 +2946,23 @@
     },
     {
       "year": 2013,
-      "title": "Lieder",
-      "artist": "Adel Tawil",
-      "spotifyTrackId": "2ZoO0uLQRp2WhTlyIH8PJf",
+      "title": "Bei meiner Seele",
+      "artist": "Xavier Naidoo",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
       "year": 2013,
-      "title": "Wie schön du bist",
-      "artist": "Sarah Connor",
-      "spotifyTrackId": "2xtnnO9bHKXEmsfetO3ldK",
+      "title": "Bilder im Kopf",
+      "artist": "Sido",
+      "spotifyTrackId": "3AzVdNe7tCYbjjRzQyVLbN",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Lila Wolken",
+      "artist": "Marteria, Yasha & Miss Platnum",
+      "spotifyTrackId": "0c6EzAElZrC62yj80FLmpP",
       "tier": 1
     },
     {
@@ -2988,23 +2974,9 @@
     },
     {
       "year": 2013,
-      "title": "Der Himmel soll warten",
-      "artist": "Sido & Adel Tawil",
-      "spotifyTrackId": "6Fgk8pBAmzx0RBLaoSoX9L",
-      "tier": 1
-    },
-    {
-      "year": 2013,
-      "title": "Bei meiner Seele",
-      "artist": "Xavier Naidoo",
-      "spotifyTrackId": "",
-      "tier": 1
-    },
-    {
-      "year": 2013,
-      "title": "Whatever",
-      "artist": "Cro",
-      "spotifyTrackId": "3jtWarFX9mNJpamfDTeP5J",
+      "title": "Am seidenen Faden",
+      "artist": "Tim Bendzko",
+      "spotifyTrackId": "46LGWszI7pK43tqzVt29Wm",
       "tier": 2
     },
     {
@@ -3016,17 +2988,24 @@
     },
     {
       "year": 2013,
-      "title": "Am seidenen Faden",
-      "artist": "Tim Bendzko",
-      "spotifyTrackId": "46LGWszI7pK43tqzVt29Wm",
-      "tier": 2
-    },
-    {
-      "year": 2013,
       "title": "Millionen Lichter",
       "artist": "Christina Stürmer",
       "spotifyTrackId": "66og7eLYQaDJwjWbFB0IiJ",
       "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Whatever",
+      "artist": "Cro",
+      "spotifyTrackId": "3jtWarFX9mNJpamfDTeP5J",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Amoi seg' ma uns wieder",
+      "artist": "Andreas Gabalier",
+      "spotifyTrackId": "1s9Iij8FwCbeyxDCBdlz9P",
+      "tier": 1
     },
     {
       "year": 2014,
@@ -3044,23 +3023,16 @@
     },
     {
       "year": 2014,
-      "title": "Auf anderen Wegen",
-      "artist": "Andreas Bourani",
-      "spotifyTrackId": "6GyBgO7IGH7nBdhbogEYnT",
-      "tier": 1
-    },
-    {
-      "year": 2014,
-      "title": "Traum",
-      "artist": "Cro",
-      "spotifyTrackId": "6D579iDSk3u8fCokhBl8dQ",
-      "tier": 1
-    },
-    {
-      "year": 2014,
       "title": "Kids (2 Finger an den Kopf)",
       "artist": "Marteria",
       "spotifyTrackId": "3pJlJBxitGP7Btt5veLnDd",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Lieder",
+      "artist": "Adel Tawil",
+      "spotifyTrackId": "2ZoO0uLQRp2WhTlyIH8PJf",
       "tier": 1
     },
     {
@@ -3072,23 +3044,30 @@
     },
     {
       "year": 2014,
-      "title": "Lass uns gehen",
-      "artist": "Revolverheld",
-      "spotifyTrackId": "0fHsDAxHoljPezzp8A84Kz",
-      "tier": 2
-    },
-    {
-      "year": 2014,
-      "title": "Wir sind groß",
-      "artist": "Mark Forster",
-      "spotifyTrackId": "7AraSdlKIOoPCLRKkI3WjP",
-      "tier": 2
+      "title": "Traum",
+      "artist": "Cro",
+      "spotifyTrackId": "6D579iDSk3u8fCokhBl8dQ",
+      "tier": 1
     },
     {
       "year": 2014,
       "title": "Bad Chick",
       "artist": "Cro",
       "spotifyTrackId": "3NqXYg2MGboDZY72cZCARQ",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Ich lass für dich das Licht an",
+      "artist": "Revolverheld",
+      "spotifyTrackId": "55VQvOY6dT63vHmYlWJDpG",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Lass uns gehen",
+      "artist": "Revolverheld",
+      "spotifyTrackId": "0fHsDAxHoljPezzp8A84Kz",
       "tier": 2
     },
     {
@@ -3100,13 +3079,6 @@
     },
     {
       "year": 2015,
-      "title": "Hulapalu",
-      "artist": "Andreas Gabalier",
-      "spotifyTrackId": "627QU4vNG3alCWCK1FMeLK",
-      "tier": 1
-    },
-    {
-      "year": 2015,
       "title": "Astronaut",
       "artist": "Sido feat. Andreas Bourani",
       "spotifyTrackId": "0pQr5WsobmdZHnuObT0sc2",
@@ -3114,9 +3086,9 @@
     },
     {
       "year": 2015,
-      "title": "Lieblingsmensch",
-      "artist": "Namika",
-      "spotifyTrackId": "6oHDvarQSp0mf5AD1SyNH0",
+      "title": "Auf anderen Wegen",
+      "artist": "Andreas Bourani",
+      "spotifyTrackId": "6GyBgO7IGH7nBdhbogEYnT",
       "tier": 1
     },
     {
@@ -3142,6 +3114,41 @@
     },
     {
       "year": 2015,
+      "title": "Lieblingsmensch",
+      "artist": "Namika",
+      "spotifyTrackId": "6oHDvarQSp0mf5AD1SyNH0",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Wie schön du bist",
+      "artist": "Sarah Connor",
+      "spotifyTrackId": "2xtnnO9bHKXEmsfetO3ldK",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Bye Bye",
+      "artist": "Cro",
+      "spotifyTrackId": "",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Herz über Kopf",
+      "artist": "Joris",
+      "spotifyTrackId": "2krwNGlAHQuClcMw0WMUiz",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Ich will nur, dass du weißt",
+      "artist": "SDP feat. Adel Tawil",
+      "spotifyTrackId": "5cNrYbEQ6QHj8LwibGk57Z",
+      "tier": 2
+    },
+    {
+      "year": 2015,
       "title": "Musik ist keine Lösung",
       "artist": "Alligatoah",
       "spotifyTrackId": "4P4HYzDVjzeaP5WUTH3Vah",
@@ -3155,38 +3162,10 @@
       "tier": 2
     },
     {
-      "year": 2015,
-      "title": "Ich will nur, dass du weißt",
-      "artist": "SDP feat. Adel Tawil",
-      "spotifyTrackId": "5cNrYbEQ6QHj8LwibGk57Z",
-      "tier": 2
-    },
-    {
-      "year": 2015,
-      "title": "Bye Bye",
-      "artist": "Cro",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
       "year": 2016,
       "title": "80 Millionen",
       "artist": "Max Giesinger",
       "spotifyTrackId": "2ladamWCFAfQbgIIdkewAx",
-      "tier": 1
-    },
-    {
-      "year": 2016,
-      "title": "Wenn sie tanzt",
-      "artist": "Max Giesinger",
-      "spotifyTrackId": "2yEPMTjt6Jp7yS9zh12ZHb",
-      "tier": 1
-    },
-    {
-      "year": 2016,
-      "title": "Vincent",
-      "artist": "Sarah Connor",
-      "spotifyTrackId": "7vs1Yi6SUphHp0eW6ys8HG",
       "tier": 1
     },
     {
@@ -3198,6 +3177,20 @@
     },
     {
       "year": 2016,
+      "title": "Die immer lacht",
+      "artist": "Stereoact feat. Kerstin Ott",
+      "spotifyTrackId": "1vVppN5AZqTG5eZjSOsRtX",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Hulapalu",
+      "artist": "Andreas Gabalier",
+      "spotifyTrackId": "627QU4vNG3alCWCK1FMeLK",
+      "tier": 1
+    },
+    {
+      "year": 2016,
       "title": "Oft gefragt",
       "artist": "AnnenMayKantereit",
       "spotifyTrackId": "6J07Aeq7fOW5Xx9mFtwyoH",
@@ -3205,16 +3198,23 @@
     },
     {
       "year": 2016,
-      "title": "Die immer lacht",
-      "artist": "Kerstin Ott",
-      "spotifyTrackId": "1vVppN5AZqTG5eZjSOsRtX",
+      "title": "Vincent",
+      "artist": "Sarah Connor",
+      "spotifyTrackId": "7vs1Yi6SUphHp0eW6ys8HG",
       "tier": 1
     },
     {
       "year": 2016,
-      "title": "Feuerwerk",
-      "artist": "Wincent Weiss",
-      "spotifyTrackId": "3GRoxbBauU8Ui1zUJwn9aD",
+      "title": "Wenn sie tanzt",
+      "artist": "Max Giesinger",
+      "spotifyTrackId": "2yEPMTjt6Jp7yS9zh12ZHb",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Ahnma",
+      "artist": "Beginner",
+      "spotifyTrackId": "1sr9lbDDGIxmFK7wUdA1Z8",
       "tier": 2
     },
     {
@@ -3226,23 +3226,30 @@
     },
     {
       "year": 2016,
-      "title": "Herz über Kopf",
-      "artist": "Joris",
-      "spotifyTrackId": "2krwNGlAHQuClcMw0WMUiz",
+      "title": "Feuerwerk",
+      "artist": "Wincent Weiss",
+      "spotifyTrackId": "3GRoxbBauU8Ui1zUJwn9aD",
       "tier": 2
     },
     {
       "year": 2016,
-      "title": "Ahnma",
-      "artist": "Beginner",
-      "spotifyTrackId": "1sr9lbDDGIxmFK7wUdA1Z8",
+      "title": "Mörder",
+      "artist": "Bonez MC & RAF Camora",
+      "spotifyTrackId": "6v6xHeuMLbCuddN0ETrGhs",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Wir sind groß",
+      "artist": "Mark Forster",
+      "spotifyTrackId": "7AraSdlKIOoPCLRKkI3WjP",
       "tier": 2
     },
     {
       "year": 2017,
-      "title": "Was du Liebe nennst",
-      "artist": "Bausa",
-      "spotifyTrackId": "4hKWUzhQWsOkgT6LnDEASe",
+      "title": "Erfolg ist kein Glück",
+      "artist": "Kontra K",
+      "spotifyTrackId": "4xuVfUXkHe1YZZZWNICGcV",
       "tier": 1
     },
     {
@@ -3261,13 +3268,6 @@
     },
     {
       "year": 2017,
-      "title": "Sowieso",
-      "artist": "Mark Forster",
-      "spotifyTrackId": "1CLljfgtXG6ODaJONSMkwQ",
-      "tier": 1
-    },
-    {
-      "year": 2017,
       "title": "Marionetten",
       "artist": "Söhne Mannheims",
       "spotifyTrackId": "4ZZwPfHnZDgDV8ze9C8pqs",
@@ -3275,24 +3275,10 @@
     },
     {
       "year": 2017,
-      "title": "Erfolg ist kein Glück",
-      "artist": "Kontra K",
-      "spotifyTrackId": "4xuVfUXkHe1YZZZWNICGcV",
+      "title": "Sowieso",
+      "artist": "Mark Forster",
+      "spotifyTrackId": "1CLljfgtXG6ODaJONSMkwQ",
       "tier": 1
-    },
-    {
-      "year": 2017,
-      "title": "Unendlichkeit",
-      "artist": "Cro",
-      "spotifyTrackId": "1ALs3LHwsOSIyU2oqPenTG",
-      "tier": 2
-    },
-    {
-      "year": 2017,
-      "title": "Musik sein",
-      "artist": "Wincent Weiss",
-      "spotifyTrackId": "00ZoztotP7jEoezTPNMjvm",
-      "tier": 2
     },
     {
       "year": 2017,
@@ -3309,24 +3295,24 @@
       "tier": 2
     },
     {
-      "year": 2018,
-      "title": "Je ne parle pas français",
-      "artist": "Namika",
-      "spotifyTrackId": "4eJqzRN15DabYK4byfWghD",
-      "tier": 1
+      "year": 2017,
+      "title": "Musik sein",
+      "artist": "Wincent Weiss",
+      "spotifyTrackId": "00ZoztotP7jEoezTPNMjvm",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Unendlichkeit",
+      "artist": "Cro",
+      "spotifyTrackId": "1ALs3LHwsOSIyU2oqPenTG",
+      "tier": 2
     },
     {
       "year": 2018,
-      "title": "Zusammen",
-      "artist": "Die Fantastischen Vier & Clueso",
-      "spotifyTrackId": "2qlTyN8Ou086f0HTtZtGoA",
-      "tier": 1
-    },
-    {
-      "year": 2018,
-      "title": "One Night Stand",
-      "artist": "Capital Bra",
-      "spotifyTrackId": "4i2DmyVwf29lEdmLGNTyGM",
+      "title": "500 PS",
+      "artist": "Bonez MC & RAF Camora",
+      "spotifyTrackId": "4UOXo3xWnxYdTf3sFyRaUG",
       "tier": 1
     },
     {
@@ -3338,9 +3324,16 @@
     },
     {
       "year": 2018,
-      "title": "Regenbogenfarben",
-      "artist": "Kerstin Ott",
-      "spotifyTrackId": "1L0zpRujG3Rgq7K1I8E3nD",
+      "title": "Je ne parle pas français",
+      "artist": "Namika",
+      "spotifyTrackId": "4eJqzRN15DabYK4byfWghD",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Melodien",
+      "artist": "Capital Bra & Juju",
+      "spotifyTrackId": "3HKjsfDbwnGwMRN8pqPO2b",
       "tier": 1
     },
     {
@@ -3352,10 +3345,31 @@
     },
     {
       "year": 2018,
-      "title": "Berlin lebt",
+      "title": "One Night Stand",
       "artist": "Capital Bra",
-      "spotifyTrackId": "5FGtzUgxycYideaPBFdkaV",
-      "tier": 2
+      "spotifyTrackId": "4i2DmyVwf29lEdmLGNTyGM",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Regenbogenfarben",
+      "artist": "Kerstin Ott",
+      "spotifyTrackId": "1L0zpRujG3Rgq7K1I8E3nD",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Was du Liebe nennst",
+      "artist": "Bausa",
+      "spotifyTrackId": "4hKWUzhQWsOkgT6LnDEASe",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Zusammen",
+      "artist": "Die Fantastischen Vier & Clueso",
+      "spotifyTrackId": "2qlTyN8Ou086f0HTtZtGoA",
+      "tier": 1
     },
     {
       "year": 2018,
@@ -3366,9 +3380,9 @@
     },
     {
       "year": 2018,
-      "title": "Tausend Tattoos",
-      "artist": "Sido",
-      "spotifyTrackId": "1rGZd7EVl4aOClpzDLNPwy",
+      "title": "Berlin lebt",
+      "artist": "Capital Bra",
+      "spotifyTrackId": "5FGtzUgxycYideaPBFdkaV",
       "tier": 2
     },
     {
@@ -3380,30 +3394,9 @@
     },
     {
       "year": 2019,
-      "title": "Roller",
-      "artist": "Apache 207",
-      "spotifyTrackId": "6hw1Sy9wZ8UCxYGdpKrU6M",
-      "tier": 1
-    },
-    {
-      "year": 2019,
-      "title": "500 PS",
-      "artist": "Bonez MC & RAF Camora",
-      "spotifyTrackId": "4UOXo3xWnxYdTf3sFyRaUG",
-      "tier": 1
-    },
-    {
-      "year": 2019,
-      "title": "Vermissen",
-      "artist": "Juju & Henning May",
-      "spotifyTrackId": "1SSzM044DUbVpYNNHWIhYJ",
-      "tier": 1
-    },
-    {
-      "year": 2019,
-      "title": "Melodien",
-      "artist": "Capital Bra & Juju",
-      "spotifyTrackId": "3HKjsfDbwnGwMRN8pqPO2b",
+      "title": "Gib ihm",
+      "artist": "Shirin David",
+      "spotifyTrackId": "5iIgIxtMNeogKaFUfvuAbs",
       "tier": 1
     },
     {
@@ -3415,10 +3408,38 @@
     },
     {
       "year": 2019,
-      "title": "Gib ihm",
-      "artist": "Shirin David",
-      "spotifyTrackId": "5iIgIxtMNeogKaFUfvuAbs",
+      "title": "Tilidin",
+      "artist": "Samra & Capital Bra",
+      "spotifyTrackId": "1VEMUkGFio5uURvN8x1DZJ",
       "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Vermissen",
+      "artist": "Juju & Henning May",
+      "spotifyTrackId": "1SSzM044DUbVpYNNHWIhYJ",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "2002",
+      "artist": "Sido feat. Apache 207",
+      "spotifyTrackId": "2u8AXJyk8pICzj2wyPBL0b",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Cherry Lady",
+      "artist": "Capital Bra",
+      "spotifyTrackId": "4j5WelE5mkf9A2jmts729h",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Fieber",
+      "artist": "Bausa",
+      "spotifyTrackId": "7iQLj3OuDnuB031syVVI2f",
+      "tier": 2
     },
     {
       "year": 2019,
@@ -3436,9 +3457,16 @@
     },
     {
       "year": 2019,
-      "title": "Cherry Lady",
-      "artist": "Capital Bra",
-      "spotifyTrackId": "4j5WelE5mkf9A2jmts729h",
+      "title": "Tausend Tattoos",
+      "artist": "Sido",
+      "spotifyTrackId": "1rGZd7EVl4aOClpzDLNPwy",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Wieder Lila",
+      "artist": "Samra & Capital Bra",
+      "spotifyTrackId": "2kkcJ8tSDV42LdWcPjy6We",
       "tier": 2
     },
     {
@@ -3449,11 +3477,11 @@
       "tier": 2
     },
     {
-      "year": 2020,
-      "title": "Tilidin",
-      "artist": "Samra & Capital Bra",
-      "spotifyTrackId": "1VEMUkGFio5uURvN8x1DZJ",
-      "tier": 1
+      "year": 2019,
+      "title": "Wolke 10",
+      "artist": "Mero",
+      "spotifyTrackId": "4Ry9AxD63dk4f6GT4nvdPT",
+      "tier": 2
     },
     {
       "year": 2020,
@@ -3471,9 +3499,16 @@
     },
     {
       "year": 2020,
-      "title": "Ich darf das",
-      "artist": "Shirin David",
-      "spotifyTrackId": "0i239e7IfbcMy4xx3FGMNz",
+      "title": "Hobby Hobby",
+      "artist": "Mero",
+      "spotifyTrackId": "1Mp78QzFO1GrE5h1HvM0Rp",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Roller",
+      "artist": "Apache 207",
+      "spotifyTrackId": "6hw1Sy9wZ8UCxYGdpKrU6M",
       "tier": 1
     },
     {
@@ -3485,20 +3520,6 @@
     },
     {
       "year": 2020,
-      "title": "Hobby Hobby",
-      "artist": "Mero",
-      "spotifyTrackId": "1Mp78QzFO1GrE5h1HvM0Rp",
-      "tier": 1
-    },
-    {
-      "year": 2020,
-      "title": "Mörder",
-      "artist": "Bonez MC & RAF Camora",
-      "spotifyTrackId": "6v6xHeuMLbCuddN0ETrGhs",
-      "tier": 2
-    },
-    {
-      "year": 2020,
       "title": "Vergiss mich",
       "artist": "Kontra K",
       "spotifyTrackId": "",
@@ -3506,37 +3527,30 @@
     },
     {
       "year": 2020,
-      "title": "Wolke 10",
-      "artist": "Mero",
-      "spotifyTrackId": "4Ry9AxD63dk4f6GT4nvdPT",
+      "title": "Übermorgen",
+      "artist": "Mark Forster",
+      "spotifyTrackId": "1NP7bzm8UksJUWXsuFoOwE",
       "tier": 2
-    },
-    {
-      "year": 2020,
-      "title": "Wieder Lila",
-      "artist": "Samra & Capital Bra",
-      "spotifyTrackId": "2kkcJ8tSDV42LdWcPjy6We",
-      "tier": 2
-    },
-    {
-      "year": 2021,
-      "title": "Nicht die Musik",
-      "artist": "Kummer",
-      "spotifyTrackId": "255yef0DAuu82ov3WhVS3l",
-      "tier": 1
-    },
-    {
-      "year": 2021,
-      "title": "Der letzte Song (Alles wird gut)",
-      "artist": "Kummer feat. Fred Rabe",
-      "spotifyTrackId": "4FxaCzWS3M4eSfoEiStq79",
-      "tier": 1
     },
     {
       "year": 2021,
       "title": "9010",
       "artist": "Kummer",
       "spotifyTrackId": "27YLmJ5rJ8DykxCmEyM5HO",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Auf & ab",
+      "artist": "Montez",
+      "spotifyTrackId": "",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Auf mich",
+      "artist": "badmómzjay",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -3548,9 +3562,16 @@
     },
     {
       "year": 2021,
-      "title": "Auf mich",
-      "artist": "badmómzjay",
-      "spotifyTrackId": "",
+      "title": "Ich darf das",
+      "artist": "Shirin David",
+      "spotifyTrackId": "0i239e7IfbcMy4xx3FGMNz",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Nicht die Musik",
+      "artist": "Kummer",
+      "spotifyTrackId": "255yef0DAuu82ov3WhVS3l",
       "tier": 1
     },
     {
@@ -3569,9 +3590,9 @@
     },
     {
       "year": 2021,
-      "title": "Übermorgen",
-      "artist": "Mark Forster",
-      "spotifyTrackId": "1NP7bzm8UksJUWXsuFoOwE",
+      "title": "Matrix",
+      "artist": "Apache 207",
+      "spotifyTrackId": "7ygVaACDENw4PgLbN1awFE",
       "tier": 2
     },
     {
@@ -3582,38 +3603,10 @@
       "tier": 2
     },
     {
-      "year": 2021,
-      "title": "Matrix",
-      "artist": "Apache 207",
-      "spotifyTrackId": "7ygVaACDENw4PgLbN1awFE",
-      "tier": 2
-    },
-    {
       "year": 2022,
-      "title": "Layla",
-      "artist": "DJ Robin & Schürze",
-      "spotifyTrackId": "3ujiq7yK4Uan5z4876fHLK",
-      "tier": 1
-    },
-    {
-      "year": 2022,
-      "title": "Wildberry Lillet",
-      "artist": "Nina Chuba",
-      "spotifyTrackId": "6yeZM8gyykjaf8w0GqRfK4",
-      "tier": 1
-    },
-    {
-      "year": 2022,
-      "title": "Zukunft Pink",
-      "artist": "Peter Fox feat. Inéz",
-      "spotifyTrackId": "4YxZQd3I4rj1nqkXgvpCk4",
-      "tier": 1
-    },
-    {
-      "year": 2022,
-      "title": "Auf & ab",
-      "artist": "Montez",
-      "spotifyTrackId": "",
+      "title": "Der letzte Song (Alles wird gut)",
+      "artist": "Kummer feat. Fred Rabe",
+      "spotifyTrackId": "4FxaCzWS3M4eSfoEiStq79",
       "tier": 1
     },
     {
@@ -3625,16 +3618,37 @@
     },
     {
       "year": 2022,
-      "title": "Party Sahne",
-      "artist": "Ski Aggu",
-      "spotifyTrackId": "2hFOXN8Eq2gXIGGMIdHdWJ",
+      "title": "Layla",
+      "artist": "DJ Robin & Schürze",
+      "spotifyTrackId": "3ujiq7yK4Uan5z4876fHLK",
       "tier": 1
     },
     {
       "year": 2022,
-      "title": "Fieber",
-      "artist": "Bausa",
-      "spotifyTrackId": "7iQLj3OuDnuB031syVVI2f",
+      "title": "Ohne Benzin",
+      "artist": "Domiziana",
+      "spotifyTrackId": "3a0F2N6rXJSibQTp77xH4f",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Sehnsucht",
+      "artist": "Miksu/Macloud, t-low & makko",
+      "spotifyTrackId": "7xaqxUl08zOg0YNUHokQpq",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Wildberry Lillet",
+      "artist": "Nina Chuba",
+      "spotifyTrackId": "6yeZM8gyykjaf8w0GqRfK4",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Kompass",
+      "artist": "Kontra K",
+      "spotifyTrackId": "",
       "tier": 2
     },
     {
@@ -3646,23 +3660,16 @@
     },
     {
       "year": 2022,
-      "title": "2002",
-      "artist": "Apache 207",
-      "spotifyTrackId": "2u8AXJyk8pICzj2wyPBL0b",
-      "tier": 2
-    },
-    {
-      "year": 2022,
-      "title": "Kompass",
-      "artist": "Kontra K",
+      "title": "Zorn & Liebe",
+      "artist": "Provinz feat. Nina Chuba",
       "spotifyTrackId": "",
       "tier": 2
     },
     {
       "year": 2023,
-      "title": "Komet",
-      "artist": "Udo Lindenberg & Apache 207",
-      "spotifyTrackId": "7oQepKHmXDaPC3rgeLRvQu",
+      "title": "9 bis 9",
+      "artist": "Sira, Badchieff & Bausa",
+      "spotifyTrackId": "5YWu6dt50Nieq8qi572RF8",
       "tier": 1
     },
     {
@@ -3674,30 +3681,37 @@
     },
     {
       "year": 2023,
-      "title": "Bauch Beine Po",
-      "artist": "Shirin David",
-      "spotifyTrackId": "13QjwdjKiFrKzYznJu6iiP",
+      "title": "Komet",
+      "artist": "Udo Lindenberg & Apache 207",
+      "spotifyTrackId": "7oQepKHmXDaPC3rgeLRvQu",
       "tier": 1
     },
     {
       "year": 2023,
-      "title": "Ohne Benzin",
-      "artist": "Domiziana",
-      "spotifyTrackId": "3a0F2N6rXJSibQTp77xH4f",
+      "title": "Liebe auf der Rückbank",
+      "artist": "Finch x Tream",
+      "spotifyTrackId": "1oOAF031KeT5zokTIK5A3N",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Party Sahne",
+      "artist": "Ski Aggu",
+      "spotifyTrackId": "2hFOXN8Eq2gXIGGMIdHdWJ",
       "tier": 1
     },
     {
       "year": 2023,
       "title": "Sie weiß",
-      "artist": "Ayliva",
+      "artist": "Ayliva feat. Mero",
       "spotifyTrackId": "7DyDjhZMEIK5Ied4juTCyc",
       "tier": 1
     },
     {
       "year": 2023,
-      "title": "Sehnsucht",
-      "artist": "Miksu/Macloud, t-low & makko",
-      "spotifyTrackId": "7xaqxUl08zOg0YNUHokQpq",
+      "title": "Zukunft Pink",
+      "artist": "Peter Fox feat. Inéz",
+      "spotifyTrackId": "4YxZQd3I4rj1nqkXgvpCk4",
       "tier": 1
     },
     {
@@ -3709,9 +3723,9 @@
     },
     {
       "year": 2023,
-      "title": "Zorn und Zärtlichkeit",
-      "artist": "Provinz",
-      "spotifyTrackId": "",
+      "title": "Mädchen auf dem Pferd",
+      "artist": "Luca-Dante Spadafora, Niklas Dee, Octavian, Peter Plate & Ulf Leo Sommer",
+      "spotifyTrackId": "7AOJcugo17Kr1WUheSI6Oq",
       "tier": 2
     },
     {
@@ -3730,16 +3744,9 @@
     },
     {
       "year": 2024,
-      "title": "9 bis 9",
-      "artist": "Sira, Badchieff & Bausa",
-      "spotifyTrackId": "5YWu6dt50Nieq8qi572RF8",
-      "tier": 1
-    },
-    {
-      "year": 2024,
-      "title": "Vempa",
-      "artist": "Fourty & Bausa",
-      "spotifyTrackId": "3pPMgoouYtezLiBTEeL9be",
+      "title": "Bauch Beine Po",
+      "artist": "Shirin David",
+      "spotifyTrackId": "13QjwdjKiFrKzYznJu6iiP",
       "tier": 1
     },
     {
@@ -3758,13 +3765,6 @@
     },
     {
       "year": 2024,
-      "title": "Liebe auf der Rückbank",
-      "artist": "Finch x Tream",
-      "spotifyTrackId": "1oOAF031KeT5zokTIK5A3N",
-      "tier": 1
-    },
-    {
-      "year": 2024,
       "title": "Panama",
       "artist": "GReeeN",
       "spotifyTrackId": "3qcreqi8RaGqahtJSQDxNI",
@@ -3772,10 +3772,10 @@
     },
     {
       "year": 2024,
-      "title": "Mittelmeer",
-      "artist": "Pashanim",
-      "spotifyTrackId": "4gxAezF8MafmWSZ0KCsRGj",
-      "tier": 2
+      "title": "Vempa",
+      "artist": "Fourty & Bausa",
+      "spotifyTrackId": "3pPMgoouYtezLiBTEeL9be",
+      "tier": 1
     },
     {
       "year": 2024,
@@ -3786,23 +3786,44 @@
     },
     {
       "year": 2024,
+      "title": "Mittelmeer",
+      "artist": "Pashanim",
+      "spotifyTrackId": "4gxAezF8MafmWSZ0KCsRGj",
+      "tier": 2
+    },
+    {
+      "year": 2024,
       "title": "Wie du manchmal fehlst",
       "artist": "Zartmann & Ski Aggu",
       "spotifyTrackId": "0Mvc2FRCYnVjMTd4jx4DMq",
       "tier": 2
     },
     {
-      "year": 2024,
-      "title": "Mädchen auf dem Pferd",
-      "artist": "Luca-Dante Spadafora, Niklas Dee, Octavian, Peter Plate & Ulf Leo Sommer",
-      "spotifyTrackId": "7AOJcugo17Kr1WUheSI6Oq",
-      "tier": 2
+      "year": 2025,
+      "title": "Akon",
+      "artist": "Jazeek",
+      "spotifyTrackId": "6YFNhYf7A33biVmMG1JSQf",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Fata Morgana",
+      "artist": "Nina Chuba",
+      "spotifyTrackId": "7a4O4FPGjTL4084bbvFeJF",
+      "tier": 1
     },
     {
       "year": 2025,
       "title": "Tau mich auf",
       "artist": "Zartmann",
       "spotifyTrackId": "6j8OrKDQHxXakjA7KKbWzj",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Vielleicht vielleicht",
+      "artist": "MilleniumKid & JBS",
+      "spotifyTrackId": "559mLg44MrcA7JzYGbpXfL",
       "tier": 1
     },
     {
@@ -3821,24 +3842,10 @@
     },
     {
       "year": 2025,
-      "title": "Akon",
-      "artist": "Jazeek",
-      "spotifyTrackId": "6YFNhYf7A33biVmMG1JSQf",
-      "tier": 1
-    },
-    {
-      "year": 2025,
-      "title": "Vielleicht vielleicht",
-      "artist": "MilleniumKid & JBS",
-      "spotifyTrackId": "559mLg44MrcA7JzYGbpXfL",
-      "tier": 1
-    },
-    {
-      "year": 2025,
-      "title": "Fata Morgana",
-      "artist": "Nina Chuba",
-      "spotifyTrackId": "7a4O4FPGjTL4084bbvFeJF",
-      "tier": 1
+      "title": "Bella Napoli",
+      "artist": "Roy Bianco & Die Abbrunzati Boys",
+      "spotifyTrackId": "2RETchtst6lwpgfHy7CCoT",
+      "tier": 2
     },
     {
       "year": 2025,
@@ -3856,17 +3863,31 @@
     },
     {
       "year": 2025,
-      "title": "Bella Napoli",
-      "artist": "Roy Bianco & Die Abbrunzati Boys",
-      "spotifyTrackId": "2RETchtst6lwpgfHy7CCoT",
-      "tier": 2
-    },
-    {
-      "year": 2025,
       "title": "Wie?",
       "artist": "Ayliva",
       "spotifyTrackId": "36w8f4Cl7JqTbFDamAdq8Q",
       "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Gut genug",
+      "artist": "Kitschkrieg & Shirin David",
+      "spotifyTrackId": "7iNLydOMjLLb7BiwkdoPDU",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Gute Laune",
+      "artist": "Grossstadtengel",
+      "spotifyTrackId": "7fapAlfgJf6EzlviBqJb4f",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Killy Manjaro",
+      "artist": "Summer Cem & Billa Joe",
+      "spotifyTrackId": "4rcQuHo8PhGshmvEVJZ4T5",
+      "tier": 1
     },
     {
       "year": 2026,
@@ -3884,38 +3905,10 @@
     },
     {
       "year": 2026,
-      "title": "Gut genug",
-      "artist": "Kitschkrieg & Shirin David",
-      "spotifyTrackId": "7iNLydOMjLLb7BiwkdoPDU",
-      "tier": 1
-    },
-    {
-      "year": 2026,
-      "title": "Killy Manjaro",
-      "artist": "Summer Cem & Billa Joe",
-      "spotifyTrackId": "4rcQuHo8PhGshmvEVJZ4T5",
-      "tier": 1
-    },
-    {
-      "year": 2026,
-      "title": "Gute Laune",
-      "artist": "Grossstadtengel",
-      "spotifyTrackId": "7fapAlfgJf6EzlviBqJb4f",
-      "tier": 1
-    },
-    {
-      "year": 2026,
       "title": "schöne Dinge",
       "artist": "Chapo102 & 102 Boyz",
       "spotifyTrackId": "08xtK5QZPMcjOsz6KhV1MV",
       "tier": 1
-    },
-    {
-      "year": 2026,
-      "title": "Walzer",
-      "artist": "Provinz",
-      "spotifyTrackId": "605G7F1FEjm60IdXmLhlNN",
-      "tier": 2
     },
     {
       "year": 2026,
@@ -3936,6 +3929,13 @@
       "title": "Unsterblich sein",
       "artist": "Kraftklub & Domkiziana",
       "spotifyTrackId": "2RGcXKa0RNmQKWsTSOxkk4",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Walzer",
+      "artist": "Provinz",
+      "spotifyTrackId": "605G7F1FEjm60IdXmLhlNN",
       "tier": 2
     }
   ]
