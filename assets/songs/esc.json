@@ -96,10 +96,10 @@
       "year": 1959,
       "title": "Heute Abend wollen wir tanzen geh'n",
       "artist": "Alice & Ellen Kessler",
-      "spotifyTrackId": "273eox7q7UTOATzTIhbI1K",
       "country": "Germany",
       "place": 8,
-      "tier": 1
+      "tier": 1,
+      "spotifyTrackId": "273eox7q7UTOATzTIhbI1K"
     },
     {
       "year": 1959,
@@ -422,7 +422,8 @@
       "artist": "Karina",
       "country": "Spain",
       "place": 2,
-      "tier": 1
+      "tier": 1,
+      "spotifyTrackId": "5mSaItSsruXfxT7xW2h087"
     },
     {
       "year": 1971,
@@ -878,10 +879,10 @@
       "year": 1983,
       "title": "Si la vie est cadeau",
       "artist": "Corinne Hermès",
-      "spotifyTrackId": "5jSTQn4s1a7cDcjFXKA8V4",
       "country": "Luxembourg",
       "place": 1,
-      "tier": 1
+      "tier": 1,
+      "spotifyTrackId": "5jSTQn4s1a7cDcjFXKA8V4"
     },
     {
       "year": 1983,
@@ -1180,10 +1181,10 @@
       "year": 1989,
       "title": "J'ai volé la vie",
       "artist": "Nathalie Pâque",
-      "spotifyTrackId": "4TgJplEH0Kl0eCNy17gEar",
       "country": "France",
       "place": 8,
-      "tier": 1
+      "tier": 1,
+      "spotifyTrackId": "4TgJplEH0Kl0eCNy17gEar"
     },
     {
       "year": 1990,
@@ -2461,7 +2462,8 @@
       "artist": "Getter Jaani",
       "country": "Estonia",
       "place": 24,
-      "tier": 2
+      "tier": 2,
+      "spotifyTrackId": "4rvFyA7h88s8DehCOjqW9K"
     },
     {
       "year": 2011,
@@ -3724,10 +3726,10 @@
       "year": 2025,
       "title": "Serving",
       "artist": "Miriana Conte",
-      "spotifyTrackId": "4l9nP0UbrgnfhKvbLsU6xk",
       "country": "Malta",
       "place": 17,
-      "tier": 2
+      "tier": 2,
+      "spotifyTrackId": "4l9nP0UbrgnfhKvbLsU6xk"
     },
     {
       "year": 2026,

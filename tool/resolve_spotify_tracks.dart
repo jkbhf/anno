@@ -21,9 +21,18 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-/// Spotify answers a burst with a lockout of hours, so the requests are spaced
+/// Spotify answers a burst with a lockout of a day, so the requests are spaced
 /// out and a 429 ends the run instead of waiting it out.
-const requestGap = Duration(milliseconds: 120);
+///
+/// 120ms was still too fast: a fill and a recheck back to back bought a lockout
+/// of 24 hours. A full pass over a catalog is a couple of minutes at this pace,
+/// which is nothing next to waiting a day for the next attempt.
+const requestGap = Duration(milliseconds: 350);
+
+/// How many hits a search may ask for. Anything above this is answered with
+/// `400 Invalid limit` - the documented maximum of 50 is not what an app in
+/// development mode gets, and asking for it fails every single search.
+const searchLimit = 10;
 
 /// Album or track names that mean this is not the recording of the entry.
 const notTheSong = [
@@ -40,6 +49,21 @@ const notTheSong = [
   'nightcore',
   'cover version',
 ];
+
+/// A request that came back with neither a result nor a rate limit.
+///
+/// It has to be told apart from an empty result: a song whose search failed is
+/// unknown, and calling it "not on Spotify" would swap out a good entry over a
+/// bad request.
+class RequestFailed implements Exception {
+  const RequestFailed(this.status, this.path);
+
+  final int status;
+  final String path;
+
+  @override
+  String toString() => 'Spotify answered $status for $path';
+}
 
 class RateLimited implements Exception {
   const RateLimited(this.retryAfter);
@@ -69,7 +93,7 @@ Future<String> fetchToken(String id, String secret) async {
   return jsonDecode(response.body)['access_token'] as String;
 }
 
-Future<Map<String, dynamic>?> _api(String token, String path) async {
+Future<Map<String, dynamic>> _api(String token, String path) async {
   await Future<void>.delayed(requestGap);
   final response = await http.get(
     Uri.parse('https://api.spotify.com/v1$path'),
@@ -80,8 +104,7 @@ Future<Map<String, dynamic>?> _api(String token, String path) async {
     throw RateLimited(Duration(seconds: seconds));
   }
   if (response.statusCode != 200) {
-    stderr.writeln('Request failed (${response.statusCode}): $path');
-    return null;
+    throw RequestFailed(response.statusCode, path);
   }
   return jsonDecode(response.body) as Map<String, dynamic>;
 }
@@ -141,12 +164,46 @@ bool artistMatches(String catalog, List<String> credited) {
   return false;
 }
 
+/// True when the two name the same song.
+///
+/// Word for word, give or take one: catalogs and Spotify disagree by a single
+/// word all the time - "Si la vie est cadeau" against "Si la vie est un
+/// cadeau", "Serving" against "SERVING KANT", a "geh'n" that Spotify cut to
+/// "Geh". Two words apart is another song, which is what keeps "I Can" away
+/// from "I Can't Wait" and "Chai" away from "Ayelet Chen".
+///
+/// One word of slack does let "Love Is..." through to "Love Is Blue" - the
+/// artist is what separates those two, and every caller checks it.
 bool titleMatches(String catalog, String spotify) {
-  final a = normalize(catalog);
-  final b = normalize(spotify);
+  final a = _words(catalog);
+  final b = _words(spotify);
   if (a.isEmpty || b.isEmpty) return false;
-  return a == b || a.contains(b) || b.contains(a);
+  final (short, long) = a.length <= b.length ? (a, b) : (b, a);
+  if (long.length - short.length > 1) return false;
+  return _isSubsequence(short, long);
 }
+
+List<String> _words(String value) {
+  final normalized = normalize(value);
+  return normalized.isEmpty ? const [] : normalized.split(' ');
+}
+
+/// True when every word of [short] turns up in [long], in that order.
+bool _isSubsequence(List<String> short, List<String> long) {
+  var index = 0;
+  for (final word in long) {
+    if (index < short.length && short[index] == word) index++;
+  }
+  return index == short.length;
+}
+
+/// True when a Spotify title says nothing either way, because it is written in
+/// a script that [normalize] leaves nothing of - Hebrew, Cyrillic, Greek.
+///
+/// The entries are in transcription ("Milim", "Hora"), Spotify carries them as
+/// מילים and הורה, and the two can never be compared. The artist has to carry
+/// the match there, and an id like that is kept rather than thrown away.
+bool titleUnreadable(String spotify) => normalize(spotify).isEmpty;
 
 /// A karaoke or nightcore version says so in a bracket, and [normalize] throws
 /// brackets away - so this one reads the name as it stands.
@@ -162,14 +219,12 @@ List<String> creditsOf(Map<String, dynamic> track) => [
     artist['name'] as String,
 ];
 
-Future<List<Map<String, dynamic>>> _search(
-  String token,
-  String query, {
-  int limit = 20,
-}) async {
+Future<List<Map<String, dynamic>>> _search(String token, String query) async {
   final encoded = Uri.encodeQueryComponent(query);
-  final body = await _api(token, '/search?q=$encoded&type=track&limit=$limit');
-  if (body == null) return const [];
+  final body = await _api(
+    token,
+    '/search?q=$encoded&type=track&limit=$searchLimit',
+  );
   return (body['tracks']['items'] as List).cast<Map<String, dynamic>>();
 }
 
@@ -197,17 +252,25 @@ Future<Map<String, dynamic>?> searchTrack(
 
   for (final query in queries) {
     for (final track in await _search(token, query)) {
+      final name = track['name'] as String;
       if (!isTheRecording(track)) continue;
       if (!artistMatches(artist, creditsOf(track))) continue;
-      if (!titleMatches(title, track['name'] as String)) continue;
+      if (!titleMatches(title, name) && !titleUnreadable(name)) continue;
       return track;
     }
   }
   return null;
 }
 
-Future<Map<String, dynamic>?> fetchTrack(String token, String id) =>
-    _api(token, '/tracks/$id');
+/// The track behind an id, or null when Spotify does not know it any more.
+Future<Map<String, dynamic>?> fetchTrack(String token, String id) async {
+  try {
+    return await _api(token, '/tracks/$id');
+  } on RequestFailed catch (error) {
+    if (error.status == 404) return null;
+    rethrow;
+  }
+}
 
 Future<void> _write(File file, Map<String, dynamic> catalog) async {
   await file.writeAsString(
@@ -225,8 +288,9 @@ Future<void> _write(File file, Map<String, dynamic> catalog) async {
 String? cannotStay(Map<String, dynamic> song, Map<String, dynamic>? track) {
   if (track == null) return 'id points at nothing';
   final title = song['title'] as String;
-  if (!titleMatches(title, track['name'] as String)) {
-    return 'is "${track['name']}"';
+  final name = track['name'] as String;
+  if (!titleMatches(title, name) && !titleUnreadable(name)) {
+    return 'is "$name"';
   }
   if (!isTheRecording(track)) {
     return 'is "${track['name']}" / ${track['album']?['name']}';
@@ -257,6 +321,10 @@ Future<int> recheck(String token, List<File> files) async {
       } on RateLimited {
         if (changed) await _write(file, catalog);
         rethrow;
+      } on RequestFailed catch (error) {
+        // Unknown, not wrong: leave the id where it is and say so.
+        review.add('${catalog['id']} · ${song['title']}: $error');
+        continue;
       }
 
       final title = song['title'] as String;
@@ -318,6 +386,7 @@ Future<void> main(List<String> args) async {
 
     final review = <String>[];
     final swap = <String>[];
+    final unchecked = <String>[];
     var resolved = 0;
 
     for (final file in files) {
@@ -339,6 +408,12 @@ Future<void> main(List<String> args) async {
           // Keep what this file already found before handing the run back.
           if (changed) await _write(file, catalog);
           rethrow;
+        } on RequestFailed catch (error) {
+          // A song whose search never ran is unknown, not missing - saying
+          // "not on Spotify" here would swap out a good entry over a bad
+          // request, which is exactly how the first miss list came about.
+          unchecked.add('${catalog['id']} · ${song['year']} · $title: $error');
+          continue;
         }
         if (track == null) {
           swap.add('${catalog['id']} · ${song['year']} · $title - $artist');
@@ -373,6 +448,12 @@ Future<void> main(List<String> args) async {
         '(CLAUDE.md):',
       );
       for (final line in swap) {
+        stdout.writeln('  $line');
+      }
+    }
+    if (unchecked.isNotEmpty) {
+      stdout.writeln('\nCould not be looked up - run again, do NOT swap:');
+      for (final line in unchecked) {
         stdout.writeln('  $line');
       }
     }

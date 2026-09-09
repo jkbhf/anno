@@ -3,15 +3,18 @@ import 'package:flutter_test/flutter_test.dart';
 import '../tool/resolve_spotify_tracks.dart';
 
 /// The shape the Spotify search hands back, cut down to what is looked at.
-Map<String, dynamic> track(String name, List<String> artists, {String? album}) =>
-    {
-      'id': 'x' * 22,
-      'name': name,
-      'artists': [
-        for (final artist in artists) {'name': artist},
-      ],
-      'album': {'name': album ?? name},
-    };
+Map<String, dynamic> track(
+  String name,
+  List<String> artists, {
+  String? album,
+}) => {
+  'id': 'x' * 22,
+  'name': name,
+  'artists': [
+    for (final artist in artists) {'name': artist},
+  ],
+  'album': {'name': album ?? name},
+};
 
 Map<String, dynamic> entry(String title, String artist) => {
   'title': title,
@@ -23,8 +26,10 @@ void main() {
   group('normalize', () {
     test('drops accents, brackets and the pressing suffix', () {
       expect(normalize('Ein bißchen Frieden'), 'ein bisschen frieden');
-      expect(normalize('Si la vie est un cadeau (Eurovision 1983)'),
-          'si la vie est un cadeau');
+      expect(
+        normalize('Si la vie est un cadeau (Eurovision 1983)'),
+        'si la vie est un cadeau',
+      );
       expect(
         normalize('Sag ihr, ich laß\' sie grüßen - Remastered 2016'),
         'sag ihr ich lass sie grussen',
@@ -58,10 +63,36 @@ void main() {
       expect(titleMatches('Chai', 'Ayelet Chen'), isFalse);
       expect(titleMatches('Amour, amour', 'Sans amour'), isFalse);
       expect(titleMatches('I Can', 'Can I Get It'), isFalse);
+      // Two words apart, so not the same song however the apostrophe falls.
+      expect(titleMatches('I Can', "I Can't Wait - Radio Edit"), isFalse);
+    });
+
+    test('one word of difference is still the same song', () {
+      expect(
+        titleMatches('Si la vie est cadeau', 'Si la vie est un cadeau'),
+        isTrue,
+      );
+      expect(titleMatches('Serving', 'SERVING KANT'), isTrue);
+      expect(
+        titleMatches(
+          "Heute Abend wollen wir tanzen geh'n",
+          'Heute Abend Wollen Wir Tanzen Geh',
+        ),
+        isTrue,
+      );
+      expect(titleMatches("J'ai volé la vie", 'J AI VOLE LA VIE'), isTrue);
+    });
+
+    test('a title in another script is not judged by its name', () {
+      expect(titleUnreadable('מילים'), isTrue);
+      expect(titleUnreadable('Milim'), isFalse);
     });
 
     test('spelling and a suffix do not stand in the way', () {
-      expect(titleMatches('Ein bißchen Frieden', 'Ein bisschen Frieden'), isTrue);
+      expect(
+        titleMatches('Ein bißchen Frieden', 'Ein bisschen Frieden'),
+        isTrue,
+      );
       expect(
         titleMatches('Qélé, Qélé', 'Qélé Qélé (Eurovision 2008 Armenia)'),
         isTrue,
@@ -80,10 +111,12 @@ void main() {
         isFalse,
       );
       expect(
-        isTheRecording(track(
-          'Rockefeller Street (New Nightcore) [#Rockefellerstreet Remix]',
-          ['Getter Jaani'],
-        )),
+        isTheRecording(
+          track(
+            'Rockefeller Street (New Nightcore) [#Rockefellerstreet Remix]',
+            ['Getter Jaani'],
+          ),
+        ),
         isFalse,
       );
       expect(isTheRecording(track('Satellite', ['Lena'])), isTrue);
@@ -92,7 +125,9 @@ void main() {
     test('a live recording of the entry still counts', () {
       expect(
         isTheRecording(
-          track('Tu te reconnaîtras', ['Anne-Marie David'], album: 'Live á Charleroi'),
+          track('Tu te reconnaîtras', [
+            'Anne-Marie David',
+          ], album: 'Live á Charleroi'),
         ),
         isTrue,
       );
@@ -102,7 +137,10 @@ void main() {
   group('cannotStay', () {
     test('another song under the id is cleared', () {
       expect(
-        cannotStay(entry('Chai', 'Ofra Haza'), track('Ayelet Chen', ['Ofra Haza'])),
+        cannotStay(
+          entry('Chai', 'Ofra Haza'),
+          track('Ayelet Chen', ['Ofra Haza']),
+        ),
         isNotNull,
       );
       expect(
@@ -125,6 +163,15 @@ void main() {
         cannotStay(
           entry('Milim', 'Harel Skaat'),
           track('Milim', ['הראל סקעת']),
+        ),
+        isNull,
+      );
+      // Spotify carries the entry under its Hebrew title - unreadable here,
+      // and no reason to drop a working id.
+      expect(
+        cannotStay(
+          entry('Milim', 'Harel Skaat'),
+          track('מילים', ['Harel Skaat']),
         ),
         isNull,
       );
