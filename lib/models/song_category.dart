@@ -38,8 +38,17 @@ class SongCategory {
 
   bool get isEmpty => songs.isEmpty;
 
-  /// How many years have at least one song.
-  int get coveredYears => _byYear.length;
+  /// The years the deck spans, as "1950-2026" - or a single year where first
+  /// and last are the same. Null while the deck is empty. A count of years
+  /// would be the wrong number to show: the decks have no gaps, so it only
+  /// restates the span while hiding where the deck actually sits in time.
+  String? get yearSpan {
+    if (_byYear.isEmpty) return null;
+    final years = _byYear.keys.toList()..sort();
+    final first = years.first;
+    final last = years.last;
+    return first == last ? '$first' : '$first-$last';
+  }
 
   List<Song> songsForYear(int year) => _byYear[year] ?? const <Song>[];
 }

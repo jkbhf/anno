@@ -131,7 +131,7 @@ class _CategoryCard extends StatelessWidget {
     final enabled = onTap != null;
     final subtitle = category.isEmpty
         ? 'No songs yet'
-        : '${category.songs.length} songs · ${category.coveredYears} years';
+        : '${category.songs.length} songs · ${category.yearSpan}';
 
     return Card(
       color: selected ? theme.colorScheme.primaryContainer : null,
