@@ -47,20 +47,77 @@ entries that never got to compete (Little Big "Uno", German entry Ben Dolic
 "Violent Thing") and leave `place` off, otherwise the card is a dead round when
 ESC is the only selected deck. 1969 had four winners - one of them is enough.
 
+## How many songs a hit year gets
+
+`assets/songs/international_hits.json`. A contest year has a participant list
+as its natural ceiling; a hit year has none, so the size is set:
+
+| Years | Entries per year |
+| --- | --- |
+| 1960-1979 | 5 |
+| 1980-1999 | 8 |
+| 2000-2026 | 10 |
+
+Same reason as the ESC table: the deck grows towards the present because that
+is where the cards are, and a thin year is heard out within two evenings.
+
+**The measure is the US/UK year-end charts**, not what a German room happened
+to hear. That is what makes the deck "international" rather than a second
+German one, and it is the line that keeps a decision arguable later: a song
+either was in those charts or it was not. Where two songs are equally big, the
+one that dates itself wins - a card the room can place to a year beats a
+timeless one it can only place to a decade.
+
+**No dedupe against the other decks.** Waterloo, Volare, Euphoria and Satellite
+are world hits *and* ESC entries; they stand in both files. Playing both decks
+in one evening can draw the same song twice - that is accepted, because
+thinning the hit deck to protect ESC would cost the better card in the deck
+that has no other claim to it.
+
+**German-language world hits belong here**, not in `german_songs`: 99
+Luftballons, Der Kommissar, Rock Me Amadeus, Da Da Da all charted in the US or
+the UK, and that is the only test this deck applies. `german_songs` is the deck
+for what was big *only* in German-speaking countries.
+
+**The year is the chart year, not the pressing.** A single that came out in
+October and topped the charts in February belongs on the later card - that is
+the year the room is guessing. This matters more here than for ESC, where the
+contest date settles it. Two consequences:
+
+- The resolver's "Check the year by hand" list is **loud** for this deck and
+  mostly noise: the only pressing Spotify carries is often a remaster or a
+  best-of, so its year is a re-release date. Never move a catalog year onto
+  what the API reports.
+- **A song that got big again years later is a bad card**, not a two-year one.
+  Running Up That Hill (1985, huge again 2022) and Cruel Summer (2019, huge
+  again 2023) are left out for that reason: whichever year is on the card, half
+  the room is right and cannot be told so.
+
+The catalog is filled from 1960 to 2026, 530 entries. Every future year needs
+its ten, otherwise that card is a dead round in a game played on the hit deck
+alone. A running year is filled from the number ones so far - that is the only
+chart that exists before the year-end one does, and it puts the songs on the
+card that the room has actually been hearing.
+
 ## Draw weight: `tier`
 
 Within a year not everything should come up equally often. The core of a year
 is drawn more often than its long tail:
 
-- **`tier: 1`** - winner, German entry, and the 4 best known of the rest.
-  This is the default when the field is missing.
-- **`tier: 2`** - the remaining 4 of the eight. Only 2005-2026 has them; the
-  smaller years are core all the way through.
+- **`tier: 1`** - in ESC the winner, the German entry, and the 4 best known of
+  the rest. This is the default when the field is missing.
+- **`tier: 2`** - the remaining 4 of the eight. Only ESC 2005-2026 has them;
+  the smaller years are core all the way through.
 
-So a 2005+ year is 6 tier 1 + 4 tier 2, and a tier 1 song should be drawn about
-3x as often as a tier 2 one - roughly 80% of that year's rounds land on the
-core. Keep the JSON at "core or tail" rather than a per-song weight, so a year
-can still be filled in by hand.
+So a 2005+ ESC year is 6 tier 1 + 4 tier 2, and a tier 1 song should be drawn
+about 3x as often as a tier 2 one - roughly 80% of that year's rounds land on
+the core. Keep the JSON at "core or tail" rather than a per-song weight, so a
+year can still be filled in by hand.
+
+The hit deck splits the same way, read off the size of the year: a 10 song year
+is 6 + 4, an 8 song year 5 + 3, a 5 song year is core all the way through. Core
+is the same question there as here - the songs the room names before the chorus
+is over.
 
 Implemented: `Song.tier` (default 1, anything but 1 or 2 is a `FormatException`
 at startup) and `GameController._pickWeighted`. The weighting sits inside the

@@ -2,5 +2,3187 @@
   "id": "international_hits",
   "name": "International Hits",
   "description": "World hits from the international charts",
-  "songs": []
+  "_comment": "year is the year the song was a hit in the US/UK charts, not the release year of the pressing Spotify carries. Which songs a year gets and how tier works: see CLAUDE.md.",
+  "songs": [
+    {
+      "year": 1960,
+      "title": "The Twist",
+      "artist": "Chubby Checker",
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "It's Now or Never",
+      "artist": "Elvis Presley",
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "Cathy's Clown",
+      "artist": "The Everly Brothers",
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "Apache",
+      "artist": "The Shadows",
+      "tier": 1
+    },
+    {
+      "year": 1960,
+      "title": "Save the Last Dance for Me",
+      "artist": "The Drifters",
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Stand by Me",
+      "artist": "Ben E. King",
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Runaway",
+      "artist": "Del Shannon",
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Blue Moon",
+      "artist": "The Marcels",
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Crazy",
+      "artist": "Patsy Cline",
+      "tier": 1
+    },
+    {
+      "year": 1961,
+      "title": "Wooden Heart",
+      "artist": "Elvis Presley",
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "I Can't Stop Loving You",
+      "artist": "Ray Charles",
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "The Loco-Motion",
+      "artist": "Little Eva",
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "Telstar",
+      "artist": "The Tornados",
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "Sherry",
+      "artist": "The Four Seasons",
+      "tier": 1
+    },
+    {
+      "year": 1962,
+      "title": "Love Me Do",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "She Loves You",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Surfin' U.S.A.",
+      "artist": "The Beach Boys",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Be My Baby",
+      "artist": "The Ronettes",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Louie Louie",
+      "artist": "The Kingsmen",
+      "tier": 1
+    },
+    {
+      "year": 1963,
+      "title": "Blowin' in the Wind",
+      "artist": "Peter, Paul and Mary",
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "I Want to Hold Your Hand",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "The House of the Rising Sun",
+      "artist": "The Animals",
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "Oh, Pretty Woman",
+      "artist": "Roy Orbison",
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "You Really Got Me",
+      "artist": "The Kinks",
+      "tier": 1
+    },
+    {
+      "year": 1964,
+      "title": "Baby Love",
+      "artist": "The Supremes",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "(I Can't Get No) Satisfaction",
+      "artist": "The Rolling Stones",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Yesterday",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Like a Rolling Stone",
+      "artist": "Bob Dylan",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Unchained Melody",
+      "artist": "The Righteous Brothers",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "My Generation",
+      "artist": "The Who",
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Good Vibrations",
+      "artist": "The Beach Boys",
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "These Boots Are Made for Walkin'",
+      "artist": "Nancy Sinatra",
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Paint It Black",
+      "artist": "The Rolling Stones",
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Wild Thing",
+      "artist": "The Troggs",
+      "tier": 1
+    },
+    {
+      "year": 1966,
+      "title": "Strangers in the Night",
+      "artist": "Frank Sinatra",
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "A Whiter Shade of Pale",
+      "artist": "Procol Harum",
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "Light My Fire",
+      "artist": "The Doors",
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "Respect",
+      "artist": "Aretha Franklin",
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "All You Need Is Love",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1967,
+      "title": "San Francisco (Be Sure to Wear Flowers in Your Hair)",
+      "artist": "Scott McKenzie",
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "Hey Jude",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "(Sittin' On) The Dock of the Bay",
+      "artist": "Otis Redding",
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "Born to Be Wild",
+      "artist": "Steppenwolf",
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "Mrs. Robinson",
+      "artist": "Simon & Garfunkel",
+      "tier": 1
+    },
+    {
+      "year": 1968,
+      "title": "What a Wonderful World",
+      "artist": "Louis Armstrong",
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Sugar, Sugar",
+      "artist": "The Archies",
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Space Oddity",
+      "artist": "David Bowie",
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Bad Moon Rising",
+      "artist": "Creedence Clearwater Revival",
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Honky Tonk Women",
+      "artist": "The Rolling Stones",
+      "tier": 1
+    },
+    {
+      "year": 1969,
+      "title": "Je t'aime... moi non plus",
+      "artist": "Jane Birkin & Serge Gainsbourg",
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "Bridge over Troubled Water",
+      "artist": "Simon & Garfunkel",
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "Let It Be",
+      "artist": "The Beatles",
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "In the Summertime",
+      "artist": "Mungo Jerry",
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "Venus",
+      "artist": "Shocking Blue",
+      "tier": 1
+    },
+    {
+      "year": 1970,
+      "title": "All Right Now",
+      "artist": "Free",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Imagine",
+      "artist": "John Lennon",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Maggie May",
+      "artist": "Rod Stewart",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "My Sweet Lord",
+      "artist": "George Harrison",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "What's Going On",
+      "artist": "Marvin Gaye",
+      "tier": 1
+    },
+    {
+      "year": 1971,
+      "title": "Stairway to Heaven",
+      "artist": "Led Zeppelin",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "American Pie",
+      "artist": "Don McLean",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Rocket Man",
+      "artist": "Elton John",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Lean on Me",
+      "artist": "Bill Withers",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "Without You",
+      "artist": "Nilsson",
+      "tier": 1
+    },
+    {
+      "year": 1972,
+      "title": "School's Out",
+      "artist": "Alice Cooper",
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Killing Me Softly with His Song",
+      "artist": "Roberta Flack",
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Superstition",
+      "artist": "Stevie Wonder",
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Tie a Yellow Ribbon Round the Ole Oak Tree",
+      "artist": "Tony Orlando & Dawn",
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Angie",
+      "artist": "The Rolling Stones",
+      "tier": 1
+    },
+    {
+      "year": 1973,
+      "title": "Cum On Feel the Noize",
+      "artist": "Slade",
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Waterloo",
+      "artist": "ABBA",
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Kung Fu Fighting",
+      "artist": "Carl Douglas",
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Sweet Home Alabama",
+      "artist": "Lynyrd Skynyrd",
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "The Way We Were",
+      "artist": "Barbra Streisand",
+      "tier": 1
+    },
+    {
+      "year": 1974,
+      "title": "Killer Queen",
+      "artist": "Queen",
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Bohemian Rhapsody",
+      "artist": "Queen",
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Mamma Mia",
+      "artist": "ABBA",
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Born to Run",
+      "artist": "Bruce Springsteen",
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "I'm Not in Love",
+      "artist": "10cc",
+      "tier": 1
+    },
+    {
+      "year": 1975,
+      "title": "Love to Love You Baby",
+      "artist": "Donna Summer",
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Dancing Queen",
+      "artist": "ABBA",
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Don't Go Breaking My Heart",
+      "artist": "Elton John & Kiki Dee",
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Play That Funky Music",
+      "artist": "Wild Cherry",
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "December, 1963 (Oh, What a Night)",
+      "artist": "The Four Seasons",
+      "tier": 1
+    },
+    {
+      "year": 1976,
+      "title": "Anarchy in the U.K.",
+      "artist": "Sex Pistols",
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Hotel California",
+      "artist": "Eagles",
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "We Are the Champions",
+      "artist": "Queen",
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "I Feel Love",
+      "artist": "Donna Summer",
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "Go Your Own Way",
+      "artist": "Fleetwood Mac",
+      "tier": 1
+    },
+    {
+      "year": 1977,
+      "title": "How Deep Is Your Love",
+      "artist": "Bee Gees",
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Stayin' Alive",
+      "artist": "Bee Gees",
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "You're the One That I Want",
+      "artist": "John Travolta & Olivia Newton-John",
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Y.M.C.A.",
+      "artist": "Village People",
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Rivers of Babylon",
+      "artist": "Boney M.",
+      "tier": 1
+    },
+    {
+      "year": 1978,
+      "title": "Le Freak",
+      "artist": "Chic",
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "I Will Survive",
+      "artist": "Gloria Gaynor",
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Another Brick in the Wall, Part 2",
+      "artist": "Pink Floyd",
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Heart of Glass",
+      "artist": "Blondie",
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "Video Killed the Radio Star",
+      "artist": "The Buggles",
+      "tier": 1
+    },
+    {
+      "year": 1979,
+      "title": "We Are Family",
+      "artist": "Sister Sledge",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Another One Bites the Dust",
+      "artist": "Queen",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Call Me",
+      "artist": "Blondie",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Rock with You",
+      "artist": "Michael Jackson",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Funkytown",
+      "artist": "Lipps Inc.",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Enola Gay",
+      "artist": "Orchestral Manoeuvres in the Dark",
+      "tier": 1
+    },
+    {
+      "year": 1980,
+      "title": "Upside Down",
+      "artist": "Diana Ross",
+      "tier": 2
+    },
+    {
+      "year": 1980,
+      "title": "Don't Stand So Close to Me",
+      "artist": "The Police",
+      "tier": 2
+    },
+    {
+      "year": 1980,
+      "title": "Ashes to Ashes",
+      "artist": "David Bowie",
+      "tier": 2
+    },
+    {
+      "year": 1981,
+      "title": "Bette Davis Eyes",
+      "artist": "Kim Carnes",
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Don't Stop Believin'",
+      "artist": "Journey",
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Under Pressure",
+      "artist": "Queen & David Bowie",
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Tainted Love",
+      "artist": "Soft Cell",
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Physical",
+      "artist": "Olivia Newton-John",
+      "tier": 1
+    },
+    {
+      "year": 1981,
+      "title": "Ghost Town",
+      "artist": "The Specials",
+      "tier": 2
+    },
+    {
+      "year": 1981,
+      "title": "Start Me Up",
+      "artist": "The Rolling Stones",
+      "tier": 2
+    },
+    {
+      "year": 1981,
+      "title": "Just Can't Get Enough",
+      "artist": "Depeche Mode",
+      "tier": 2
+    },
+    {
+      "year": 1982,
+      "title": "Eye of the Tiger",
+      "artist": "Survivor",
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Come On Eileen",
+      "artist": "Dexys Midnight Runners",
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Don't You Want Me",
+      "artist": "The Human League",
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Africa",
+      "artist": "Toto",
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Der Kommissar",
+      "artist": "Falco",
+      "tier": 1
+    },
+    {
+      "year": 1982,
+      "title": "Ebony and Ivory",
+      "artist": "Paul McCartney & Stevie Wonder",
+      "tier": 2
+    },
+    {
+      "year": 1982,
+      "title": "Rock the Casbah",
+      "artist": "The Clash",
+      "tier": 2
+    },
+    {
+      "year": 1982,
+      "title": "Da Da Da",
+      "artist": "Trio",
+      "tier": 2
+    },
+    {
+      "year": 1983,
+      "title": "Billie Jean",
+      "artist": "Michael Jackson",
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Every Breath You Take",
+      "artist": "The Police",
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Total Eclipse of the Heart",
+      "artist": "Bonnie Tyler",
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "99 Luftballons",
+      "artist": "Nena",
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Karma Chameleon",
+      "artist": "Culture Club",
+      "tier": 1
+    },
+    {
+      "year": 1983,
+      "title": "Sweet Dreams (Are Made of This)",
+      "artist": "Eurythmics",
+      "tier": 2
+    },
+    {
+      "year": 1983,
+      "title": "Blue Monday",
+      "artist": "New Order",
+      "tier": 2
+    },
+    {
+      "year": 1983,
+      "title": "Down Under",
+      "artist": "Men at Work",
+      "tier": 2
+    },
+    {
+      "year": 1984,
+      "title": "When Doves Cry",
+      "artist": "Prince",
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Like a Virgin",
+      "artist": "Madonna",
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Wake Me Up Before You Go-Go",
+      "artist": "Wham!",
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Relax",
+      "artist": "Frankie Goes to Hollywood",
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Careless Whisper",
+      "artist": "George Michael",
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Do They Know It's Christmas?",
+      "artist": "Band Aid",
+      "tier": 2
+    },
+    {
+      "year": 1984,
+      "title": "Girls Just Want to Have Fun",
+      "artist": "Cyndi Lauper",
+      "tier": 2
+    },
+    {
+      "year": 1984,
+      "title": "Self Control",
+      "artist": "Laura Branigan",
+      "tier": 2
+    },
+    {
+      "year": 1985,
+      "title": "Take On Me",
+      "artist": "a-ha",
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Money for Nothing",
+      "artist": "Dire Straits",
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Everybody Wants to Rule the World",
+      "artist": "Tears for Fears",
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "We Are the World",
+      "artist": "USA for Africa",
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Don't You (Forget About Me)",
+      "artist": "Simple Minds",
+      "tier": 1
+    },
+    {
+      "year": 1985,
+      "title": "Into the Groove",
+      "artist": "Madonna",
+      "tier": 2
+    },
+    {
+      "year": 1985,
+      "title": "The Power of Love",
+      "artist": "Jennifer Rush",
+      "tier": 2
+    },
+    {
+      "year": 1985,
+      "title": "Live Is Life",
+      "artist": "Opus",
+      "tier": 2
+    },
+    {
+      "year": 1986,
+      "title": "Rock Me Amadeus",
+      "artist": "Falco",
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "The Final Countdown",
+      "artist": "Europe",
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Livin' on a Prayer",
+      "artist": "Bon Jovi",
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "West End Girls",
+      "artist": "Pet Shop Boys",
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Papa Don't Preach",
+      "artist": "Madonna",
+      "tier": 1
+    },
+    {
+      "year": 1986,
+      "title": "Walk This Way",
+      "artist": "Run-D.M.C.",
+      "tier": 2
+    },
+    {
+      "year": 1986,
+      "title": "Sledgehammer",
+      "artist": "Peter Gabriel",
+      "tier": 2
+    },
+    {
+      "year": 1986,
+      "title": "Kiss",
+      "artist": "Prince",
+      "tier": 2
+    },
+    {
+      "year": 1987,
+      "title": "Never Gonna Give You Up",
+      "artist": "Rick Astley",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "I Wanna Dance with Somebody (Who Loves Me)",
+      "artist": "Whitney Houston",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "With or Without You",
+      "artist": "U2",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Faith",
+      "artist": "George Michael",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "Bad",
+      "artist": "Michael Jackson",
+      "tier": 1
+    },
+    {
+      "year": 1987,
+      "title": "La Bamba",
+      "artist": "Los Lobos",
+      "tier": 2
+    },
+    {
+      "year": 1987,
+      "title": "Nothing's Gonna Stop Us Now",
+      "artist": "Starship",
+      "tier": 2
+    },
+    {
+      "year": 1987,
+      "title": "Push It",
+      "artist": "Salt-N-Pepa",
+      "tier": 2
+    },
+    {
+      "year": 1988,
+      "title": "Sweet Child o' Mine",
+      "artist": "Guns N' Roses",
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Don't Worry Be Happy",
+      "artist": "Bobby McFerrin",
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "I Should Be So Lucky",
+      "artist": "Kylie Minogue",
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Need You Tonight",
+      "artist": "INXS",
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Fast Car",
+      "artist": "Tracy Chapman",
+      "tier": 1
+    },
+    {
+      "year": 1988,
+      "title": "Orinoco Flow",
+      "artist": "Enya",
+      "tier": 2
+    },
+    {
+      "year": 1988,
+      "title": "Kokomo",
+      "artist": "The Beach Boys",
+      "tier": 2
+    },
+    {
+      "year": 1988,
+      "title": "Girl You Know It's True",
+      "artist": "Milli Vanilli",
+      "tier": 2
+    },
+    {
+      "year": 1989,
+      "title": "Like a Prayer",
+      "artist": "Madonna",
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Pump Up the Jam",
+      "artist": "Technotronic",
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Ride on Time",
+      "artist": "Black Box",
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Another Day in Paradise",
+      "artist": "Phil Collins",
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Love Shack",
+      "artist": "The B-52's",
+      "tier": 1
+    },
+    {
+      "year": 1989,
+      "title": "Eternal Flame",
+      "artist": "The Bangles",
+      "tier": 2
+    },
+    {
+      "year": 1989,
+      "title": "Straight Up",
+      "artist": "Paula Abdul",
+      "tier": 2
+    },
+    {
+      "year": 1989,
+      "title": "Fight the Power",
+      "artist": "Public Enemy",
+      "tier": 2
+    },
+    {
+      "year": 1990,
+      "title": "Nothing Compares 2 U",
+      "artist": "Sinéad O'Connor",
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Vogue",
+      "artist": "Madonna",
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Ice Ice Baby",
+      "artist": "Vanilla Ice",
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "U Can't Touch This",
+      "artist": "MC Hammer",
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "Sadeness (Part I)",
+      "artist": "Enigma",
+      "tier": 1
+    },
+    {
+      "year": 1990,
+      "title": "The Power",
+      "artist": "Snap!",
+      "tier": 2
+    },
+    {
+      "year": 1990,
+      "title": "Groove Is in the Heart",
+      "artist": "Deee-Lite",
+      "tier": 2
+    },
+    {
+      "year": 1990,
+      "title": "Killer",
+      "artist": "Adamski",
+      "tier": 2
+    },
+    {
+      "year": 1991,
+      "title": "Smells Like Teen Spirit",
+      "artist": "Nirvana",
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "(Everything I Do) I Do It for You",
+      "artist": "Bryan Adams",
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Wind of Change",
+      "artist": "Scorpions",
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Losing My Religion",
+      "artist": "R.E.M.",
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Black or White",
+      "artist": "Michael Jackson",
+      "tier": 1
+    },
+    {
+      "year": 1991,
+      "title": "Enter Sandman",
+      "artist": "Metallica",
+      "tier": 2
+    },
+    {
+      "year": 1991,
+      "title": "Get Ready for This",
+      "artist": "2 Unlimited",
+      "tier": 2
+    },
+    {
+      "year": 1991,
+      "title": "More Than Words",
+      "artist": "Extreme",
+      "tier": 2
+    },
+    {
+      "year": 1992,
+      "title": "I Will Always Love You",
+      "artist": "Whitney Houston",
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Rhythm Is a Dancer",
+      "artist": "Snap!",
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "November Rain",
+      "artist": "Guns N' Roses",
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Under the Bridge",
+      "artist": "Red Hot Chili Peppers",
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Jump",
+      "artist": "Kris Kross",
+      "tier": 1
+    },
+    {
+      "year": 1992,
+      "title": "Tears in Heaven",
+      "artist": "Eric Clapton",
+      "tier": 2
+    },
+    {
+      "year": 1992,
+      "title": "Baby Got Back",
+      "artist": "Sir Mix-a-Lot",
+      "tier": 2
+    },
+    {
+      "year": 1992,
+      "title": "Achy Breaky Heart",
+      "artist": "Billy Ray Cyrus",
+      "tier": 2
+    },
+    {
+      "year": 1993,
+      "title": "What Is Love",
+      "artist": "Haddaway",
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Mr. Vain",
+      "artist": "Culture Beat",
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "I'd Do Anything for Love (But I Won't Do That)",
+      "artist": "Meat Loaf",
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "All That She Wants",
+      "artist": "Ace of Base",
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "Creep",
+      "artist": "Radiohead",
+      "tier": 1
+    },
+    {
+      "year": 1993,
+      "title": "No Limit",
+      "artist": "2 Unlimited",
+      "tier": 2
+    },
+    {
+      "year": 1993,
+      "title": "Dreamlover",
+      "artist": "Mariah Carey",
+      "tier": 2
+    },
+    {
+      "year": 1993,
+      "title": "Informer",
+      "artist": "Snow",
+      "tier": 2
+    },
+    {
+      "year": 1994,
+      "title": "Love Is All Around",
+      "artist": "Wet Wet Wet",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Zombie",
+      "artist": "The Cranberries",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Saturday Night",
+      "artist": "Whigfield",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Basket Case",
+      "artist": "Green Day",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "Streets of Philadelphia",
+      "artist": "Bruce Springsteen",
+      "tier": 1
+    },
+    {
+      "year": 1994,
+      "title": "The Sign",
+      "artist": "Ace of Base",
+      "tier": 2
+    },
+    {
+      "year": 1994,
+      "title": "Return to Innocence",
+      "artist": "Enigma",
+      "tier": 2
+    },
+    {
+      "year": 1994,
+      "title": "Mmm Mmm Mmm Mmm",
+      "artist": "Crash Test Dummies",
+      "tier": 2
+    },
+    {
+      "year": 1995,
+      "title": "Wonderwall",
+      "artist": "Oasis",
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Cotton Eye Joe",
+      "artist": "Rednex",
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Gangsta's Paradise",
+      "artist": "Coolio",
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Scatman (Ski-Ba-Bop-Ba-Dop-Bop)",
+      "artist": "Scatman John",
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Common People",
+      "artist": "Pulp",
+      "tier": 1
+    },
+    {
+      "year": 1995,
+      "title": "Waterfalls",
+      "artist": "TLC",
+      "tier": 2
+    },
+    {
+      "year": 1995,
+      "title": "Back for Good",
+      "artist": "Take That",
+      "tier": 2
+    },
+    {
+      "year": 1995,
+      "title": "Boombastic",
+      "artist": "Shaggy",
+      "tier": 2
+    },
+    {
+      "year": 1996,
+      "title": "Macarena",
+      "artist": "Los del Río",
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Wannabe",
+      "artist": "Spice Girls",
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Killing Me Softly",
+      "artist": "Fugees",
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Children",
+      "artist": "Robert Miles",
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Return of the Mack",
+      "artist": "Mark Morrison",
+      "tier": 1
+    },
+    {
+      "year": 1996,
+      "title": "Firestarter",
+      "artist": "The Prodigy",
+      "tier": 2
+    },
+    {
+      "year": 1996,
+      "title": "Insomnia",
+      "artist": "Faithless",
+      "tier": 2
+    },
+    {
+      "year": 1996,
+      "title": "No Diggity",
+      "artist": "Blackstreet",
+      "tier": 2
+    },
+    {
+      "year": 1997,
+      "title": "Candle in the Wind 1997",
+      "artist": "Elton John",
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Barbie Girl",
+      "artist": "Aqua",
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "MMMBop",
+      "artist": "Hanson",
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Bitter Sweet Symphony",
+      "artist": "The Verve",
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "I'll Be Missing You",
+      "artist": "Puff Daddy & Faith Evans",
+      "tier": 1
+    },
+    {
+      "year": 1997,
+      "title": "Torn",
+      "artist": "Natalie Imbruglia",
+      "tier": 2
+    },
+    {
+      "year": 1997,
+      "title": "Around the World",
+      "artist": "Daft Punk",
+      "tier": 2
+    },
+    {
+      "year": 1997,
+      "title": "Song 2",
+      "artist": "Blur",
+      "tier": 2
+    },
+    {
+      "year": 1998,
+      "title": "My Heart Will Go On",
+      "artist": "Céline Dion",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Believe",
+      "artist": "Cher",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "The Boy Is Mine",
+      "artist": "Brandy & Monica",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Ray of Light",
+      "artist": "Madonna",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Doo Wop (That Thing)",
+      "artist": "Lauryn Hill",
+      "tier": 1
+    },
+    {
+      "year": 1998,
+      "title": "Iris",
+      "artist": "Goo Goo Dolls",
+      "tier": 2
+    },
+    {
+      "year": 1998,
+      "title": "Gettin' Jiggy wit It",
+      "artist": "Will Smith",
+      "tier": 2
+    },
+    {
+      "year": 1998,
+      "title": "Music Sounds Better with You",
+      "artist": "Stardust",
+      "tier": 2
+    },
+    {
+      "year": 1999,
+      "title": "...Baby One More Time",
+      "artist": "Britney Spears",
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Blue (Da Ba Dee)",
+      "artist": "Eiffel 65",
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Livin' la Vida Loca",
+      "artist": "Ricky Martin",
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "No Scrubs",
+      "artist": "TLC",
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Mambo No. 5 (a Little Bit of...)",
+      "artist": "Lou Bega",
+      "tier": 1
+    },
+    {
+      "year": 1999,
+      "title": "Pretty Fly (For a White Guy)",
+      "artist": "The Offspring",
+      "tier": 2
+    },
+    {
+      "year": 1999,
+      "title": "Smooth",
+      "artist": "Santana & Rob Thomas",
+      "tier": 2
+    },
+    {
+      "year": 1999,
+      "title": "Sandstorm",
+      "artist": "Darude",
+      "tier": 2
+    },
+    {
+      "year": 2000,
+      "title": "Oops!... I Did It Again",
+      "artist": "Britney Spears",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "The Real Slim Shady",
+      "artist": "Eminem",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Bye Bye Bye",
+      "artist": "NSYNC",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "It's My Life",
+      "artist": "Bon Jovi",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Who Let the Dogs Out",
+      "artist": "Baha Men",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Music",
+      "artist": "Madonna",
+      "tier": 1
+    },
+    {
+      "year": 2000,
+      "title": "Beautiful Day",
+      "artist": "U2",
+      "tier": 2
+    },
+    {
+      "year": 2000,
+      "title": "Rock DJ",
+      "artist": "Robbie Williams",
+      "tier": 2
+    },
+    {
+      "year": 2000,
+      "title": "Around the World (La La La La La)",
+      "artist": "ATC",
+      "tier": 2
+    },
+    {
+      "year": 2000,
+      "title": "Sex Bomb",
+      "artist": "Tom Jones & Mousse T.",
+      "tier": 2
+    },
+    {
+      "year": 2001,
+      "title": "Can't Get You Out of My Head",
+      "artist": "Kylie Minogue",
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "In the End",
+      "artist": "Linkin Park",
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Lady Marmalade",
+      "artist": "Christina Aguilera, Lil' Kim, Mýa & Pink",
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Survivor",
+      "artist": "Destiny's Child",
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Clint Eastwood",
+      "artist": "Gorillaz",
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Whenever, Wherever",
+      "artist": "Shakira",
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Get the Party Started",
+      "artist": "Pink",
+      "tier": 2
+    },
+    {
+      "year": 2001,
+      "title": "Drops of Jupiter",
+      "artist": "Train",
+      "tier": 2
+    },
+    {
+      "year": 2001,
+      "title": "Because I Got High",
+      "artist": "Afroman",
+      "tier": 2
+    },
+    {
+      "year": 2001,
+      "title": "Hey Baby",
+      "artist": "DJ Ötzi",
+      "tier": 2
+    },
+    {
+      "year": 2002,
+      "title": "Lose Yourself",
+      "artist": "Eminem",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Complicated",
+      "artist": "Avril Lavigne",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Hot in Herre",
+      "artist": "Nelly",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "The Ketchup Song (Aserejé)",
+      "artist": "Las Ketchup",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Heaven",
+      "artist": "DJ Sammy",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "A Thousand Miles",
+      "artist": "Vanessa Carlton",
+      "tier": 1
+    },
+    {
+      "year": 2002,
+      "title": "Murder on the Dancefloor",
+      "artist": "Sophie Ellis-Bextor",
+      "tier": 2
+    },
+    {
+      "year": 2002,
+      "title": "Wherever You Will Go",
+      "artist": "The Calling",
+      "tier": 2
+    },
+    {
+      "year": 2002,
+      "title": "Foolish",
+      "artist": "Ashanti",
+      "tier": 2
+    },
+    {
+      "year": 2002,
+      "title": "Freak Like Me",
+      "artist": "Sugababes",
+      "tier": 2
+    },
+    {
+      "year": 2003,
+      "title": "In da Club",
+      "artist": "50 Cent",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Crazy in Love",
+      "artist": "Beyoncé",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Hey Ya!",
+      "artist": "OutKast",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Where Is the Love?",
+      "artist": "The Black Eyed Peas",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Bring Me to Life",
+      "artist": "Evanescence",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Seven Nation Army",
+      "artist": "The White Stripes",
+      "tier": 1
+    },
+    {
+      "year": 2003,
+      "title": "Beautiful",
+      "artist": "Christina Aguilera",
+      "tier": 2
+    },
+    {
+      "year": 2003,
+      "title": "Are You Gonna Be My Girl",
+      "artist": "Jet",
+      "tier": 2
+    },
+    {
+      "year": 2003,
+      "title": "Clocks",
+      "artist": "Coldplay",
+      "tier": 2
+    },
+    {
+      "year": 2003,
+      "title": "Stacy's Mom",
+      "artist": "Fountains of Wayne",
+      "tier": 2
+    },
+    {
+      "year": 2004,
+      "title": "Toxic",
+      "artist": "Britney Spears",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Yeah!",
+      "artist": "Usher",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Dragostea Din Tei",
+      "artist": "O-Zone",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Mr. Brightside",
+      "artist": "The Killers",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "This Love",
+      "artist": "Maroon 5",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "Take Me Out",
+      "artist": "Franz Ferdinand",
+      "tier": 1
+    },
+    {
+      "year": 2004,
+      "title": "The Reason",
+      "artist": "Hoobastank",
+      "tier": 2
+    },
+    {
+      "year": 2004,
+      "title": "Vertigo",
+      "artist": "U2",
+      "tier": 2
+    },
+    {
+      "year": 2004,
+      "title": "Left Outside Alone",
+      "artist": "Anastacia",
+      "tier": 2
+    },
+    {
+      "year": 2004,
+      "title": "Cha Cha Slide",
+      "artist": "DJ Casper",
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Hollaback Girl",
+      "artist": "Gwen Stefani",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Gold Digger",
+      "artist": "Kanye West",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "You're Beautiful",
+      "artist": "James Blunt",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Feel Good Inc.",
+      "artist": "Gorillaz",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Since U Been Gone",
+      "artist": "Kelly Clarkson",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Don't Cha",
+      "artist": "The Pussycat Dolls",
+      "tier": 1
+    },
+    {
+      "year": 2005,
+      "title": "Axel F",
+      "artist": "Crazy Frog",
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Boulevard of Broken Dreams",
+      "artist": "Green Day",
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Speed of Sound",
+      "artist": "Coldplay",
+      "tier": 2
+    },
+    {
+      "year": 2005,
+      "title": "Beverly Hills",
+      "artist": "Weezer",
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Crazy",
+      "artist": "Gnarls Barkley",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "SexyBack",
+      "artist": "Justin Timberlake",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Hips Don't Lie",
+      "artist": "Shakira",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Chasing Cars",
+      "artist": "Snow Patrol",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Bad Day",
+      "artist": "Daniel Powter",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Promiscuous",
+      "artist": "Nelly Furtado",
+      "tier": 1
+    },
+    {
+      "year": 2006,
+      "title": "Smack That",
+      "artist": "Akon",
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Ridin'",
+      "artist": "Chamillionaire",
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Snow (Hey Oh)",
+      "artist": "Red Hot Chili Peppers",
+      "tier": 2
+    },
+    {
+      "year": 2006,
+      "title": "Temperature",
+      "artist": "Sean Paul",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Umbrella",
+      "artist": "Rihanna",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Apologize",
+      "artist": "Timbaland & OneRepublic",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Bleeding Love",
+      "artist": "Leona Lewis",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Big Girls Don't Cry",
+      "artist": "Fergie",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Grace Kelly",
+      "artist": "Mika",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Crank That (Soulja Boy)",
+      "artist": "Soulja Boy",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Rockstar",
+      "artist": "Nickelback",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Girlfriend",
+      "artist": "Avril Lavigne",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Rehab",
+      "artist": "Amy Winehouse",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Beautiful Girls",
+      "artist": "Sean Kingston",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "I Kissed a Girl",
+      "artist": "Katy Perry",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Viva la Vida",
+      "artist": "Coldplay",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Low",
+      "artist": "Flo Rida",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Just Dance",
+      "artist": "Lady Gaga",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Sex on Fire",
+      "artist": "Kings of Leon",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "American Boy",
+      "artist": "Estelle",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Disturbia",
+      "artist": "Rihanna",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Love Song",
+      "artist": "Sara Bareilles",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Whatever You Like",
+      "artist": "T.I.",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Womanizer",
+      "artist": "Britney Spears",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Poker Face",
+      "artist": "Lady Gaga",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "I Gotta Feeling",
+      "artist": "The Black Eyed Peas",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Empire State of Mind",
+      "artist": "Jay-Z & Alicia Keys",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Sexy Chick",
+      "artist": "David Guetta & Akon",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Halo",
+      "artist": "Beyoncé",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Fireflies",
+      "artist": "Owl City",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Down",
+      "artist": "Jay Sean",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Use Somebody",
+      "artist": "Kings of Leon",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Whatcha Say",
+      "artist": "Jason Derulo",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Right Round",
+      "artist": "Flo Rida",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "Tik Tok",
+      "artist": "Kesha",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Bad Romance",
+      "artist": "Lady Gaga",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Love the Way You Lie",
+      "artist": "Eminem & Rihanna",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Waka Waka (This Time for Africa)",
+      "artist": "Shakira",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Just the Way You Are",
+      "artist": "Bruno Mars",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Dynamite",
+      "artist": "Taio Cruz",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "California Gurls",
+      "artist": "Katy Perry",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "Airplanes",
+      "artist": "B.o.B",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "OMG",
+      "artist": "Usher",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "We No Speak Americano",
+      "artist": "Yolanda Be Cool & DCUP",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Rolling in the Deep",
+      "artist": "Adele",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Party Rock Anthem",
+      "artist": "LMFAO",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Moves Like Jagger",
+      "artist": "Maroon 5",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Give Me Everything",
+      "artist": "Pitbull",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "We Found Love",
+      "artist": "Rihanna",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Pumped Up Kicks",
+      "artist": "Foster the People",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Someone Like You",
+      "artist": "Adele",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "On the Floor",
+      "artist": "Jennifer Lopez",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Danza Kuduro",
+      "artist": "Don Omar & Lucenzo",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "E.T.",
+      "artist": "Katy Perry",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Gangnam Style",
+      "artist": "PSY",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Call Me Maybe",
+      "artist": "Carly Rae Jepsen",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Somebody That I Used to Know",
+      "artist": "Gotye",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Titanium",
+      "artist": "David Guetta & Sia",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "We Are Young",
+      "artist": "fun.",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Ho Hey",
+      "artist": "The Lumineers",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Diamonds",
+      "artist": "Rihanna",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Locked Out of Heaven",
+      "artist": "Bruno Mars",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Wild Ones",
+      "artist": "Flo Rida",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Little Talks",
+      "artist": "Of Monsters and Men",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Get Lucky",
+      "artist": "Daft Punk",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Blurred Lines",
+      "artist": "Robin Thicke",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Wrecking Ball",
+      "artist": "Miley Cyrus",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Thrift Shop",
+      "artist": "Macklemore & Ryan Lewis",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Royals",
+      "artist": "Lorde",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Roar",
+      "artist": "Katy Perry",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Wake Me Up",
+      "artist": "Avicii",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Radioactive",
+      "artist": "Imagine Dragons",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Counting Stars",
+      "artist": "OneRepublic",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Let Her Go",
+      "artist": "Passenger",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Happy",
+      "artist": "Pharrell Williams",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "All About That Bass",
+      "artist": "Meghan Trainor",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Shake It Off",
+      "artist": "Taylor Swift",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Rude",
+      "artist": "Magic!",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Chandelier",
+      "artist": "Sia",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Budapest",
+      "artist": "George Ezra",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Am I Wrong",
+      "artist": "Nico & Vinz",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Stay with Me",
+      "artist": "Sam Smith",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Waves",
+      "artist": "Mr. Probz",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Take Me to Church",
+      "artist": "Hozier",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Uptown Funk",
+      "artist": "Mark Ronson & Bruno Mars",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Hello",
+      "artist": "Adele",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "See You Again",
+      "artist": "Wiz Khalifa & Charlie Puth",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Lean On",
+      "artist": "Major Lazer & DJ Snake",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Cheerleader",
+      "artist": "OMI",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Can't Feel My Face",
+      "artist": "The Weeknd",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Love Me Like You Do",
+      "artist": "Ellie Goulding",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Thinking Out Loud",
+      "artist": "Ed Sheeran",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "What Do You Mean?",
+      "artist": "Justin Bieber",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Sugar",
+      "artist": "Maroon 5",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Closer",
+      "artist": "The Chainsmokers",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "One Dance",
+      "artist": "Drake",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Cheap Thrills",
+      "artist": "Sia",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Can't Stop the Feeling!",
+      "artist": "Justin Timberlake",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "7 Years",
+      "artist": "Lukas Graham",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Faded",
+      "artist": "Alan Walker",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Work",
+      "artist": "Rihanna",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Love Yourself",
+      "artist": "Justin Bieber",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Starboy",
+      "artist": "The Weeknd",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Cake by the Ocean",
+      "artist": "DNCE",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Despacito",
+      "artist": "Luis Fonsi & Daddy Yankee",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Something Just Like This",
+      "artist": "The Chainsmokers & Coldplay",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Havana",
+      "artist": "Camila Cabello",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Believer",
+      "artist": "Imagine Dragons",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Symphony",
+      "artist": "Clean Bandit",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "HUMBLE.",
+      "artist": "Kendrick Lamar",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Attention",
+      "artist": "Charlie Puth",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Feel It Still",
+      "artist": "Portugal. The Man",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "New Rules",
+      "artist": "Dua Lipa",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "God's Plan",
+      "artist": "Drake",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Shallow",
+      "artist": "Lady Gaga & Bradley Cooper",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "thank u, next",
+      "artist": "Ariana Grande",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Girls Like You",
+      "artist": "Maroon 5",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "This Is America",
+      "artist": "Childish Gambino",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Sweet but Psycho",
+      "artist": "Ava Max",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "One Kiss",
+      "artist": "Calvin Harris & Dua Lipa",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Psycho",
+      "artist": "Post Malone",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Lucid Dreams",
+      "artist": "Juice WRLD",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Jackie Chan",
+      "artist": "Tiësto & Dzeko",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Old Town Road",
+      "artist": "Lil Nas X",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Bad Guy",
+      "artist": "Billie Eilish",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Someone You Loved",
+      "artist": "Lewis Capaldi",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Señorita",
+      "artist": "Shawn Mendes & Camila Cabello",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Dance Monkey",
+      "artist": "Tones and I",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Sunflower",
+      "artist": "Post Malone & Swae Lee",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Truth Hurts",
+      "artist": "Lizzo",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Don't Start Now",
+      "artist": "Dua Lipa",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Memories",
+      "artist": "Maroon 5",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "7 rings",
+      "artist": "Ariana Grande",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Blinding Lights",
+      "artist": "The Weeknd",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Rain on Me",
+      "artist": "Lady Gaga & Ariana Grande",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Watermelon Sugar",
+      "artist": "Harry Styles",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Say So",
+      "artist": "Doja Cat",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Break My Heart",
+      "artist": "Dua Lipa",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Savage Love",
+      "artist": "Jawsh 685 & Jason Derulo",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Dynamite",
+      "artist": "BTS",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "The Box",
+      "artist": "Roddy Ricch",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Before You Go",
+      "artist": "Lewis Capaldi",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Head & Heart",
+      "artist": "Joel Corry & MNEK",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "drivers license",
+      "artist": "Olivia Rodrigo",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Levitating",
+      "artist": "Dua Lipa",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Stay",
+      "artist": "The Kid LAROI & Justin Bieber",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "MONTERO (Call Me By Your Name)",
+      "artist": "Lil Nas X",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Save Your Tears",
+      "artist": "The Weeknd",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Beggin'",
+      "artist": "Måneskin",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Bad Habits",
+      "artist": "Ed Sheeran",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Heat Waves",
+      "artist": "Glass Animals",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Kiss Me More",
+      "artist": "Doja Cat",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Astronaut in the Ocean",
+      "artist": "Masked Wolf",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "As It Was",
+      "artist": "Harry Styles",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Unholy",
+      "artist": "Sam Smith & Kim Petras",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "About Damn Time",
+      "artist": "Lizzo",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "I'm Good (Blue)",
+      "artist": "David Guetta & Bebe Rexha",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "abcdefu",
+      "artist": "GAYLE",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Break My Soul",
+      "artist": "Beyoncé",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Anti-Hero",
+      "artist": "Taylor Swift",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Enemy",
+      "artist": "Imagine Dragons",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Glimpse of Us",
+      "artist": "Joji",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Woman",
+      "artist": "Doja Cat",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Flowers",
+      "artist": "Miley Cyrus",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Kill Bill",
+      "artist": "SZA",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Calm Down",
+      "artist": "Rema & Selena Gomez",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Vampire",
+      "artist": "Olivia Rodrigo",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Paint The Town Red",
+      "artist": "Doja Cat",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Dance The Night",
+      "artist": "Dua Lipa",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Miracle",
+      "artist": "Calvin Harris & Ellie Goulding",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Padam Padam",
+      "artist": "Kylie Minogue",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Greedy",
+      "artist": "Tate McRae",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "What Was I Made For?",
+      "artist": "Billie Eilish",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Espresso",
+      "artist": "Sabrina Carpenter",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Beautiful Things",
+      "artist": "Benson Boone",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Birds of a Feather",
+      "artist": "Billie Eilish",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Lose Control",
+      "artist": "Teddy Swims",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Not Like Us",
+      "artist": "Kendrick Lamar",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Too Sweet",
+      "artist": "Hozier",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Good Luck, Babe!",
+      "artist": "Chappell Roan",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Die With A Smile",
+      "artist": "Lady Gaga & Bruno Mars",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Houdini",
+      "artist": "Dua Lipa",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "APT.",
+      "artist": "ROSÉ & Bruno Mars",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Golden",
+      "artist": "HUNTR/X, EJAE, Audrey Nuna & REI AMI",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Luther",
+      "artist": "Kendrick Lamar & SZA",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Abracadabra",
+      "artist": "Lady Gaga",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Manchild",
+      "artist": "Sabrina Carpenter",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swift",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Messy",
+      "artist": "Lola Young",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Anxiety",
+      "artist": "Doechii",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Nokia",
+      "artist": "Drake",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Back to Friends",
+      "artist": "sombr",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Choosin' Texas",
+      "artist": "Ella Langley",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "I Just Might",
+      "artist": "Bruno Mars",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Opalite",
+      "artist": "Taylor Swift",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Aperture",
+      "artist": "Harry Styles",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "DTMF",
+      "artist": "Bad Bunny",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Drop Dead",
+      "artist": "Olivia Rodrigo",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Swim",
+      "artist": "BTS",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Hate That I Made You Love Me",
+      "artist": "Ariana Grande",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "I Knew It, I Knew You",
+      "artist": "Taylor Swift",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Janice STFU",
+      "artist": "Drake",
+      "tier": 2
+    }
+  ]
 }
