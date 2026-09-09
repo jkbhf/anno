@@ -135,14 +135,21 @@ Two things follow from it:
   room hearing a sped-up cover is a worse round than a swapped song. The
   resolver refuses them on purpose; do not put one in by hand.
 
-**A "no hit" is only worth as much as the query behind it.** The resolver used
-to search `track:$title artist:$artist` unquoted, where Spotify takes only the
-first word of each field: that put t.A.T.u., Mia Martini and the 2011 winner on
-the miss list and answered Blue's "I Can" with Adele. It now quotes the fields,
-checks artist, title and pressing on every candidate, and `--recheck` reads the
-ids already in a file back. So before swapping a batch of entries, make sure
-the list came from the current resolver - otherwise good songs get thrown out
-for a bug.
+**A "no hit" is only worth as much as the query behind it, and the query has
+been wrong twice.** First `track:$title artist:$artist` went out unquoted,
+where Spotify takes only the first word of each field: that put t.A.T.u., Mia
+Martini and the 2011 winner on the miss list and answered Blue's "I Can" with
+Adele. Then every search asked for `limit=20`, which this app answers with
+`400 Invalid limit` - the documented maximum of 50 is not what a development
+mode app gets, ten is - and the tool booked all 47 failures as "not on
+Spotify". Both times the miss list looked like a catalog problem and was a
+client one.
+
+Hence: a request that fails is its own bucket ("Could not be looked up"), never
+a swap, and a miss list is only worth acting on when it comes out of a run that
+had no failures in it. Sanity check it against what you know - a Eurovision
+winner or a t.A.T.u. single is not missing from Spotify, and a list saying so
+is a bug report, not a curation task.
 
 A new category is filled the same way: pick the songs by the curation rule
 first, then let the resolver decide which of them can stay.
