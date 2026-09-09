@@ -119,6 +119,81 @@ alone. A running year is filled from the number ones so far - that is the only
 chart that exists before the year-end one does, and it puts the songs on the
 card that the room has actually been hearing.
 
+## How many songs a German year gets
+
+`assets/songs/german_songs.json`, still empty. The deck is what was big *only*
+in German-speaking countries - what crossed over stands in the hit deck
+already, 99 Luftballons, Der Kommissar, Rock Me Amadeus, Da Da Da.
+
+| Years | Entries per year |
+| --- | --- |
+| 1950-1958 | 3 |
+| 1959-1979 | 5 |
+| 1980-1999 | 8 |
+| 2000-2026 | 10 |
+
+**The measure is the German singles chart from 1959 on**, the same way the
+US/UK year-end charts decide the hit deck: a song either stood in it or it did
+not, and that is what keeps a decision arguable later. **From 1971 to 1989 the
+DDR-Hitparade counts beside it.** Two charts for two countries - the eastern
+entries take normal slots and push out weaker western ones. Ueber sieben
+Bruecken and Am Fenster are better known today than half the western chart of
+their year, and a measure that cannot see them is the wrong measure.
+
+**Below 1959 a different measure applies, and it is named rather than hidden:**
+there is no German singles chart before 1959, so 1950-1958 is filled from the
+sellers and film hits documented in hindsight. Three a year. That is the weak
+end of the deck and it is meant to be - the same honesty with which the hit
+deck stops at 1950.
+
+**The test is German-language *and* big only here.** The first is what the card
+promises when the reveal says `German Songs`; the second is the line against
+the hit deck. An English-language German production still gets in when it was
+an event here and nothing outside - Modern Talking yes (UK #56, nothing in the
+US), Milli Vanilli and Boney M no, those were a US number one and a UK regular
+and belong in the hit deck. At equal standing the German-language song takes
+the slot. The same rule sorts Rock & Pop on its own: Rammstein was big
+internationally and is not this deck, Die Toten Hosen and Die Ärzte never were
+and stay.
+
+**No genre quota, the chart decides.** Written out: 1950-1975 is almost pure
+Schlager, 1978-1985 tips into the NDW, the 90s split between Wolfgang Petry and
+Die Fantastischen Vier, and from 2000 Deutschrap and Helene Fischer carry the
+year together. An evening on 1955-1970 is a Schlager evening - that is not a
+list gone wrong, that is the country in those years.
+
+**An evergreen is a good card, not a bad one.** Griechischer Wein and Ein Bett
+im Kornfeld have been running for fifty years and still have exactly one hit
+year. The hit deck's rule - that a song which got big again years later is a
+bad card - bites only where there really are **two competing hit years**, never
+on one hit with a long tail. Applied wider it would clear out half the deck.
+
+**One song, one card.** Über sieben Brücken exists as Karat 1978 and as
+Maffay 1980; taking both means half the room is right and cannot be told so.
+Take the recording that was the bigger event and its year - Maffay 1980. Same
+for German covers of foreign originals: the year of the German version counts,
+because that is the one the room heard.
+
+**Volksmusik excludes itself.** Kastelruther Spatzen and Hansi Hinterseer live
+in the album chart and barely in the singles chart, so the measure keeps them
+out on its own. Leave it at that rather than forcing them in.
+
+**Ballermann and Après-Ski are cards**, precisely because each hangs on a
+single summer - Anton aus Tirol 1999, Layla 2022. The deliberately dated
+production does no harm; the room places the summer, not the sound.
+
+**The resolver needs German words before it runs over this deck.** `notTheSong`
+in `tool/resolve_spotify_tracks.dart` is English only (`karaoke`, `tribute`,
+`made famous by`), and the Schlager corner of Spotify announces the same thing
+in German: `neuaufnahme`, `neu aufgenommen`, `im stil von`,
+`instrumentalversion` belong in that list, or a best-of playback walks through a
+clean artist+title match. The more dangerous pressing gets through anyway -
+Schlager singers re-record their own hits every ten years and that pressing
+often calls itself nothing at all. It is no reason to drop the entry, the song
+is right and only the recording is young, but it makes the "Check the year by
+hand" list even louder here than for the hit deck. The rule stands: never move
+a catalog year onto what the API reports.
+
 ## Draw weight: `tier`
 
 Within a year not everything should come up equally often. The core of a year
@@ -134,10 +209,10 @@ about 3x as often as a tier 2 one - roughly 80% of that year's rounds land on
 the core. Keep the JSON at "core or tail" rather than a per-song weight, so a
 year can still be filled in by hand.
 
-The hit deck splits the same way, read off the size of the year: a 10 song year
-is 6 + 4, an 8 song year 5 + 3, a 5 song year is core all the way through. Core
-is the same question there as here - the songs the room names before the chorus
-is over.
+The hit and German decks split the same way, read off the size of the year: a
+10 song year is 6 + 4, an 8 song year 5 + 3, a 5 or 3 song year is core all the
+way through. Core is the same question there as here - the songs the room names
+before the chorus is over.
 
 Implemented: `Song.tier` (default 1, anything but 1 or 2 is a `FormatException`
 at startup) and `GameController._pickWeighted`. The weighting sits inside the
