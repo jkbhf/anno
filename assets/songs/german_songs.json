@@ -1115,7 +1115,7 @@
       "title": "Wahnsinn",
       "artist": "Wolfgang Petry",
       "spotifyTrackId": "7pAOcmT8XYXE40apvk9j2k",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 1983,
@@ -1133,10 +1133,10 @@
     },
     {
       "year": 1983,
-      "title": "Rosemarie",
-      "artist": "Hoffmann & Hoffmann",
+      "title": "Major Tom (völlig losgelöst)",
+      "artist": "Peter Schilling",
       "spotifyTrackId": "",
-      "tier": 2
+      "tier": 1
     },
     {
       "year": 1983,
@@ -1637,9 +1637,9 @@
     },
     {
       "year": 1992,
-      "title": "Sascha … ein aufrechter Deutscher",
-      "artist": "Die Toten Hosen",
-      "spotifyTrackId": "1VxZSRwQliC4itfgaNk6rG",
+      "title": "Verlieben, verloren, vergessen, verzeih'n",
+      "artist": "Wolfgang Petry",
+      "spotifyTrackId": "",
       "tier": 2
     },
     {
@@ -1686,8 +1686,8 @@
     },
     {
       "year": 1993,
-      "title": "Es ist geil, ein Arschloch zu sein",
-      "artist": "Die Ärzte",
+      "title": "Sascha … ein aufrechter Deutscher",
+      "artist": "Die Toten Hosen",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -1882,7 +1882,7 @@
     },
     {
       "year": 1997,
-      "title": "Verlieben, verlieren, vergessen, verzeih'n",
+      "title": "Die längste Single der Welt",
       "artist": "Wolfgang Petry",
       "spotifyTrackId": "",
       "tier": 1
@@ -2225,8 +2225,8 @@
     },
     {
       "year": 2002,
-      "title": "Verschwende deine Zeit",
-      "artist": "Die Fantastischen Vier",
+      "title": "Engel",
+      "artist": "Ben feat. Gim",
       "spotifyTrackId": "",
       "tier": 1
     },
@@ -2659,8 +2659,8 @@
     },
     {
       "year": 2008,
-      "title": "Augenbling",
-      "artist": "Sido",
+      "title": "Lasse redn",
+      "artist": "Die Ärzte",
       "spotifyTrackId": "",
       "tier": 2
     },
@@ -2925,9 +2925,9 @@
     },
     {
       "year": 2012,
-      "title": "Lasse redn",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "6vJ4egoPoiPKUyohVOfVHC",
+      "title": "Leider geil",
+      "artist": "Deichkind",
+      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -3422,7 +3422,7 @@
     },
     {
       "year": 2019,
-      "title": "Nachts wach",
+      "title": "Mary",
       "artist": "Bausa",
       "spotifyTrackId": "",
       "tier": 2
@@ -3528,14 +3528,14 @@
     {
       "year": 2021,
       "title": "Der letzte Song (Alles wird gut)",
-      "artist": "Kummer & Max Raabe",
+      "artist": "Kummer feat. Fred Rabe",
       "spotifyTrackId": "4FxaCzWS3M4eSfoEiStq79",
       "tier": 1
     },
     {
       "year": 2021,
       "title": "9010",
-      "artist": "Kummer feat. Fred Rabe",
+      "artist": "Kummer",
       "spotifyTrackId": "27YLmJ5rJ8DykxCmEyM5HO",
       "tier": 1
     },
@@ -3611,8 +3611,8 @@
     },
     {
       "year": 2022,
-      "title": "Nie verliebt",
-      "artist": "Nina Chuba",
+      "title": "Auf & ab",
+      "artist": "Montez",
       "spotifyTrackId": "",
       "tier": 1
     },
