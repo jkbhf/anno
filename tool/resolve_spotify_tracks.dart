@@ -295,12 +295,16 @@ Future<Map<String, dynamic>?> searchTrack(
   final first = artistParts(artist).isEmpty
       ? artist
       : artistParts(artist).first;
+  // For a solo artist the second query is the first one over again, and a
+  // duplicate costs a request out of a budget whose penalty is measured in
+  // days.
+  final seen = <String>{};
   final queries = [
     'track:"$title" artist:"$artist"',
     'track:"$title" artist:"$first"',
     'artist:"$artist" $title',
     'track:"$title"',
-  ];
+  ].where((query) => seen.add(query.toLowerCase()));
 
   for (final query in queries) {
     for (final track in await _search(token, query)) {
