@@ -66,12 +66,20 @@ as its natural ceiling; a hit year has none, so the size is set:
 
 | Years | Entries per year |
 | --- | --- |
-| 1960-1979 | 5 |
+| 1950-1979 | 5 |
 | 1980-1999 | 8 |
 | 2000-2026 | 10 |
 
 Same reason as the ESC table: the deck grows towards the present because that
 is where the cards are, and a thin year is heard out within two evenings.
+
+**Why the deck starts at 1950 and ESC at 1956.** ESC has no choice: the first
+contest was 1956, there is nothing before it. A hit year has no such floor -
+the US year-end charts run from 1946, the UK singles chart from 1952 - so the
+bottom is a decision, and it is 1950 because that is what `README.md` promises
+the player. It is the weakest end of the deck and it is meant to be: five a
+year, all core, and the further down you go the more the room is placing a
+decade rather than a year. Below 1950 that stops being a game.
 
 **The measure is the US/UK year-end charts**, not what a German room happened
 to hear. That is what makes the deck "international" rather than a second
@@ -105,7 +113,7 @@ contest date settles it. Two consequences:
   again 2023) are left out for that reason: whichever year is on the card, half
   the room is right and cannot be told so.
 
-The catalog is filled from 1960 to 2026, 530 entries. Every future year needs
+The catalog is filled from 1950 to 2026, 580 entries. Every future year needs
 its ten, otherwise that card is a dead round in a game played on the hit deck
 alone. A running year is filled from the number ones so far - that is the only
 chart that exists before the year-end one does, and it puts the songs on the

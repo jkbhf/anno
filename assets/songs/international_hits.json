@@ -5,6 +5,356 @@
   "_comment": "year is the year the song was a hit in the US/UK charts, not the release year of the pressing Spotify carries. Which songs a year gets and how tier works: see CLAUDE.md.",
   "songs": [
     {
+      "year": 1950,
+      "title": "Goodnight Irene",
+      "artist": "The Weavers",
+      "spotifyTrackId": "3dY8hcWemd21HzZoEf9zU8",
+      "tier": 1
+    },
+    {
+      "year": 1950,
+      "title": "Mona Lisa",
+      "artist": "Nat King Cole",
+      "spotifyTrackId": "5dae01pKNjRQtgOeAkFzPY",
+      "tier": 1
+    },
+    {
+      "year": 1950,
+      "title": "The Third Man Theme",
+      "artist": "Anton Karas",
+      "spotifyTrackId": "7kixCGSpKVDPF7nOqfWQcx",
+      "tier": 1
+    },
+    {
+      "year": 1950,
+      "title": "Music! Music! Music!",
+      "artist": "Teresa Brewer",
+      "spotifyTrackId": "68ZOKozM9xmlp1iwaQSwY7",
+      "tier": 1
+    },
+    {
+      "year": 1950,
+      "title": "If I Knew You Were Comin' I'd've Baked a Cake",
+      "artist": "Eileen Barton",
+      "spotifyTrackId": "3R2OD33agLA7FMqLguRoqV",
+      "tier": 1
+    },
+    {
+      "year": 1951,
+      "title": "The Tennessee Waltz",
+      "artist": "Patti Page",
+      "spotifyTrackId": "4W0sbtVR0pqOo2d7qAHhGr",
+      "tier": 1
+    },
+    {
+      "year": 1951,
+      "title": "Too Young",
+      "artist": "Nat King Cole",
+      "spotifyTrackId": "0zII0Soax7wbm3Avw7iVAd",
+      "tier": 1
+    },
+    {
+      "year": 1951,
+      "title": "How High the Moon",
+      "artist": "Les Paul & Mary Ford",
+      "spotifyTrackId": "0onHzLoj8yQbjbHtJzwjBx",
+      "tier": 1
+    },
+    {
+      "year": 1951,
+      "title": "Come On-a My House",
+      "artist": "Rosemary Clooney",
+      "spotifyTrackId": "3GVyT9fBXuEkGs1STo2WHZ",
+      "tier": 1
+    },
+    {
+      "year": 1951,
+      "title": "Because of You",
+      "artist": "Tony Bennett",
+      "spotifyTrackId": "4aBifVheuFNdL7bajzX283",
+      "tier": 1
+    },
+    {
+      "year": 1952,
+      "title": "Cry",
+      "artist": "Johnnie Ray",
+      "spotifyTrackId": "0Ig4dmbyb1aBynsyyyjwEp",
+      "tier": 1
+    },
+    {
+      "year": 1952,
+      "title": "Blue Tango",
+      "artist": "Leroy Anderson",
+      "spotifyTrackId": "6ecG5Am0TRxn0uwZBQHA3L",
+      "tier": 1
+    },
+    {
+      "year": 1952,
+      "title": "You Belong to Me",
+      "artist": "Jo Stafford",
+      "spotifyTrackId": "3xZe0jFAwc3akvChOrPS7u",
+      "tier": 1
+    },
+    {
+      "year": 1952,
+      "title": "Wheel of Fortune",
+      "artist": "Kay Starr",
+      "spotifyTrackId": "2FlDxXrsYrza7Mk98NCSIo",
+      "tier": 1
+    },
+    {
+      "year": 1952,
+      "title": "Here in My Heart",
+      "artist": "Al Martino",
+      "spotifyTrackId": "5INGQJv6rLOIuM6jwFjjt9",
+      "tier": 1
+    },
+    {
+      "year": 1953,
+      "title": "Song from Moulin Rouge",
+      "artist": "Percy Faith",
+      "spotifyTrackId": "2qB4ICc0xkW6Mnhm32W6eL",
+      "tier": 1
+    },
+    {
+      "year": 1953,
+      "title": "(How Much Is) That Doggie in the Window",
+      "artist": "Patti Page",
+      "spotifyTrackId": "18wOScp6kmJR7JEi0tO29j",
+      "tier": 1
+    },
+    {
+      "year": 1953,
+      "title": "I Believe",
+      "artist": "Frankie Laine",
+      "spotifyTrackId": "3FzkbFgVGdg4zqyCMzUPM7",
+      "tier": 1
+    },
+    {
+      "year": 1953,
+      "title": "Vaya con Dios",
+      "artist": "Les Paul & Mary Ford",
+      "spotifyTrackId": "3qhxI5f7klTVfK0iWYmKdM",
+      "tier": 1
+    },
+    {
+      "year": 1953,
+      "title": "Rags to Riches",
+      "artist": "Tony Bennett",
+      "spotifyTrackId": "4BH8EuPAxeFAh1rSWtnGdD",
+      "tier": 1
+    },
+    {
+      "year": 1954,
+      "title": "Sh-Boom",
+      "artist": "The Crew-Cuts",
+      "spotifyTrackId": "7G2jAmiYUDZKyk7npVrgX8",
+      "tier": 1
+    },
+    {
+      "year": 1954,
+      "title": "Mister Sandman",
+      "artist": "The Chordettes",
+      "spotifyTrackId": "5VbwM8nvvQLXcwsZUwgm9K",
+      "tier": 1
+    },
+    {
+      "year": 1954,
+      "title": "Shake, Rattle and Roll",
+      "artist": "Bill Haley & His Comets",
+      "spotifyTrackId": "5z2Gef9D3UgRquZXe7UUW4",
+      "tier": 1
+    },
+    {
+      "year": 1954,
+      "title": "Secret Love",
+      "artist": "Doris Day",
+      "spotifyTrackId": "5wzjc23Qsn7wN75eLMvFEc",
+      "tier": 1
+    },
+    {
+      "year": 1954,
+      "title": "Three Coins in the Fountain",
+      "artist": "The Four Aces",
+      "spotifyTrackId": "0ORe9enQbeEbvee4oJhyPE",
+      "tier": 1
+    },
+    {
+      "year": 1955,
+      "title": "Rock Around the Clock",
+      "artist": "Bill Haley & His Comets",
+      "spotifyTrackId": "34AmZ4PMz9iNZVp9AMIGZj",
+      "tier": 1
+    },
+    {
+      "year": 1955,
+      "title": "Sixteen Tons",
+      "artist": "Tennessee Ernie Ford",
+      "spotifyTrackId": "3P6OwCX7Ofiaaqtvujb6i5",
+      "tier": 1
+    },
+    {
+      "year": 1955,
+      "title": "Maybellene",
+      "artist": "Chuck Berry",
+      "spotifyTrackId": "3SQhmctWreNM0X6Zkm2K5R",
+      "tier": 1
+    },
+    {
+      "year": 1955,
+      "title": "Ain't That a Shame",
+      "artist": "Fats Domino",
+      "spotifyTrackId": "36ordvZDZM3hGH920vcEnk",
+      "tier": 1
+    },
+    {
+      "year": 1955,
+      "title": "Cry Me a River",
+      "artist": "Julie London",
+      "spotifyTrackId": "7f6AAixCrVar1ZY7RPHDfM",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "Heartbreak Hotel",
+      "artist": "Elvis Presley",
+      "spotifyTrackId": "2IfE8FhnPPEBSS4rL1qhBb",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "Hound Dog",
+      "artist": "Elvis Presley",
+      "spotifyTrackId": "64Ny7djQ6rNJspquof2KoX",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "The Great Pretender",
+      "artist": "The Platters",
+      "spotifyTrackId": "6EjKJ1tR0RWKKjaOv796U8",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "Que Sera, Sera (Whatever Will Be, Will Be)",
+      "artist": "Doris Day",
+      "spotifyTrackId": "4Ylqc711Eq763XbTAOABu3",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "Tutti Frutti",
+      "artist": "Little Richard",
+      "spotifyTrackId": "2iXcvnD3d1gfLBum0cE5Eg",
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Jailhouse Rock",
+      "artist": "Elvis Presley",
+      "spotifyTrackId": "4gphxUgq0JSFv2BCLhNDiE",
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "That'll Be the Day",
+      "artist": "Buddy Holly & The Crickets",
+      "spotifyTrackId": "4UcHTV3TjlThmMlZgOG4Kr",
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Great Balls of Fire",
+      "artist": "Jerry Lee Lewis",
+      "spotifyTrackId": "5jw1zzcYFivmuJK52JrnMK",
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Wake Up Little Susie",
+      "artist": "The Everly Brothers",
+      "spotifyTrackId": "11fNLqDB47gMKj7BHhR2Qr",
+      "tier": 1
+    },
+    {
+      "year": 1957,
+      "title": "Diana",
+      "artist": "Paul Anka",
+      "spotifyTrackId": "12CsN1uG7jDAogsKmHGs2n",
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "Nel blu, dipinto di blu (Volare)",
+      "artist": "Domenico Modugno",
+      "spotifyTrackId": "5zyrEv4F3FaLECI8TOKpFM",
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "Johnny B. Goode",
+      "artist": "Chuck Berry",
+      "spotifyTrackId": "2QfiRTz5Yc8DdShCxG1tB2",
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "All I Have to Do Is Dream",
+      "artist": "The Everly Brothers",
+      "spotifyTrackId": "7dblNGnRXEBrVJunazs2U5",
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "At the Hop",
+      "artist": "Danny & The Juniors",
+      "spotifyTrackId": "1b20X818P0dpNYfargfBJk",
+      "tier": 1
+    },
+    {
+      "year": 1958,
+      "title": "Tequila",
+      "artist": "The Champs",
+      "spotifyTrackId": "14bUqUj1EUnQabWeAqnj39",
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "Mack the Knife",
+      "artist": "Bobby Darin",
+      "spotifyTrackId": "3E5ndyOfO6vFDEIE42HA8o",
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "The Battle of New Orleans",
+      "artist": "Johnny Horton",
+      "spotifyTrackId": "0dwpdcQkeZqpuoAPYD49N3",
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "Smoke Gets in Your Eyes",
+      "artist": "The Platters",
+      "spotifyTrackId": "2vSxjnyrWrtxyfzO47EX6q",
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "What'd I Say",
+      "artist": "Ray Charles",
+      "spotifyTrackId": "5yQ9iMZXGcr5rlO4hoLsP4",
+      "tier": 1
+    },
+    {
+      "year": 1959,
+      "title": "Stagger Lee",
+      "artist": "Lloyd Price",
+      "spotifyTrackId": "7qoaMWT3eRCKG1RN6dVuOY",
+      "tier": 1
+    },
+    {
       "year": 1960,
       "title": "The Twist",
       "artist": "Chubby Checker",
