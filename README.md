@@ -228,8 +228,9 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 contest year gets, which ones, and which of them are core.
 
 ESC, German Songs, International Hits and Rock & Pop exist; ESC is filled with
-427 entries from 1956 to 2026 and International Hits with 580 from 1950 to
-2026 - German Songs and Rock & Pop are still empty. The intent is at least one
+427 entries from 1956 to 2026, International Hits with 580 from 1950 to 2026
+and German Songs with 542 from 1950 to 2026 (2024 and 2025 still open) - Rock
+& Pop is still empty. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956 - for how many entries a year gets
 beyond that, see `CLAUDE.md`. When a year holds several, the

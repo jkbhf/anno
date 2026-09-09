@@ -96,6 +96,10 @@ const notTheSong = [
   'remix',
   'nightcore',
   'cover version',
+  'neuaufnahme',
+  'neu aufgenommen',
+  'im stil von',
+  'instrumentalversion',
 ];
 
 /// A request that came back with neither a result nor a rate limit.
