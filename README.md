@@ -134,7 +134,9 @@ lives in the environment; a PKCE login in a browser must never carry one.
 2. **Categories** - which decks to play from. Several can be picked; each round
    then draws from one of them at random, and every deck has the same chance
    regardless of how many songs it holds for that year. Categories without songs
-   cannot be selected.
+   cannot be selected. A deck marked `needsCompanion` - K-Pop, which only
+   covers 2016 on - can be picked but not on its own: alone it would answer
+   most cards with nothing, so Start stays off until a full deck joins it.
 3. **Game** - scan a card and the song starts. The screen that follows is the
    scoreboard with a "Reveal the year" button where the song card will be: the
    scores are up while the group guesses, but the year, the title and the
@@ -227,11 +229,18 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 2 is refused at startup. `CLAUDE.md` holds the rule for how many entries a
 contest year gets, which ones, and which of them are core.
 
-ESC, German Songs, International Hits and Rock & Pop exist; so far only ESC is
-filled, with 427 entries from 1956 to 2026 - the three other decks are empty. The intent is at least one song per year from 1950 to
-2026 - for ESC more than that, see `CLAUDE.md`. When a year holds several, the
-app picks one at random and only repeats it within a game once all the others
-have had their turn.
+`needsCompanion` sits next to `songs` on the category itself and defaults to
+false. It marks a deck that only covers a stretch of years instead of the whole
+century, and keeps it from being the only pick - see `canCarryGame` in
+`lib/models/song_category.dart`.
+
+Five decks exist. ESC is filled with 427 entries from 1956 to 2026,
+International Hits with 530 from 1960 to 2026, K-Pop with 115 from 2016 to 2026
+(a companion deck). German Songs and Rock & Pop are empty and cannot be
+selected. The intent is at least one song per year from
+1950 to 2026 - for ESC more than that, see `CLAUDE.md`. When a year holds
+several, the app picks one at random and only repeats it within a game once all
+the others have had their turn.
 
 `spotifyTrackId` is the last part of `https://open.spotify.com/track/<id>`.
 Without it the app opens a Spotify search for title and artist - the song then

@@ -10,6 +10,11 @@ import 'game_screen.dart';
 ///
 /// More than one is allowed - each round then draws from a category picked at
 /// random among those that have a song for the scanned year.
+///
+/// A deck with [SongCategory.needsCompanion] can be picked freely but not on
+/// its own: it only covers part of the century, so alone it would answer most
+/// cards with nothing. [canCarryGame] is the check, and the button says why it
+/// is off rather than just going grey.
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({
     required this.players,
@@ -33,12 +38,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
+  List<SongCategory> _chosen(List<SongCategory> categories) => [
+    for (final category in categories)
+      if (_selected.contains(category.id)) category,
+  ];
+
   Future<void> _start(List<SongCategory> categories) async {
-    final chosen = [
-      for (final category in categories)
-        if (_selected.contains(category.id)) category,
-    ];
-    if (chosen.isEmpty) return;
+    final chosen = _chosen(categories);
+    if (!canCarryGame(chosen)) return;
 
     await openGame(
       context,
@@ -53,6 +60,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final theme = Theme.of(context);
     final categories = AppScope.of(context).categories;
     final playable = categories.where((c) => !c.isEmpty).length;
+    final chosen = _chosen(categories);
+    final ready = canCarryGame(chosen);
+    // Picked something, but all of it needs a companion - the one case where
+    // the disabled button needs a sentence to go with it.
+    final companionOnly = chosen.isNotEmpty && !ready;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Categories')),
@@ -98,13 +110,32 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              child: FilledButton(
-                onPressed: _selected.isEmpty ? null : () => _start(categories),
-                child: Text(
-                  _selected.length <= 1
-                      ? 'Start'
-                      : 'Start with ${_selected.length} categories',
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (companionOnly) ...[
+                    Text(
+                      chosen.length == 1
+                          ? '${chosen.single.name} only covers part of the '
+                                'years - pick another deck to go with it.'
+                          : 'These decks only cover part of the years - pick '
+                                'another one to go with them.',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  FilledButton(
+                    onPressed: ready ? () => _start(categories) : null,
+                    child: Text(
+                      _selected.length <= 1
+                          ? 'Start'
+                          : 'Start with ${_selected.length} categories',
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -131,7 +162,8 @@ class _CategoryCard extends StatelessWidget {
     final enabled = onTap != null;
     final subtitle = category.isEmpty
         ? 'No songs yet'
-        : '${category.songs.length} songs · ${category.coveredYears} years';
+        : '${category.songs.length} songs · ${category.coveredYears} years'
+              '${category.needsCompanion ? ' · only with another deck' : ''}';
 
     return Card(
       color: selected ? theme.colorScheme.primaryContainer : null,

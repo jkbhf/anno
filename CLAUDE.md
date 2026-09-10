@@ -99,6 +99,72 @@ alone. A running year is filled from the number ones so far - that is the only
 chart that exists before the year-end one does, and it puts the songs on the
 card that the room has actually been hearing.
 
+## A deck that does not span the century: `needsCompanion`
+
+The cards run over the whole century, so the rule behind "every year needs its
+ten" is really *every year the cards can show*. A deck that only covers a
+stretch of years breaks that - alone it answers most cards with nothing, which
+is a round without a song.
+
+That does not have to cost the deck. `GameController._draw` picks only among
+the categories that hold something for the scanned year, so next to a full deck
+a short one never produces a dead round: the other deck steps in and the short
+one waits for a year it can serve. What has to be ruled out is the *selection*,
+not the deck.
+
+Hence `"needsCompanion": true` in the category JSON (`SongCategory
+.needsCompanion`, default false). The deck can be picked freely, it just cannot
+be the whole game: `canCarryGame` in `lib/models/song_category.dart` is the one
+check, and both the selection screen and the resume card on the setup screen
+read it. The button then says why it is off - "K-Pop only covers part of the
+years" - rather than going grey without a reason.
+
+**The flag is for a deck whose curation rule has an end, not for one that is
+still being filled.** An unfinished deck gets filled; K-Pop covers 2016 on
+because that is the stretch the room knows, and no amount of work extends it
+downwards without turning the older cards into coin flips. Where a deck could
+cover the century and simply does not yet, leave the flag off and fill it.
+
+The price is real and worth naming: on a 1950-2026 card deck a companion deck
+serves maybe a fifth of the rounds. It is a deck for the songs in between, not
+for an evening of its own.
+
+## How many songs a K-Pop year gets
+
+`assets/songs/kpop.json`. Ten per year, 6 core and 4 tail, the same split as a
+2000+ hit year - the deck only serves part of the rounds, so depth per year
+matters less here than in a deck that has to carry an evening.
+
+**The deck starts in 2016 and the reason is the room, not the music.** K-Pop
+before that is a different set of groups, and a song nobody recognises turns
+the round into a coin flip - the same "best known" filter the other decks
+apply. Gangnam Style and the 2nd generation would stretch the range by a few
+years on world-hit recognition alone; take them only if the room actually names
+them, and note that each such year still needs its ten.
+
+**The year is the release year of the title track.** A comeback is a dated
+event the fandom knows to the week, which makes this deck one of the sharpest
+in the game - the production sound moves fast enough that 2018 and 2022 are
+told apart on the intro. That also means the resolver's year warnings matter
+here: unlike the hit deck, a mismatch is worth looking at rather than noise,
+because there is no chart year that could legitimately differ from the release.
+
+**Soundtrack acts count.** HUNTR/X and the Saja Boys are fictional groups, but
+"Golden" was the song of 2025 for exactly the room this deck is for. The test
+is what the room names, not what a label calls an act.
+
+Filled from 2016 to 2026, 115 entries, every one of them with a track id. The
+years from 2022 on do not sit on exactly ten - they run between 9 and 13,
+because they were gone through by hand and a year somebody has just been
+through deserves what they found. That is the curator's call and not a defect:
+the ten is a target for a year nobody is looking at. No test guards the size
+for that reason; only the tier split is checked, because the draw weight leans
+on tier 1 being the majority.
+
+2026 is a running year and was filled from the comebacks so far, so its tiers
+are the softest in the deck - a year is only really sorted into core and tail
+once it is over.
+
 ## Draw weight: `tier`
 
 Within a year not everything should come up equally often. The core of a year
@@ -114,10 +180,10 @@ about 3x as often as a tier 2 one - roughly 80% of that year's rounds land on
 the core. Keep the JSON at "core or tail" rather than a per-song weight, so a
 year can still be filled in by hand.
 
-The hit deck splits the same way, read off the size of the year: a 10 song year
-is 6 + 4, an 8 song year 5 + 3, a 5 song year is core all the way through. Core
-is the same question there as here - the songs the room names before the chorus
-is over.
+The hit and K-Pop decks split the same way, read off the size of the year: a 10
+song year is 6 + 4, an 8 song year 5 + 3, a 5 song year is core all the way
+through. Core is the same question there as here - the songs the room names
+before the chorus is over.
 
 Implemented: `Song.tier` (default 1, anything but 1 or 2 is a `FormatException`
 at startup) and `GameController._pickWeighted`. The weighting sits inside the
