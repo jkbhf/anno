@@ -227,9 +227,9 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 2 is refused at startup. `CLAUDE.md` holds the rule for how many entries a
 contest year gets, which ones, and which of them are core.
 
-ESC, German Songs, International Hits and Rock & Pop exist; ESC is filled with
-427 entries from 1956 to 2026, International Hits with 580 from 1950 to 2026
-and German Songs with 544 from 1950 to 2026 - Rock & Pop is still empty. The intent is at least one
+ESC, German Songs and International Hits exist; ESC is filled with 427 entries
+from 1956 to 2026, International Hits with 580 from 1950 to 2026 and German
+Songs with 544 from 1950 to 2026. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956 - for how many entries a year gets
 beyond that, see `CLAUDE.md`. When a year holds several, the

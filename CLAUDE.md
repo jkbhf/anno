@@ -152,9 +152,9 @@ the hit deck. An English-language German production still gets in when it was
 an event here and nothing outside - Modern Talking yes (UK #56, nothing in the
 US), Milli Vanilli and Boney M no, those were a US number one and a UK regular
 and belong in the hit deck. At equal standing the German-language song takes
-the slot. The same rule sorts Rock & Pop on its own: Rammstein was big
-internationally and is not this deck, Die Toten Hosen and Die Ärzte never were
-and stay.
+the slot. That is also what keeps Rammstein out - big internationally, so the
+hit deck is its place - while Die Toten Hosen and Die Ärzte never were and
+stay.
 
 **No genre quota, the chart decides.** Written out: 1950-1975 is almost pure
 Schlager, 1978-1985 tips into the NDW, the 90s split between Wolfgang Petry and

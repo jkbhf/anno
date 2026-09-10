@@ -296,8 +296,8 @@ void main() {
     final game = buildGame(
       categories: [
         SongCategory(
-          id: 'rock_pop',
-          name: 'Rock & Pop Classics',
+          id: 'german_songs',
+          name: 'German Songs',
           description: '',
           songs: const [Song(title: 'A', artist: 'X', year: 2005)],
         ),
@@ -309,7 +309,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Only the app bar names the deck; the reveal card adds no origin line.
-    expect(find.text('Rock & Pop Classics'), findsOneWidget);
+    expect(find.text('German Songs'), findsOneWidget);
     expect(find.textContaining('·'), findsNothing);
     expect(find.text('A'), findsOneWidget);
   });
@@ -320,8 +320,8 @@ void main() {
       categories: [
         escCategory,
         SongCategory(
-          id: 'rock_pop',
-          name: 'Rock & Pop Classics',
+          id: 'german_songs',
+          name: 'German Songs',
           description: '',
           songs: const [Song(title: 'A', artist: 'X', year: 1999)],
         ),

@@ -12,7 +12,6 @@ const List<String> categoryAssets = [
   'assets/songs/esc.json',
   'assets/songs/german_songs.json',
   'assets/songs/international_hits.json',
-  'assets/songs/rock_pop.json',
 ];
 
 /// Loads the song catalogs from the JSON assets.
