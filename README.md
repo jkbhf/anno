@@ -229,7 +229,7 @@ contest year gets, which ones, and which of them are core.
 
 ESC, German Songs and International Hits exist; ESC is filled with 427 entries
 from 1956 to 2026, International Hits with 580 from 1950 to 2026 and German
-Songs with 544 from 1950 to 2026. The intent is at least one
+Songs with 543 from 1950 to 2026. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956 - for how many entries a year gets
 beyond that, see `CLAUDE.md`. When a year holds several, the
