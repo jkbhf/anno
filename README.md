@@ -134,7 +134,9 @@ lives in the environment; a PKCE login in a browser must never carry one.
 2. **Categories** - which decks to play from. Several can be picked; each round
    then draws from one of them at random, and every deck has the same chance
    regardless of how many songs it holds for that year. Categories without songs
-   cannot be selected.
+   cannot be selected. A deck marked `needsCompanion` - K-Pop, which only
+   covers 2016 on - can be picked but not on its own: alone it would answer
+   most cards with nothing, so Start stays off until a full deck joins it.
 3. **Game** - scan a card and the song starts. The screen that follows is the
    scoreboard with a "Reveal the year" button where the song card will be: the
    scores are up while the group guesses, but the year, the title and the
@@ -227,11 +229,18 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 2 is refused at startup. `CLAUDE.md` holds the rule for how many entries a
 contest year gets, which ones, and which of them are core.
 
-ESC, German Songs and International Hits exist; ESC is filled with 427 entries
-from 1956 to 2026, International Hits with 580 from 1950 to 2026 and German
-Songs with 543 from 1950 to 2026. The intent is at least one
+`needsCompanion` sits next to `songs` on the category itself and defaults to
+false. It marks a deck that only covers a stretch of years instead of the whole
+century, and keeps it from being the only pick - see `canCarryGame` in
+`lib/models/song_category.dart`.
+
+ESC, German Songs, International Hits and K-Pop exist; ESC is filled with 427
+entries from 1956 to 2026, International Hits with 580 from 1950 to 2026,
+German Songs with 543 from 1950 to 2026 and K-Pop with 115 from 2016 to 2026 -
+the last one a companion deck. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
-the contest did not exist before 1956 - for how many entries a year gets
+the contest did not exist before 1956, and K-Pop does not try to because the
+room only knows the deck from 2016 on - for how many entries a year gets
 beyond that, see `CLAUDE.md`. When a year holds several, the
 app picks one at random and only repeats it within a game once all the others
 have had their turn.

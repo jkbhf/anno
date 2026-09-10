@@ -1,0 +1,814 @@
+{
+  "id": "kpop",
+  "name": "K-Pop",
+  "description": "Title tracks from 2016 on - only together with another deck",
+  "needsCompanion": true,
+  "_comment": "Covers 2016 on only, so it cannot carry a game alone - needsCompanion keeps it from being the sole pick. year is the release year of the title track. Which songs a year gets and how tier works: see CLAUDE.md.",
+  "songs": [
+    {
+      "year": 2016,
+      "title": "BOOMBAYAH",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "13MF2TYuyfITClL1R2ei6e",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "WHISTLE",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "6NEoeBLQbOMw92qMeLfI40",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Blood Sweat & Tears",
+      "artist": "BTS",
+      "spotifyTrackId": "2u54HNQamwFuOMLSuhSRom",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Russian Roulette",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "5HiSc2ZCGn8L3cH3qSwzBT",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "CHEER UP",
+      "artist": "TWICE",
+      "spotifyTrackId": "7lB4rxNVc7vm33ZSZXVRAQ",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "TT",
+      "artist": "TWICE",
+      "spotifyTrackId": "60jFaQV7Z4boGC4ob5B5c6",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "PLAYING WITH FIRE",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "7qmvLmX9tyaTiBAVNI6YEn",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Save ME",
+      "artist": "BTS",
+      "spotifyTrackId": "7bxGcILuAjkZzaveU28ZJS",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Monster",
+      "artist": "EXO",
+      "spotifyTrackId": "7GbUWl6qLW1gdngbEV2WDJ",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Decalcomanie",
+      "artist": "MAMAMOO",
+      "spotifyTrackId": "5WitNasXEIRptoLIQUcXMx",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "AS IF IT'S YOUR LAST",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4ZxOuNHhpyOj4gv52MtQpT",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "DNA",
+      "artist": "BTS",
+      "spotifyTrackId": "2ngmiq1KoYn3x25VOmvd8F",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Spring Day",
+      "artist": "BTS",
+      "spotifyTrackId": "2j1fFjWHCI9KJSwcuYAOyF",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Red Flavor",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "7nKQ5WAcjnG48knyLuo8gO",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "SIGNAL",
+      "artist": "TWICE",
+      "spotifyTrackId": "15rX80MpEJ2OqW3dPunQvI",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "LIKEY",
+      "artist": "TWICE",
+      "spotifyTrackId": "0IEVKWduAaMcZepZQVr80T",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "MIC Drop",
+      "artist": "BTS",
+      "spotifyTrackId": "4gZGAVECoiutzp64KSHNjE",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Ko Ko Bop",
+      "artist": "EXO",
+      "spotifyTrackId": "5EzitieoPnjyKHAq0gfRMa",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Don't Wanna Cry",
+      "artist": "SEVENTEEN",
+      "spotifyTrackId": "6Upu6yjkdi0DVI8E3IBZEU",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Energetic",
+      "artist": "Wanna One",
+      "spotifyTrackId": "3NkkcnnKrNHv4AiGaPdD76",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "DDU-DU DDU-DU",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4lQsB3ERTWSNaAN1IkuNRl",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "IDOL",
+      "artist": "BTS",
+      "spotifyTrackId": "1e8J3XClxZbFmvIHLI8CE4",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "FAKE LOVE",
+      "artist": "BTS",
+      "spotifyTrackId": "6m1TWFMeon7ai9XLOzdbiR",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Bad Boy",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "5GKwq4sO5ZHKuWaDmdwMQc",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "What is Love?",
+      "artist": "TWICE",
+      "spotifyTrackId": "3zhbXKFjUDw40pTYyCgt1Y",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Dance The Night Away",
+      "artist": "TWICE",
+      "spotifyTrackId": "4DYIDSMIB5y2UmZFv9fxeX",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "LATATA",
+      "artist": "(G)I-DLE",
+      "spotifyTrackId": "26SFI2FmBQ4TgMVrXwLwPc",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "BBoom BBoom",
+      "artist": "MOMOLAND",
+      "spotifyTrackId": "3BPoSr2pO34Aan6alFfVto",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Power Up",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "381g0b6QZxC13SzA2HRMIc",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Oh My!",
+      "artist": "SEVENTEEN",
+      "spotifyTrackId": "06pQBEBRpmMv9JlxbpLp0E",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Kill This Love",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "6hvczQ05jc1yGlp9zhb95V",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Boy With Luv",
+      "artist": "BTS",
+      "spotifyTrackId": "4a9tbd947vo9K8Vti9JwcI",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "DALLA DALLA",
+      "artist": "ITZY",
+      "spotifyTrackId": "38rUIlTX93Aoif3WcY1wv6",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "CROWN",
+      "artist": "TOMORROW X TOGETHER",
+      "spotifyTrackId": "0EmYZZ8OqeALedVhijSjsg",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "FANCY",
+      "artist": "TWICE",
+      "spotifyTrackId": "2qQpFbqqkLOGySgNK8wBXt",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Feel Special",
+      "artist": "TWICE",
+      "spotifyTrackId": "3Hz3tTQwOdM6XkA0ALB2G9",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Gotta Go",
+      "artist": "CHUNG HA",
+      "spotifyTrackId": "1exnDFdC34GyBcaLt9ZJfX",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "ICY",
+      "artist": "ITZY",
+      "spotifyTrackId": "2vdkN2NSQ5mxqNGg7sJUxs",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "HIT",
+      "artist": "SEVENTEEN",
+      "spotifyTrackId": "0uIw1c0E2nyFWWwEVzhl30",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "MIROH",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "2sFWzfV3kqAwXEWM9BjzwH",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "How You Like That",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4SFknyjLcyTLJFPKD2m96o",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Lovesick Girls",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4Ws314Ylb27BVsvlZOy30C",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Ice Cream (with Selena Gomez)",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "2J4P46vCFm1rPkNkp9pZWX",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Dynamite",
+      "artist": "BTS",
+      "spotifyTrackId": "5QDLhrAOJJdNAmCTJ8xMyW",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "WANNABE",
+      "artist": "ITZY",
+      "spotifyTrackId": "4pspYVQGFHLPEFgQPD1J7e",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "I CAN'T STOP ME",
+      "artist": "TWICE",
+      "spotifyTrackId": "37ZtpRBkHcaq6hHy0X98zn",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Oh my god",
+      "artist": "(G)I-DLE",
+      "spotifyTrackId": "2DmRXiyn03tOqKgEJXlaiJ",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Black Mamba",
+      "artist": "aespa",
+      "spotifyTrackId": "1t2qYCAjUAoGfeFeoBlK51",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Black Swan",
+      "artist": "BTS",
+      "spotifyTrackId": "6wH3AP7b01vpzKYRJhreMy",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Left & Right",
+      "artist": "SEVENTEEN",
+      "spotifyTrackId": "5QGooKayQPVZMUDc8Qt3Dm",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Next Level",
+      "artist": "aespa",
+      "spotifyTrackId": "2zrhoHlFKxFTRF5aMyxMoQ",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Savage",
+      "artist": "aespa",
+      "spotifyTrackId": "3dbLT62Cvs46Ju7a8gpr36",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Butter",
+      "artist": "BTS",
+      "spotifyTrackId": "1mWdTewIgB3gtBM3TOSFhB",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Permission to Dance",
+      "artist": "BTS",
+      "spotifyTrackId": "3XYRV7ZSHqIRDG87DKTtry",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "LALISA",
+      "artist": "LISA",
+      "spotifyTrackId": "7uQZVznj0uQOGC9KhV2Mg6",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "On The Ground",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "2pn8dNVSpYnAtlKFC8Q0DJ",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Drunk-Dazed",
+      "artist": "ENHYPEN",
+      "spotifyTrackId": "1wcr8DjnN59Awev8nnKpQ4",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Queendom",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "6SpPr7K4YQ2wp8jU6uOTmQ",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Thunderous",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "0nwTMzpatarzvLvtwwzdCt",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Alcohol-Free",
+      "artist": "TWICE",
+      "spotifyTrackId": "0BTaaKT4RMbs5M73tOHX5Y",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Pink Venom",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "0skYUMpS0AcbpjcGsAbRGj",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Shut Down",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "0ARKW62l9uWIDYMZTUmJHF",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "LOVE DIVE",
+      "artist": "IVE",
+      "spotifyTrackId": "0Q5VnK2DYzRyfqQRJuUtvi",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "FEARLESS",
+      "artist": "LE SSERAFIM",
+      "spotifyTrackId": "296nXCOv97WJNRWzIBQnoj",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Hype Boy",
+      "artist": "NewJeans",
+      "spotifyTrackId": "0a4MMyCrzT0En247IhqZbD",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Attention",
+      "artist": "NewJeans",
+      "spotifyTrackId": "2pIUpMhHL6L9Z5lnKxJJr9",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Ditto",
+      "artist": "NewJeans",
+      "spotifyTrackId": "3r8RuvgbX9s7ammBn07D3W",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "TOMBOY",
+      "artist": "(G)I-DLE",
+      "spotifyTrackId": "6WYsZJDfUOftGVji74yYSU",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "After LIKE",
+      "artist": "IVE",
+      "spotifyTrackId": "2gYj9lubBorOPIVWsTXugG",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "CASE 143",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "3O8G8eVrhfXTGttyQ1xVuq",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Talk that Talk",
+      "artist": "TWICE",
+      "spotifyTrackId": "0kqTXMHiQiB7IECD0WwcPq",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Cupid",
+      "artist": "FIFTY FIFTY",
+      "spotifyTrackId": "5pMPNxZz50iup8cXchRHxm",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "I AM",
+      "artist": "IVE",
+      "spotifyTrackId": "7KavHYqoVFNB3IUXfs5gvP",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Seven (feat. Latto)",
+      "artist": "Jung Kook",
+      "spotifyTrackId": "2HRgqmZQC0MC7GeNuDIXHN",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "OMG",
+      "artist": "NewJeans",
+      "spotifyTrackId": "65FftemJ1DbbZ45DUfHJXE",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Super Shy",
+      "artist": "NewJeans",
+      "spotifyTrackId": "5sdQOyqq2IDhvmx2lHOpwd",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Queencard",
+      "artist": "(G)I-DLE",
+      "spotifyTrackId": "3xtPQCHJQ3o70PeVAaZSG2",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Like Crazy",
+      "artist": "Jimin",
+      "spotifyTrackId": "3Ua0m0YmEjrMi9XErKcNiR",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "UNFORGIVEN",
+      "artist": "LE SSERAFIM",
+      "spotifyTrackId": "51vRumtqbkNW9wrKfESwfu",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "S-Class",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "3gTQwwDNJ42CCLo3Sf4JDd",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Supernova",
+      "artist": "aespa",
+      "spotifyTrackId": "58b0gBwBVjQfbbCU4xIvoy",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Whiplash",
+      "artist": "aespa",
+      "spotifyTrackId": "3coRPMnFg2dJcPu5RMloa9",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Magnetic",
+      "artist": "ILLIT",
+      "spotifyTrackId": "1aKvZDoLGkNMxoRYgkckZG",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "EASY",
+      "artist": "LE SSERAFIM",
+      "spotifyTrackId": "2O4Bb2WCkjlTPO827OnBMI",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "How Sweet",
+      "artist": "NewJeans",
+      "spotifyTrackId": "38tXZcL1gZRfbqfOG0VMTH",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "APT.",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "5vNRhkKd0yEAg8suGBpjeY",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "HEYA",
+      "artist": "IVE",
+      "spotifyTrackId": "4gOwpU4kMZZNDWkoHYUj1Z",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Touch",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "6aJn7Cst74cj4lNIiPRgav",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Love is Lonely",
+      "artist": "NMIXX",
+      "spotifyTrackId": "4IAjCbrxOPyfMqbVasSjwc",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Chk Chk Boom",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "09keT5ocFhEd5W5HidiUNq",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Strategy",
+      "artist": "TWICE",
+      "spotifyTrackId": "5zQUndaoBtXJ10SsApqtvw",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "JUMP",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "5H1sKFMzDeMtXwND3V6hRY",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Golden",
+      "artist": "HUNTR/X",
+      "spotifyTrackId": "1CPZ5BxNNd0n0nF4Orb9JS",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "REBEL HEART",
+      "artist": "IVE",
+      "spotifyTrackId": "1jtlHteF4y7FFHKgYFld4f",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Gnarly",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "1j15Ar0qGDzIR0v3CQv3JL",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "HOT",
+      "artist": "LE SSERAFIM",
+      "spotifyTrackId": "24Y63uAvj6Oc9jGuTlhlgf",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Spaghetti",
+      "artist": "LE SSERAFIM",
+      "spotifyTrackId": "2N9miXnewVmUrgl6JSK1FI",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Soda Pop",
+      "artist": "Saja Boys",
+      "spotifyTrackId": "02sy7FAs8dkDNYsHp4Ul3f",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Dirty Work",
+      "artist": "aespa",
+      "spotifyTrackId": "1ImRS2KtSaDZcj9vQTxwFA",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "like JENNIE",
+      "artist": "JENNIE",
+      "spotifyTrackId": "0fK7ie6XwGxQTIkpFoWkd1",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Gabriela",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "1xOqGUkyxGQRdCvGpvWKmL",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Your Idol",
+      "artist": "Saja Boys",
+      "spotifyTrackId": "5iupE5tK6WVGkK2wXN7DlC",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Lemonade",
+      "artist": "aespa",
+      "spotifyTrackId": "2oR7jPvWPC08Su4KYmKR3O",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Go",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "0mYa3o6tlUN5HRippmKmwH",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Swim",
+      "artist": "BTS",
+      "spotifyTrackId": "68lbSrXDORS51pmyjZv712",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "It's Me",
+      "artist": "ILLIT",
+      "spotifyTrackId": "1D5L58KLBbceOynTP4DQnY",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Bang Bang",
+      "artist": "IVE",
+      "spotifyTrackId": "4HEBNeUYxEpjDglZbjYz7o",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Animal",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "3ouNEk0tv5TTi8VWMe1xbX",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Run It",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "0D7q3I9Hpi7bBuFd2OFp1s",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Choom",
+      "artist": "BABYMONSTER",
+      "spotifyTrackId": "4cox7ONwuCwUvfZ9fsGDVu",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Rude",
+      "artist": "Hearts2Hearts",
+      "spotifyTrackId": "2bAQsNqdo62T8akkIvWzGl",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Hootie Frutti",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "6oUUmBcUbZa5O48V5pjgAD",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Iconic By Mistake",
+      "artist": "LE SSERAFIM, ILLIT & KATSEYE",
+      "spotifyTrackId": "6fl4Gu0lJm5hc8FM5JzCZD",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Heavy Serenade",
+      "artist": "NMIXX",
+      "spotifyTrackId": "1404zSB6dqMIiStHLI7gg4",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Catch Catch",
+      "artist": "YENA",
+      "spotifyTrackId": "2O9bMJticxbQ8FH3NiQ7Xh",
+      "tier": 2
+    }
+  ]
+}
