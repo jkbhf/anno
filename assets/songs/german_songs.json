@@ -2001,13 +2001,6 @@
     },
     {
       "year": 1999,
-      "title": "Weit weg",
-      "artist": "Echt",
-      "spotifyTrackId": "",
-      "tier": 1
-    },
-    {
-      "year": 1999,
       "title": "Esperanto",
       "artist": "Freundeskreis",
       "spotifyTrackId": "696VIHNs5IIil4WDvyYVG5",
@@ -2211,13 +2204,6 @@
     },
     {
       "year": 2002,
-      "title": "Erwin",
-      "artist": "Sportfreunde Stiller",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
-      "year": 2002,
       "title": "Zum Meer",
       "artist": "Herbert Grönemeyer",
       "spotifyTrackId": "5MKndJQ26WU4iKgj1BUUEr",
@@ -2226,15 +2212,15 @@
     {
       "year": 2003,
       "title": "Anyplace, Anywhere, Anytime",
-      "artist": "Nena & Kim Wilde",
-      "spotifyTrackId": "",
+      "artist": "Nena",
+      "spotifyTrackId": "3E2ldA54uIQRFSkJHpRyTS",
       "tier": 1
     },
     {
       "year": 2003,
       "title": "Der Steuersong",
-      "artist": "Die Gerd Show",
-      "spotifyTrackId": "",
+      "artist": "Blödel Allstars",
+      "spotifyTrackId": "00X1KEv26wNNK9T3Xf6yKc",
       "tier": 1
     },
     {
@@ -2280,13 +2266,6 @@
       "tier": 1
     },
     {
-      "year": 2003,
-      "title": "Wir kriegen euch alle",
-      "artist": "Die Ärzte",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
       "year": 2004,
       "title": "Aurélie",
       "artist": "Wir sind Helden",
@@ -2312,13 +2291,6 @@
       "title": "Symphonie",
       "artist": "Silbermond",
       "spotifyTrackId": "7mOD9NFyZhC8PtW4joWDWT",
-      "tier": 1
-    },
-    {
-      "year": 2004,
-      "title": "Wir sind wir",
-      "artist": "Paul van Dyk & Peter Heppner",
-      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -2437,21 +2409,14 @@
       "year": 2005,
       "title": "Schrei",
       "artist": "Tokio Hotel",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
-      "year": 2005,
-      "title": "Wenn du lachst",
-      "artist": "Silbermond",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "2O3T4KTlTTV5Y4fCiAN4qq",
       "tier": 2
     },
     {
       "year": 2006,
       "title": "'54, '74, '90, 2006",
       "artist": "Sportfreunde Stiller",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "6ee1motyT1KuUMiz8dMqxj",
       "tier": 1
     },
     {
@@ -2466,13 +2431,6 @@
       "title": "Ding",
       "artist": "Seeed",
       "spotifyTrackId": "4i4RFXGR8LjhBjgmIsczzo",
-      "tier": 1
-    },
-    {
-      "year": 2006,
-      "title": "Dreh dich nicht um",
-      "artist": "Rosenstolz",
-      "spotifyTrackId": "",
       "tier": 1
     },
     {
@@ -2506,8 +2464,8 @@
     {
       "year": 2006,
       "title": "Ein Elefant für dich",
-      "artist": "Silbermond",
-      "spotifyTrackId": "",
+      "artist": "Wir sind Helden",
+      "spotifyTrackId": "4PzlKvCtMLM7XEeXI3bk35",
       "tier": 2
     },
     {
@@ -2584,7 +2542,7 @@
       "year": 2008,
       "title": "Ein Stern (der deinen Namen trägt)",
       "artist": "DJ Ötzi & Nik P.",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "1o5evgltJughVgrPinzAOV",
       "tier": 1
     },
     {
@@ -2619,7 +2577,7 @@
       "year": 2008,
       "title": "Lasse redn",
       "artist": "Die Ärzte",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "6vJ4egoPoiPKUyohVOfVHC",
       "tier": 2
     },
     {
@@ -2752,14 +2710,7 @@
       "year": 2010,
       "title": "Das geht ab (Wir feiern die ganze Nacht)",
       "artist": "Die Atzen",
-      "spotifyTrackId": "",
-      "tier": 2
-    },
-    {
-      "year": 2010,
-      "title": "So wia's is",
-      "artist": "Andreas Gabalier",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "0TvcLuXOCVXQZwspgXPOZb",
       "tier": 2
     },
     {
@@ -2871,7 +2822,7 @@
       "year": 2012,
       "title": "Leider geil",
       "artist": "Deichkind",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "3gmxpKRiDdCe6ub96LvKx5",
       "tier": 1
     },
     {
@@ -2927,7 +2878,7 @@
       "year": 2013,
       "title": "Bei meiner Seele",
       "artist": "Xavier Naidoo",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "6NriBxLnfs8biRUwrrQ4re",
       "tier": 1
     },
     {
@@ -3109,7 +3060,7 @@
       "year": 2015,
       "title": "Bye Bye",
       "artist": "Cro",
-      "spotifyTrackId": "",
+      "spotifyTrackId": "29uiAcSHtjAUfnSs7UzmkG",
       "tier": 2
     },
     {
