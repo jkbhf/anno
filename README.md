@@ -234,9 +234,9 @@ false. It marks a deck that only covers a stretch of years instead of the whole
 century, and keeps it from being the only pick - see `canCarryGame` in
 `lib/models/song_category.dart`.
 
-ESC, German Songs, International Hits and K-Pop exist; ESC is filled with 427
-entries from 1956 to 2026, International Hits with 580 from 1950 to 2026,
-German Songs with 543 from 1950 to 2026 and K-Pop with 115 from 2016 to 2026 -
+ESC, German Songs, International Hits and K-Pop exist; ESC is filled with 421
+entries from 1956 to 2026, International Hits with 576 from 1950 to 2026,
+German Songs with 535 from 1950 to 2026 and K-Pop with 115 from 2016 to 2026 -
 the last one a companion deck. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956, and K-Pop does not try to because the

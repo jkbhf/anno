@@ -68,12 +68,12 @@ void main() {
     }
   });
 
-  // Four years in the German deck are the wrong way round already - the test
+  // Three years in the German deck are the wrong way round already - the test
   // below found them. They are listed rather than fixed because which song of
   // a year is core is a curation call, not a mechanical one. Re-tier them and
   // delete the entry; the list is meant to shrink to nothing.
   const knownInverted = {
-    'german_songs': {1999, 2004, 2012, 2019},
+    'german_songs': {1999, 2012, 2019},
   };
 
   test('every year has at least as much core as tail', () {

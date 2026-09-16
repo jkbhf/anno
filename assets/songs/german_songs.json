@@ -61,13 +61,6 @@
       "tier": 1
     },
     {
-      "year": 1952,
-      "title": "Grün ist die Heide",
-      "artist": "Roy Black",
-      "spotifyTrackId": "1M7ZIDu9MRG4HEfNUD8ORA",
-      "tier": 1
-    },
-    {
       "year": 1953,
       "title": "O mein Papa",
       "artist": "Lys Assia",
@@ -118,16 +111,16 @@
     },
     {
       "year": 1955,
-      "title": "Weißer Holunder",
-      "artist": "Issy Pat & Die Telestars",
-      "spotifyTrackId": "512wU1JWldTwvnLRPuNzsg",
-      "tier": 1
-    },
-    {
-      "year": 1955,
       "title": "Wo meine Sonne scheint",
       "artist": "Caterina Valente",
       "spotifyTrackId": "6fTeeC4vu7yKpsDy91HaBZ",
+      "tier": 1
+    },
+    {
+      "year": 1956,
+      "title": "Weißer Holunder",
+      "artist": "Issy Pat & Die Telestars",
+      "spotifyTrackId": "512wU1JWldTwvnLRPuNzsg",
       "tier": 1
     },
     {
@@ -299,6 +292,13 @@
       "tier": 1
     },
     {
+      "year": 1961,
+      "title": "Zwei Gitarren am Meer",
+      "artist": "Billy Vaughn",
+      "spotifyTrackId": "0mZSA2xuId7fKAhQoZKPB9",
+      "tier": 1
+    },
+    {
       "year": 1962,
       "title": "Junge, komm bald wieder",
       "artist": "Freddy Quinn",
@@ -405,13 +405,6 @@
     },
     {
       "year": 1965,
-      "title": "17 Jahr, blondes Haar",
-      "artist": "Udo Jürgens",
-      "spotifyTrackId": "16bKwCv4I2ru13HDdliO5h",
-      "tier": 1
-    },
-    {
-      "year": 1965,
       "title": "Marmor, Stein und Eisen bricht",
       "artist": "Drafi Deutscher",
       "spotifyTrackId": "70gS6bjAjFc96IIunuRj1c",
@@ -429,6 +422,13 @@
       "title": "Shake Hands",
       "artist": "Drafi Deutscher",
       "spotifyTrackId": "2Leg7D1fA82aXS1iOhyusi",
+      "tier": 1
+    },
+    {
+      "year": 1965,
+      "title": "Sag ihr, ich lass sie grüßen",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "7I78cAUVH0zu8brBM9cR4M",
       "tier": 1
     },
     {
@@ -492,13 +492,6 @@
       "title": "Wärst du doch in Düsseldorf geblieben",
       "artist": "Dorthe",
       "spotifyTrackId": "4Im22oLBjv4o0EnYkZ32jS",
-      "tier": 1
-    },
-    {
-      "year": 1967,
-      "title": "Zwei Gitarren am Meer",
-      "artist": "Billy Vaughn",
-      "spotifyTrackId": "0mZSA2xuId7fKAhQoZKPB9",
       "tier": 1
     },
     {
@@ -622,13 +615,6 @@
     },
     {
       "year": 1971,
-      "title": "Diese Welt",
-      "artist": "Katja Ebstein",
-      "spotifyTrackId": "24u9ByjYwrVqwui1foSO1X",
-      "tier": 1
-    },
-    {
-      "year": 1971,
       "title": "Schöne Maid",
       "artist": "Tony Marshall",
       "spotifyTrackId": "5udRth9qdISXgpmovT3Ysc",
@@ -671,16 +657,16 @@
     },
     {
       "year": 1972,
-      "title": "Sag ihr, ich lass sie grüßen",
-      "artist": "Udo Jürgens",
-      "spotifyTrackId": "7I78cAUVH0zu8brBM9cR4M",
+      "title": "Zwei blaue Vergissmeinnicht",
+      "artist": "Rex Gildo",
+      "spotifyTrackId": "4PPa4OqxaonEdu0vTPLahr",
       "tier": 1
     },
     {
       "year": 1972,
-      "title": "Zwei blaue Vergissmeinnicht",
-      "artist": "Rex Gildo",
-      "spotifyTrackId": "4PPa4OqxaonEdu0vTPLahr",
+      "title": "Eviva España",
+      "artist": "Hanna Aroni",
+      "spotifyTrackId": "3H3lzzByDIkyTl52ht6t6C",
       "tier": 1
     },
     {
@@ -695,13 +681,6 @@
       "title": "Du kannst nicht immer 17 sein",
       "artist": "Chris Roberts",
       "spotifyTrackId": "0IbuM7HceQXATToyQSvegs",
-      "tier": 1
-    },
-    {
-      "year": 1973,
-      "title": "Eviva España",
-      "artist": "Hanna Aroni",
-      "spotifyTrackId": "3H3lzzByDIkyTl52ht6t6C",
       "tier": 1
     },
     {
@@ -922,6 +901,13 @@
       "tier": 1
     },
     {
+      "year": 1979,
+      "title": "So bist du",
+      "artist": "Peter Maffay",
+      "spotifyTrackId": "3a5Pk82SnxIfGbuu78jCGp",
+      "tier": 2
+    },
+    {
       "year": 1980,
       "title": "Deine Spuren im Sand",
       "artist": "Howard Carpendale",
@@ -933,13 +919,6 @@
       "title": "Der Nippel",
       "artist": "Mike Krüger",
       "spotifyTrackId": "3XqgqDim4XESbdDOBUPqSo",
-      "tier": 1
-    },
-    {
-      "year": 1980,
-      "title": "Du entschuldige, i kenn' di",
-      "artist": "Peter Cornelius",
-      "spotifyTrackId": "0EU1QSamfdveKFIlxN1jW0",
       "tier": 1
     },
     {
@@ -958,30 +937,16 @@
     },
     {
       "year": 1980,
-      "title": "Fang das Licht",
-      "artist": "Karel Gott & Darinka",
-      "spotifyTrackId": "4Ov2I9GCsSQN90lSX6EDuo",
-      "tier": 2
-    },
-    {
-      "year": 1980,
       "title": "Schwanenkönig",
       "artist": "Karat",
       "spotifyTrackId": "1xcYHxvuXpIEx7b0RvGOec",
       "tier": 2
     },
     {
-      "year": 1980,
-      "title": "So bist du",
-      "artist": "Peter Maffay",
-      "spotifyTrackId": "3a5Pk82SnxIfGbuu78jCGp",
-      "tier": 2
-    },
-    {
       "year": 1981,
-      "title": "Bodo mit dem Bagger",
-      "artist": "Mike Krüger",
-      "spotifyTrackId": "6Ad5UmaaLYodJfYUTauDLO",
+      "title": "Du entschuldige, i kenn' di",
+      "artist": "Peter Cornelius",
+      "spotifyTrackId": "0EU1QSamfdveKFIlxN1jW0",
       "tier": 1
     },
     {
@@ -1021,16 +986,16 @@
     },
     {
       "year": 1981,
-      "title": "Ein Jahr (Es geht voran)",
-      "artist": "Fehlfarben",
-      "spotifyTrackId": "6mMUoEgOl1yuGMJ6dfHzh6",
-      "tier": 2
-    },
-    {
-      "year": 1981,
       "title": "Fred vom Jupiter",
       "artist": "Andreas Dorau",
       "spotifyTrackId": "7HyAIKz7frBvOVtjIUZlzA",
+      "tier": 2
+    },
+    {
+      "year": 1982,
+      "title": "Ein Jahr (Es geht voran)",
+      "artist": "Fehlfarben",
+      "spotifyTrackId": "6mMUoEgOl1yuGMJ6dfHzh6",
       "tier": 2
     },
     {
@@ -1147,16 +1112,16 @@
     },
     {
       "year": 1984,
-      "title": "1000 und 1 Nacht (Zoom!)",
-      "artist": "Klaus Lage",
-      "spotifyTrackId": "50brQMN8OxkmYUb1LyOsnQ",
+      "title": "Bodo mit dem Bagger",
+      "artist": "Mike Krüger",
+      "spotifyTrackId": "6Ad5UmaaLYodJfYUTauDLO",
       "tier": 1
     },
     {
       "year": 1984,
-      "title": "An der Nordseeküste",
-      "artist": "Klaus & Klaus",
-      "spotifyTrackId": "7lg9reolractKDt8McON0K",
+      "title": "1000 und 1 Nacht (Zoom!)",
+      "artist": "Klaus Lage",
+      "spotifyTrackId": "50brQMN8OxkmYUb1LyOsnQ",
       "tier": 1
     },
     {
@@ -1202,6 +1167,27 @@
       "tier": 2
     },
     {
+      "year": 1984,
+      "title": "Alkohol",
+      "artist": "Herbert Grönemeyer",
+      "spotifyTrackId": "0fEuIosdE4UTHACOrmjR1f",
+      "tier": 2
+    },
+    {
+      "year": 1985,
+      "title": "Fang das Licht",
+      "artist": "Karel Gott & Darinka",
+      "spotifyTrackId": "4Ov2I9GCsSQN90lSX6EDuo",
+      "tier": 2
+    },
+    {
+      "year": 1985,
+      "title": "An der Nordseeküste",
+      "artist": "Klaus & Klaus",
+      "spotifyTrackId": "7lg9reolractKDt8McON0K",
+      "tier": 1
+    },
+    {
       "year": 1985,
       "title": "Ba-Ba-Banküberfall",
       "artist": "Erste Allgemeine Verunsicherung",
@@ -1235,13 +1221,6 @@
       "artist": "Modern Talking",
       "spotifyTrackId": "0Zn63G0XTiqXwr1KSmARWz",
       "tier": 1
-    },
-    {
-      "year": 1985,
-      "title": "Alkohol",
-      "artist": "Herbert Grönemeyer",
-      "spotifyTrackId": "0fEuIosdE4UTHACOrmjR1f",
-      "tier": 2
     },
     {
       "year": 1985,
@@ -1748,13 +1727,6 @@
       "tier": 2
     },
     {
-      "year": 1994,
-      "title": "Wahre Liebe",
-      "artist": "Simone & Charly Brunner",
-      "spotifyTrackId": "2ZQ4g42wfwF1683HlfLHF0",
-      "tier": 2
-    },
-    {
       "year": 1995,
       "title": "Abenteuerland",
       "artist": "Pur",
@@ -1966,13 +1938,6 @@
     },
     {
       "year": 1998,
-      "title": "Nie genug",
-      "artist": "Wolfgang Petry",
-      "spotifyTrackId": "5ktEJ9W9n7npwLJbxa0jvB",
-      "tier": 2
-    },
-    {
-      "year": 1998,
       "title": "Wieder hier",
       "artist": "Marius Müller-Westernhagen",
       "spotifyTrackId": "1DJJoaqjXO1XvEFoj9QnOt",
@@ -2067,13 +2032,6 @@
       "title": "Wadde hadde dudde da?",
       "artist": "Stefan Raab",
       "spotifyTrackId": "7AJkCOIlPI68oDMrWNgt20",
-      "tier": 1
-    },
-    {
-      "year": 2000,
-      "title": "Was wir alleine nicht schaffen",
-      "artist": "Xavier Naidoo",
-      "spotifyTrackId": "3WfGJJVdlbZXfvuIggD1aO",
       "tier": 1
     },
     {
@@ -2193,7 +2151,7 @@
       "title": "Wo willst du hin",
       "artist": "Xavier Naidoo",
       "spotifyTrackId": "3tPoDyHhd5h9xUSQ5w3NR7",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 2002,
@@ -2221,7 +2179,7 @@
       "title": "Der Steuersong",
       "artist": "Blödel Allstars",
       "spotifyTrackId": "00X1KEv26wNNK9T3Xf6yKc",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 2003,
@@ -2249,14 +2207,14 @@
       "title": "Ich kenne nichts (das so schön ist wie du)",
       "artist": "Xavier Naidoo & RZA",
       "spotifyTrackId": "1E3HbBRkIbgmgPYNQANDQQ",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 2003,
       "title": "Unrockbar",
       "artist": "Die Ärzte",
       "spotifyTrackId": "517vCkYwqxHJCDnPIDQv7P",
-      "tier": 1
+      "tier": 2
     },
     {
       "year": 2003,
@@ -2312,7 +2270,7 @@
       "title": "Durch die Nacht",
       "artist": "Silbermond",
       "spotifyTrackId": "7j0QAdFpgWzqsMbXZDVHao",
-      "tier": 2
+      "tier": 1
     },
     {
       "year": 2004,
@@ -2326,7 +2284,7 @@
       "title": "Mein Block",
       "artist": "Sido",
       "spotifyTrackId": "4T1tVhQahmAOvTF65lKq4o",
-      "tier": 2
+      "tier": 1
     },
     {
       "year": 2004,
@@ -2400,13 +2358,6 @@
     },
     {
       "year": 2005,
-      "title": "Liebe ist",
-      "artist": "Nena",
-      "spotifyTrackId": "6Y7JUV3nBBfUkhAo3PnkC9",
-      "tier": 2
-    },
-    {
-      "year": 2005,
       "title": "Schrei",
       "artist": "Tokio Hotel",
       "spotifyTrackId": "2O3T4KTlTTV5Y4fCiAN4qq",
@@ -2414,9 +2365,9 @@
     },
     {
       "year": 2006,
-      "title": "'54, '74, '90, 2006",
-      "artist": "Sportfreunde Stiller",
-      "spotifyTrackId": "6ee1motyT1KuUMiz8dMqxj",
+      "title": "Was wir alleine nicht schaffen",
+      "artist": "Xavier Naidoo",
+      "spotifyTrackId": "3WfGJJVdlbZXfvuIggD1aO",
       "tier": 1
     },
     {
@@ -2456,23 +2407,9 @@
     },
     {
       "year": 2006,
-      "title": "Danke",
-      "artist": "Xavier Naidoo",
-      "spotifyTrackId": "5M1Coybff67lURqcwEQZeb",
-      "tier": 2
-    },
-    {
-      "year": 2006,
       "title": "Ein Elefant für dich",
       "artist": "Wir sind Helden",
       "spotifyTrackId": "4PzlKvCtMLM7XEeXI3bk35",
-      "tier": 2
-    },
-    {
-      "year": 2006,
-      "title": "Frauen regier'n die Welt",
-      "artist": "Roger Cicero",
-      "spotifyTrackId": "3eETBVmtzUn8RyrqspRgXO",
       "tier": 2
     },
     {
@@ -2487,6 +2424,13 @@
       "title": "Wir beide",
       "artist": "Juli",
       "spotifyTrackId": "059vqesASfCCpWPabAngNE",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Frauen regier'n die Welt",
+      "artist": "Roger Cicero",
+      "spotifyTrackId": "3eETBVmtzUn8RyrqspRgXO",
       "tier": 2
     },
     {
@@ -3666,6 +3610,13 @@
       "tier": 2
     },
     {
+      "year": 2024,
+      "title": "Wunder",
+      "artist": "Ayliva & Apache 207",
+      "spotifyTrackId": "4b3W0IbHDwHCvjSs708Tr4",
+      "tier": 1
+    },
+    {
       "year": 2025,
       "title": "Akon",
       "artist": "Jazeek",
@@ -3702,13 +3653,6 @@
     },
     {
       "year": 2025,
-      "title": "Wunder",
-      "artist": "Ayliva & Apache 207",
-      "spotifyTrackId": "4b3W0IbHDwHCvjSs708Tr4",
-      "tier": 1
-    },
-    {
-      "year": 2025,
       "title": "Bella Napoli",
       "artist": "Roy Bianco & Die Abbrunzati Boys",
       "spotifyTrackId": "2RETchtst6lwpgfHy7CCoT",
@@ -3736,17 +3680,24 @@
       "tier": 2
     },
     {
+      "year": 2025,
+      "title": "Gute Laune",
+      "artist": "Grossstadtengel",
+      "spotifyTrackId": "7fapAlfgJf6EzlviBqJb4f",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Walzer",
+      "artist": "Provinz",
+      "spotifyTrackId": "605G7F1FEjm60IdXmLhlNN",
+      "tier": 2
+    },
+    {
       "year": 2026,
       "title": "Gut genug",
       "artist": "Kitschkrieg & Shirin David",
       "spotifyTrackId": "7iNLydOMjLLb7BiwkdoPDU",
-      "tier": 1
-    },
-    {
-      "year": 2026,
-      "title": "Gute Laune",
-      "artist": "Grossstadtengel",
-      "spotifyTrackId": "7fapAlfgJf6EzlviBqJb4f",
       "tier": 1
     },
     {
@@ -3794,15 +3745,8 @@
     {
       "year": 2026,
       "title": "Unsterblich sein",
-      "artist": "Kraftklub & Domkiziana",
+      "artist": "Kraftklub & Domiziana",
       "spotifyTrackId": "2RGcXKa0RNmQKWsTSOxkk4",
-      "tier": 2
-    },
-    {
-      "year": 2026,
-      "title": "Walzer",
-      "artist": "Provinz",
-      "spotifyTrackId": "605G7F1FEjm60IdXmLhlNN",
       "tier": 2
     }
   ]

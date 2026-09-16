@@ -50,7 +50,7 @@ Raab 2000 (5th) all earn a slot on home recognition alone. It counts against
 the 2 resp. 4 "best known" slots and beats a foreign entry of the same
 standing. Where nobody would know it - most of the 60s and the 90s - skip it.
 
-The catalog is filled from 1956 to 2026, 427 entries. Every future contest
+The catalog is filled from 1956 to 2026, 421 entries. Every future contest
 needs its ten, otherwise that card is a dead round in a game played on the ESC
 deck alone.
 
@@ -113,7 +113,7 @@ contest date settles it. Two consequences:
   again 2023) are left out for that reason: whichever year is on the card, half
   the room is right and cannot be told so.
 
-The catalog is filled from 1950 to 2026, 580 entries. Every future year needs
+The catalog is filled from 1950 to 2026, 576 entries. Every future year needs
 its ten, otherwise that card is a dead round in a game played on the hit deck
 alone. A running year is filled from the number ones so far - that is the only
 chart that exists before the year-end one does, and it puts the songs on the

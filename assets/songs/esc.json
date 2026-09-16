@@ -444,29 +444,11 @@
     },
     {
       "year": 1972,
-      "title": "Nur die Liebe lässt uns leben",
-      "artist": "Mary Roos",
-      "spotifyTrackId": "7nlbJorq1OC3Gph4hCLyhY",
-      "country": "Germany",
-      "place": 3,
-      "tier": 1
-    },
-    {
-      "year": 1972,
       "title": "Beg, Steal or Borrow",
       "artist": "The New Seekers",
       "spotifyTrackId": "5qyE3nSkh3KRfLzISfXYDc",
       "country": "United Kingdom",
       "place": 2,
-      "tier": 1
-    },
-    {
-      "year": 1973,
-      "title": "Tu te reconnaîtras",
-      "artist": "Anne-Marie David",
-      "spotifyTrackId": "6qRH85Un9i0nKp5PMMBpdw",
-      "country": "Luxembourg",
-      "place": 1,
       "tier": 1
     },
     {
@@ -578,15 +560,6 @@
     },
     {
       "year": 1976,
-      "title": "We'll Live It All Again",
-      "artist": "Al Bano & Romina Power",
-      "spotifyTrackId": "0gSnFvwhI0hUr9uT0bTY13",
-      "country": "Italy",
-      "place": 7,
-      "tier": 1
-    },
-    {
-      "year": 1976,
       "title": "1, 2, 3",
       "artist": "Catherine Ferry",
       "spotifyTrackId": "4AFbTE63GLKZyZv96eNmYK",
@@ -684,10 +657,10 @@
     },
     {
       "year": 1978,
-      "title": "Bailemos un vals",
-      "artist": "José Vélez",
-      "country": "Spain",
-      "place": 9,
+      "title": "A-Ba-Ni-Bi",
+      "artist": "Izhar Cohen & the Alphabeta",
+      "country": "Israel",
+      "place": 1,
       "tier": 1
     },
     {
@@ -715,15 +688,6 @@
       "spotifyTrackId": "2YDMHFV05yjkhAbh2gDm6B",
       "country": "Spain",
       "place": 2,
-      "tier": 1
-    },
-    {
-      "year": 1979,
-      "title": "Je suis l'enfant soleil",
-      "artist": "Anne-Marie David",
-      "spotifyTrackId": "6QEKaNlJiSgMI8qwyogFgl",
-      "country": "France",
-      "place": 3,
       "tier": 1
     },
     {
@@ -913,14 +877,6 @@
     },
     {
       "year": 1984,
-      "title": "Love Games",
-      "artist": "Belle and the Devotions",
-      "country": "United Kingdom",
-      "place": 7,
-      "tier": 1
-    },
-    {
-      "year": 1984,
       "title": "Aufrecht geh'n",
       "artist": "Mary Roos",
       "spotifyTrackId": "6ozjeu8wUDx3GYjvgnW2gt",
@@ -953,6 +909,15 @@
       "spotifyTrackId": "3K0rUw4z0khdNg4MiSIHB4",
       "country": "Spain",
       "place": 3,
+      "tier": 1
+    },
+    {
+      "year": 1984,
+      "title": "Diggiloo Diggiley",
+      "artist": "Herreys",
+      "spotifyTrackId": "4NzirQ4BrNkVaPEla2ipG4",
+      "country": "Sweden",
+      "place": 1,
       "tier": 1
     },
     {
@@ -1616,15 +1581,6 @@
     },
     {
       "year": 2000,
-      "title": "Fly on the Wings of Love",
-      "artist": "Olsen Brothers",
-      "spotifyTrackId": "5QbZ2liHjmV27XMmRoEquv",
-      "country": "Denmark",
-      "place": 1,
-      "tier": 1
-    },
-    {
-      "year": 2000,
       "title": "Wadde hadde dudde da?",
       "artist": "Stefan Raab",
       "spotifyTrackId": "7AJkCOIlPI68oDMrWNgt20",
@@ -1648,23 +1604,6 @@
       "spotifyTrackId": "1qn0J3EnF4zqvwoHYHxhgD",
       "country": "Latvia",
       "place": 3,
-      "tier": 1
-    },
-    {
-      "year": 2000,
-      "title": "Once in a Lifetime",
-      "artist": "Ines",
-      "spotifyTrackId": "19Y42jcrqN5vAVNUo89umu",
-      "country": "Estonia",
-      "place": 4,
-      "tier": 1
-    },
-    {
-      "year": 2001,
-      "title": "Listen to Your Heartbeat",
-      "artist": "Friends",
-      "country": "Sweden",
-      "place": 5,
       "tier": 1
     },
     {
@@ -1701,6 +1640,14 @@
       "spotifyTrackId": "7mx6IZujrnfHLBmqcIOxIe",
       "country": "Denmark",
       "place": 2,
+      "tier": 1
+    },
+    {
+      "year": 2001,
+      "title": "Everybody",
+      "artist": "Tanel Padar & Dave Benton",
+      "country": "Estonia",
+      "place": 1,
       "tier": 1
     },
     {
@@ -2365,14 +2312,6 @@
     },
     {
       "year": 2011,
-      "title": "New Tomorrow",
-      "artist": "A Friend in London",
-      "country": "Denmark",
-      "place": 5,
-      "tier": 1
-    },
-    {
-      "year": 2011,
       "title": "Taken by a Stranger",
       "artist": "Lena",
       "spotifyTrackId": "7ytIbb2rICCr5juZbqPENQ",
@@ -2449,6 +2388,14 @@
       "country": "Austria",
       "place": 18,
       "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Running Scared",
+      "artist": "Ell & Nikki",
+      "country": "Azerbaijan",
+      "place": 1,
+      "tier": 1
     },
     {
       "year": 2012,

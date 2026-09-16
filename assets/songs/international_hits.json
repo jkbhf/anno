@@ -356,13 +356,6 @@
     },
     {
       "year": 1960,
-      "title": "The Twist",
-      "artist": "Chubby Checker",
-      "spotifyTrackId": "4YCnTYbq3oL1Lqpyxg33CU",
-      "tier": 1
-    },
-    {
-      "year": 1960,
       "title": "It's Now or Never",
       "artist": "Elvis Presley",
       "spotifyTrackId": "1XunTmhOcj3xwh4b8P3isX",
@@ -548,13 +541,6 @@
       "title": "Like a Rolling Stone",
       "artist": "Bob Dylan",
       "spotifyTrackId": "3AhXZa8sUQht0UEdBJgpGc",
-      "tier": 1
-    },
-    {
-      "year": 1965,
-      "title": "Unchained Melody",
-      "artist": "The Righteous Brothers",
-      "spotifyTrackId": "2qhASBzpbFhPRtrnZ5lLnz",
       "tier": 1
     },
     {
@@ -1119,13 +1105,6 @@
     },
     {
       "year": 1981,
-      "title": "Don't Stop Believin'",
-      "artist": "Journey",
-      "spotifyTrackId": "77NNZQSqzLNqh2A9JhLRkg",
-      "tier": 1
-    },
-    {
-      "year": 1981,
       "title": "Under Pressure",
       "artist": "Queen & David Bowie",
       "spotifyTrackId": "11IzgLRXV7Cgek3tEgGgjw",
@@ -1189,13 +1168,6 @@
     },
     {
       "year": 1982,
-      "title": "Africa",
-      "artist": "Toto",
-      "spotifyTrackId": "2374M0fQpWi3dLnB54qaLX",
-      "tier": 1
-    },
-    {
-      "year": 1982,
       "title": "Der Kommissar",
       "artist": "Falco",
       "spotifyTrackId": "3TBRJsLCcwroEkA3tD4u2N",
@@ -1224,6 +1196,13 @@
     },
     {
       "year": 1983,
+      "title": "Africa",
+      "artist": "Toto",
+      "spotifyTrackId": "2374M0fQpWi3dLnB54qaLX",
+      "tier": 1
+    },
+    {
+      "year": 1983,
       "title": "Billie Jean",
       "artist": "Michael Jackson",
       "spotifyTrackId": "7J1uxwnxfQLu4APicE5Rnj",
@@ -1241,13 +1220,6 @@
       "title": "Total Eclipse of the Heart",
       "artist": "Bonnie Tyler",
       "spotifyTrackId": "7wuJGgpTNzbUyn26IOY6rj",
-      "tier": 1
-    },
-    {
-      "year": 1983,
-      "title": "99 Luftballons",
-      "artist": "Nena",
-      "spotifyTrackId": "2IJftBfq7pJ43tfnOR0RB3",
       "tier": 1
     },
     {
@@ -1277,6 +1249,13 @@
       "artist": "Men at Work",
       "spotifyTrackId": "3ZZq9396zv8pcn5GYVhxUi",
       "tier": 2
+    },
+    {
+      "year": 1984,
+      "title": "99 Luftballons",
+      "artist": "Nena",
+      "spotifyTrackId": "2IJftBfq7pJ43tfnOR0RB3",
+      "tier": 1
     },
     {
       "year": 1984,
@@ -2168,7 +2147,7 @@
       "tier": 2
     },
     {
-      "year": 1999,
+      "year": 2000,
       "title": "Sandstorm",
       "artist": "Darude",
       "spotifyTrackId": "6Sy9BUbgFse0n0LPA5lwy5",
@@ -2253,13 +2232,6 @@
     },
     {
       "year": 2001,
-      "title": "In the End",
-      "artist": "Linkin Park",
-      "spotifyTrackId": "60a0Rd6pjrkxjPbaKzXjfq",
-      "tier": 1
-    },
-    {
-      "year": 2001,
       "title": "Lady Marmalade",
       "artist": "Christina Aguilera, Lil' Kim, Mýa & Pink",
       "spotifyTrackId": "0PSZ9G584Ve27GK6ThlY6P",
@@ -2313,6 +2285,13 @@
       "artist": "DJ Ötzi",
       "spotifyTrackId": "0HNXnhNZZtRZFLhP4hfyCP",
       "tier": 2
+    },
+    {
+      "year": 2002,
+      "title": "In the End",
+      "artist": "Linkin Park",
+      "spotifyTrackId": "60a0Rd6pjrkxjPbaKzXjfq",
+      "tier": 1
     },
     {
       "year": 2002,
@@ -4020,13 +3999,6 @@
       "title": "Aperture",
       "artist": "Harry Styles",
       "spotifyTrackId": "45Z3m6yazmAi4jZuW0tzW0",
-      "tier": 1
-    },
-    {
-      "year": 2026,
-      "title": "DTMF",
-      "artist": "Bad Bunny",
-      "spotifyTrackId": "3sK8wGT43QFpWrvNQsrQya",
       "tier": 1
     },
     {
