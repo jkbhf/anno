@@ -168,9 +168,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         _game.cancelRound();
         await _showNote(
           'No song for $year',
+          // A deck on its own is often one that only covers part of the
+          // century, so the span is what the room needs to hear.
           _game.categories.length == 1
-              ? '${_game.categories.single.name} has no entry for that year '
-                    'yet. Draw another card or fill in the catalog.'
+              ? '${_game.categories.single.name} covers '
+                    '${_game.categories.single.yearSpan} - draw another card.'
               : 'None of the chosen categories has an entry for that year '
                     'yet. Draw another card or fill in the catalog.',
         );

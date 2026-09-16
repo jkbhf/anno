@@ -1,9 +1,8 @@
 {
   "id": "kpop",
   "name": "K-Pop",
-  "description": "Title tracks from 2016 on - only together with another deck",
-  "needsCompanion": true,
-  "_comment": "Covers 2016 on only, so it cannot carry a game alone - needsCompanion keeps it from being the sole pick. year is the release year of the title track. Which songs a year gets and how tier works: see CLAUDE.md.",
+  "description": "Title tracks from 2016 on",
+  "_comment": "year is the release year of the title track. Which songs a year gets and how tier works: see CLAUDE.md.",
   "songs": [
     {
       "year": 2016,

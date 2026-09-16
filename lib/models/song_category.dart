@@ -7,7 +7,6 @@ class SongCategory {
     required this.name,
     required this.description,
     required this.songs,
-    this.needsCompanion = false,
   }) : _byYear = <int, List<Song>>{} {
     for (final song in songs) {
       _byYear.putIfAbsent(song.year, () => <Song>[]).add(song);
@@ -19,17 +18,10 @@ class SongCategory {
     if (rawSongs is! List) {
       throw FormatException('Category needs a songs list: ${json['id']}');
     }
-    final companion = json['needsCompanion'] ?? false;
-    if (companion is! bool) {
-      throw FormatException(
-        'needsCompanion must be true or false: ${json['id']}',
-      );
-    }
     return SongCategory(
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String? ?? '',
-      needsCompanion: companion,
       songs: [
         for (final entry in rawSongs)
           Song.fromJson(entry as Map<String, dynamic>),
@@ -41,18 +33,6 @@ class SongCategory {
   final String name;
   final String description;
   final List<Song> songs;
-
-  /// True when the deck covers too few years to be played on its own.
-  ///
-  /// The cards run over the whole century, so a deck that only holds a decade
-  /// answers most of them with nothing - a round without a song. Next to a
-  /// full deck that never happens: `GameController` draws only among the
-  /// categories that have a song for the scanned year, so the other one steps
-  /// in and this deck simply waits for a year it can serve.
-  ///
-  /// Hence it is not a preference but a rule of the selection screen - see
-  /// [canCarryGame]. `CLAUDE.md` holds when a deck earns the flag.
-  final bool needsCompanion;
 
   final Map<int, List<Song>> _byYear;
 
@@ -73,10 +53,12 @@ class SongCategory {
   List<Song> songsForYear(int year) => _byYear[year] ?? const <Song>[];
 }
 
-/// Whether [selection] can be played as it stands.
+/// Whether [selection] can be played as it stands: at least one deck with
+/// songs in it.
 ///
-/// One deck has to be able to answer any card, so a selection needs at least
-/// one that is filled and does not carry [SongCategory.needsCompanion]. A
-/// companion deck may join anything, it just cannot be the whole game.
+/// A deck that covers only part of the century - K-Pop from 2016 on - carries
+/// a game on its own too. Its span stands on the selection card, so the room
+/// plays the cards of those years, and a card outside it only brings up a
+/// note, never a round without a song.
 bool canCarryGame(Iterable<SongCategory> selection) =>
-    selection.any((c) => !c.isEmpty && !c.needsCompanion);
+    selection.any((c) => !c.isEmpty);

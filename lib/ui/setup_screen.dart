@@ -146,9 +146,8 @@ class _SetupScreenState extends State<SetupScreen> {
   /// The saved categories that still exist. A deck removed from the assets
   /// simply drops out; only if none is left does the card disappear.
   ///
-  /// What drops out can leave the rest unplayable - a game of ESC plus K-Pop
-  /// that loses ESC would resume on a deck that cannot answer most cards. The
-  /// caller therefore checks the result with [canCarryGame], not for empty.
+  /// What is left can still be unplayable - decks that have lost their songs.
+  /// The caller therefore checks the result with [canCarryGame], not for empty.
   static List<SongCategory> _resolve(
     List<SongCategory> categories,
     List<String> ids,

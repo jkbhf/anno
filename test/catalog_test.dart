@@ -59,10 +59,10 @@ void main() {
     expect(canCarryGame(_load()), isTrue);
   });
 
-  test('a companion deck holds songs and covers its years without a gap', () {
-    // Its whole point is to step in for the years it has, so a hole in the
-    // middle of the range is a curation slip, not a deliberate thin year.
-    for (final category in _load().where((c) => c.needsCompanion)) {
+  test('every deck holds songs and covers its years without a gap', () {
+    // A deck played on its own answers a card inside its span, so a hole in
+    // the middle of the range is a dead round, not a deliberate thin year.
+    for (final category in _load()) {
       expect(category.isEmpty, isFalse, reason: '${category.id} is empty');
 
       final years = category.songs.map((s) => s.year).toSet().toList()..sort();

@@ -204,35 +204,31 @@ is right and only the recording is young, but it makes the "Check the year by
 hand" list even louder here than for the hit deck. The rule stands: never move
 a catalog year onto what the API reports.
 
-## A deck that does not span the century: `needsCompanion`
+## A deck that does not span the century
 
 The cards run over the whole century, so the rule behind "every year needs its
-ten" is really *every year the cards can show*. A deck that only covers a
-stretch of years breaks that - alone it answers most cards with nothing, which
-is a round without a song.
+ten" is really *every year the cards can show*. K-Pop (2016 on) and White Girl
+Music (2007 on) break that on purpose - their curation rule has an end at the
+bottom, and no amount of work extends them downwards without turning the older
+cards into coin flips.
 
-That does not have to cost the deck. `GameController._draw` picks only among
-the categories that hold something for the scanned year, so next to a full deck
-a short one never produces a dead round: the other deck steps in and the short
-one waits for a year it can serve. What has to be ruled out is the *selection*,
-not the deck.
+**Such a deck can still be played on its own.** There used to be a
+`needsCompanion` flag that kept it from being the only pick, because alone it
+answers most cards with nothing. It is gone: the selection card shows the span
+(`115 songs · 2016-2026`), so a room that picks K-Pop alone plays the cards of
+those years, and a card outside the span only brings up "K-Pop covers
+2016-2026 - draw another card" - a card drawn again, not a round without a
+song. `canCarryGame` in `lib/models/song_category.dart` only asks for a deck
+with songs in it.
 
-Hence `"needsCompanion": true` in the category JSON (`SongCategory
-.needsCompanion`, default false). The deck can be picked freely, it just cannot
-be the whole game: `canCarryGame` in `lib/models/song_category.dart` is the one
-check, and both the selection screen and the resume card on the setup screen
-read it. The button then says why it is off - "K-Pop only covers part of the
-years" - rather than going grey without a reason.
+Next to a full deck nothing changes: `GameController._draw` picks only among the
+categories that hold something for the scanned year, so the other deck steps in
+and the short one waits for a year it can serve. On a 1950-2026 card deck it
+then serves maybe a fifth of the rounds.
 
-**The flag is for a deck whose curation rule has an end, not for one that is
-still being filled.** An unfinished deck gets filled; K-Pop covers 2016 on
-because that is the stretch the room knows, and no amount of work extends it
-downwards without turning the older cards into coin flips. Where a deck could
-cover the century and simply does not yet, leave the flag off and fill it.
-
-The price is real and worth naming: on a 1950-2026 card deck a companion deck
-serves maybe a fifth of the rounds. It is a deck for the songs in between, not
-for an evening of its own.
+**A short deck must not have holes inside its span.** Played alone, a card in
+the middle of the range is one the room was told to play; `catalog_test.dart`
+checks every deck for a gap.
 
 ## How many songs a K-Pop year gets
 
@@ -273,8 +269,8 @@ once it is over.
 ## How many songs a White Girl Music year gets
 
 `assets/songs/white_girl_music.json`. Ten per year, 6 core and 4 tail, the same
-split as K-Pop and for the same reason: it is a companion deck and only serves
-part of the rounds.
+split as K-Pop and for the same reason: next to a full deck it only serves part
+of the rounds.
 
 **The deck is the girls' night singalong, not a genre.** Taylor Swift, Olivia
 Rodrigo, Lorde, Lana Del Rey, Paramore, Adele, One Direction, Sabrina Carpenter,
@@ -287,8 +283,8 @@ Bridgers, boygenius) only gets tail slots.
 **The deck starts in 2007 and the reason is the canon.** What the phrase means
 starts with Teardrops On My Guitar, Misery Business and Girlfriend; before that
 the deck turns into the hit deck under another name. Mr. Brightside is the
-famous hole - it belongs to 2004 and would need a year of ten around it. Hence
-`needsCompanion`, as with K-Pop: the rule has an end at the bottom.
+famous hole - it belongs to 2004 and would need a year of ten around it. As with
+K-Pop, the rule has an end at the bottom.
 
 **The year is the year the song was everywhere**, like the hit deck, not the
 release of the pressing. Stick Season (July 2022) sits on 2023, back to friends

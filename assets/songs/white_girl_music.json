@@ -1,9 +1,8 @@
 {
   "id": "white_girl_music",
   "name": "White Girl Music",
-  "description": "Girls' night singalongs from 2007 on - only together with another deck",
-  "needsCompanion": true,
-  "_comment": "Covers 2007 on only, so it cannot carry a game alone - needsCompanion keeps it from being the sole pick. year is the year the song was everywhere, not the release year of the pressing Spotify carries. Which songs a year gets and how tier works: see CLAUDE.md.",
+  "description": "Girls' night singalongs from 2007 on",
+  "_comment": "year is the year the song was everywhere, not the release year of the pressing Spotify carries. Which songs a year gets and how tier works: see CLAUDE.md.",
   "songs": [
     {
       "year": 2007,

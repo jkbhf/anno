@@ -1,6 +1,6 @@
-// A companion deck covers only part of the century, so on its own it would
-// answer most cards with nothing. The rule lives in `canCarryGame`; these
-// tests pin both halves of it - the deck may be picked, but not alone.
+// A deck that covers only part of the century - K-Pop from 2016 on - is a
+// game of its own like any other: its span stands on the card, and a card
+// outside it only brings up a note. The rule lives in `canCarryGame`.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/data/year_database.dart';
@@ -13,17 +13,15 @@ import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/category_screen.dart';
 import 'package:anno/ui/theme.dart';
 
-SongCategory deck(String id, String name, {bool needsCompanion = false}) =>
-    SongCategory(
-      id: id,
-      name: name,
-      description: '',
-      needsCompanion: needsCompanion,
-      songs: [Song(year: 2016, title: 'A', artist: 'B')],
-    );
+SongCategory deck(String id, String name) => SongCategory(
+  id: id,
+  name: name,
+  description: '',
+  songs: [Song(year: 2016, title: 'A', artist: 'B')],
+);
 
 final full = deck('esc', 'ESC');
-final companion = deck('kpop', 'K-Pop', needsCompanion: true);
+final short = deck('kpop', 'K-Pop');
 final empty = SongCategory(
   id: 'rock_pop',
   name: 'Rock & Pop',
@@ -50,86 +48,41 @@ bool startEnabled(WidgetTester tester) =>
 
 void main() {
   group('canCarryGame', () {
-    test('a full deck carries a game, on its own too', () {
+    test('any deck with songs carries a game, on its own too', () {
       expect(canCarryGame([full]), isTrue);
-      expect(canCarryGame([full, companion]), isTrue);
-    });
-
-    test('a companion deck alone does not', () {
-      expect(canCarryGame([companion]), isFalse);
-      expect(canCarryGame([companion, companion]), isFalse);
+      expect(canCarryGame([short]), isTrue);
+      expect(canCarryGame([full, short]), isTrue);
     });
 
     test('nothing selected does not', () {
       expect(canCarryGame(const <SongCategory>[]), isFalse);
     });
 
-    test('an empty deck cannot stand in for the full one', () {
+    test('an empty deck does not', () {
       expect(canCarryGame([empty]), isFalse);
-      expect(canCarryGame([empty, companion]), isFalse);
+      expect(canCarryGame([empty, short]), isTrue);
     });
   });
 
-  testWidgets('a companion deck can be picked but not started alone', (
-    tester,
-  ) async {
-    await tester.pumpWidget(wrap([full, companion]));
+  testWidgets('a short deck starts on its own', (tester) async {
+    await tester.pumpWidget(wrap([full, short]));
 
     await tester.tap(find.text('K-Pop'));
     await tester.pump();
 
-    expect(startEnabled(tester), isFalse);
-    expect(
-      find.textContaining('pick another deck to go with it'),
-      findsOneWidget,
-    );
+    expect(startEnabled(tester), isTrue);
   });
 
-  testWidgets('adding a full deck to it starts the game', (tester) async {
-    await tester.pumpWidget(wrap([full, companion]));
+  testWidgets('the card shows the years the deck covers', (tester) async {
+    await tester.pumpWidget(wrap([full, short]));
 
-    await tester.tap(find.text('K-Pop'));
-    await tester.pump();
-    await tester.tap(find.text('ESC'));
-    await tester.pump();
-
-    expect(
-      tester
-              .widget<FilledButton>(
-                find.widgetWithText(FilledButton, 'Start with 2 categories'),
-              )
-              .onPressed !=
-          null,
-      isTrue,
-    );
-    expect(find.textContaining('pick another deck'), findsNothing);
+    expect(find.text('1 songs · 2016'), findsNWidgets(2));
+    expect(find.textContaining('another deck'), findsNothing);
   });
 
-  testWidgets('dropping the full deck again disables Start', (tester) async {
-    await tester.pumpWidget(wrap([full, companion]));
-
-    await tester.tap(find.text('ESC'));
-    await tester.pump();
-    await tester.tap(find.text('K-Pop'));
-    await tester.pump();
-    await tester.tap(find.text('ESC'));
-    await tester.pump();
+  testWidgets('with nothing picked Start is off', (tester) async {
+    await tester.pumpWidget(wrap([full, short]));
 
     expect(startEnabled(tester), isFalse);
-  });
-
-  testWidgets('the card says the deck needs a second one', (tester) async {
-    await tester.pumpWidget(wrap([full, companion]));
-
-    expect(find.textContaining('only with another deck'), findsOneWidget);
-  });
-
-  testWidgets('with nothing picked Start is off and says nothing', (
-    tester,
-  ) async {
-    await tester.pumpWidget(wrap([full, companion]));
-
-    expect(startEnabled(tester), isFalse);
-    expect(find.textContaining('pick another deck'), findsNothing);
   });
 }
