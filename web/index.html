@@ -18,6 +18,17 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+
+  <!--
+    Which scripts may run in the page. It holds the Spotify refresh token in
+    localStorage, so an injected script is exactly what must not run here.
+    Allowed, and nothing else: this site; www.gstatic.com for CanvasKit, which
+    Flutter's web build loads from there; sdk.scdn.co for the Spotify player.
+    'wasm-unsafe-eval' lets CanvasKit and the QR reader compile their
+    WebAssembly. A new script host has to be added here, or it is blocked -
+    the browser console names it.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com https://sdk.scdn.co; object-src 'none'; base-uri 'self'">
   <meta name="description" content="Music guessing game: scan a QR card, hear the song in Spotify, guess the year.">
   <meta name="theme-color" content="#12101A">
 
@@ -44,6 +55,13 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!--
+    The QR reader for browsers without a BarcodeDetector, from this site rather
+    than a CDN - see zxing/setup.js. The id is the one mobile_scanner looks for
+    before it would load the reader itself.
+  -->
+  <script id="mobile-scanner-zxing-wasm" src="zxing/reader.js" defer></script>
+  <script src="zxing/setup.js" defer></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

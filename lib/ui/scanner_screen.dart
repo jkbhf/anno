@@ -83,28 +83,55 @@ class _ScannerScreenState extends State<ScannerScreen> {
             controller: _controller,
             onDetect: _onDetect,
             errorBuilder: (context, error) => _ScannerError(
-              message: error.errorDetails?.message ?? error.errorCode.name,
+              message: _explain(error),
               onManual: _enterManually,
             ),
           ),
-          const _ScanFrame(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: TextButton.icon(
-                onPressed: _enterManually,
-                icon: const Icon(Icons.keyboard),
-                label: const Text('Enter the code by hand'),
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
-              ),
-            ),
+          // The frame and the second button belong to a working camera. Over
+          // the error they cut through the message and say the same thing
+          // twice.
+          ValueListenableBuilder<MobileScannerState>(
+            valueListenable: _controller,
+            builder: (context, state, _) => state.error != null
+                ? const SizedBox.shrink()
+                : Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      const _ScanFrame(),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: TextButton.icon(
+                            onPressed: _enterManually,
+                            icon: const Icon(Icons.keyboard),
+                            label: const Text('Enter the code by hand'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
     );
   }
 }
+
+/// What went wrong, in words for whoever is holding the phone - not the name
+/// of an enum value.
+String _explain(MobileScannerException error) => switch (error.errorCode) {
+  MobileScannerErrorCode.permissionDenied =>
+    'The camera is not allowed for this page. Allow it in the browser\'s site '
+        'settings and open the scanner again.',
+  MobileScannerErrorCode.unsupported =>
+    'This browser offers no camera here. The page needs https, and a browser '
+        'that may use the camera.',
+  _ => error.errorDetails?.message ?? 'The camera could not be started.',
+};
 
 class _ScanFrame extends StatelessWidget {
   const _ScanFrame();

@@ -5,10 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Nothing by default; each job names what it needs. The build runs third-party
+# code - flutter-action, every pub package - and has no use for the OIDC token
+# that publishing to Pages is authorised with.
+permissions: {}
 
 concurrency:
   group: pages
@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
     steps:
       - uses: actions/checkout@v4
       # 3.38.6 or newer, never below: up to 3.38.5 the web engine keeps the
@@ -31,6 +34,12 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      # A build without it still works, just without the in-app player - which
+      # nobody notices until the evening it is missing. Say so in the run.
+      - if: vars.SPOTIFY_CLIENT_ID == ''
+        run: >
+          echo "::warning::SPOTIFY_CLIENT_ID is not set - this build has no
+          in-app Spotify player."
       # The client id is public by design - PKCE, no secret in the browser.
       # Set it as a repository variable (Settings -> Secrets and variables ->
       # Actions -> Variables). Missing it only drops the in-app player.
@@ -47,6 +56,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
