@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../data/game_store.dart';
+import '../data/music_service_store.dart';
 import '../data/roster_store.dart';
 import '../models/player.dart';
 import '../models/song_category.dart';
+import '../music/music_service.dart';
 import 'app_scope.dart';
 import 'category_screen.dart';
 import 'centered_body.dart';
@@ -113,6 +115,11 @@ class _SetupScreenState extends State<SetupScreen> {
     }
   }
 
+  void _chooseService(MusicService service) {
+    AppScope.of(context).service.value = service;
+    unawaited(MusicServiceStore.save(service));
+  }
+
   void _start() {
     final names = _playerNames;
     // Saved on the way into a game, not on every keystroke: these are the
@@ -197,7 +204,14 @@ class _SetupScreenState extends State<SetupScreen> {
               ),
               const SizedBox(height: 24),
             ],
-            SpotifyCard(session: AppScope.of(context).spotify),
+            // Logging in to Spotify is beside the point for a device that plays
+            // on YouTube Music.
+            ValueListenableBuilder(
+              valueListenable: AppScope.of(context).service,
+              builder: (context, service, _) => service == MusicService.spotify
+                  ? SpotifyCard(session: AppScope.of(context).spotify)
+                  : const SizedBox.shrink(),
+            ),
             Text("Who's playing?", style: theme.textTheme.headlineSmall),
             const SizedBox(height: 4),
             Text(
@@ -257,6 +271,22 @@ class _SetupScreenState extends State<SetupScreen> {
                   onSelected: (_) => _chooseCustomTarget(),
                 ),
               ],
+            ),
+            const SizedBox(height: 24),
+            Text('Play songs in', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            ValueListenableBuilder(
+              valueListenable: AppScope.of(context).service,
+              builder: (context, service, _) => SegmentedButton<MusicService>(
+                showSelectedIcon: false,
+                segments: [
+                  for (final option in MusicService.values)
+                    ButtonSegment(value: option, label: Text(option.label)),
+                ],
+                selected: {service},
+                onSelectionChanged: (selection) =>
+                    _chooseService(selection.single),
+              ),
             ),
             const SizedBox(height: 32),
             FilledButton(

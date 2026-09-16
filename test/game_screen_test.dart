@@ -5,28 +5,27 @@ import 'package:anno/game/game_controller.dart';
 import 'package:anno/models/player.dart';
 import 'package:anno/models/song.dart';
 import 'package:anno/models/song_category.dart';
-import 'package:anno/music/spotify_launcher.dart';
+import 'package:anno/music/music_service.dart';
+import 'package:anno/music/song_launcher.dart';
 import 'package:anno/music/spotify_session.dart';
 import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/game_screen.dart';
 import 'package:anno/ui/theme.dart';
 
 /// Hands the song over without a word - the link path, as on a phone.
-class SilentLauncher implements SpotifyLauncher {
+class SilentLauncher implements SongLauncher {
   const SilentLauncher();
 
   @override
-  Future<SpotifyLaunchResult> open(Song song) async =>
-      const SpotifyLaunchResult.ok();
+  Future<LaunchResult> open(Song song) async => const LaunchResult.ok();
 }
 
 /// The song plays in the tab, which is what a working in-app player reports.
-class InTabLauncher implements SpotifyLauncher {
+class InTabLauncher implements SongLauncher {
   const InTabLauncher();
 
   @override
-  Future<SpotifyLaunchResult> open(Song song) async =>
-      const SpotifyLaunchResult.inTab();
+  Future<LaunchResult> open(Song song) async => const LaunchResult.inTab();
 }
 
 const card = 'https://play-the-music.com/de/year/182ca01194a98f0b';
@@ -34,7 +33,8 @@ const card = 'https://play-the-music.com/de/year/182ca01194a98f0b';
 GameController buildGame({
   int players = 2,
   List<SongCategory>? categories,
-  SpotifyLauncher launcher = const SilentLauncher(),
+  SongLauncher launcher = const SilentLauncher(),
+  MusicService service = MusicService.spotify,
 }) => GameController(
   players: [
     for (var i = 0; i < players; i++) GamePlayer(name: 'Player ${i + 1}'),
@@ -42,6 +42,7 @@ GameController buildGame({
   categories: categories ?? [escCategory],
   years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
   launcher: launcher,
+  service: service,
 );
 
 final escCategory = SongCategory(
@@ -81,6 +82,7 @@ Widget wrap(GameController game, {SpotifySession? spotify}) => AppScope(
   years: game.years,
   categories: game.categories,
   spotify: spotify ?? NoSpotifySession(),
+  service: ValueNotifier(game.service),
   child: MaterialApp(
     theme: buildTheme(),
     home: GameScreen(controller: game),
@@ -207,6 +209,37 @@ void main() {
     expect(find.text('Pause'), findsNothing);
     // Still nothing given away before the button.
     expect(find.text('2005'), findsNothing);
+  });
+
+  testWidgets('a YouTube Music round names YouTube Music', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame(service: MusicService.youtubeMusic);
+    game.scan(card);
+    await game.startPlayback();
+
+    // A connected Spotify session changes nothing: the song went out by link.
+    await tester.pumpWidget(
+      wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('The song is playing in YouTube Music'), findsOneWidget);
+    expect(find.textContaining('Coming back'), findsOneWidget);
+    expect(find.text('Pause'), findsNothing);
+  });
+
+  test('the countdown only drops out for the Spotify player in the tab', () {
+    expect(needsCountdown(MusicService.spotify, sessionReady: true), isFalse);
+    expect(needsCountdown(MusicService.spotify, sessionReady: false), isTrue);
+    // YouTube Music always leaves by link, whatever Spotify is doing.
+    expect(
+      needsCountdown(MusicService.youtubeMusic, sessionReady: true),
+      isTrue,
+    );
+    expect(
+      needsCountdown(MusicService.youtubeMusic, sessionReady: false),
+      isTrue,
+    );
   });
 
   testWidgets('eight players are scaled down, not scrolled', (tester) async {

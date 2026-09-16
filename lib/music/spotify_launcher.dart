@@ -2,46 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/song.dart';
+import 'song_launcher.dart';
 
-/// Opens songs in Spotify.
-///
-/// The app does not remote control Spotify, it only hands over a link - hence
-/// no Spotify SDK, no login, no Premium requirement and no quota limit from the
-/// developer dashboard.
-abstract class SpotifyLauncher {
-  Future<SpotifyLaunchResult> open(Song song);
-}
-
-class SpotifyLaunchResult {
-  const SpotifyLaunchResult({
-    required this.opened,
-    this.message,
-    this.inApp = false,
-  });
-
-  const SpotifyLaunchResult.ok()
-    : opened = true,
-      message = null,
-      inApp = false;
-
-  /// The song is coming out of this page - nobody left, so there is nothing to
-  /// come back from.
-  const SpotifyLaunchResult.inTab()
-    : opened = true,
-      message = null,
-      inApp = true;
-
-  final bool opened;
-  final String? message;
-
-  /// True only when the song really plays here. A session that reports itself
-  /// ready is not the same thing: playback still fails on a track the account
-  /// cannot play, and then it was the link that ran. Whoever branches on the
-  /// two ways has to branch on this, not on the session.
-  final bool inApp;
-}
-
-class UrlSpotifyLauncher implements SpotifyLauncher {
+/// Opens songs in Spotify, in the app where there is one.
+class UrlSpotifyLauncher implements SongLauncher {
   const UrlSpotifyLauncher();
 
   /// Deep link into the installed app - plays the track directly.
@@ -62,22 +26,22 @@ class UrlSpotifyLauncher implements SpotifyLauncher {
   /// `window.open` with `noopener`, which cannot report back whether the popup
   /// blocker swallowed the tab. Hence the manual button on the playing screen.
   @override
-  Future<SpotifyLaunchResult> open(Song song) async {
+  Future<LaunchResult> open(Song song) async {
     // url_launcher only knows http(s) on the web, and a browser would not hand
     // `spotify:` to the desktop app from a background tab anyway.
     final direct = kIsWeb ? null : appUri(song);
     if (direct != null && await _tryLaunch(direct)) {
-      return const SpotifyLaunchResult.ok();
+      return const LaunchResult.ok();
     }
     if (await _tryLaunch(webUri(song))) {
-      return SpotifyLaunchResult(
+      return LaunchResult(
         opened: true,
         message: song.spotifyTrackId == null
             ? 'No track on file - Spotify shows the search.'
             : null,
       );
     }
-    return const SpotifyLaunchResult(
+    return const LaunchResult(
       opened: false,
       message: 'Spotify would not open. Look the song up by hand.',
     );

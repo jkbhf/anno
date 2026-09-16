@@ -9,7 +9,9 @@ import '../models/player.dart';
 import '../models/song.dart';
 import '../models/song_category.dart';
 import '../music/in_app_launcher.dart';
+import '../music/music_service.dart';
 import '../music/spotify_session.dart';
+import '../music/youtube_music_launcher.dart';
 import 'app_scope.dart';
 import 'centered_body.dart';
 import 'countdown_screen.dart';
@@ -26,13 +28,18 @@ Future<void> openGame(
   required int targetScore,
 }) async {
   final scope = AppScope.of(context);
+  final service = scope.service.value;
   final controller = GameController(
     players: players,
     categories: categories,
     years: scope.years,
     targetScore: targetScore,
     persist: GameStore.save,
-    launcher: InAppSpotifyLauncher(scope.spotify),
+    service: service,
+    launcher: switch (service) {
+      MusicService.spotify => InAppSpotifyLauncher(scope.spotify),
+      MusicService.youtubeMusic => const YouTubeMusicLauncher(),
+    },
   );
   await GameStore.save(controller.snapshot);
   if (!context.mounted) {
@@ -44,6 +51,12 @@ Future<void> openGame(
   );
   controller.dispose();
 }
+
+/// Whether the three seconds before a round run - everywhere but in a round
+/// that plays in the Spotify player of this tab. See `_runCountdown`.
+@visibleForTesting
+bool needsCountdown(MusicService service, {required bool sessionReady}) =>
+    !(service == MusicService.spotify && sessionReady);
 
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
@@ -117,7 +130,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (_busy) return null;
     // Still inside the tap: a mobile browser grants sound from here, not from
     // the countdown three seconds later.
-    unawaited(_spotify?.prepare() ?? Future<void>.value());
+    if (_game.service == MusicService.spotify) {
+      unawaited(_spotify?.prepare() ?? Future<void>.value());
+    }
     _busy = true;
     try {
       return await Navigator.of(context).push<String>(
@@ -172,18 +187,25 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// The three seconds between the scan and the song. False when the round was
   /// cancelled on them.
   ///
-  /// Only the handover needs it. The song then comes out of Spotify, a tab or
-  /// an app away, and it starts while the room is still looking at the phone -
-  /// the countdown is what puts everybody on the same beat. A song played in
-  /// this tab has no such gap: it is there as soon as the round screen is, so
-  /// the countdown would only hold the music up.
+  /// Only the handover needs it. The song then comes out of Spotify or YouTube
+  /// Music, a tab or an app away, and it starts while the room is still
+  /// looking at the phone - the countdown is what puts everybody on the same
+  /// beat. A song played in this tab has no such gap: it is there as soon as
+  /// the round screen is, so the countdown would only hold the music up.
   ///
   /// This is the one place that asks the session instead of the launch, and it
   /// has to: nothing has been handed over yet, so there is no launch to ask.
   /// Being wrong here costs a countdown, never a round - a ready session that
   /// refuses the track still falls back to the link, and the round runs on.
+  ///
+  /// A connected session is no reason to skip it on YouTube Music: that game
+  /// never plays through the session, so the song always goes out by link.
   Future<bool> _runCountdown() async {
-    if (_spotify?.isReady ?? false) return true;
+    final countdown = needsCountdown(
+      _game.service,
+      sessionReady: _spotify?.isReady ?? false,
+    );
+    if (!countdown) return true;
     final ran = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(builder: (_) => const CountdownScreen()),
     );
@@ -505,7 +527,11 @@ class _PlayingBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _RevealSlot(onReveal: game.reveal, inApp: inApp),
+          _RevealSlot(
+            onReveal: game.reveal,
+            inApp: inApp,
+            service: game.service,
+          ),
           const SizedBox(height: 20),
           if (inApp)
             Center(
@@ -516,13 +542,13 @@ class _PlayingBody extends StatelessWidget {
               ),
             )
           // On the web a blocked popup looks exactly like a successful one, so
-          // the way to Spotify stays reachable by hand.
+          // the way to the service stays reachable by hand.
           else if (kIsWeb)
             Center(
               child: TextButton.icon(
-                onPressed: game.reopenInSpotify,
+                onPressed: game.reopen,
                 icon: const Icon(Icons.open_in_new),
-                label: const Text('Open in Spotify'),
+                label: Text('Open in ${game.service.label}'),
               ),
             ),
           if (message != null) ...[
@@ -557,10 +583,15 @@ class _PlayingBody extends StatelessWidget {
 /// Deliberately in theme colours: the card it stands in for is tinted by the
 /// decade, and that tint would hand the room the answer.
 class _RevealSlot extends StatelessWidget {
-  const _RevealSlot({required this.onReveal, required this.inApp});
+  const _RevealSlot({
+    required this.onReveal,
+    required this.inApp,
+    required this.service,
+  });
 
   final VoidCallback onReveal;
   final bool inApp;
+  final MusicService service;
 
   @override
   Widget build(BuildContext context) {
@@ -590,7 +621,7 @@ class _RevealSlot extends StatelessWidget {
               Text(
                 inApp
                     ? 'The song is playing'
-                    : 'The song is playing in Spotify',
+                    : 'The song is playing in ${service.label}',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium,
               ),

@@ -4,8 +4,10 @@
 // throws here.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/models/song_category.dart';
+import 'package:anno/music/music_service.dart';
 import 'package:anno/music/spotify_session.dart';
 import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/category_screen.dart';
@@ -25,17 +27,30 @@ class FakeSession extends NoSpotifySession {
   Future<void> disconnect() async => disconnects++;
 }
 
-Widget wrap({SpotifySession? spotify, List<String> roster = const []}) =>
-    AppScope(
-      years: YearDatabase.inMemory(),
-      categories: [
-        SongCategory(id: 'esc', name: 'ESC', description: '', songs: const []),
-      ],
-      spotify: spotify ?? NoSpotifySession(),
-      child: MaterialApp(
-        theme: buildTheme(),
-        home: SetupScreen(roster: roster),
-      ),
+Widget wrap({
+  SpotifySession? spotify,
+  List<String> roster = const [],
+  ValueNotifier<MusicService>? service,
+}) => AppScope(
+  years: YearDatabase.inMemory(),
+  categories: [
+    SongCategory(id: 'esc', name: 'ESC', description: '', songs: const []),
+  ],
+  spotify: spotify ?? NoSpotifySession(),
+  service: service ?? ValueNotifier(MusicService.spotify),
+  child: MaterialApp(
+    theme: buildTheme(),
+    home: SetupScreen(roster: roster),
+  ),
+);
+
+/// The screen is a lazy list, and the lower half of it is not built until it
+/// is scrolled to.
+Future<void> scrollTo(WidgetTester tester, String text) =>
+    tester.scrollUntilVisible(
+      find.text(text),
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
 
 void main() {
@@ -97,6 +112,7 @@ void main() {
     await tester.enterText(find.byType(TextField).first, 'Anna');
     await tester.pump();
 
+    await scrollTo(tester, 'Continue to categories');
     await tester.tap(find.text('Continue to categories'));
     await tester.pumpAndSettle();
 
@@ -107,6 +123,7 @@ void main() {
   testWidgets('without a single name the game cannot start', (tester) async {
     await tester.pumpWidget(wrap());
 
+    await scrollTo(tester, 'Continue to categories');
     final button = tester.widget<FilledButton>(
       find.widgetWithText(FilledButton, 'Continue to categories'),
     );
@@ -129,6 +146,33 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Year database'), findsOneWidget);
     expect(find.text('Disconnect Spotify'), findsNothing);
+  });
+
+  testWidgets('YouTube Music is picked here and outlives the screen', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final service = ValueNotifier(MusicService.spotify);
+    await tester.pumpWidget(
+      wrap(
+        spotify: FakeSession(SpotifyConnection.disconnected),
+        service: service,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Connect Spotify'), findsOneWidget);
+
+    await scrollTo(tester, 'YouTube Music');
+    await tester.tap(find.text('YouTube Music'));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 2000));
+    await tester.pumpAndSettle();
+
+    expect(service.value, MusicService.youtubeMusic);
+    // No point logging in to a service this device does not play in.
+    expect(find.text('Connect Spotify'), findsNothing);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('music.service'), 'youtubeMusic');
   });
 
   testWidgets('a connected Spotify is a menu entry, not a card', (
@@ -179,6 +223,7 @@ void main() {
     expect(find.byType(TextField), findsNWidgets(3));
     // And the game can go on straight away - the button is live without a
     // single keystroke.
+    await scrollTo(tester, 'Continue to categories');
     final button = tester.widget<FilledButton>(
       find.widgetWithText(FilledButton, 'Continue to categories'),
     );

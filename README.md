@@ -2,7 +2,7 @@
 
 A music guessing game with QR cards. Scan a card, the app looks up the year
 behind it, draws a song from that year out of the chosen category and hands it
-to Spotify. The group guesses the year, a button reveals it, and points are
+to Spotify or YouTube Music. The group guesses the year, a button reveals it, and points are
 given with a tap on a player tile.
 
 ## Running it
@@ -25,6 +25,12 @@ whether the song starts right away or the track page just opens is up to
 Spotify. On the web it can instead play the song **inside the game tab**, which
 needs Spotify Premium and a login; see [Playing in the tab](#playing-in-the-tab).
 The link is always the fallback: everything works without the second way.
+
+**YouTube Music** is the other service, picked under "Play songs in" on the
+setup screen and kept per device. It only has the first way: the app opens
+`https://music.youtube.com/watch?v=<id>`, which Android and iOS hand to the
+YouTube Music app and the browser opens in a tab, and the countdown runs before
+every round. There is no player in the tab on purpose, see `CLAUDE.md`.
 
 ## On the web
 
@@ -253,6 +259,10 @@ has to be tapped there, which is a round without music until somebody does. It
 is what a hand-written entry looks like until the resolver below has run over
 it, so run it before the file ships.
 
+`youtubeVideoId` is the same for YouTube Music, the `v` of
+`https://music.youtube.com/watch?v=<id>`. Without it a YouTube Music round
+lands on the search.
+
 The year is the truth of the game and deliberately comes from no API: streaming
 services report the year of the re-release for remasters.
 
@@ -294,6 +304,21 @@ answers a burst of requests with a lockout of several hours for the whole app -
 the script spaces its requests out and stops on a `429` instead of waiting it
 out, so run it once and let it finish rather than restarting it.
 
+### Filling in YouTube Music ids
+
+```sh
+dart run tool/resolve_youtube_music_tracks.dart            # every category
+dart run tool/resolve_youtube_music_tracks.dart assets/songs/esc.json
+dart run tool/resolve_youtube_music_tracks.dart --only=1971,Chai
+```
+
+No credentials: it asks the search behind music.youtube.com for songs only,
+the same endpoint the web player uses. The matching is the Spotify resolver's,
+plus live, acoustic and sped-up takes refused on top, and every hit is printed
+on its own line so a wrong one shows up reading down the run. It only fills
+empty `youtubeVideoId` fields. What it cannot find stays without an id - no
+swap, the catalog is curated against Spotify.
+
 ## Layout
 
 ```
@@ -301,10 +326,11 @@ lib/
   models/       Song, SongCategory, GamePlayer
   data/         song catalogs, year database, saved game, last roster
   game/         GameController - the round state
-  music/        handover to Spotify: link, or the in-app player on the web
+  music/        handover to Spotify (link, or the in-app player on the web)
+                or to YouTube Music (link)
   ui/           setup, category, game, scanner, year database
 assets/
   qr_years.json   bundled card -> year mapping
   songs/          one catalog per category
-tool/           resolve_spotify_tracks.dart
+tool/           resolve_spotify_tracks.dart, resolve_youtube_music_tracks.dart
 ```

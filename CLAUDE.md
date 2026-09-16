@@ -347,7 +347,8 @@ year that is only scanned once or twice ever gets to show. The factor is
 
 ## Two ways to play a song, one of them optional
 
-`SpotifyLauncher` has two implementations and the choice is not a preference:
+`SongLauncher` has two Spotify implementations and the choice is not a
+preference:
 
 - `UrlSpotifyLauncher` hands Spotify a link. Works everywhere, needs nothing.
 - `InAppSpotifyLauncher` plays through `SpotifySession` where there is one and
@@ -381,6 +382,40 @@ round - the fallback still plays the song by link either way. Anything after
 the launch reads `playingInApp`.
 
 `README.md` has the setup under "Playing in the tab".
+
+## YouTube Music: a link, never a player
+
+The second service, picked per device on the setup screen (`MusicService`,
+stored by `MusicServiceStore`). It opens `music.youtube.com/watch?v=<id>` and
+that is all it does - no player in the tab, and the countdown runs before every
+round even when a Spotify session happens to be connected
+(`needsCountdown` in `lib/ui/game_screen.dart`).
+
+**The in-tab player was looked at and left out** (2026-09-16). The YouTube
+IFrame player would play without login or Premium, but only a *visible* one is
+allowed - hiding it, which a guessing game has to because the video shows
+title and cover, breaks the API policies. On top of that an ad plays invisibly
+before the intro, and many official uploads refuse embedding (error 101/150),
+so a share of the rounds would fall back anyway. Pulling the audio stream out
+directly (yt-dlp and friends) is out for the same reason and breaks every few
+weeks. Do not build either without asking again.
+
+**A missing `youtubeVideoId` is not a swap.** The catalogs are curated against
+Spotify - "What Spotify does not carry is not a card" stays the rule. An entry
+YouTube Music does not carry keeps its slot and opens the search there. Swapping
+it would cost the Spotify deck a good card for the sake of the smaller path.
+
+**The resolver goes through an undocumented endpoint.**
+`tool/resolve_youtube_music_tracks.dart` asks the search behind
+music.youtube.com, because the official Data API allows about 100 searches a
+day - two weeks for the catalogs. When it stops working, that is the endpoint
+having changed, not the catalog: fix the client version or the parsing, never
+book the misses as missing songs. The game itself never talks to it.
+
+YouTube Music carries far more second takes than Spotify - acoustic, live,
+sped up, uploaded by the artist next to the original and often ranked above it.
+The resolver refuses those on top of Spotify's `notTheSong` list; a new kind
+that slips through belongs in `notTheSongHere`, not in a hand edit.
 
 ## What Spotify does not carry is not a card
 

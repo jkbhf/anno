@@ -42,6 +42,14 @@ void main() {
             reason: 'not a Spotify track id: $song ($id)',
           );
         }
+        final video = song.youtubeVideoId;
+        if (video != null) {
+          expect(
+            RegExp(r'^[A-Za-z0-9_-]{11}$').hasMatch(video),
+            isTrue,
+            reason: 'not a YouTube video id: $song ($video)',
+          );
+        }
       }
     }
   });

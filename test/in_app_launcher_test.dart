@@ -4,7 +4,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/models/song.dart';
 import 'package:anno/music/in_app_launcher.dart';
-import 'package:anno/music/spotify_launcher.dart';
+import 'package:anno/music/song_launcher.dart';
 import 'package:anno/music/spotify_session.dart';
 
 class FakeSession extends NoSpotifySession {
@@ -24,13 +24,13 @@ class FakeSession extends NoSpotifySession {
   }
 }
 
-class FakeFallback implements SpotifyLauncher {
+class FakeFallback implements SongLauncher {
   final List<Song> opened = [];
 
   @override
-  Future<SpotifyLaunchResult> open(Song song) async {
+  Future<LaunchResult> open(Song song) async {
     opened.add(song);
-    return const SpotifyLaunchResult.ok();
+    return const LaunchResult.ok();
   }
 }
 

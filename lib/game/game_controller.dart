@@ -8,6 +8,8 @@ import '../data/year_database.dart';
 import '../models/player.dart';
 import '../models/song.dart';
 import '../models/song_category.dart';
+import '../music/music_service.dart';
+import '../music/song_launcher.dart';
 import '../music/spotify_launcher.dart';
 
 /// The course of one round.
@@ -18,7 +20,7 @@ enum RoundPhase {
   /// The song is picked, the countdown is running.
   countdown,
 
-  /// Spotify was opened, the group is guessing.
+  /// The song was handed over, the group is guessing.
   playing,
 
   /// Year and song are revealed, points are handed out.
@@ -47,7 +49,8 @@ class GameController extends ChangeNotifier {
     required this.categories,
     required this.years,
     this.targetScore = 10,
-    SpotifyLauncher launcher = const UrlSpotifyLauncher(),
+    this.service = MusicService.spotify,
+    SongLauncher launcher = const UrlSpotifyLauncher(),
     Future<void> Function(SavedGame)? persist,
     Random? random,
   }) : assert(categories.isNotEmpty, 'A game needs at least one category.'),
@@ -70,7 +73,11 @@ class GameController extends ChangeNotifier {
   final YearDatabase years;
   final int targetScore;
 
-  final SpotifyLauncher _launcher;
+  /// Where the songs are handed over to. Only named here for the screen - the
+  /// launcher is what actually goes there.
+  final MusicService service;
+
+  final SongLauncher _launcher;
   final Future<void> Function(SavedGame)? _persist;
   final Random _random;
 
@@ -181,12 +188,12 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Hands the current song to Spotify again.
+  /// Hands the current song over again.
   ///
   /// The way out on the web: a blocked popup reaches the app as a success, so
   /// the playing screen offers this as a button, where the tap counts as the
   /// user gesture the browser wants.
-  Future<void> reopenInSpotify() async {
+  Future<void> reopen() async {
     final song = currentSong;
     if (song == null || phase != RoundPhase.playing) return;
     final result = await _launcher.open(song);

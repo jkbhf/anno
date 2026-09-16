@@ -6,9 +6,9 @@ import 'package:anno/game/game_controller.dart';
 import 'package:anno/models/player.dart';
 import 'package:anno/models/song.dart';
 import 'package:anno/models/song_category.dart';
-import 'package:anno/music/spotify_launcher.dart';
+import 'package:anno/music/song_launcher.dart';
 
-class FakeLauncher implements SpotifyLauncher {
+class FakeLauncher implements SongLauncher {
   FakeLauncher({this.opened = true, this.inApp = false});
 
   final bool opened;
@@ -16,9 +16,9 @@ class FakeLauncher implements SpotifyLauncher {
   final List<Song> played = [];
 
   @override
-  Future<SpotifyLaunchResult> open(Song song) async {
+  Future<LaunchResult> open(Song song) async {
     played.add(song);
-    return SpotifyLaunchResult(
+    return LaunchResult(
       opened: opened,
       message: opened ? null : 'no Spotify',
       inApp: inApp,

@@ -13,6 +13,7 @@ class Song {
     required this.artist,
     required this.year,
     this.spotifyTrackId,
+    this.youtubeVideoId,
     this.country,
     this.place,
     this.tier = 1,
@@ -34,6 +35,11 @@ class Song {
       throw FormatException('spotifyTrackId must be a string: $json');
     }
     final id = trackId as String?;
+    final videoId = json['youtubeVideoId'];
+    if (videoId != null && videoId is! String) {
+      throw FormatException('youtubeVideoId must be a string: $json');
+    }
+    final video = videoId as String?;
 
     final country = json['country'];
     if (country != null && country is! String) {
@@ -53,6 +59,7 @@ class Song {
       artist: artist,
       year: year,
       spotifyTrackId: (id == null || id.isEmpty) ? null : id,
+      youtubeVideoId: (video == null || video.isEmpty) ? null : video,
       country: country as String?,
       place: place as int?,
       tier: (tier as int?) ?? 1,
@@ -69,6 +76,13 @@ class Song {
   /// Without it the app opens a Spotify search for title and artist instead -
   /// playable, but the song has to be tapped there.
   final String? spotifyTrackId;
+
+  /// The 11 character YouTube video id, the `v` of
+  /// `https://music.youtube.com/watch?v=<id>`.
+  ///
+  /// The same deal as [spotifyTrackId] for the players on YouTube Music:
+  /// without it they land on a search.
+  final String? youtubeVideoId;
 
   /// Where the entry competed, for contest categories. Null everywhere else.
   final String? country;
