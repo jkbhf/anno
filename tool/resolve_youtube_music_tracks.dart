@@ -30,9 +30,9 @@ import 'resolve_spotify_tracks.dart'
         artistMatches,
         artistParts,
         flatten,
+        normalize,
         notTheSong,
-        titleMatches,
-        titleUnreadable;
+        titleMatches;
 
 /// There is no documented limit, so the pace is the one that kept Spotify
 /// friendly. A pass over every catalog is a quarter of an hour.
@@ -40,6 +40,9 @@ const requestGap = Duration(milliseconds: 350);
 
 /// The `params` the web player sends for the "Songs" filter.
 const songsOnly = 'EgWKAQIIAWoKEAMQBBAJEAoQBQ==';
+
+/// The same for "Videos" - the second try, see [findSong].
+const videosOnly = 'EgWKAQIQAWoKEAMQBBAJEAoQBQ==';
 
 /// Failures in a row after which the run stops: that is a block or a changed
 /// endpoint, not a string of unlucky songs.
@@ -148,6 +151,8 @@ final _live = RegExp(r'[(\[][^)\]]*\blive\b|\s-\s.*\blive\b');
 /// often enough - "Tattoo (Acoustic)" came back for Jordin Sparks.
 const notTheSongHere = [
   'acoustic',
+  'acappella',
+  'a cappella',
   'unplugged',
   'sped up',
   'slowed',
@@ -156,20 +161,112 @@ const notTheSongHere = [
   'piano version',
   'orchestral',
   'lullaby',
+  'maxi',
+  'long version',
+  'neue version',
+  "taylor's version",
+  'zeitlos version',
+  'raw sessions',
+  'studio recording',
+  'version mto',
+  'kinderversion',
+  'kinder version',
+  'nl version',
+  'japanese ver',
+  'chinese ver',
+  'english ver',
+  'spanish ver',
+  'french ver',
 ];
 
-bool isTheRecording(YouTubeSong song) {
-  final title = flatten(song.title);
+/// A take in another language is another song to the room - Lulu's "Boom Bang
+/// a Bang (Deutsch Version)" is not what Madrid heard in 1969. Except in the
+/// German deck, where the German version is the one the card is about.
+const germanVersion = ['deutsche version', 'deutsch version', 'german version'];
+
+/// What a bracket or a dash suffix of the title says about the pressing.
+final _suffix = RegExp(r'[(\[]([^)\]]*)[)\]]|\s-\s(.*)$');
+
+/// A mix is the song when it is the one that was on the radio - "Radio Mix",
+/// "7\" Mix", "Single Mix" - and a remix under another name otherwise: "Motiv8
+/// Extended Vocal Mix", "Nite Mix", "Special 12\" Dance Mix" all came back
+/// as the entry before this check.
+const _mixThatIsTheSong = [
+  'radio',
+  'single',
+  '7"',
+  'video',
+  'album',
+  'original',
+  'edit',
+  'lp',
+  'eurovision',
+  'stereo',
+  'mono',
+];
+
+/// A suffix that only credits somebody.
+final _guest = RegExp(r'^\s*(feat\.?|featuring|with)\s');
+
+/// Suffixes that are a remix whatever else they say.
+final _remix = RegExp(r'\brmx\b|\bextended\b|\bdj\s');
+
+/// A four digit year in a suffix.
+final _year = RegExp(r'\b(19[5-9]\d|20\d\d)\b');
+
+/// True when the row is the recording and not another take of it.
+///
+/// [year] is the catalog year. A suffix naming a later one is a re-recording -
+/// "MfG (2022)", "O mein Papa (Version 2008)" - while one naming the year
+/// itself, "Looking High, High, High (1960)", only dates the original.
+///
+/// Whatever the catalog [title] says itself is no objection: "All Too Well
+/// (Taylor's Version)" is the entry, "Mine (Taylor's Version)" is not. [deck]
+/// is the catalog id, for [germanVersion].
+bool isTheRecording(
+  YouTubeSong song, {
+  int? year,
+  String title = '',
+  String deck = '',
+}) {
+  final name = flatten(song.title);
   final album = flatten(song.album ?? '');
-  final haystack = '$title $album';
-  if (notTheSong.any(haystack.contains)) return false;
-  if (notTheSongHere.any(haystack.contains)) return false;
-  return !_live.hasMatch(title) && !_live.hasMatch(album);
+  final wanted = flatten(title);
+  final haystack = '$name $album';
+  bool refuses(String word) =>
+      haystack.contains(word) && !wanted.contains(word);
+
+  if (notTheSong.any(refuses)) return false;
+  if (notTheSongHere.any(refuses)) return false;
+  if (deck != 'german_songs' && germanVersion.any(refuses)) return false;
+  if (_live.hasMatch(name) || _live.hasMatch(album)) return false;
+
+  for (final match in _suffix.allMatches(name)) {
+    final suffix = match.group(1) ?? match.group(2) ?? '';
+    if (wanted.contains(suffix)) continue;
+    // A guest is not a pressing: "Lean On (feat. DJ Snake)".
+    if (_guest.hasMatch(suffix)) continue;
+    if (_remix.hasMatch(suffix)) return false;
+    if (suffix.contains('mix') && !_mixThatIsTheSong.any(suffix.contains)) {
+      return false;
+    }
+    // A remaster is the old recording with a new date on it, "Love Me Do
+    // (Remastered 2009)" - the year there says nothing about the song.
+    if (year != null && !suffix.contains('remaster')) {
+      for (final found in _year.allMatches(suffix)) {
+        if (int.parse(found.group(1)!) > year + 1) return false;
+      }
+    }
+  }
+  return true;
 }
 
 var requestCount = 0;
 
-Future<List<YouTubeSong>> search(String query) async {
+Future<List<YouTubeSong>> search(
+  String query, {
+  String filter = songsOnly,
+}) async {
   await Future<void>.delayed(requestGap);
   requestCount++;
   final response = await http.post(
@@ -189,7 +286,7 @@ Future<List<YouTubeSong>> search(String query) async {
         },
       },
       'query': query,
-      'params': songsOnly,
+      'params': filter,
     }),
   );
   if (response.statusCode != 200) throw RequestFailed(response.statusCode);
@@ -198,11 +295,66 @@ Future<List<YouTubeSong>> search(String query) async {
   );
 }
 
+/// True when the two name the same song - [titleMatches], or the same letters
+/// with the spaces and dashes in other places: the catalog has
+/// "Maschendrahtzaun", YouTube Music "Maschen-Draht-Zaun".
+bool sameTitle(String catalog, String found) =>
+    titleMatches(catalog, found) ||
+    (normalize(catalog).replaceAll(' ', '') ==
+        normalize(found).replaceAll(' ', ''));
+
+/// True when a row is the entry: the recording, the title and the artist.
+///
+/// Both ways out of a name that cannot be compared are closed, unlike in the
+/// Spotify resolver. A title nothing is left of - "Water" came back as "Само
+/// Шампиони" - because a search here answers with the artist's whole catalog.
+/// An artist nothing is left of - "A-Ba-Ni-Bi" came back from a Thai artist -
+/// because a cover carries the same title. Those entries go to the search in
+/// the game instead.
+bool isTheEntry(
+  YouTubeSong song,
+  String title,
+  String artist, {
+  int? year,
+  String deck = '',
+}) =>
+    isTheRecording(song, year: year, title: title, deck: deck) &&
+    sameTitle(title, song.title) &&
+    artistMatches(artist, song.artists);
+
+/// A music video is titled for the channel page, "Dua Lipa - New Rules
+/// (Official Music Video)". The brackets go in [normalize]; the artist in
+/// front has to go here, or the title left over is "Dua Lipa".
+YouTubeSong asVideo(YouTubeSong video, String artist) {
+  final dash = video.title.indexOf(' - ');
+  if (dash == -1) return video;
+  final front = video.title.substring(0, dash);
+  if (!artistMatches(artist, [front])) return video;
+  return YouTubeSong(
+    videoId: video.videoId,
+    title: video.title.substring(dash + 3),
+    artists: video.artists,
+    album: video.album,
+  );
+}
+
 /// The entry's own recording, or null when YouTube Music has none.
 ///
 /// The first row is not trusted any more than Spotify's first hit is: every
 /// candidate is checked against artist, title and pressing.
-Future<YouTubeSong?> findSong(String title, String artist) async {
+///
+/// Songs first, the music video second. The album recording is the better
+/// card, but some labels do not let it into the German catalog at all while
+/// the video stands right next to it - "New Rules" answers with covers and a
+/// remix from Germany and with the song from the US. A video on the artist's
+/// own channel is the same song with a longer intro, and far better than the
+/// search page the round would land on otherwise.
+Future<YouTubeSong?> findSong(
+  String title,
+  String artist, {
+  required int year,
+  required String deck,
+}) async {
   final parts = artistParts(artist);
   final seen = <String>{};
   final queries = [
@@ -212,12 +364,15 @@ Future<YouTubeSong?> findSong(String title, String artist) async {
 
   for (final query in queries) {
     for (final song in await search(query)) {
-      if (!isTheRecording(song)) continue;
-      if (!artistMatches(artist, song.artists)) continue;
-      if (!titleMatches(title, song.title) && !titleUnreadable(song.title)) {
-        continue;
+      if (isTheEntry(song, title, artist, year: year, deck: deck)) {
+        return song;
       }
-      return song;
+    }
+  }
+  for (final row in await search('$title $artist', filter: videosOnly)) {
+    final video = asVideo(row, artist);
+    if (isTheEntry(video, title, artist, year: year, deck: deck)) {
+      return video;
     }
   }
   return null;
@@ -289,7 +444,12 @@ Future<void> main(List<String> args) async {
       final label = '${catalog['id']} · ${song['year']} · $title - $artist';
       final YouTubeSong? hit;
       try {
-        hit = await findSong(title, artist);
+        hit = await findSong(
+          title,
+          artist,
+          year: song['year'] as int,
+          deck: catalog['id'] as String,
+        );
         failures = 0;
       } on Exception catch (error) {
         unchecked.add('$label: $error');

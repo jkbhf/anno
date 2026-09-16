@@ -132,6 +132,119 @@ void main() {
     expect(isTheRecording(song('Satellite', album: 'Karaoke Hits')), isFalse);
   });
 
+  test('a mix is only the song when it was the one on the radio', () {
+    expect(isTheRecording(song('What Is Love (7" Mix)')), isTrue);
+    expect(isTheRecording(song('Durch den Monsun (Radio Mix)')), isTrue);
+    expect(isTheRecording(song('Je T\'adore (Eurovision Mix)')), isTrue);
+    expect(
+      isTheRecording(
+        song('Ooh Aah...Just a Little Bit (Motiv8 Extended Vocal Mix)'),
+      ),
+      isFalse,
+    );
+    expect(isTheRecording(song('Saturday Night (Nite Mix)')), isFalse);
+    expect(isTheRecording(song('Anton aus Tirol (Silverjam RMX)')), isFalse);
+    expect(
+      isTheRecording(song('Blue (Da Ba Dee) (DJ Ponte Ice Pop Radio)')),
+      isFalse,
+    );
+    expect(isTheRecording(song('Tattoo (Acappella)')), isFalse);
+  });
+
+  test('a remaster, a stereo mix and a guest are the recording', () {
+    expect(
+      isTheRecording(song('Love Me Do (Remastered 2009)'), year: 1962),
+      isTrue,
+    );
+    expect(isTheRecording(song("Frag' den Abendwind (Stereo Mix)")), isTrue);
+    expect(isTheRecording(song('Lean On (feat. DJ Snake)')), isTrue);
+  });
+
+  test('a later year in a bracket is a re-recording', () {
+    expect(isTheRecording(song('MfG (2022)'), year: 1999), isFalse);
+    expect(
+      isTheRecording(song('O mein Papa (Version 2008)'), year: 1953),
+      isFalse,
+    );
+    expect(
+      isTheRecording(song('Looking High, High, High (1960)'), year: 1960),
+      isTrue,
+    );
+  });
+
+  test('a title nothing is left of is not taken', () {
+    const water = YouTubeSong(
+      videoId: 'abcdefghijk',
+      title: 'Само Шампиони',
+      artists: ['Elitsa Todorova', 'Stoyan Yankoulov'],
+    );
+
+    expect(
+      isTheEntry(water, 'Water', 'Elitsa Todorova & Stoyan Yankoulov'),
+      isFalse,
+    );
+  });
+
+  test('a title with its dashes elsewhere is the same title', () {
+    expect(sameTitle('Maschendrahtzaun', 'Maschen-Draht-Zaun'), isTrue);
+    expect(sameTitle('I Can', "I Can't Wait"), isFalse);
+  });
+
+  test('an artist nothing is left of is not taken', () {
+    const cover = YouTubeSong(
+      videoId: 'abcdefghijk',
+      title: 'A-Ba-Ni-Bi',
+      artists: ['สเตทเอ็กซ์เพรส'],
+    );
+
+    expect(
+      isTheEntry(cover, 'A-Ba-Ni-Bi', 'Izhar Cohen & the Alphabeta'),
+      isFalse,
+    );
+  });
+
+  test('a take the catalog title names itself is the entry', () {
+    expect(isTheRecording(song("Mine (Taylor's Version)")), isFalse);
+    expect(
+      isTheRecording(
+        song("All Too Well (10 Minute Version) [Taylor's Version]"),
+        title: "All Too Well (10 Minute Version) (Taylor's Version)",
+      ),
+      isTrue,
+    );
+  });
+
+  test('a German version belongs to the German deck only', () {
+    final lulu = song('Boom Bang a Bang (Deutsch Version)');
+    final udo = song('Buenos Dias Argentina (Deutsche Version)');
+
+    expect(isTheRecording(lulu, deck: 'esc'), isFalse);
+    expect(isTheRecording(udo, deck: 'german_songs'), isTrue);
+    expect(isTheRecording(song('Oh My! (Japanese ver.)')), isFalse);
+  });
+
+  test('a music video loses the artist in front of its title', () {
+    const official = YouTubeSong(
+      videoId: 'k2qgadSvNyU',
+      title: 'Dua Lipa - New Rules (Official Music Video)',
+      artists: ['Dua Lipa'],
+    );
+    const fan = YouTubeSong(
+      videoId: 'Qs0VniZIs_o',
+      title: 'Dua Lipa - New Rules (Lyrics)',
+      artists: ['Dan Music'],
+    );
+
+    expect(
+      isTheEntry(asVideo(official, 'Dua Lipa'), 'New Rules', 'Dua Lipa'),
+      isTrue,
+    );
+    expect(
+      isTheEntry(asVideo(fan, 'Dua Lipa'), 'New Rules', 'Dua Lipa'),
+      isFalse,
+    );
+  });
+
   test('the id goes in next to the Spotify one', () {
     final entry = withVideoId({
       'year': 2010,

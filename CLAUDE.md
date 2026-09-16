@@ -417,6 +417,23 @@ sped up, uploaded by the artist next to the original and often ranked above it.
 The resolver refuses those on top of Spotify's `notTheSong` list; a new kind
 that slips through belongs in `notTheSongHere`, not in a hand edit.
 
+The first full pass took all of that on trust and a read-through of every hit
+whose title was not the catalog title word for word turned up what else has to
+be refused, now in the rules and their tests: mixes that are remixes under
+another name ("Nite Mix", "Motiv8 Extended Vocal Mix"), re-recordings dated in
+a bracket ("MfG (2022)", "Mine (Taylor's Version)"), takes in another language
+("Boom Bang a Bang (Deutsch Version)" - allowed only in `german_songs`), and
+any name that cannot be compared: a Cyrillic title turned out to be another
+song of the artist, a Thai artist a cover. Those entries go to the search in
+the game - a miss costs a tap, a wrong id costs the round.
+
+**Some songs are only there as a video in Germany.** The search runs with
+`gl: DE`, and labels keep album tracks out of the German catalog that the US
+one has ("New Rules", "Somebody That I Used to Know"). The resolver falls back
+to the videos filter then and takes the video from the artist's own channel.
+Keep `gl` on `DE`: an id found for another country can be greyed out for the
+room.
+
 ## What Spotify does not carry is not a card
 
 `spotifyTrackId` is not a nicety, it is what makes the round play. Without it
