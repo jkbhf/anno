@@ -13,6 +13,7 @@ import 'category_screen.dart';
 import 'centered_body.dart';
 import 'game_screen.dart';
 import '../music/spotify_session.dart';
+import 'route_observer.dart';
 import 'spotify_card.dart';
 import 'text_input_dialog.dart';
 import 'year_database_screen.dart';
@@ -31,7 +32,7 @@ class SetupScreen extends StatefulWidget {
   State<SetupScreen> createState() => _SetupScreenState();
 }
 
-class _SetupScreenState extends State<SetupScreen> {
+class _SetupScreenState extends State<SetupScreen> with RouteAware {
   static const List<int> _presets = [5, 10, 15];
 
   late final List<TextEditingController> _names;
@@ -55,11 +56,30 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null) appRouteObserver.subscribe(this, route);
+  }
+
+  @override
   void dispose() {
+    appRouteObserver.unsubscribe(this);
     for (final controller in _names) {
       controller.dispose();
     }
     super.dispose();
+  }
+
+  /// Back on this screen from a game, however it was left. A game left by the
+  /// back button is still saved, and its resume card belongs here again.
+  @override
+  void didPopNext() => unawaited(_reloadSavedGame());
+
+  Future<void> _reloadSavedGame() async {
+    final saved = await GameStore.load();
+    if (!mounted) return;
+    setState(() => _savedGame = saved);
   }
 
   /// Only the filled in fields become players - an empty row is a leftover,
@@ -120,7 +140,31 @@ class _SetupScreenState extends State<SetupScreen> {
     unawaited(MusicServiceStore.save(service));
   }
 
-  void _start() {
+  Future<void> _start() async {
+    // Starting a new game overwrites the saved one the moment it begins.
+    if (_savedGame != null) {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Start a new game?'),
+          content: const Text(
+            'The game in progress will be discarded. Resume it instead to '
+            'keep its scores.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('New game'),
+            ),
+          ],
+        ),
+      );
+      if (ok != true || !mounted) return;
+    }
     final names = _playerNames;
     // Saved on the way into a game, not on every keystroke: these are the
     // names the group settled on.
@@ -140,6 +184,7 @@ class _SetupScreenState extends State<SetupScreen> {
       categories: categories,
       players: game.players,
       targetScore: game.targetScore,
+      played: game.played,
     );
   }
 

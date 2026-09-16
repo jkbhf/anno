@@ -24,6 +24,15 @@ class FakeSession extends NoSpotifySession {
   }
 }
 
+/// A cast on an odd API answer throws an Error, not an Exception.
+class ThrowingSession extends NoSpotifySession {
+  @override
+  SpotifyConnection get connection => SpotifyConnection.ready;
+
+  @override
+  Future<bool> play(Song song) async => throw TypeError();
+}
+
 class FakeFallback implements SongLauncher {
   final List<Song> opened = [];
 
@@ -100,6 +109,18 @@ void main() {
       isFalse,
       reason: 'the session was ready, but the link is what played',
     );
+  });
+
+  test('a player that throws still ends at the link', () async {
+    final fallback = FakeFallback();
+
+    final result = await InAppSpotifyLauncher(
+      ThrowingSession(),
+      fallback: fallback,
+    ).open(song);
+
+    expect(fallback.opened, [song]);
+    expect(result.inApp, isFalse);
   });
 
   test('a fallback is reported as one, whatever the session says', () async {

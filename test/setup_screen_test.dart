@@ -2,15 +2,21 @@
 // on pop, but the route keeps rebuilding through its exit animation.
 // `pumpAndSettle` runs that animation, so a controller disposed too early
 // throws here.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:anno/data/game_store.dart';
 import 'package:anno/data/year_database.dart';
+import 'package:anno/models/player.dart';
+import 'package:anno/models/song.dart';
 import 'package:anno/models/song_category.dart';
 import 'package:anno/music/music_service.dart';
 import 'package:anno/music/spotify_session.dart';
 import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/category_screen.dart';
+import 'package:anno/ui/route_observer.dart';
 import 'package:anno/ui/setup_screen.dart';
 import 'package:anno/ui/theme.dart';
 
@@ -228,6 +234,75 @@ void main() {
       find.widgetWithText(FilledButton, 'Continue to categories'),
     );
     expect(button.onPressed, isNotNull);
+  });
+
+  group('a game in progress', () {
+    // With a song: a saved game on decks without any is not offered at all.
+    final esc = SongCategory(
+      id: 'esc',
+      name: 'ESC',
+      description: '',
+      songs: const [
+        Song(title: 'A', artist: 'X', year: 2005, spotifyTrackId: 'a'),
+      ],
+    );
+    final saved = SavedGame(
+      players: [GamePlayer(name: 'Anna', score: 4)],
+      categoryIds: const ['esc'],
+      targetScore: 10,
+    );
+
+    Widget withObserver({SavedGame? savedGame}) => AppScope(
+      years: YearDatabase.inMemory(),
+      categories: [esc],
+      spotify: NoSpotifySession(),
+      service: ValueNotifier(MusicService.spotify),
+      child: MaterialApp(
+        theme: buildTheme(),
+        navigatorObservers: [appRouteObserver],
+        home: SetupScreen(savedGame: savedGame, roster: const ['Anna']),
+      ),
+    );
+
+    testWidgets('is not overwritten by a new one without asking', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      await tester.pumpWidget(withObserver(savedGame: saved));
+      await tester.pumpAndSettle();
+
+      await scrollTo(tester, 'Continue to categories');
+      await tester.tap(find.text('Continue to categories'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Start a new game?'), findsOneWidget);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.byType(CategoryScreen), findsNothing);
+    });
+
+    testWidgets('comes back to the start screen when it is left', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      await tester.pumpWidget(withObserver());
+      await tester.pumpAndSettle();
+      expect(find.text('Game in progress'), findsNothing);
+
+      // Somewhere above the start screen a game gets saved, then left.
+      await GameStore.save(saved);
+      final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+      unawaited(
+        navigator.push(
+          MaterialPageRoute<void>(builder: (_) => const Text('game')),
+        ),
+      );
+      await tester.pumpAndSettle();
+      navigator.pop();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Game in progress'), findsOneWidget);
+    });
   });
 
   testWidgets('a first-time group gets two empty fields', (tester) async {

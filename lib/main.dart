@@ -11,6 +11,7 @@ import 'models/song_category.dart';
 import 'music/music_service.dart';
 import 'music/spotify_session.dart';
 import 'ui/app_scope.dart';
+import 'ui/route_observer.dart';
 import 'ui/setup_screen.dart';
 import 'ui/theme.dart';
 
@@ -89,6 +90,7 @@ class _PlayAppState extends State<PlayApp> {
         title: 'Anno',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
+        navigatorObservers: [appRouteObserver],
         home: SetupScreen(savedGame: widget.savedGame, roster: widget.roster),
       ),
     );

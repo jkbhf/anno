@@ -30,9 +30,11 @@ to derive from what is already in the file:
 The years grow towards the present because that is where the cards are: a
 session played on a narrow range (2005-2026 is what actually gets played) puts
 every round into ~22 years, so a thin year is heard out within two evenings.
-`_played` in `GameController` only prevents repeats *inside* one game - it is
-cleared for the next one, so across evenings the draw is plain random and the
-pool size is what carries the variety.
+`_played` in `GameController` only prevents repeats *inside* one game; across
+evenings `RecentSongsStore` remembers the last 300 songs and draws them a
+quarter as often (`_freshAcrossEveningsWeight`). A weight, not a ban - on a
+narrow range of cards a ban would empty the thin years - so the pool size is
+still what carries the variety.
 
 **"Best known" is the only filter, the place is not one.** The room has to
 guess the *year*; a song nobody recognises turns the round into a coin flip.
@@ -121,7 +123,7 @@ card that the room has actually been hearing.
 
 ## How many songs a German year gets
 
-`assets/songs/german_songs.json`, still empty. The deck is what was big *only*
+`assets/songs/german_songs.json`. The deck is what was big *only*
 in German-speaking countries - what crossed over stands in the hit deck
 already, 99 Luftballons, Der Kommissar, Rock Me Amadeus, Da Da Da.
 
@@ -192,12 +194,12 @@ year-end charts entry by entry, and the charts do not care about the table.
 The floor that does matter is one entry per year, because an empty year is a
 dead round.
 
-**The resolver needs German words before it runs over this deck.** `notTheSong`
-in `tool/resolve_spotify_tracks.dart` is English only (`karaoke`, `tribute`,
-`made famous by`), and the Schlager corner of Spotify announces the same thing
-in German: `neuaufnahme`, `neu aufgenommen`, `im stil von`,
-`instrumentalversion` belong in that list, or a best-of playback walks through a
-clean artist+title match. The more dangerous pressing gets through anyway -
+**The resolver knows German words for this deck.** `notTheSong` in
+`tool/resolve_spotify_tracks.dart` carries `neuaufnahme`, `neu aufgenommen`,
+`im stil von` and `instrumentalversion` beside the English ones, because the
+Schlager corner of Spotify announces a best-of playback in German - without
+them it walks through a clean artist+title match. Keep adding to that list
+rather than hand-picking around it. The more dangerous pressing gets through anyway -
 Schlager singers re-record their own hits every ten years and that pressing
 often calls itself nothing at all. It is no reason to drop the entry, the song
 is right and only the recording is young, but it makes the "Check the year by
@@ -377,7 +379,40 @@ there is at that point, and being wrong there costs a countdown rather than a
 round - the fallback still plays the song by link either way. Anything after
 the launch reads `playingInApp`.
 
+**A launch that succeeded can still fail afterwards.** Spotify answers the
+play request with 204 and only then reports `playback_error` - a DRM stack
+that refuses, a mobile browser that would not unlock audio. The session keeps
+that as `playbackError`, the game screen hands it to
+`GameController.playbackFailedInApp`, and the round turns into a link round
+with its "Open in Spotify" button. `reopen` goes through the link launcher
+only: trying the player again would fail the same way.
+
+**The seek bar is an in-app extra, nothing more.** `SongProgressBar` shows only
+where `playingInApp` is true, because a song handed over by link is out of
+reach. Do not build round flow on it - the link round has to stay complete
+without it.
+
+**A round can end while its launch is still out.** Reset, a new game, a swap -
+`startPlayback` checks after the `await` that the round it launched is still
+the one on screen, and stops a song that started in the tab too late. Anything
+new that awaits a launch needs the same check.
+
 `README.md` has the setup under "Playing in the tab".
+
+## The page's script sources are a list
+
+`web/index.html` carries a Content-Security-Policy that names every host a
+script may come from: this site, `www.gstatic.com` (CanvasKit) and
+`sdk.scdn.co` (the Spotify player). The page keeps the Spotify refresh token in
+`localStorage`, so an injected script is the one thing that must not run. A new
+script host that is not added there is blocked silently in production - the
+browser console names it.
+
+That is also why the QR reader is served from `web/zxing/` instead of the CDN
+`mobile_scanner` would use: `reader.js` and `zxing_reader.wasm` are zxing-wasm
+at the version `mobile_scanner` pins, and `mobile_scanner` is pinned exactly in
+`pubspec.yaml` so the two cannot drift apart. Upgrading it means copying the
+matching zxing-wasm files - `README.md`, "Camera".
 
 ## YouTube Music: a link, never a player
 

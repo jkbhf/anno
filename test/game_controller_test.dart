@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -28,6 +29,39 @@ class FakeLauncher implements SongLauncher {
 }
 
 const card2005 = 'https://play-the-music.com/de/year/182ca01194a98f0b';
+
+/// Answers only when the test says so - a launch still on its way.
+class PendingLauncher implements SongLauncher {
+  final Completer<LaunchResult> _answer = Completer();
+
+  void answer(LaunchResult result) => _answer.complete(result);
+
+  @override
+  Future<LaunchResult> open(Song song) => _answer.future;
+}
+
+class ThrowingLauncher implements SongLauncher {
+  @override
+  Future<LaunchResult> open(Song song) async => throw StateError('broken');
+}
+
+GameController buildGameWith(SongLauncher launcher) => GameController(
+  players: [GamePlayer(name: 'Anna')],
+  categories: [buildCategory()],
+  years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+  launcher: launcher,
+);
+
+/// One whole round on [card2005]: the song goes out, the year comes up, on to
+/// the next. That is what counts a song as played - a closed countdown is not.
+Future<Song> playRound(GameController game) async {
+  game.scan(card2005);
+  final song = game.currentSong!;
+  await game.startPlayback();
+  game.reveal();
+  game.nextRound();
+  return song;
+}
 
 SongCategory buildCategory([List<Song>? songs]) => SongCategory(
   id: 'esc',
@@ -237,7 +271,7 @@ void main() {
     expect(game.winners.map((p) => p.name), ['Anna', 'Ben']);
   });
 
-  test('a year with several songs does not repeat right away', () {
+  test('a year with several songs does not repeat right away', () async {
     final game = buildGame(
       category: buildCategory(const [
         Song(title: 'A', artist: 'X', year: 2005, spotifyTrackId: 'a'),
@@ -245,11 +279,8 @@ void main() {
       ]),
     );
 
-    game.scan(card2005);
-    final first = game.currentSong!;
-    game.cancelRound();
-    game.scan(card2005);
-    final second = game.currentSong!;
+    final first = await playRound(game);
+    final second = await playRound(game);
 
     expect(second.key, isNot(first.key));
   });
@@ -393,19 +424,24 @@ void main() {
       expect(game.currentCategory, isNull);
     });
 
-    test('the fresh song of the other deck beats a repeat of the first', () {
-      final game = withDecks([
-        categoryWith('esc', 'A'),
-        categoryWith('rock', 'B'),
-      ]);
+    test(
+      'the fresh song of the other deck beats a repeat of the first',
+      () async {
+        final game = withDecks([
+          categoryWith('esc', 'A'),
+          categoryWith('rock', 'B'),
+        ]);
 
-      game.scan(card2005);
-      final first = game.currentCategory!.id;
-      game.cancelRound();
+        game.scan(card2005);
+        final first = game.currentCategory!.id;
+        await game.startPlayback();
+        game.reveal();
+        game.nextRound();
 
-      game.scan(card2005);
-      expect(game.currentCategory!.id, isNot(first));
-    });
+        game.scan(card2005);
+        expect(game.currentCategory!.id, isNot(first));
+      },
+    );
   });
 
   group('contest entries', () {
@@ -507,15 +543,347 @@ void main() {
       expect(core / rounds, closeTo(0.75, 0.06));
     });
 
-    test('the tail still comes before anything repeats', () {
+    test('the tail still comes before anything repeats', () async {
       final game = gameWith([tiered('core'), tiered('tail', tier: 2)]);
 
-      game.scan(card2005);
-      final first = game.currentSong!.title;
-      game.cancelRound();
+      final first = await playRound(game);
+      final second = await playRound(game);
+
+      expect(second.title, isNot(first.title));
+    });
+
+    test('the songs of the last evenings come up less often', () {
+      final category = SongCategory(
+        id: 'esc',
+        name: 'ESC',
+        description: '',
+        songs: [tiered('core'), tiered('tail', tier: 2)],
+      );
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [category],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        random: Random(7),
+        recentlyPlayed: {
+          GameController.playedKey(category, category.songs.first),
+        },
+      );
+
+      const rounds = 700;
+      var core = 0;
+      for (var round = 0; round < rounds; round++) {
+        game.scan(card2005);
+        if (game.currentSong!.title == 'core') core++;
+        game.cancelRound();
+      }
+
+      // A recent core song weighs 3, a tail song nobody heard lately 1 x 4:
+      // the tail now comes up more often than the core.
+      expect(core / rounds, closeTo(3 / 7, 0.06));
+    });
+  });
+
+  group('played songs', () {
+    final songs = [
+      for (final title in ['A', 'B', 'C'])
+        Song(title: title, artist: 'X', year: 2005, spotifyTrackId: title),
+    ];
+
+    test('a closed countdown does not use the song up', () {
+      final game = buildGame(category: buildCategory(songs));
 
       game.scan(card2005);
-      expect(game.currentSong!.title, isNot(first));
+      game.cancelRound();
+
+      expect(game.played, isEmpty);
+    });
+
+    test('a used up year starts over instead of repeating at random', () async {
+      final game = buildGame(category: buildCategory(songs));
+
+      final firstPass = [for (var i = 0; i < 3; i++) await playRound(game)];
+      final secondPass = [for (var i = 0; i < 3; i++) await playRound(game)];
+
+      expect(firstPass.map((s) => s.title).toSet(), {'A', 'B', 'C'});
+      expect(secondPass.map((s) => s.title).toSet(), {'A', 'B', 'C'});
+      expect(
+        secondPass.first.title,
+        isNot(firstPass.last.title),
+        reason: 'the year does not open with the song it just ended on',
+      );
+    });
+
+    test('the saved game carries what was played, a resume skips it', () async {
+      final game = buildGame(category: buildCategory(songs));
+      final first = await playRound(game);
+      final second = await playRound(game);
+
+      final saved = game.snapshot;
+      expect(saved.played, hasLength(2));
+
+      final resumed = GameController(
+        players: saved.players,
+        categories: game.categories,
+        years: game.years,
+        launcher: FakeLauncher(),
+        played: saved.played,
+      );
+      final third = await playRound(resumed);
+
+      expect(third.title, isNot(anyOf(first.title, second.title)));
+    });
+
+    test('only a song that went out is remembered for later', () async {
+      final remembered = <String>[];
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory(songs)],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        onPlayed: remembered.add,
+      );
+
+      game.scan(card2005);
+      game.cancelRound();
+      expect(remembered, isEmpty);
+
+      game.scan(card2005);
+      await game.startPlayback();
+      expect(remembered, ['esc|${game.currentSong!.key}']);
+    });
+  });
+
+  group('drawing again', () {
+    final songs = [
+      for (final title in ['A', 'B'])
+        Song(title: title, artist: 'X', year: 2005, spotifyTrackId: title),
+    ];
+
+    test('swaps the song for another one of the year', () async {
+      final launcher = FakeLauncher();
+      final game = buildGame(
+        category: buildCategory(songs),
+        launcher: launcher,
+      );
+      game.scan(card2005);
+      await game.startPlayback();
+      final unknown = game.currentSong!;
+
+      expect(game.canRedraw, isTrue);
+      expect(game.redraw(), isTrue);
+      expect(game.phase, RoundPhase.countdown);
+      expect(game.currentSong!.title, isNot(unknown.title));
+
+      await game.startPlayback();
+      expect(launcher.played.map((s) => s.title), [
+        unknown.title,
+        game.currentSong!.title,
+      ]);
+    });
+
+    test('never the same song again, even in a used up year', () async {
+      final game = buildGame(category: buildCategory(songs));
+      await playRound(game);
+      await playRound(game);
+
+      for (var i = 0; i < 10; i++) {
+        game.scan(card2005);
+        await game.startPlayback();
+        final unknown = game.currentSong!.title;
+        expect(game.redraw(), isTrue);
+        expect(game.currentSong!.title, isNot(unknown));
+        game.cancelRound();
+      }
+    });
+
+    test('a year with one song has nothing to swap in', () async {
+      final game = buildGame();
+      game.scan(card2005);
+      await game.startPlayback();
+
+      expect(game.canRedraw, isFalse);
+      expect(game.redraw(), isFalse);
+      expect(game.phase, RoundPhase.playing);
+    });
+
+    test('only while the song is playing', () {
+      final game = buildGame(category: buildCategory(songs));
+      game.scan(card2005);
+
+      expect(game.redraw(), isFalse);
+      expect(game.phase, RoundPhase.countdown);
+    });
+  });
+
+  group('taking the last round back', () {
+    test('goes back to the reveal of the round that ended the game', () async {
+      var discarded = 0;
+      final saves = <int>[];
+      final game = GameController(
+        players: [
+          GamePlayer(name: 'Anna'),
+          GamePlayer(name: 'Ben'),
+        ],
+        categories: [buildCategory()],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        targetScore: 1,
+        launcher: FakeLauncher(),
+        persist: (game) async => saves.add(game.players.first.score),
+        discard: () async => discarded++,
+      );
+      game.scan(card2005);
+      await game.startPlayback();
+      game.reveal();
+      // The double tap that should have gone to Ben.
+      game.addPoint(game.players.first);
+      game.nextRound();
+
+      expect(game.phase, RoundPhase.finished);
+      expect(discarded, 1, reason: 'a finished game is nothing to resume');
+      expect(game.canUndoFinish, isTrue);
+
+      game.undoFinish();
+
+      expect(game.phase, RoundPhase.revealed);
+      expect(game.currentSong?.title, 'My Number One');
+      expect(game.currentYear, 2005);
+      expect(saves.last, 1, reason: 'saved again, so it can be resumed');
+      expect(game.canUndoFinish, isFalse);
+
+      game.removePoint(game.players.first);
+      game.addPoint(game.players.last);
+      game.nextRound();
+      expect(game.winners.single.name, 'Ben');
+    });
+
+    test('a rematch has nothing to take back', () async {
+      final game = buildGame(targetScore: 1);
+      game.scan(card2005);
+      await game.startPlayback();
+      game.reveal();
+      game.addPoint(game.players.first);
+      game.nextRound();
+
+      game.resetScores();
+
+      expect(game.canUndoFinish, isFalse);
+      game.undoFinish();
+      expect(game.phase, RoundPhase.idle);
+    });
+  });
+
+  group('launches that answer late', () {
+    test('a round reset during the launch stays reset, and quiet', () async {
+      final launcher = PendingLauncher();
+      var stops = 0;
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory()],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: launcher,
+        stopMusic: () async => stops++,
+      );
+      game.scan(card2005);
+      final launch = game.startPlayback();
+
+      game.resetScores();
+      launcher.answer(const LaunchResult(opened: false));
+      await launch;
+
+      expect(game.phase, RoundPhase.idle, reason: 'no reveal of year 0');
+      expect(stops, 0, reason: 'nothing played here');
+    });
+
+    test('a song that started in the tab after all is stopped', () async {
+      final launcher = PendingLauncher();
+      var stops = 0;
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory()],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: launcher,
+        stopMusic: () async => stops++,
+      );
+      game.scan(card2005);
+      final launch = game.startPlayback();
+
+      game.cancelRound();
+      launcher.answer(const LaunchResult.inTab());
+      await launch;
+
+      expect(stops, 1);
+      expect(game.playingInApp, isFalse);
+    });
+
+    test('a disposed game takes a late answer without complaint', () async {
+      final launcher = PendingLauncher();
+      final game = buildGameWith(launcher);
+      game.scan(card2005);
+      final launch = game.startPlayback();
+
+      game.dispose();
+      launcher.answer(const LaunchResult.ok());
+      await launch;
+    });
+
+    test('coming back while the launch is out reveals nothing', () async {
+      final launcher = PendingLauncher();
+      final game = buildGameWith(launcher);
+      game.scan(card2005);
+      final launch = game.startPlayback();
+
+      game.onAppResumed(now: DateTime.now().add(const Duration(seconds: 20)));
+      expect(game.phase, RoundPhase.playing);
+
+      launcher.answer(const LaunchResult.inTab());
+      await launch;
+      expect(game.playingInApp, isTrue);
+    });
+
+    test('a launcher that throws ends in the reveal, not stuck', () async {
+      final game = buildGameWith(ThrowingLauncher());
+      game.scan(card2005);
+
+      await game.startPlayback();
+
+      expect(game.phase, RoundPhase.revealed);
+      expect(game.launchMessage, isNotNull);
+    });
+  });
+
+  group('a song the tab took and then could not play', () {
+    test('turns the round into a link round', () async {
+      final game = buildGame(launcher: FakeLauncher(inApp: true));
+      game.scan(card2005);
+      await game.startPlayback();
+
+      game.playbackFailedInApp();
+
+      expect(game.playingInApp, isFalse);
+      expect(game.launchMessage, isNotNull);
+      expect(game.phase, RoundPhase.playing);
+    });
+
+    test('opens it again by link, not through the player', () async {
+      final inApp = FakeLauncher(inApp: true);
+      final link = FakeLauncher();
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory()],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: inApp,
+        linkLauncher: link,
+      );
+      game.scan(card2005);
+      await game.startPlayback();
+      game.playbackFailedInApp();
+
+      await game.reopen();
+
+      expect(inApp.played, hasLength(1));
+      expect(link.played, hasLength(1));
+      expect(game.playingInApp, isFalse);
     });
   });
 }

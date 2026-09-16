@@ -39,8 +39,14 @@ The browser is the main target, and three things work differently there.
 **Camera.** `getUserMedia` only runs on `https://` or on `localhost`. On plain
 HTTP the scanner stays black - the code can still be typed in by hand. The
 barcode reader itself uses the browser's own `BarcodeDetector` where it exists
-(Chrome, Edge, Android) and otherwise pulls zxing from `unpkg.com` at runtime,
-so the first scan on Firefox or Safari needs a network connection.
+(Chrome, Edge, Android) and otherwise zxing-wasm, which the page serves itself
+from `web/zxing/` - `mobile_scanner` would fetch it from jsDelivr, and the
+Content-Security-Policy in `web/index.html` does not let it. The files there are
+`dist/iife/reader/index.js` (as `reader.js`) and
+`dist/reader/zxing_reader.wasm` of the zxing-wasm version `mobile_scanner`
+pins in `lib/src/web/web_library_versions.dart`: 3.1.1 for `mobile_scanner`
+7.4.0. `mobile_scanner` is pinned exactly for that reason; upgrading it means
+replacing both files with the matching version.
 
 **Opening Spotify.** Custom schemes are out: `url_launcher` only knows http(s)
 in the browser, so the web build always uses `https://open.spotify.com/track/…`
@@ -149,7 +155,16 @@ lives in the environment; a PKCE login in a browser must never carry one.
    artist are not. The button swaps the song card in and opens up scoring - a
    tap on a tile gives a point, a long press takes one away. "Next round" leads
    back to the scanner. Once someone reaches the score target, the game ends
-   after the current round.
+   after the current round - and "Back to the last round" on the finish screen
+   returns to that reveal, for the point that went to the wrong tile.
+
+   A song nobody in the room knows can be swapped while it plays: "Nobody knows
+   it? Draw another" picks another song of the same year. Played in the tab, a
+   bar under the reveal panel moves around in the song - drag it, start over,
+   ten seconds either way, or straight to the middle.
+
+   The screen stays on during a game (Screen Wake Lock, where the browser has
+   it), and the back button asks before it leaves a running game.
 
 Between the scan and the song there is a three second countdown, and only on
 the way that hands the song over to Spotify. That way the music starts in
@@ -164,15 +179,22 @@ wrong costs a countdown, not a round.
 On Android, coming back from Spotify still reveals the year by itself; the
 button is what does it everywhere else.
 
-The running game is saved after every score change. If Android kills the app
-while Spotify is in the foreground, it can be resumed from the setup screen.
-That save is cleared when a game ends; the roster in `RosterStore` is not,
-which is the whole point of keeping the two apart.
+The running game is saved after every score change, together with the songs it
+has played. If Android kills the app while Spotify is in the foreground, or the
+game is left by the back button, it can be resumed from the setup screen and
+does not start its years over. That save is cleared when a game ends; the
+roster in `RosterStore` is not, which is the whole point of keeping the two
+apart.
+
+Across games, `RecentSongsStore` keeps the last 300 songs this device played.
+They are drawn a quarter as often as the others, so the next evening does not
+open with last week's songs - less often, not never, so a thin year can still
+play its few.
 
 No screen of a running game scrolls. The phone is passed around and tapped by
 whoever is holding it, so a tile that has to be scrolled into view is a tile in
-the wrong place - with eight players the whole body is scaled down together
-instead.
+the wrong place - from five players the tiles go into three columns, and what
+still does not fit is scaled down together instead.
 
 ## The two data sources
 

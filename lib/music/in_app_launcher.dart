@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../models/song.dart';
 import 'song_launcher.dart';
 import 'spotify_launcher.dart';
@@ -20,9 +22,20 @@ class InAppSpotifyLauncher implements SongLauncher {
 
   @override
   Future<LaunchResult> open(Song song) async {
-    if (session.isReady && await session.play(song)) {
+    if (session.isReady && await _plays(song)) {
       return const LaunchResult.inTab();
     }
     return fallback.open(song);
+  }
+
+  /// A player that throws has not played - and that must still end at the
+  /// link, not skip past it.
+  Future<bool> _plays(Song song) async {
+    try {
+      return await session.play(song);
+    } on Object catch (error) {
+      debugPrint('In-app play failed: $error');
+      return false;
+    }
   }
 }

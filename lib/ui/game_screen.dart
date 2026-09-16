@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../data/game_store.dart';
+import '../data/recent_songs_store.dart';
 import '../game/game_controller.dart';
 import '../models/player.dart';
 import '../models/song.dart';
@@ -13,11 +14,14 @@ import '../music/music_service.dart';
 import '../music/spotify_session.dart';
 import '../music/youtube_music_launcher.dart';
 import 'app_scope.dart';
+import 'category_screen.dart';
 import 'centered_body.dart';
 import 'countdown_screen.dart';
 import 'haptics/haptics.dart';
 import 'scanner_screen.dart';
+import 'song_progress_bar.dart';
 import 'theme.dart';
+import 'wake_lock/wake_lock.dart';
 import 'year_database_screen.dart';
 
 /// Starts a game and cleans the controller up afterwards.
@@ -26,18 +30,33 @@ Future<void> openGame(
   required List<SongCategory> categories,
   required List<GamePlayer> players,
   required int targetScore,
+  List<String> played = const [],
 }) async {
   final scope = AppScope.of(context);
   final service = scope.service.value;
+  final spotify = scope.spotify;
+  // Read per game, not once at startup: the game before this one tonight is
+  // part of what the next one should not play again.
+  final recent = await RecentSongsStore.load();
+  final inApp = InAppSpotifyLauncher(spotify);
   final controller = GameController(
     players: players,
     categories: categories,
     years: scope.years,
     targetScore: targetScore,
     persist: GameStore.save,
+    discard: GameStore.clear,
+    stopMusic: spotify.stop,
+    onPlayed: (key) => unawaited(RecentSongsStore.add(key)),
+    played: played,
+    recentlyPlayed: recent.toSet(),
     service: service,
     launcher: switch (service) {
-      MusicService.spotify => InAppSpotifyLauncher(scope.spotify),
+      MusicService.spotify => inApp,
+      MusicService.youtubeMusic => const YouTubeMusicLauncher(),
+    },
+    linkLauncher: switch (service) {
+      MusicService.spotify => inApp.fallback,
       MusicService.youtubeMusic => const YouTubeMusicLauncher(),
     },
   );
@@ -86,20 +105,33 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _lastPhase = _game.phase;
     _game.addListener(_onPhaseChanged);
+    unawaited(WakeLock.hold());
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _spotify = AppScope.of(context).spotify;
+    final spotify = AppScope.of(context).spotify;
+    if (!identical(spotify, _spotify)) {
+      _spotify?.removeListener(_onSessionChanged);
+      _spotify = spotify..addListener(_onSessionChanged);
+    }
   }
 
   @override
   void dispose() {
+    unawaited(WakeLock.release());
+    _spotify?.removeListener(_onSessionChanged);
     unawaited(_spotify?.stop());
     _game.removeListener(_onPhaseChanged);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  /// Spotify took the song and then could not play it. The round has to hear
+  /// about that, or it sits there in silence without its link button.
+  void _onSessionChanged() {
+    if (_spotify?.playbackError != null) _game.playbackFailedInApp();
   }
 
   /// The reveal can arrive without anybody touching the screen - the app is
@@ -121,7 +153,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _game.onAppResumed();
+    if (state == AppLifecycleState.resumed) {
+      // The browser drops the lock whenever the tab was hidden - every trip
+      // to Spotify and back.
+      unawaited(WakeLock.hold());
+      _game.onAppResumed();
+    }
   }
 
   /// Pushes the camera and returns the scanned code, or null when it was
@@ -190,6 +227,30 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           return;
         }
         await _game.startPlayback();
+    }
+  }
+
+  /// Swaps the song nobody knows for another one of the year, and hands that
+  /// one over the way a scan would.
+  Future<void> _redraw() async {
+    if (_busy) return;
+    if (!_game.redraw()) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No other song for this year.')),
+      );
+      return;
+    }
+    Haptics.tick();
+    _busy = true;
+    try {
+      if (!await _runCountdown()) {
+        _game.cancelRound();
+        return;
+      }
+      await _game.startPlayback();
+    } finally {
+      _busy = false;
     }
   }
 
@@ -271,8 +332,31 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           MaterialPageRoute<void>(builder: (_) => const YearDatabaseScreen()),
         );
       case 'category':
-        if (!context.mounted) return;
-        Navigator.of(context).pop();
+        final ok = await _confirm(
+          'Change categories?',
+          'The scores stay, and the game goes on with the new choice.',
+        );
+        if (!ok || !mounted) return;
+        // Straight to the choice, from wherever the game was opened: a resumed
+        // game has no category screen underneath it to go back to.
+        final navigator = Navigator.of(context);
+        final players = _game.players;
+        final target = _game.targetScore;
+        final played = _game.played.toList();
+        final selected = {for (final c in _game.categories) c.id};
+        navigator.popUntil((route) => route.isFirst);
+        unawaited(
+          navigator.push(
+            MaterialPageRoute<void>(
+              builder: (_) => CategoryScreen(
+                players: players,
+                targetScore: target,
+                played: played,
+                initialSelection: selected,
+              ),
+            ),
+          ),
+        );
       case 'new':
         final ok = await _confirm(
           'New game?',
@@ -306,8 +390,31 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     return result ?? false;
   }
 
+  /// The back button, the browser's included. A running game is saved, so
+  /// leaving it loses nothing - but a stray swipe should not end the evening
+  /// without anyone noticing.
+  Future<void> _onBack(bool didPop) async {
+    if (didPop) return;
+    if (_game.phase != RoundPhase.finished) {
+      final ok = await _confirm(
+        'Leave the game?',
+        'It stays saved and can be resumed from the start screen.',
+      );
+      if (!ok || !mounted) return;
+    }
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return PopScope<void>(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) => _onBack(didPop),
+      child: _scaffold(context),
+    );
+  }
+
+  Widget _scaffold(BuildContext context) {
     return ListenableBuilder(
       listenable: _game,
       builder: (context, _) {
@@ -349,12 +456,17 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         // anything here would only flicker behind the one or the other.
         return const SizedBox.shrink();
       case RoundPhase.playing:
-        return _PlayingBody(game: _game, spotify: AppScope.of(context).spotify);
+        return _PlayingBody(
+          game: _game,
+          spotify: AppScope.of(context).spotify,
+          onRedraw: _redraw,
+        );
       case RoundPhase.revealed:
         return _RevealBody(game: _game, onNextRound: _nextRound);
       case RoundPhase.finished:
         return _FinishedBody(
           game: _game,
+          onUndo: _game.undoFinish,
           onRematch: _game.resetScores,
           onHome: () async {
             await GameStore.clear();
@@ -503,10 +615,15 @@ class _IdleBody extends StatelessWidget {
 }
 
 class _PlayingBody extends StatelessWidget {
-  const _PlayingBody({required this.game, required this.spotify});
+  const _PlayingBody({
+    required this.game,
+    required this.spotify,
+    required this.onRedraw,
+  });
 
   final GameController game;
   final SpotifySession spotify;
+  final VoidCallback onRedraw;
 
   @override
   Widget build(BuildContext context) {
@@ -543,13 +660,7 @@ class _PlayingBody extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           if (inApp)
-            Center(
-              child: TextButton.icon(
-                onPressed: spotify.togglePause,
-                icon: Icon(spotify.isPlaying ? Icons.pause : Icons.play_arrow),
-                label: Text(spotify.isPlaying ? 'Pause' : 'Play on'),
-              ),
-            )
+            SongProgressBar(session: spotify)
           // On the web a blocked popup looks exactly like a successful one, so
           // the way to the service stays reachable by hand.
           else if (kIsWeb)
@@ -570,7 +681,21 @@ class _PlayingBody extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 36),
+          // For the song nobody in the room knows - that round is a coin flip.
+          if (game.canRedraw) ...[
+            const SizedBox(height: 4),
+            Center(
+              child: TextButton.icon(
+                onPressed: onRedraw,
+                icon: const Icon(Icons.shuffle),
+                label: const Text('Nobody knows it? Draw another'),
+                style: TextButton.styleFrom(
+                  foregroundColor: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+          const SizedBox(height: 32),
           _SectionHeading(title: 'Scores', targetScore: game.targetScore),
           const SizedBox(height: 16),
           // The same tiles as the reveal, but inert: points are handed out
@@ -838,14 +963,18 @@ class _PlayerGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final tap = onTap;
     final longPress = onLongPress;
+    // Two columns hold four players comfortably. Beyond that a third column
+    // keeps the grid at three rows instead of four - otherwise the whole body
+    // gets scaled down until the names are too small to read across a table.
+    final wide = game.players.length > 4;
 
     return GridView.count(
-      crossAxisCount: 2,
+      crossAxisCount: wide ? 3 : 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 1.45,
+      mainAxisSpacing: wide ? 12 : 16,
+      crossAxisSpacing: wide ? 12 : 16,
+      childAspectRatio: wide ? 0.95 : 1.45,
       children: [
         for (final player in game.players)
           _PlayerTile(
@@ -960,11 +1089,13 @@ class _PlayerTileState extends State<_PlayerTile> {
 class _FinishedBody extends StatelessWidget {
   const _FinishedBody({
     required this.game,
+    required this.onUndo,
     required this.onRematch,
     required this.onHome,
   });
 
   final GameController game;
+  final VoidCallback onUndo;
   final VoidCallback onRematch;
   final Future<void> Function() onHome;
 
@@ -981,7 +1112,9 @@ class _FinishedBody extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          Text('🏆', style: theme.textTheme.displayLarge),
+          // An icon, not the emoji: that one needs a font Flutter web fetches
+          // at runtime, and on a slow line it shows up as an empty box.
+          Icon(Icons.emoji_events, size: 72, color: theme.colorScheme.primary),
           const SizedBox(height: 12),
           Text(
             title,
@@ -1004,6 +1137,16 @@ class _FinishedBody extends StatelessWidget {
               ],
             ),
           ),
+          // The last point was a slip of the finger more than once: the way
+          // back to the reveal, where it can be taken away again.
+          if (game.canUndoFinish) ...[
+            TextButton.icon(
+              onPressed: onUndo,
+              icon: const Icon(Icons.undo),
+              label: const Text('Back to the last round'),
+            ),
+            const SizedBox(height: 8),
+          ],
           FilledButton(
             onPressed: onRematch,
             child: const Text('Play again, same players'),

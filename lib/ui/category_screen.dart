@@ -14,18 +14,27 @@ class CategoryScreen extends StatefulWidget {
   const CategoryScreen({
     required this.players,
     required this.targetScore,
+    this.played = const [],
+    this.initialSelection = const {},
     super.key,
   });
 
   final List<GamePlayer> players;
   final int targetScore;
 
+  /// What the game so far has played, when the categories are changed in the
+  /// middle of one - the new choice should not start those songs over.
+  final List<String> played;
+
+  /// The category ids ticked when the screen opens.
+  final Set<String> initialSelection;
+
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  final Set<String> _selected = <String>{};
+  late final Set<String> _selected = {...widget.initialSelection};
 
   void _toggle(SongCategory category) {
     setState(() {
@@ -47,6 +56,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       categories: chosen,
       players: widget.players,
       targetScore: widget.targetScore,
+      played: widget.played,
     );
   }
 

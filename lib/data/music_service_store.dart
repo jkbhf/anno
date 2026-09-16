@@ -15,7 +15,7 @@ class MusicServiceStore {
     try {
       final prefs = await SharedPreferences.getInstance();
       return MusicService.fromName(prefs.getString(_key));
-    } on Exception catch (error) {
+    } on Object catch (error) {
       debugPrint('Music service not readable: $error');
       return MusicService.spotify;
     }
@@ -25,7 +25,7 @@ class MusicServiceStore {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, service.name);
-    } on Exception catch (error) {
+    } on Object catch (error) {
       debugPrint('Could not save the music service: $error');
     }
   }

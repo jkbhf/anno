@@ -23,7 +23,7 @@ class RosterStore {
         for (final entry in jsonDecode(raw) as List)
           if (entry is String && entry.trim().isNotEmpty) entry.trim(),
       ];
-    } on Exception catch (error) {
+    } on Object catch (error) {
       debugPrint('Roster not readable: $error');
       return const [];
     }
@@ -34,7 +34,7 @@ class RosterStore {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_key, jsonEncode(names));
-    } on Exception catch (error) {
+    } on Object catch (error) {
       debugPrint('Could not save the roster: $error');
     }
   }

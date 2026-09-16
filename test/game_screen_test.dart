@@ -79,6 +79,42 @@ class FakeSession extends NoSpotifySession {
   Future<bool> play(Song song) async => state == SpotifyConnection.ready;
 }
 
+/// Two songs for 2005, so there is something to swap in.
+final twoSongs = SongCategory(
+  id: 'esc',
+  name: 'ESC',
+  description: '',
+  songs: const [
+    Song(title: 'A', artist: 'X', year: 2005, spotifyTrackId: 'a'),
+    Song(title: 'B', artist: 'Y', year: 2005, spotifyTrackId: 'b'),
+  ],
+);
+
+/// A ready session in the middle of a 3:20 song, that records where it is sent.
+class SeekableSession extends FakeSession {
+  SeekableSession() : super(SpotifyConnection.ready, playing: false);
+
+  final List<Duration> seeks = [];
+  String? _playbackError;
+
+  @override
+  Duration get duration => const Duration(seconds: 200);
+
+  @override
+  Duration get position => const Duration(seconds: 42);
+
+  @override
+  String? get playbackError => _playbackError;
+
+  void failPlayback(String message) {
+    _playbackError = message;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> seek(Duration position) async => seeks.add(position);
+}
+
 Widget wrap(GameController game, {SpotifySession? spotify}) => AppScope(
   years: game.years,
   categories: game.categories,
@@ -134,7 +170,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('The song is playing'), findsOneWidget);
-    expect(find.text('Pause'), findsOneWidget);
+    expect(find.byTooltip('Pause'), findsOneWidget);
     // Nobody left the app, so there is nothing to come back from.
     expect(find.textContaining('Coming back'), findsNothing);
 
@@ -348,6 +384,192 @@ void main() {
     expect(find.text('German Songs'), findsOneWidget);
     expect(find.textContaining('·'), findsNothing);
     expect(find.text('A'), findsOneWidget);
+  });
+
+  testWidgets('the song nobody knows is swapped for another one', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = buildGame(
+      launcher: const InTabLauncher(),
+      categories: [twoSongs],
+    );
+    game.scan(card);
+    await game.startPlayback();
+    final unknown = game.currentSong!.title;
+
+    await tester.pumpWidget(
+      wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Nobody knows it? Draw another'));
+    await tester.pumpAndSettle();
+
+    // In the tab there is no countdown, the new song is simply there.
+    expect(game.phase, RoundPhase.playing);
+    expect(game.currentSong!.title, isNot(unknown));
+    expect(find.text('2005'), findsNothing, reason: 'still a secret');
+  });
+
+  testWidgets('a year with one song offers no swap', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nobody knows it? Draw another'), findsNothing);
+  });
+
+  testWidgets('the in-app round has a bar to move around in the song', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final session = SeekableSession();
+    final game = buildGame(launcher: const InTabLauncher());
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game, spotify: session));
+    await tester.pump();
+
+    expect(find.byType(Slider), findsOneWidget);
+    expect(find.text('3:20'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('To the middle'));
+    await tester.pump();
+    expect(session.seeks.last, const Duration(seconds: 100));
+
+    await tester.tap(find.byTooltip('From the start'));
+    await tester.pump();
+    expect(session.seeks.last, Duration.zero);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a link round has no seek bar - the song is out of reach', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
+    await tester.pump();
+
+    expect(find.byType(Slider), findsNothing);
+  });
+
+  testWidgets('a song the tab could not play turns into a link round', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final session = SeekableSession();
+    final game = buildGame(launcher: const InTabLauncher());
+    game.scan(card);
+    await game.startPlayback();
+    await tester.pumpWidget(wrap(game, spotify: session));
+    await tester.pump();
+
+    session.failPlayback('Playback failed');
+    await tester.pump();
+
+    expect(game.playingInApp, isFalse);
+    expect(find.byType(Slider), findsNothing);
+    expect(find.textContaining('could not play'), findsOneWidget);
+  });
+
+  testWidgets('the point that ended the game can be taken back', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = GameController(
+      players: [
+        GamePlayer(name: 'Player 1'),
+        GamePlayer(name: 'Player 2'),
+      ],
+      categories: [escCategory],
+      years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+      launcher: const SilentLauncher(),
+      targetScore: 1,
+    );
+    await reveal(game);
+    game.addPoint(game.players.first);
+    game.nextRound();
+
+    await tester.pumpWidget(wrap(game));
+    await tester.pumpAndSettle();
+    expect(find.text('Player 1 wins'), findsOneWidget);
+
+    await tester.tap(find.text('Back to the last round'));
+    await tester.pumpAndSettle();
+
+    expect(game.phase, RoundPhase.revealed);
+    expect(find.text('Who got it right?'), findsOneWidget);
+  });
+
+  testWidgets('leaving a running game asks first', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+
+    await tester.pumpWidget(
+      AppScope(
+        years: game.years,
+        categories: game.categories,
+        spotify: NoSpotifySession(),
+        service: ValueNotifier(game.service),
+        child: MaterialApp(
+          theme: buildTheme(),
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => GameScreen(controller: game),
+                ),
+              ),
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.text('Leave the game?'), findsOneWidget);
+
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.text('Scan a card'), findsOneWidget, reason: 'still in it');
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Yes'));
+    await tester.pumpAndSettle();
+    expect(find.text('open'), findsOneWidget);
+  });
+
+  testWidgets('eight players get a third column and stay readable', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = buildGame(players: 8);
+    await reveal(game);
+
+    await tester.pumpWidget(wrap(game));
+    await tester.pumpAndSettle();
+
+    final first = tester.getTopLeft(find.text('Player 1'));
+    final third = tester.getTopLeft(find.text('Player 3'));
+    expect(third.dy, closeTo(first.dy, 1), reason: 'three tiles in a row');
+    // Rendered size, scale included: a name has to be read across a table.
+    expect(tester.getSize(find.text('Player 1')).height, greaterThan(12));
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('with several decks the app bar counts them', (tester) async {

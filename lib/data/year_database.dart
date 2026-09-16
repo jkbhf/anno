@@ -47,7 +47,7 @@ class YearDatabase extends ChangeNotifier {
     Map<String, int> defaults = {};
     try {
       defaults = _parse(await source.loadString(defaultAsset)).entries;
-    } on Exception catch (error) {
+    } on Object catch (error) {
       debugPrint('qr_years.json not readable: $error');
     }
 
@@ -57,7 +57,7 @@ class YearDatabase extends ChangeNotifier {
       prefs = await SharedPreferences.getInstance();
       final stored = prefs.getString(_prefsKey);
       if (stored != null) local = _parse(stored).entries;
-    } on Exception catch (error) {
+    } on Object catch (error) {
       debugPrint('Local year database not readable: $error');
     }
 
@@ -135,8 +135,14 @@ class YearDatabase extends ChangeNotifier {
     });
   }
 
-  /// Reads JSON from the clipboard and stores everything as own entries.
-  /// Accepts the export format and a flat `{"code": year}` map.
+  /// Reads JSON from the clipboard and stores what differs from the bundled
+  /// file as own entries. Accepts the export format and a flat
+  /// `{"code": year}` map.
+  ///
+  /// The export carries the bundled entries too, so an import on a second
+  /// device brings them along. Stored as own entries they would be copies:
+  /// "delete own entries" would no longer lead back to the bundled file, and a
+  /// later correction in `qr_years.json` would stay hidden behind them.
   Future<ImportResult> importJson(String text) async {
     final parsed = _parse(text);
     var added = 0;
@@ -148,7 +154,11 @@ class YearDatabase extends ChangeNotifier {
       } else if (existing != entry.value) {
         updated++;
       }
-      _local[entry.key] = entry.value;
+      if (_defaults[entry.key] == entry.value) {
+        _local.remove(entry.key);
+      } else {
+        _local[entry.key] = entry.value;
+      }
     }
     notifyListeners();
     await _persist();

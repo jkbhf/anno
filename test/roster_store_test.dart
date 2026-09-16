@@ -37,4 +37,10 @@ void main() {
     SharedPreferences.setMockInitialValues({'roster.names': 'not json'});
     expect(await RosterStore.load(), isEmpty);
   });
+
+  test('JSON of the wrong shape does not either', () async {
+    // A failed cast is a TypeError, which an `on Exception` lets through.
+    SharedPreferences.setMockInitialValues({'roster.names': '{"a":1}'});
+    expect(await RosterStore.load(), isEmpty);
+  });
 }

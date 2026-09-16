@@ -96,6 +96,38 @@ void main() {
     expect(db.yearFor('ghi'), 1980);
   });
 
+  test(
+    'an export brought to a second device leaves the bundle alone',
+    () async {
+      final source = YearDatabase.inMemory(
+        defaults: {'abc': 1999},
+        local: {'def': 2010},
+      );
+      final target = YearDatabase.inMemory(defaults: {'abc': 1999});
+
+      await target.importJson(source.exportJson());
+
+      expect(target.localCount, 1, reason: 'only the entry typed in by hand');
+      expect(target.isLocal('abc'), isFalse);
+      expect(target.yearFor('def'), 2010);
+    },
+  );
+
+  test(
+    'importing the bundled year over an own entry drops the own one',
+    () async {
+      final db = YearDatabase.inMemory(
+        defaults: {'abc': 1999},
+        local: {'abc': 2001},
+      );
+
+      await db.importJson('{"abc": 1999}');
+
+      expect(db.isLocal('abc'), isFalse);
+      expect(db.yearFor('abc'), 1999);
+    },
+  );
+
   test('broken JSON throws a FormatException', () {
     final db = YearDatabase.inMemory();
     expect(() => db.importJson('no json'), throwsFormatException);

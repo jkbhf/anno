@@ -39,6 +39,21 @@ abstract class SpotifySession extends ChangeNotifier {
   /// True while a song is running here.
   bool get isPlaying;
 
+  /// How far into the running song the player is. Zero before it has said.
+  Duration get position;
+
+  /// How long the running song is. Zero while it is not known, which is also
+  /// what tells the playing screen there is nothing to seek in yet.
+  Duration get duration;
+
+  /// Why the last song that went out did not play after all, or null.
+  ///
+  /// Spotify accepts a track first and only then finds it cannot play it - a
+  /// DRM stack that refuses, a market that does not carry it. `play` has long
+  /// returned true by then, so this is how the round learns that its music
+  /// never came. Cleared by the next `play`.
+  String? get playbackError;
+
   bool get isReady => connection == SpotifyConnection.ready;
 
   bool get isAvailable => connection != SpotifyConnection.unavailable;
@@ -69,6 +84,9 @@ abstract class SpotifySession extends ChangeNotifier {
   /// Pause and resume in one, for the button on the playing screen.
   Future<void> togglePause();
 
+  /// Jumps to [position] in the running song.
+  Future<void> seek(Duration position);
+
   /// Ends the round's music.
   Future<void> stop();
 }
@@ -83,6 +101,15 @@ class NoSpotifySession extends SpotifySession {
 
   @override
   bool get isPlaying => false;
+
+  @override
+  Duration get position => Duration.zero;
+
+  @override
+  Duration get duration => Duration.zero;
+
+  @override
+  String? get playbackError => null;
 
   @override
   Future<void> restore() async {}
@@ -101,6 +128,9 @@ class NoSpotifySession extends SpotifySession {
 
   @override
   Future<void> togglePause() async {}
+
+  @override
+  Future<void> seek(Duration position) async {}
 
   @override
   Future<void> stop() async {}
