@@ -270,6 +270,54 @@ on tier 1 being the majority.
 are the softest in the deck - a year is only really sorted into core and tail
 once it is over.
 
+## How many songs a White Girl Music year gets
+
+`assets/songs/white_girl_music.json`. Ten per year, 6 core and 4 tail, the same
+split as K-Pop and for the same reason: it is a companion deck and only serves
+part of the rounds.
+
+**The deck is the girls' night singalong, not a genre.** Taylor Swift, Olivia
+Rodrigo, Lorde, Lana Del Rey, Paramore, Adele, One Direction, Sabrina Carpenter,
+Noah Kahan - the songs the room screams along to in the car, whoever sings
+them. Harry Styles and Ed Sheeran count, a woman on the mic is not the test.
+The filter is the same "best known" as everywhere: a card is a song the room
+names before the chorus is over, and the sad-girl indie corner (Phoebe
+Bridgers, boygenius) only gets tail slots.
+
+**The deck starts in 2007 and the reason is the canon.** What the phrase means
+starts with Teardrops On My Guitar, Misery Business and Girlfriend; before that
+the deck turns into the hit deck under another name. Mr. Brightside is the
+famous hole - it belongs to 2004 and would need a year of ten around it. Hence
+`needsCompanion`, as with K-Pop: the rule has an end at the bottom.
+
+**The year is the year the song was everywhere**, like the hit deck, not the
+release of the pressing. Stick Season (July 2022) sits on 2023, back to friends
+(December 2024) and Messy (June 2024) on 2025, That's So True on 2025.
+
+**A song with two hit years is left out**, and here that bites more often than
+in the hit deck, because TikTok revives this exact corner: Cruel Summer, Sweater
+Weather, 505, Skinny Love by Bon Iver. It also bites on album tracks that chart
+on release week and again as a single a year later - Karma (2022 album, 2023
+single) and Opalite (2025 album, 2026 number one) were taken out for that.
+
+**The original recording, never Taylor's Version.** The room heard Love Story in
+2008, and that is the pressing the card plays; the re-recording is a different
+year's event. The one exception is All Too Well (10 Minute Version), which only
+exists as Taylor's Version and was the 2021 event itself.
+
+**No dedupe against the other decks**, same as between ESC and the hit deck.
+
+Filled from 2007 to 2026, 200 entries, every one with a track id. The ids were
+not filled by the resolver - there were no Spotify credentials in that session -
+but taken from Spotify's own search results and each one read back from its
+`open.spotify.com/embed/track/<id>` page, checking that title and artist match
+and that the pressing is not a live, remix or karaoke cut. Run
+`--recheck` over the file once when the resolver has credentials again.
+
+2026 is a running year, filled from the Hot 100 number ones and the pop chart
+so far; Choosin' Texas would have had a slot but had no id to be found and was
+swapped for the cure.
+
 ## Draw weight: `tier`
 
 Within a year not everything should come up equally often. The core of a year
@@ -285,7 +333,7 @@ about 3x as often as a tier 2 one - roughly 80% of that year's rounds land on
 the core. Keep the JSON at "core or tail" rather than a per-song weight, so a
 year can still be filled in by hand.
 
-The hit, German and K-Pop decks split the same way, read off the size of the
+The hit, German, K-Pop and White Girl Music decks split the same way, read off the size of the
 year: a 10 song year is 6 + 4, an 8 song year 5 + 3, a 5 or 3 song year is core
 all the way through. Core is the same question there as here - the songs the
 room names before the chorus is over.

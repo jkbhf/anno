@@ -1,0 +1,1409 @@
+{
+  "id": "white_girl_music",
+  "name": "White Girl Music",
+  "description": "Girls' night singalongs from 2007 on - only together with another deck",
+  "needsCompanion": true,
+  "_comment": "Covers 2007 on only, so it cannot carry a game alone - needsCompanion keeps it from being the sole pick. year is the year the song was everywhere, not the release year of the pressing Spotify carries. Which songs a year gets and how tier works: see CLAUDE.md.",
+  "songs": [
+    {
+      "year": 2007,
+      "title": "Hey There Delilah",
+      "artist": "Plain White T's",
+      "spotifyTrackId": "4RCWB3V8V0dignt99LZ8vH",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Girlfriend",
+      "artist": "Avril Lavigne",
+      "spotifyTrackId": "45hOioMDJktr86iKDHC8gr",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Teardrops On My Guitar",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "4tXsR2Hv3l85TQTwgEn3Um",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Misery Business",
+      "artist": "Paramore",
+      "spotifyTrackId": "6SpLc7EXZIPpy0sVko0aoU",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Big Girls Don't Cry",
+      "artist": "Fergie",
+      "spotifyTrackId": "4AniPkv5vgdE1n6VKreiyI",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Bubbly",
+      "artist": "Colbie Caillat",
+      "spotifyTrackId": "0rFOs9paloAvEtzwDX1Kmc",
+      "tier": 1
+    },
+    {
+      "year": 2007,
+      "title": "Our Song",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "15DeqWWQB4dcEWzJg15VrN",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Apologize",
+      "artist": "Timbaland, OneRepublic",
+      "spotifyTrackId": "6q3zC9dDD4lUNk8nfUztXy",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Grace Kelly",
+      "artist": "MIKA",
+      "spotifyTrackId": "7dzUZec5MnWMyQnk5klnKR",
+      "tier": 2
+    },
+    {
+      "year": 2007,
+      "title": "Tattoo",
+      "artist": "Jordin Sparks",
+      "spotifyTrackId": "3Ui2jdyxbZQrZohfM0NOgG",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Love Story",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1vrd6UOGamcKNGnSHJQlSt",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "I Kissed A Girl",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "25ZttbpeUKDOm3aghD2oBJ",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Hot N Cold",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "1y4eb6hmAvsqlDOl3fx9kk",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Viva La Vida",
+      "artist": "Coldplay",
+      "spotifyTrackId": "0d4gNT5SNBIfOCxPvYjhd3",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Bleeding Love",
+      "artist": "Leona Lewis",
+      "spotifyTrackId": "7wZUrN8oemZfsEd1CGkbXE",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "Love Song",
+      "artist": "Sara Bareilles",
+      "spotifyTrackId": "4E6cwWJWZw2zWf7VFbH7wf",
+      "tier": 1
+    },
+    {
+      "year": 2008,
+      "title": "7 Things",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "0FpT75cRdvf6va1TARHrl5",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Mercy",
+      "artist": "Duffy",
+      "spotifyTrackId": "1zusIxNqJu8i4g6P6hJ2Qa",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Chasing Pavements",
+      "artist": "Adele",
+      "spotifyTrackId": "56pHllZT7QOacB0bP56ofx",
+      "tier": 2
+    },
+    {
+      "year": 2008,
+      "title": "Burnin' Up",
+      "artist": "Jonas Brothers",
+      "spotifyTrackId": "6QQG95C5Evjbichtoxl4RH",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "You Belong With Me",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1GEBsLDvJGw7kviySRI6GX",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Party In The U.S.A.",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "5Q0Nhxo0l2bP3pNjpGJwV1",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "The Climb",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "0V8FYVlBFuXXTIvRnMbZyS",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Poker Face",
+      "artist": "Lady Gaga",
+      "spotifyTrackId": "1QV6tiMFM6fSOKOGLMHYYg",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Fireflies",
+      "artist": "Owl City",
+      "spotifyTrackId": "3DamFFqW32WihKkTVlwTYQ",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "My Life Would Suck Without You",
+      "artist": "Kelly Clarkson",
+      "spotifyTrackId": "4Dm32oO01YpIubCHaAtKkN",
+      "tier": 1
+    },
+    {
+      "year": 2009,
+      "title": "Fifteen",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "5Ora3Ish2A1JN5veGYTxhw",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Already Gone",
+      "artist": "Kelly Clarkson",
+      "spotifyTrackId": "4fq2YUONcgrCJ2SPndSeKC",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "The Fear",
+      "artist": "Lily Allen",
+      "spotifyTrackId": "7bW6MqAdTclmHVHAOkIyPS",
+      "tier": 2
+    },
+    {
+      "year": 2009,
+      "title": "Two Is Better Than One",
+      "artist": "Boys Like Girls, Taylor Swift",
+      "spotifyTrackId": "1MaqkdFNIKPdpQGDzme5ss",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "TiK ToK",
+      "artist": "Kesha",
+      "spotifyTrackId": "0HPD5WQqrq7wPWR7P7Dw1i",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Teenage Dream",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "5jzKL4BDMClWqRguW5qZvh",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "California Gurls",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "0h5MTqWWuC9SQNdX8yBCOd",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Mine",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "6LZaxlycSWrJZ4Volb25qx",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Hey, Soul Sister",
+      "artist": "Train",
+      "spotifyTrackId": "4HlFJV71xXKIGcU3kRyttv",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Dancing On My Own",
+      "artist": "Robyn",
+      "spotifyTrackId": "3Rc2ajBMInxeNGVkMPC92Y",
+      "tier": 1
+    },
+    {
+      "year": 2010,
+      "title": "Need You Now",
+      "artist": "Lady A",
+      "spotifyTrackId": "11EX5yhxr9Ihl3IN1asrfK",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "Naturally",
+      "artist": "Selena Gomez & The Scene",
+      "spotifyTrackId": "1YaVmBh7EAeR54FIjuFcb5",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "Back To December",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "5l6GqSxplqnZbLg0LTPQeG",
+      "tier": 2
+    },
+    {
+      "year": 2010,
+      "title": "The Cave",
+      "artist": "Mumford & Sons",
+      "spotifyTrackId": "7IxVWmdabNVhfLBV3JD0nJ",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Rolling in the Deep",
+      "artist": "Adele",
+      "spotifyTrackId": "1c8gk2PeTE04A1pIDH9YMk",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Someone Like You",
+      "artist": "Adele",
+      "spotifyTrackId": "5lkpeJwmQKgY3bX2zChjxX",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Video Games",
+      "artist": "Lana Del Rey",
+      "spotifyTrackId": "0fBSs3fRoh1yJcne77fdu9",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Last Friday Night (T.G.I.F.)",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "3avYqdwHKEq8beXbeWCKqJ",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Pumped Up Kicks",
+      "artist": "Foster The People",
+      "spotifyTrackId": "3KLj03cqFpDi3JxTNKLxUR",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "What Makes You Beautiful",
+      "artist": "One Direction",
+      "spotifyTrackId": "4cluDES4hQEUhmXj6TXkSo",
+      "tier": 1
+    },
+    {
+      "year": 2011,
+      "title": "Mean",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "5yEPktRqvIhko5QFF3aBhQ",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Shake It Out",
+      "artist": "Florence + The Machine",
+      "spotifyTrackId": "4lY95OMGb9WxP6IYut64ir",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "The A Team",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "1VdZ0vKfR5jneCmWIUAMxK",
+      "tier": 2
+    },
+    {
+      "year": 2011,
+      "title": "Skinny Love",
+      "artist": "Birdy",
+      "spotifyTrackId": "4RL77hMWUq35NYnPLXBpih",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Call Me Maybe",
+      "artist": "Carly Rae Jepsen",
+      "spotifyTrackId": "20I6sIOMTCkB6w7ryavxtO",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "We Are Never Ever Getting Back Together",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "6kISMRfweKSvgHR0urMQFG",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Somebody That I Used To Know",
+      "artist": "Gotye, Kimbra",
+      "spotifyTrackId": "1qDrWA6lyx8cLECdZE7TV7",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "We Are Young",
+      "artist": "fun., Janelle Monáe",
+      "spotifyTrackId": "5rgy6ghBq1eRApCkeUdJXf",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Ho Hey",
+      "artist": "The Lumineers",
+      "spotifyTrackId": "0W4Kpfp1w2xkY3PrV714B7",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Little Talks",
+      "artist": "Of Monsters and Men",
+      "spotifyTrackId": "2ihCaVdNZmnHZWt0fvAM7B",
+      "tier": 1
+    },
+    {
+      "year": 2012,
+      "title": "Some Nights",
+      "artist": "fun.",
+      "spotifyTrackId": "6t6oULCRS6hnI7rm0h5gwl",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Skyfall",
+      "artist": "Adele",
+      "spotifyTrackId": "6VObnIkLVruX4UVyxWhlqm",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Wide Awake",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "5JLv62qFIS1DR3zGEcApRt",
+      "tier": 2
+    },
+    {
+      "year": 2012,
+      "title": "Live While We're Young",
+      "artist": "One Direction",
+      "spotifyTrackId": "6Vh03bkEfXqekWp7Y1UBRb",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Royals",
+      "artist": "Lorde",
+      "spotifyTrackId": "2dLLR6qlu5UJ5gk0dKz0h3",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Wrecking Ball",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "2vwlzO0Qp8kfEtzTsCXfyE",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "I Knew You Were Trouble.",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "72jCZdH0Lhg93z6Z4hBjgj",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Roar",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "27tNWlhdAryQY04Gb2ZhUI",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Let Her Go",
+      "artist": "Passenger",
+      "spotifyTrackId": "0JmiBCpWc1IAc0et7Xm7FL",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "Pompeii",
+      "artist": "Bastille",
+      "spotifyTrackId": "6fNhZRFEkBfgW39W3wKARJ",
+      "tier": 1
+    },
+    {
+      "year": 2013,
+      "title": "22",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "6ce41JVa6KFaryfmC2bu2W",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Story of My Life",
+      "artist": "One Direction",
+      "spotifyTrackId": "4nVBt6MZDDP6tRVdQTgxJg",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Young and Beautiful",
+      "artist": "Lana Del Rey",
+      "spotifyTrackId": "2nMeu6UenVvwUktBCpLMK9",
+      "tier": 2
+    },
+    {
+      "year": 2013,
+      "title": "Burn",
+      "artist": "Ellie Goulding",
+      "spotifyTrackId": "5lF0pHbsJ0QqyIrLweHJPW",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Shake It Off",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "5xTtaWoae3wi06K5WfVUUH",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Blank Space",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1p80LdxRV74UKvL8gnD7ky",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "All About That Bass",
+      "artist": "Meghan Trainor",
+      "spotifyTrackId": "5jE48hhRu8E6zBDPRSkEq7",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Take Me to Church",
+      "artist": "Hozier",
+      "spotifyTrackId": "3dYD57lRAUcMHufyqn9GcI",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Chandelier",
+      "artist": "Sia",
+      "spotifyTrackId": "4VrWlk8IQxevMvERoX08iC",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Thinking Out Loud",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "34gCuhDGsG4bRPIf9bb02f",
+      "tier": 1
+    },
+    {
+      "year": 2014,
+      "title": "Budapest",
+      "artist": "George Ezra",
+      "spotifyTrackId": "2ixsaeFioXJmMgkkbd4uj1",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Boom Clap",
+      "artist": "Charli XCX",
+      "spotifyTrackId": "3x2YIvkLcxvZQsA5x6xyIR",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Steal My Girl",
+      "artist": "One Direction",
+      "spotifyTrackId": "2Bs4jQEGMycglOfWPBqrVG",
+      "tier": 2
+    },
+    {
+      "year": 2014,
+      "title": "Stay With Me",
+      "artist": "Sam Smith",
+      "spotifyTrackId": "5Nm9ERjJZ5oyfXZTECKmRt",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Hello",
+      "artist": "Adele",
+      "spotifyTrackId": "62PaSfnXSMyLshYJrlTuL3",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Style",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "4lIxdJw6W3Fg4vUIYCB0S5",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Love Me Like You Do",
+      "artist": "Ellie Goulding",
+      "spotifyTrackId": "3zHq9ouUJQFQRf3cm1rRLu",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Sorry",
+      "artist": "Justin Bieber",
+      "spotifyTrackId": "09CtPGIpYB4BrO8qb1RGsF",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Stitches",
+      "artist": "Shawn Mendes",
+      "spotifyTrackId": "5jsw9uXEGuKyJzs0boZ1bT",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Shut Up and Dance",
+      "artist": "WALK THE MOON",
+      "spotifyTrackId": "4kbj5MwxO1bq9wjT5g9HaA",
+      "tier": 1
+    },
+    {
+      "year": 2015,
+      "title": "Wildest Dreams",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "3fVnlF4pGqWI9flVENcT28",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Cool for the Summer",
+      "artist": "Demi Lovato",
+      "spotifyTrackId": "3uwnnTQcHM1rDqSfA4gQNz",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Drag Me Down",
+      "artist": "One Direction",
+      "spotifyTrackId": "2K87XMYnUMqLcX3zvtAF4G",
+      "tier": 2
+    },
+    {
+      "year": 2015,
+      "title": "Black Magic",
+      "artist": "Little Mix",
+      "spotifyTrackId": "6rmXhRIemCTPyMYZRDN7Qg",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Closer",
+      "artist": "The Chainsmokers, Halsey",
+      "spotifyTrackId": "7BKLCZ1jbUBVqRi2FVlTVw",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Treat You Better",
+      "artist": "Shawn Mendes",
+      "spotifyTrackId": "3QGsuHI8jO1Rx4JWLUh9jd",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Stressed Out",
+      "artist": "Twenty One Pilots",
+      "spotifyTrackId": "3CRDbSIZ4r5MsZ0YwxuEkn",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Heathens",
+      "artist": "Twenty One Pilots",
+      "spotifyTrackId": "6i0V12jOa3mr6uu4WYhUBr",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Cake By The Ocean",
+      "artist": "DNCE",
+      "spotifyTrackId": "7L5jgZtAyfiU7elB8DIqCx",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Hands To Myself",
+      "artist": "Selena Gomez",
+      "spotifyTrackId": "3CJvmtWw2bJsudbAC5uCQk",
+      "tier": 1
+    },
+    {
+      "year": 2016,
+      "title": "Ophelia",
+      "artist": "The Lumineers",
+      "spotifyTrackId": "14AyWf6y7KlWWLfAjdKMKI",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Lush Life",
+      "artist": "Zara Larsson",
+      "spotifyTrackId": "1rIKgCH4H52lrvDcz50hS8",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "Say You Won't Let Go",
+      "artist": "James Arthur",
+      "spotifyTrackId": "5uCax9HTNlzGybIStD3vDh",
+      "tier": 2
+    },
+    {
+      "year": 2016,
+      "title": "i hate u, i love u",
+      "artist": "gnash, Olivia O'Brien",
+      "spotifyTrackId": "3nbiBlaYWjSwg0b1pq4ZR4",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Look What You Made Me Do",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1P17dC1amhFzptugyAO7Il",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "7qiZfU4dY1lWllzX7mPBI3",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Perfect",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "0tgVpDi06FyKpA1z0VMD4v",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Sign of the Times",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "5Ohxk2dO5COHF1krpoPigN",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "New Rules",
+      "artist": "Dua Lipa",
+      "spotifyTrackId": "2ekn2ttSfGqwhhate0LSR0",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Green Light",
+      "artist": "Lorde",
+      "spotifyTrackId": "6ie2Bw3xLj2JcGowOlcMhb",
+      "tier": 1
+    },
+    {
+      "year": 2017,
+      "title": "Slow Hands",
+      "artist": "Niall Horan",
+      "spotifyTrackId": "2cOUlop2ZakjOKe4WinesN",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Malibu",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "1UZOjK1BwmwWU14Erba9CZ",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Issues",
+      "artist": "Julia Michaels",
+      "spotifyTrackId": "7vu0JkJh0ldukEYbTVcqd0",
+      "tier": 2
+    },
+    {
+      "year": 2017,
+      "title": "Motion Sickness",
+      "artist": "Phoebe Bridgers",
+      "spotifyTrackId": "5xo8RrjJ9CVNrtRg2S3B1R",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Delicate",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "6NFyWDv5CjfwuzoCkw47Xf",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Shallow",
+      "artist": "Lady Gaga, Bradley Cooper",
+      "spotifyTrackId": "2VxeLyX666F8uXCJ0dZF8B",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "thank u, next",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "2rPE9A1vEgShuZxxzR2tZH",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "Youngblood",
+      "artist": "5 Seconds of Summer",
+      "spotifyTrackId": "2iUXsYOEPhVqEBwsqP70rE",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "High Hopes",
+      "artist": "Panic! At The Disco",
+      "spotifyTrackId": "1rqqCSm0Qe4I9rUvWncaom",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "The Middle",
+      "artist": "Zedd, Maren Morris, Grey",
+      "spotifyTrackId": "09IStsImFySgyp0pIQdqAc",
+      "tier": 1
+    },
+    {
+      "year": 2018,
+      "title": "lovely",
+      "artist": "Billie Eilish, Khalid",
+      "spotifyTrackId": "0u2P5u6lvoDfwTYjAADbn4",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "2002",
+      "artist": "Anne-Marie",
+      "spotifyTrackId": "2BgEsaKNfHUdlh97KmvFyo",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Back To You",
+      "artist": "Selena Gomez",
+      "spotifyTrackId": "514rhnksEwHUh6LxXsQ4Y9",
+      "tier": 2
+    },
+    {
+      "year": 2018,
+      "title": "Happier",
+      "artist": "Marshmello, Bastille",
+      "spotifyTrackId": "2dpaYNEQHiRxtZbfNsse99",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "bad guy",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "2Fxmhks0bxGSBdJ92vM42m",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Lover",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1dGr1c8CrMLDpV6mPbImSI",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "You Need To Calm Down",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "6RRNNciQGZEXnqk8SQ9yv5",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Someone You Loved",
+      "artist": "Lewis Capaldi",
+      "spotifyTrackId": "7qEHsqek33rTcFNT9PFqLf",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Señorita",
+      "artist": "Shawn Mendes, Camila Cabello",
+      "spotifyTrackId": "6v3KW9xbzN5yKLt9YKDYA2",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Lose You To Love Me",
+      "artist": "Selena Gomez",
+      "spotifyTrackId": "4l0Mvzj72xxOpRrp6h8nHi",
+      "tier": 1
+    },
+    {
+      "year": 2019,
+      "title": "Sucker",
+      "artist": "Jonas Brothers",
+      "spotifyTrackId": "22vgEDb5hykfaTwLuskFGD",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Truth Hurts",
+      "artist": "Lizzo",
+      "spotifyTrackId": "3HWzoMvoF3TQfYg4UPszDq",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Lights Up",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "4jAIqgrPjKLTY9Gbez25Qb",
+      "tier": 2
+    },
+    {
+      "year": 2019,
+      "title": "Dancing With A Stranger",
+      "artist": "Sam Smith, Normani",
+      "spotifyTrackId": "6Qs4SXO9dwPj5GKvVOv8Ki",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "cardigan",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "4R2kfaDFhslZEMJqAFNpdd",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Watermelon Sugar",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "6UelLqGlWMcVH1E5c4H7lY",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Adore You",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "3jjujdWJ72nww5eGnfs2E7",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Don't Start Now",
+      "artist": "Dua Lipa",
+      "spotifyTrackId": "3PfIrDoz19wz7qK7tYeu62",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Rain On Me",
+      "artist": "Lady Gaga, Ariana Grande",
+      "spotifyTrackId": "7ju97lgwC2rKQ6wwsf9no9",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "exile",
+      "artist": "Taylor Swift, Bon Iver",
+      "spotifyTrackId": "4pvb0WLRcMtbPGmtejJJ6y",
+      "tier": 1
+    },
+    {
+      "year": 2020,
+      "title": "Midnight Sky",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "4i2qxFEVVUi8yOYoxB8TCX",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Kyoto",
+      "artist": "Phoebe Bridgers",
+      "spotifyTrackId": "4vjvx7Zxkb4AltGcZ0BBvI",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "Therefore I Am",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "54bFM56PmE4YLRnqpW6Tha",
+      "tier": 2
+    },
+    {
+      "year": 2020,
+      "title": "august",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "3hUxzQpSfdDqwM3ZTFQY0K",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "drivers license",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "5wANPM4fQCJwkGd4rN57mH",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "good 4 u",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "4ZtFanR9U6ndgddUvNcjcG",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "deja vu",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "6HU7h9RYOaPRFeh0R3UeAr",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Easy On Me",
+      "artist": "Adele",
+      "spotifyTrackId": "0gplL1WMoJ6iYaPgMCL0gX",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Happier Than Ever",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "4RVwu0g32PAqgUiJoXsdF8",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "Bad Habits",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "6PQ88X9TkUIAUIZJHW2upE",
+      "tier": 1
+    },
+    {
+      "year": 2021,
+      "title": "traitor",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "5CZ40GBx1sQ9agT82CLQCT",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "All Too Well (10 Minute Version) (Taylor's Version) (From The Vault)",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "5enxwA8aAbwZbf5qCHORXi",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "STAY",
+      "artist": "The Kid LAROI, Justin Bieber",
+      "spotifyTrackId": "5HCyWlXZPP0y6Gqq8TgA20",
+      "tier": 2
+    },
+    {
+      "year": 2021,
+      "title": "Shivers",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "6bQfNiqyCX7UaQSvVVGo4I",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "As It Was",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "4LRPiXqCikLlN15c3yImP7",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Anti-Hero",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "0V3wPSX9ygBnCm8psDIegu",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "About Damn Time",
+      "artist": "Lizzo",
+      "spotifyTrackId": "1PckUlxKqWQs3RlWXVBLw3",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "abcdefu",
+      "artist": "GAYLE",
+      "spotifyTrackId": "4fouWK6XVHhzl78KzQ1UjL",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Late Night Talking",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "1qEmFfgcLObUfQm0j1W2CK",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "I Ain't Worried",
+      "artist": "OneRepublic",
+      "spotifyTrackId": "4h9wh7iOZ0GGn8QVp4RAOB",
+      "tier": 1
+    },
+    {
+      "year": 2022,
+      "title": "Glimpse of Us",
+      "artist": "Joji",
+      "spotifyTrackId": "6xGruZOHLs39ZbVccQTuPZ",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Boyfriend",
+      "artist": "Dove Cameron",
+      "spotifyTrackId": "59CfNbkERJ3NoTXDvoURjj",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Until I Found You",
+      "artist": "Stephen Sanchez",
+      "spotifyTrackId": "0T5iIrXA4p5GsubkhuBIKV",
+      "tier": 2
+    },
+    {
+      "year": 2022,
+      "title": "Bejeweled",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "3qoftcUZaUOncvIYjFSPdE",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Flowers",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "0yLdNVWF3Srea0uzk55zFn",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "vampire",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "3k79jB4aGmMDUQzEwa46Rz",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Stick Season",
+      "artist": "Noah Kahan",
+      "spotifyTrackId": "0GNVXNz7Jkicfk2mp5OyG5",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "What Was I Made For?",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "2eG6nGJOB07RV6lkrJbzxS",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "greedy",
+      "artist": "Tate McRae",
+      "spotifyTrackId": "3rUGC1vUpkDG9CZFHMur1t",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "Dance The Night",
+      "artist": "Dua Lipa",
+      "spotifyTrackId": "1vYXt7VSjH9JIM5oRRo7vA",
+      "tier": 1
+    },
+    {
+      "year": 2023,
+      "title": "bad idea right?",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "2i8f4VnnBjy0yDqH2C452a",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Padam Padam",
+      "artist": "Kylie Minogue",
+      "spotifyTrackId": "44MuEHdlociG8KjhPhOVw5",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Say Yes To Heaven",
+      "artist": "Lana Del Rey",
+      "spotifyTrackId": "6GGtHZgBycCgGBUhZo81xe",
+      "tier": 2
+    },
+    {
+      "year": 2023,
+      "title": "Not Strong Enough",
+      "artist": "boygenius",
+      "spotifyTrackId": "72GNW1xKoi5BAhMYAW6e7e",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Espresso",
+      "artist": "Sabrina Carpenter",
+      "spotifyTrackId": "2qSkIjg1o9h3YT9RAgYN75",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Please Please Please",
+      "artist": "Sabrina Carpenter",
+      "spotifyTrackId": "2OyX4SHk1oVRBP2dBOqRqC",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Good Luck, Babe!",
+      "artist": "Chappell Roan",
+      "spotifyTrackId": "0WbMK4wrZ1wFSty9F7FCgu",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "BIRDS OF A FEATHER",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "6dOtVTDdiauQNBQEDOtlAB",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Fortnight",
+      "artist": "Taylor Swift, Post Malone",
+      "spotifyTrackId": "6dODwocEuGzHAavXqTbwHv",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Beautiful Things",
+      "artist": "Benson Boone",
+      "spotifyTrackId": "6tNQ70jh4OwmPGpYy6R2o9",
+      "tier": 1
+    },
+    {
+      "year": 2024,
+      "title": "Too Sweet",
+      "artist": "Hozier",
+      "spotifyTrackId": "3HMY0r2BAdpasXMY8rseR0",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "HOT TO GO!",
+      "artist": "Chappell Roan",
+      "spotifyTrackId": "4xdBrk0nFZaP54vvZj0yx7",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "Die With A Smile",
+      "artist": "Lady Gaga, Bruno Mars",
+      "spotifyTrackId": "2plbrEY59IikOBgBGLjaoe",
+      "tier": 2
+    },
+    {
+      "year": 2024,
+      "title": "we can't be friends (wait for your love)",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "46kspZSY3aKmwQe7O77fCC",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "That's So True",
+      "artist": "Gracie Abrams",
+      "spotifyTrackId": "7ne4VBA60CxGM75vw0EYad",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Manchild",
+      "artist": "Sabrina Carpenter",
+      "spotifyTrackId": "42UBPzRMh5yyz0EDPr6fr1",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "53iuhJlwXhSER5J2IYYv1W",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Ordinary",
+      "artist": "Alex Warren",
+      "spotifyTrackId": "6qqrTXSdwiJaq8SO0X2lSe",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "back to friends",
+      "artist": "sombr",
+      "spotifyTrackId": "0FTmksd2dxiE5e3rWyJXs6",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "Messy",
+      "artist": "Lola Young",
+      "spotifyTrackId": "35ISBknsCeZQtq66xABI9g",
+      "tier": 1
+    },
+    {
+      "year": 2025,
+      "title": "The Subway",
+      "artist": "Chappell Roan",
+      "spotifyTrackId": "2SsY5k7UWFqgye3PUMG3Oq",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "What Was That",
+      "artist": "Lorde",
+      "spotifyTrackId": "2jNyiavSywmA472t2m6ZBz",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Man I Need",
+      "artist": "Olivia Dean",
+      "spotifyTrackId": "1qbmS6ep2hbBRaEZFpn7BX",
+      "tier": 2
+    },
+    {
+      "year": 2025,
+      "title": "Sports car",
+      "artist": "Tate McRae",
+      "spotifyTrackId": "5UJbgR4XF4y1DvbkxEqe8S",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "drop dead",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "3fRCAPMMZ8l8P9YKI6OCzD",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "I Knew It, I Knew You",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "5uPaqMMt59KGrdKIitDRqa",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "Aperture",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "45Z3m6yazmAi4jZuW0tzW0",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "20jbSiX29FDX4oQxBXyUEi",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "American Girls",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "7gtG45ieyQzKtNKobfLd49",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "stupid song",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "49j6SvuvWfbEKZKzsHCdLJ",
+      "tier": 1
+    },
+    {
+      "year": 2026,
+      "title": "The Great Divide",
+      "artist": "Noah Kahan",
+      "spotifyTrackId": "4ck9vo0gEmjVHWUb5q2rYe",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Homewrecker",
+      "artist": "sombr",
+      "spotifyTrackId": "7tICCrK3CcyRFKza7yrR0z",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "Hit the Wall",
+      "artist": "Gracie Abrams",
+      "spotifyTrackId": "61Oyg0lrAOMjBpEStqfOZ1",
+      "tier": 2
+    },
+    {
+      "year": 2026,
+      "title": "the cure",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "55pBIZO1cqoldeqpp5WR7H",
+      "tier": 2
+    }
+  ]
+}

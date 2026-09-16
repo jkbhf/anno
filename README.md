@@ -135,7 +135,8 @@ lives in the environment; a PKCE login in a browser must never carry one.
    then draws from one of them at random, and every deck has the same chance
    regardless of how many songs it holds for that year. Categories without songs
    cannot be selected. A deck marked `needsCompanion` - K-Pop, which only
-   covers 2016 on - can be picked but not on its own: alone it would answer
+   covers 2016 on, and White Girl Music from 2007 on - can be picked but not on
+   its own: alone it would answer
    most cards with nothing, so Start stays off until a full deck joins it.
 3. **Game** - scan a card and the song starts. The screen that follows is the
    scoreboard with a "Reveal the year" button where the song card will be: the
@@ -234,13 +235,14 @@ false. It marks a deck that only covers a stretch of years instead of the whole
 century, and keeps it from being the only pick - see `canCarryGame` in
 `lib/models/song_category.dart`.
 
-ESC, German Songs, International Hits and K-Pop exist; ESC is filled with 421
-entries from 1956 to 2026, International Hits with 576 from 1950 to 2026,
-German Songs with 535 from 1950 to 2026 and K-Pop with 115 from 2016 to 2026 -
-the last one a companion deck. The intent is at least one
+ESC, German Songs, International Hits, K-Pop and White Girl Music exist; ESC
+is filled with 421 entries from 1956 to 2026, International Hits with 576 from
+1950 to 2026, German Songs with 535 from 1950 to 2026, K-Pop with 115 from 2016
+to 2026 and White Girl Music with 200 from 2007 to 2026 - the last two are
+companion decks. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
-the contest did not exist before 1956, and K-Pop does not try to because the
-room only knows the deck from 2016 on - for how many entries a year gets
+the contest did not exist before 1956, and K-Pop and White Girl Music do not
+try to because what the room knows of them starts later - for how many entries a year gets
 beyond that, see `CLAUDE.md`. When a year holds several, the
 app picks one at random and only repeats it within a game once all the others
 have had their turn.
