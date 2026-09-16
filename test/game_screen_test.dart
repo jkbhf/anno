@@ -55,6 +55,7 @@ final escCategory = SongCategory(
       artist: 'Helena Paparizou',
       year: 2005,
       spotifyTrackId: '3gSnnBf9fulK2fizqxmsXn',
+      youtubeVideoId: 'abcdefghijk',
       country: 'Greece',
       place: 1,
     ),
@@ -332,7 +333,9 @@ void main() {
           id: 'german_songs',
           name: 'German Songs',
           description: '',
-          songs: const [Song(title: 'A', artist: 'X', year: 2005)],
+          songs: const [
+            Song(title: 'A', artist: 'X', year: 2005, spotifyTrackId: 'a'),
+          ],
         ),
       ],
     );
@@ -356,7 +359,9 @@ void main() {
           id: 'german_songs',
           name: 'German Songs',
           description: '',
-          songs: const [Song(title: 'A', artist: 'X', year: 1999)],
+          songs: const [
+            Song(title: 'A', artist: 'X', year: 1999, spotifyTrackId: 'a'),
+          ],
         ),
       ],
     );

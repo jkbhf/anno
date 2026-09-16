@@ -1,3 +1,5 @@
+import '../music/music_service.dart';
+
 /// A song from a category's catalog.
 ///
 /// [year] is the curated truth of the game and deliberately does NOT come from
@@ -97,6 +99,17 @@ class Song {
   /// only pull apart where a year holds more than a handful. `CLAUDE.md` has
   /// the rule for which entry belongs in which tier.
   final int tier;
+
+  /// True when [service] can play this song straight away.
+  ///
+  /// Without its id the link lands on a search, and the round sits there until
+  /// somebody taps the song - so a song without it is left out of the draw on
+  /// that service rather than played that way. It still counts on the other
+  /// service, where its id may well be there.
+  bool playsOn(MusicService service) => switch (service) {
+    MusicService.spotify => spotifyTrackId != null,
+    MusicService.youtubeMusic => youtubeVideoId != null,
+  };
 
   /// True when the song carries the extra facts of a contest entry.
   bool get isContestEntry => country != null || place != null;

@@ -164,13 +164,20 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       case ScanOutcome.unknownCode:
         return;
       case ScanOutcome.noSongForYear:
-        final year = _game.currentYear;
+        final year = _game.currentYear!;
         _game.cancelRound();
+        // The year can be there and still have nothing this service plays.
+        final onOtherService = _game.categories.any(
+          (category) => category.songsForYear(year).isNotEmpty,
+        );
         await _showNote(
           'No song for $year',
-          // A deck on its own is often one that only covers part of the
-          // century, so the span is what the room needs to hear.
-          _game.categories.length == 1
+          onOtherService
+              ? 'Nothing for that year is on ${_game.service.label} - draw '
+                    'another card.'
+              // A deck on its own is often one that only covers part of the
+              // century, so the span is what the room needs to hear.
+              : _game.categories.length == 1
               ? '${_game.categories.single.name} covers '
                     '${_game.categories.single.yearSpan} - draw another card.'
               : 'None of the chosen categories has an entry for that year '

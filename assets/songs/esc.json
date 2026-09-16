@@ -1357,14 +1357,6 @@
       "youtubeVideoId": "XPqffXlK3kI"
     },
     {
-      "year": 1991,
-      "title": "Venedig im Regen",
-      "artist": "Thomas Forstner",
-      "country": "Austria",
-      "place": 22,
-      "tier": 1
-    },
-    {
       "year": 1992,
       "title": "Why Me?",
       "artist": "Linda Martin",
@@ -1523,28 +1515,12 @@
     },
     {
       "year": 1995,
-      "title": "Fra Mols til Skagen",
-      "artist": "Aud Wilken",
-      "country": "Denmark",
-      "place": 5,
-      "tier": 1
-    },
-    {
-      "year": 1995,
       "title": "Vuelve conmigo",
       "artist": "Anabel Conde",
       "spotifyTrackId": "24xF7DIibfXNpAU7gzLAKd",
       "youtubeVideoId": "2ABxtrSEo94",
       "country": "Spain",
       "place": 2,
-      "tier": 1
-    },
-    {
-      "year": 1995,
-      "title": "Il me donne rendez-vous",
-      "artist": "Nathalie Santamaria",
-      "country": "France",
-      "place": 4,
       "tier": 1
     },
     {
@@ -1824,14 +1800,6 @@
       "tier": 1
     },
     {
-      "year": 2001,
-      "title": "Everybody",
-      "artist": "Tanel Padar & Dave Benton",
-      "country": "Estonia",
-      "place": 1,
-      "tier": 1
-    },
-    {
       "year": 2002,
       "title": "I Wanna",
       "artist": "Marie N",
@@ -1889,14 +1857,6 @@
       "youtubeVideoId": "1CoL_Uhqpg8",
       "country": "Turkey",
       "place": 1,
-      "tier": 1
-    },
-    {
-      "year": 2003,
-      "title": "Weil der Mensch zählt",
-      "artist": "Alf Poier",
-      "country": "Austria",
-      "place": 6,
       "tier": 1
     },
     {
@@ -2917,14 +2877,6 @@
       "country": "Denmark",
       "place": 9,
       "tier": 1
-    },
-    {
-      "year": 2014,
-      "title": "Tick-Tock",
-      "artist": "Mariya Yaremchuk",
-      "country": "Ukraine",
-      "place": 6,
-      "tier": 2
     },
     {
       "year": 2014,

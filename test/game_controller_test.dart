@@ -6,6 +6,7 @@ import 'package:anno/game/game_controller.dart';
 import 'package:anno/models/player.dart';
 import 'package:anno/models/song.dart';
 import 'package:anno/models/song_category.dart';
+import 'package:anno/music/music_service.dart';
 import 'package:anno/music/song_launcher.dart';
 
 class FakeLauncher implements SongLauncher {
@@ -264,6 +265,64 @@ void main() {
 
     expect(game.players.every((p) => p.score == 0), isTrue);
     expect(game.phase, RoundPhase.idle);
+  });
+
+  group('the service', () {
+    const both = Song(
+      title: 'Both',
+      artist: 'X',
+      year: 2005,
+      spotifyTrackId: 'both',
+      youtubeVideoId: 'both',
+    );
+    const spotifyOnly = Song(
+      title: 'Spotify only',
+      artist: 'X',
+      year: 2005,
+      spotifyTrackId: 'spotify',
+    );
+    const youtubeOnly = Song(
+      title: 'YouTube only',
+      artist: 'X',
+      year: 2005,
+      youtubeVideoId: 'youtube',
+    );
+
+    GameController on(MusicService service, List<Song> songs) => GameController(
+      players: [GamePlayer(name: 'Anna')],
+      categories: [buildCategory(songs)],
+      years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+      launcher: FakeLauncher(),
+      service: service,
+    );
+
+    Set<String> drawnOver(GameController game, int rounds) => {
+      for (var i = 0; i < rounds; i++)
+        if (game.scan(card2005) == ScanOutcome.started) game.currentSong!.title,
+    };
+
+    test('Spotify never draws a song without a Spotify id', () {
+      final game = on(MusicService.spotify, [both, spotifyOnly, youtubeOnly]);
+
+      expect(drawnOver(game, 30), {'Both', 'Spotify only'});
+    });
+
+    test('YouTube Music never draws a song without a video id', () {
+      final game = on(MusicService.youtubeMusic, [
+        both,
+        spotifyOnly,
+        youtubeOnly,
+      ]);
+
+      expect(drawnOver(game, 30), {'Both', 'YouTube only'});
+    });
+
+    test('a year with nothing the service plays is no song for the year', () {
+      final game = on(MusicService.youtubeMusic, [spotifyOnly]);
+
+      expect(game.scan(card2005), ScanOutcome.noSongForYear);
+      expect(game.phase, RoundPhase.idle);
+    });
   });
 
   group('several categories', () {

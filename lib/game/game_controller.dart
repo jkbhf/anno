@@ -73,8 +73,8 @@ class GameController extends ChangeNotifier {
   final YearDatabase years;
   final int targetScore;
 
-  /// Where the songs are handed over to. Only named here for the screen - the
-  /// launcher is what actually goes there.
+  /// Where the songs are handed over to. The launcher is what actually goes
+  /// there; this decides which songs can be drawn at all, see [songsFor].
   final MusicService service;
 
   final SongLauncher _launcher;
@@ -279,6 +279,16 @@ class GameController extends ChangeNotifier {
     _save();
   }
 
+  /// The songs of [category] for [year] that [service] can play.
+  ///
+  /// A song without the id of the service is swapped for another one of its
+  /// year by simply not being in the pool. A year where none is left is a
+  /// [ScanOutcome.noSongForYear], the same as a year the deck does not have.
+  List<Song> songsFor(SongCategory category, int year) => [
+    for (final song in category.songsForYear(year))
+      if (song.playsOn(service)) song,
+  ];
+
   /// Draws a song for that year: first a category at random, then one of its
   /// songs.
   ///
@@ -299,7 +309,7 @@ class GameController extends ChangeNotifier {
     final withAny = <SongCategory>[];
 
     for (final category in categories) {
-      final pool = category.songsForYear(year);
+      final pool = songsFor(category, year);
       if (pool.isEmpty) continue;
       withAny.add(category);
       if (pool.any((song) => !_played.contains(_playedKey(category, song)))) {
@@ -311,7 +321,7 @@ class GameController extends ChangeNotifier {
     if (candidates.isEmpty) return null;
 
     final category = candidates[_random.nextInt(candidates.length)];
-    final pool = category.songsForYear(year);
+    final pool = songsFor(category, year);
     final fresh = [
       for (final song in pool)
         if (!_played.contains(_playedKey(category, song))) song,

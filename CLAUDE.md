@@ -50,7 +50,7 @@ Raab 2000 (5th) all earn a slot on home recognition alone. It counts against
 the 2 resp. 4 "best known" slots and beats a foreign entry of the same
 standing. Where nobody would know it - most of the 60s and the 90s - skip it.
 
-The catalog is filled from 1956 to 2026, 421 entries. Every future contest
+The catalog is filled from 1956 to 2026, 415 entries. Every future contest
 needs its ten, otherwise that card is a dead round in a game played on the ESC
 deck alone.
 
@@ -398,8 +398,20 @@ weeks. Do not build either without asking again.
 
 **A missing `youtubeVideoId` is not a swap.** The catalogs are curated against
 Spotify - "What Spotify does not carry is not a card" stays the rule. An entry
-YouTube Music does not carry keeps its slot and opens the search there. Swapping
-it would cost the Spotify deck a good card for the sake of the smaller path.
+YouTube Music does not carry keeps its slot in the file. Swapping it would cost
+the Spotify deck a good card for the sake of the smaller path.
+
+**The game only draws what the service can play** (`GameController.songsFor`,
+`Song.playsOn`). On Spotify a song without `spotifyTrackId` is never drawn, on
+YouTube Music a song without `youtubeVideoId` is not - another song of the year
+takes the round instead of a search page nobody taps. So a missing id no longer
+costs a round, it costs the song its turn on that service; only a year where
+*no* song carries the id is a dead card, and the setup check for that is to
+count, per deck and service, the years without a single id. At the time of
+writing there are none. The six ESC entries neither service carries (Venedig im
+Regen 1991, Fra Mols til Skagen and Il me donne rendez-vous 1995, Everybody
+2001, Weil der Mensch zählt 2003, Tick-Tock 2014) were dropped on 2026-09-16 -
+Everybody was the winner, and a winner nobody can hear is still no card.
 
 **The resolver goes through an undocumented endpoint.**
 `tool/resolve_youtube_music_tracks.dart` asks the search behind

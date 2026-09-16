@@ -236,7 +236,7 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 contest year gets, which ones, and which of them are core.
 
 ESC, German Songs, International Hits, K-Pop and White Girl Music exist; ESC
-is filled with 421 entries from 1956 to 2026, International Hits with 576 from
+is filled with 415 entries from 1956 to 2026, International Hits with 576 from
 1950 to 2026, German Songs with 535 from 1950 to 2026, K-Pop with 115 from 2016
 to 2026 and White Girl Music with 200 from 2007 to 2026 - the last two only
 cover part of the century. The intent is at least one
