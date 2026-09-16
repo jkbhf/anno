@@ -190,6 +190,13 @@ void main() {
     expect(sameTitle('I Can', "I Can't Wait"), isFalse);
   });
 
+  test('a Hangul title is read by the name in its bracket', () {
+    expect(sameTitle('PLAYING WITH FIRE', '불장난(Playing With Fire)'), isTrue);
+    expect(sameTitle('WHISTLE', '불장난(Playing With Fire)'), isFalse);
+    // A readable title keeps its bracket out of it.
+    expect(sameTitle('Wild & Free', 'Satellite (Wild & Free)'), isFalse);
+  });
+
   test('an artist nothing is left of is not taken', () {
     const cover = YouTubeSong(
       videoId: 'abcdefghijk',

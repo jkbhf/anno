@@ -430,6 +430,16 @@ to the videos filter then and takes the video from the artist's own channel.
 Keep `gl` on `DE`: an id found for another country can be greyed out for the
 room.
 
+**What the rules miss can be set by hand - after reading the rows.** The last
+misses were mostly the song under another name: an artist renamed (Lady
+Antebellum, Charlotte Perrelli), written in its own script (Сергей Лазарев), a
+title spelled differently ("Zieh die Schuh aus"), or a hit that is itself a
+remix ("Cheerleader (Felix Jaehn Remix)"). Loosening the rules for those would
+let the wrong hits back in, so 34 ids went in by hand, each one the artist's
+own recording seen in the search rows. What only exists as a fan upload or a
+live cut stays without an id - nine old ESC entries, "Venedig im Regen" among
+them - and opens the search.
+
 ## What Spotify does not carry is not a card
 
 `spotifyTrackId` is not a nicety, it is what makes the round play. Without it

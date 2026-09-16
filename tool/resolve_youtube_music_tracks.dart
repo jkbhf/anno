@@ -3,6 +3,7 @@
 //
 //   dart run tool/resolve_youtube_music_tracks.dart [assets/songs/esc.json ...]
 //   dart run tool/resolve_youtube_music_tracks.dart --only=1971,Chai
+//   dart run tool/resolve_youtube_music_tracks.dart --curl   # see [useCurl]
 //
 // Goes through the search of music.youtube.com itself - the endpoint its web
 // player calls, which needs no key and has no daily quota. The official Data
@@ -263,45 +264,99 @@ bool isTheRecording(
 
 var requestCount = 0;
 
+const browserAgent =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+    '(KHTML, like Gecko) Chrome/140.0 Safari/537.36';
+
+/// Send the searches through curl instead of `package:http` - `--curl`.
+///
+/// After a couple of thousand searches Google started answering the Dart
+/// client with its "Sorry..." bot page, a browser user agent did not help, and
+/// the very same request from curl went through. The block wears off on its
+/// own after a while; this is the way to carry on without waiting for it.
+var useCurl = false;
+
+const _searchUrl =
+    'https://music.youtube.com/youtubei/v1/search?prettyPrint=false';
+
 Future<List<YouTubeSong>> search(
   String query, {
   String filter = songsOnly,
 }) async {
   await Future<void>.delayed(requestGap);
   requestCount++;
-  final response = await http.post(
-    Uri.parse('https://music.youtube.com/youtubei/v1/search?prettyPrint=false'),
-    headers: {
-      'Content-Type': 'application/json',
-      'Origin': 'https://music.youtube.com',
-    },
-    body: jsonEncode({
-      'context': {
-        'client': {
-          'clientName': 'WEB_REMIX',
-          'clientVersion': '1.20260901.01.00',
-          'hl': 'en',
-          // Where the room is: a song greyed out in Germany is no card.
-          'gl': 'DE',
-        },
+  final body = jsonEncode({
+    'context': {
+      'client': {
+        'clientName': 'WEB_REMIX',
+        'clientVersion': '1.20260901.01.00',
+        'hl': 'en',
+        // Where the room is: a song greyed out in Germany is no card.
+        'gl': 'DE',
       },
-      'query': query,
-      'params': filter,
-    }),
-  );
-  if (response.statusCode != 200) throw RequestFailed(response.statusCode);
-  return parseSearch(
-    jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
-  );
+    },
+    'query': query,
+    'params': filter,
+  });
+  const headers = {
+    'Content-Type': 'application/json',
+    'Origin': 'https://music.youtube.com',
+    'User-Agent': browserAgent,
+  };
+
+  final String text;
+  if (useCurl) {
+    final process = await Process.start('curl', [
+      '-s',
+      '-X',
+      'POST',
+      _searchUrl,
+      for (final MapEntry(:key, :value) in headers.entries) ...[
+        '-H',
+        '$key: $value',
+      ],
+      '--data-binary',
+      '@-',
+      '-w',
+      '\n%{http_code}',
+    ]);
+    process.stdin.add(utf8.encode(body));
+    await process.stdin.close();
+    final out = await process.stdout.transform(utf8.decoder).join();
+    await process.exitCode;
+    final split = out.lastIndexOf('\n');
+    final status = int.tryParse(out.substring(split + 1).trim()) ?? 0;
+    if (status != 200) throw RequestFailed(status);
+    text = out.substring(0, split);
+  } else {
+    final response = await http.post(
+      Uri.parse(_searchUrl),
+      headers: headers,
+      body: body,
+    );
+    if (response.statusCode != 200) throw RequestFailed(response.statusCode);
+    text = utf8.decode(response.bodyBytes);
+  }
+  return parseSearch(jsonDecode(text) as Map<String, dynamic>);
 }
 
 /// True when the two name the same song - [titleMatches], or the same letters
 /// with the spaces and dashes in other places: the catalog has
 /// "Maschendrahtzaun", YouTube Music "Maschen-Draht-Zaun".
-bool sameTitle(String catalog, String found) =>
-    titleMatches(catalog, found) ||
-    (normalize(catalog).replaceAll(' ', '') ==
-        normalize(found).replaceAll(' ', ''));
+///
+/// A title in Hangul carries its English name in the bracket - "불장난(Playing
+/// With Fire)" - and [normalize] throws the bracket away with nothing left
+/// outside it. Then the bracket is the title.
+bool sameTitle(String catalog, String found) {
+  if (titleMatches(catalog, found) ||
+      normalize(catalog).replaceAll(' ', '') ==
+          normalize(found).replaceAll(' ', '')) {
+    return true;
+  }
+  if (normalize(found).isNotEmpty) return false;
+  final bracket = RegExp(r'[(\[]([^)\]]+)[)\]]').firstMatch(found);
+  return bracket != null && titleMatches(catalog, bracket.group(1)!);
+}
 
 /// True when a row is the entry: the recording, the title and the artist.
 ///
@@ -399,6 +454,7 @@ Future<void> _write(File file, Map<String, dynamic> catalog) async {
 }
 
 Future<void> main(List<String> args) async {
+  useCurl = args.contains('--curl');
   final only = args
       .firstWhere((arg) => arg.startsWith('--only='), orElse: () => '')
       .replaceFirst('--only=', '')

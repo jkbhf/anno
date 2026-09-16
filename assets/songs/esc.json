@@ -109,7 +109,8 @@
       "country": "Germany",
       "place": 8,
       "tier": 1,
-      "spotifyTrackId": "273eox7q7UTOATzTIhbI1K"
+      "spotifyTrackId": "273eox7q7UTOATzTIhbI1K",
+      "youtubeVideoId": "yModjX2N5L4"
     },
     {
       "year": 1959,
@@ -694,7 +695,8 @@
       "artist": "Ricchi e Poveri",
       "country": "Italy",
       "place": 12,
-      "tier": 1
+      "tier": 1,
+      "youtubeVideoId": "pWLH49vwXMM"
     },
     {
       "year": 1978,
@@ -732,13 +734,15 @@
       "artist": "Izhar Cohen & the Alphabeta",
       "country": "Israel",
       "place": 1,
-      "tier": 1
+      "tier": 1,
+      "youtubeVideoId": "HEg1nFCBT0Q"
     },
     {
       "year": 1979,
       "title": "Hallelujah",
       "artist": "Milk and Honey",
       "spotifyTrackId": "6qvBZHaVQhn4KNwYHsTFDF",
+      "youtubeVideoId": "MMICmo6Hj0k",
       "country": "Israel",
       "place": 1,
       "tier": 1
@@ -886,6 +890,7 @@
       "title": "Hora",
       "artist": "Avi Toledano",
       "spotifyTrackId": "6mWM2y8d5r996k0HY1H6nL",
+      "youtubeVideoId": "8NM_8TFTL1o",
       "country": "Israel",
       "place": 2,
       "tier": 1
@@ -1704,6 +1709,7 @@
       "title": "Take Me to Your Heaven",
       "artist": "Charlotte Nilsson",
       "spotifyTrackId": "0Z6y9qCkkfESLiEOuBWhAZ",
+      "youtubeVideoId": "HEZCuJb9jog",
       "country": "Sweden",
       "place": 1,
       "tier": 1
@@ -2037,6 +2043,7 @@
       "title": "Let Me Try",
       "artist": "Luminița Anghel & Sistem",
       "spotifyTrackId": "49ajK5Ih7mz9OxX6se0f4v",
+      "youtubeVideoId": "1P2hsdv-3zs",
       "country": "Romania",
       "place": 3,
       "tier": 2
@@ -2114,6 +2121,7 @@
       "title": "Congratulations",
       "artist": "Silvía Night",
       "spotifyTrackId": "02wyaj5X9T90TGaM0NF6mo",
+      "youtubeVideoId": "jPb-VHfZIKA",
       "country": "Iceland",
       "tier": 1
     },
@@ -2286,6 +2294,7 @@
       "title": "Shady Lady",
       "artist": "Ani Lorak",
       "spotifyTrackId": "0DHet9TdSsdouIbOjvLf3m",
+      "youtubeVideoId": "ImS59bsOWlU",
       "country": "Ukraine",
       "place": 2,
       "tier": 1
@@ -2521,6 +2530,7 @@
       "title": "Milim",
       "artist": "Harel Skaat",
       "spotifyTrackId": "5Xf6oYzSxNrRlz5vdNfNSS",
+      "youtubeVideoId": "efvrqEevSxc",
       "country": "Israel",
       "place": 14,
       "tier": 2
@@ -2570,7 +2580,8 @@
       "artist": "Mika Newton",
       "country": "Ukraine",
       "place": 4,
-      "tier": 1
+      "tier": 1,
+      "youtubeVideoId": "Jtfetx1u8I0"
     },
     {
       "year": 2011,
@@ -2675,6 +2686,7 @@
       "title": "Party for Everybody",
       "artist": "Buranovskiye Babushki",
       "spotifyTrackId": "6lnmAjsr6xgYJA2RCtncEA",
+      "youtubeVideoId": "COT5-q3KOHU",
       "country": "Russia",
       "place": 2,
       "tier": 1
@@ -2811,6 +2823,7 @@
       "title": "Hold Me",
       "artist": "Farid Mammadov",
       "spotifyTrackId": "2Xfav1hvYvP7pBAumIQLxC",
+      "youtubeVideoId": "uEeIjkcKvEg",
       "country": "Azerbaijan",
       "place": 2,
       "tier": 2
@@ -3077,6 +3090,7 @@
       "title": "You Are the Only One",
       "artist": "Sergey Lazarev",
       "spotifyTrackId": "7ANprWfKB8UoNggroXtfUv",
+      "youtubeVideoId": "X_pL0a2c9DQ",
       "country": "Russia",
       "place": 3,
       "tier": 1
@@ -3974,6 +3988,7 @@
       "title": "New Day Will Rise",
       "artist": "Yuval Raphael",
       "spotifyTrackId": "1H5GUNNCrurtyoOKbS2tT8",
+      "youtubeVideoId": "2FY8N0_w7b4",
       "country": "Israel",
       "place": 2,
       "tier": 1

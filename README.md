@@ -304,7 +304,12 @@ out, so run it once and let it finish rather than restarting it.
 dart run tool/resolve_youtube_music_tracks.dart            # every category
 dart run tool/resolve_youtube_music_tracks.dart assets/songs/esc.json
 dart run tool/resolve_youtube_music_tracks.dart --only=1971,Chai
+dart run tool/resolve_youtube_music_tracks.dart --curl     # when Google blocks Dart
 ```
+
+After a few thousand searches Google answers the Dart client with its "Sorry..."
+page and every search fails with `403`; `--curl` sends the same requests through
+curl, which it lets through.
 
 No credentials: it asks the search behind music.youtube.com for songs only,
 the same endpoint the web player uses. The matching is the Spotify resolver's,
