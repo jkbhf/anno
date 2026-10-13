@@ -14,6 +14,7 @@ const List<String> categoryAssets = [
   'assets/songs/international_hits.json',
   'assets/songs/kpop.json',
   'assets/songs/white_girl_music.json',
+  'assets/songs/anthony.json',
 ];
 
 /// Loads the song catalogs from the JSON assets.

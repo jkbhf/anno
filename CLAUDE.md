@@ -316,6 +316,26 @@ and that the pressing is not a live, remix or karaoke cut. Run
 so far; Choosin' Texas would have had a slot but had no id to be found and was
 swapped for the cure.
 
+## The Anthony deck
+
+`assets/songs/anthony.json` is not curated by a rule like the others - it is
+one person's library, built from their Spotify playlist export
+(`all_the_music_i_know.csv`, kept out of the repo: it carries a user id). The
+test is "Anthony knows it", so remixes, nightcore and party edits
+stay in; that is what the deck is for.
+
+Three things were decided when it was built (2026-10-13):
+
+- **The year is the release date in the export**, against the rule everywhere
+  else. With 1265 songs nobody is going to date them by hand, and for a library
+  that is mostly 2010-2021 singles the pressing date is right far more often
+  than not. Only the best-of pressings were moved by hand (Promiscuous 2006,
+  the two Hannah Montana songs 2006/2007). A duplicate keeps its earliest year.
+- **Mariah Carey 1994 is left out**: alone it would leave 1995-1998 empty, a
+  hole inside the span. The deck runs 1999-2024.
+- **Everything is tier 1.** A personal library has no core and tail, and
+  1999-2009 and 2022-2024 are thin anyway.
+
 ## Draw weight: `tier`
 
 Within a year not everything should come up equally often. The core of a year

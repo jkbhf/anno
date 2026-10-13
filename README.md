@@ -146,8 +146,8 @@ lives in the environment; a PKCE login in a browser must never carry one.
 2. **Categories** - which decks to play from. Several can be picked; each round
    then draws from one of them at random, and every deck has the same chance
    regardless of how many songs it holds for that year. Categories without songs
-   cannot be selected. K-Pop (2016 on) and White Girl Music (2007 on) cover only
-   part of the years and can still be played alone - the card shows the span,
+   cannot be selected. K-Pop (2016 on), White Girl Music (2007 on) and Anthony
+   (1999-2024) cover only part of the years and can still be played alone - the card shows the span,
    and a card outside it only asks for another card.
 3. **Game** - scan a card and the song starts. The screen that follows is the
    scoreboard with a "Reveal the year" button where the song card will be: the
@@ -257,11 +257,12 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 2 is refused at startup. `CLAUDE.md` holds the rule for how many entries a
 contest year gets, which ones, and which of them are core.
 
-ESC, German Songs, International Hits, K-Pop and White Girl Music exist; ESC
+ESC, German Songs, International Hits, K-Pop, White Girl Music and Anthony
+exist; ESC
 is filled with 415 entries from 1956 to 2026, International Hits with 576 from
 1950 to 2026, German Songs with 535 from 1950 to 2026, K-Pop with 115 from 2016
-to 2026 and White Girl Music with 200 from 2007 to 2026 - the last two only
-cover part of the century. The intent is at least one
+to 2026, White Girl Music with 200 from 2007 to 2026 and Anthony with 1265
+from 1999 to 2024 - the last three only cover part of the century. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956, and K-Pop and White Girl Music do not
 try to because what the room knows of them starts later - for how many entries a year gets
