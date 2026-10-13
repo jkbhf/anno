@@ -11,12 +11,16 @@ class SavedGame {
     required this.players,
     required this.categoryIds,
     required this.targetScore,
+    this.categoryWeights = const {},
     this.played = const [],
   });
 
   final List<GamePlayer> players;
   final List<String> categoryIds;
   final int targetScore;
+
+  /// The draw weight per category id, see `GameController.weights`.
+  final Map<String, int> categoryWeights;
 
   /// The songs the game has played so far, as `GameController.playedKey`s.
   final List<String> played;
@@ -69,10 +73,19 @@ class GameStore {
     // years over.
     final played = json['played'];
 
+    // Missing in a game saved before decks had a weight: all of them count 1.
+    final weights = json['categoryWeights'];
+
     return SavedGame(
       players: players,
       categoryIds: categoryIds,
       targetScore: json['targetScore'] as int,
+      categoryWeights: weights is Map
+          ? {
+              for (final entry in weights.entries)
+                entry.key as String: entry.value as int,
+            }
+          : const {},
       played: played is List ? [for (final key in played) key as String] : [],
     );
   }
@@ -82,6 +95,7 @@ class GameStore {
     'players': [for (final p in game.players) p.toJson()],
     'categoryIds': game.categoryIds,
     'targetScore': game.targetScore,
+    'categoryWeights': game.categoryWeights,
     'played': game.played,
   });
 

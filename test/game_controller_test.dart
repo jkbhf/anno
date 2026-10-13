@@ -366,14 +366,18 @@ void main() {
       ],
     );
 
-    GameController withDecks(List<SongCategory> decks, {int seed = 1}) =>
-        GameController(
-          players: [GamePlayer(name: 'Anna')],
-          categories: decks,
-          years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
-          launcher: FakeLauncher(),
-          random: Random(seed),
-        );
+    GameController withDecks(
+      List<SongCategory> decks, {
+      int seed = 1,
+      Map<String, int> weights = const {},
+    }) => GameController(
+      players: [GamePlayer(name: 'Anna')],
+      categories: decks,
+      weights: weights,
+      years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+      launcher: FakeLauncher(),
+      random: Random(seed),
+    );
 
     test('the draw reports which deck the song came from', () {
       final game = withDecks([categoryWith('esc', 'A')]);
@@ -397,6 +401,43 @@ void main() {
       }
 
       expect(seen, {'esc', 'rock'});
+    });
+
+    test('a deck comes up as often as its weight says', () {
+      final game = withDecks(
+        [categoryWith('esc', 'A'), categoryWith('rock', 'B')],
+        weights: {'esc': 3},
+      );
+
+      var esc = 0;
+      const rounds = 2000;
+      for (var round = 0; round < rounds; round++) {
+        game.scan(card2005);
+        if (game.currentCategory!.id == 'esc') esc++;
+        game.cancelRound();
+      }
+
+      // 3 against 1 is 75 % - with a fixed seed, so the margin only has to
+      // cover the randomness of one run.
+      expect(esc / rounds, closeTo(0.75, 0.04));
+    });
+
+    test('a missing or broken weight counts as 1', () {
+      final esc = categoryWith('esc', 'A');
+      final rock = categoryWith('rock', 'B');
+      final game = withDecks([esc, rock], weights: {'rock': 0});
+
+      expect(game.weightOf(esc), 1);
+      expect(game.weightOf(rock), 1);
+    });
+
+    test('the weights go into the saved game', () {
+      final game = withDecks(
+        [categoryWith('esc', 'A'), categoryWith('rock', 'B')],
+        weights: {'esc': 4},
+      );
+
+      expect(game.snapshot.categoryWeights, {'esc': 4, 'rock': 1});
     });
 
     test('a deck without that year is skipped', () {

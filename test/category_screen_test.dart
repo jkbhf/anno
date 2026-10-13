@@ -85,4 +85,25 @@ void main() {
 
     expect(startEnabled(tester), isFalse);
   });
+
+  testWidgets('with two decks picked each shows its weight and share', (
+    tester,
+  ) async {
+    await tester.pumpWidget(wrap([full, short]));
+
+    await tester.tap(find.text('ESC'));
+    await tester.pump();
+    // One deck alone is all of the rounds - nothing to weigh.
+    expect(find.text('100 %'), findsNothing);
+
+    await tester.tap(find.text('K-Pop'));
+    await tester.pump();
+    expect(find.text('50 %'), findsNWidgets(2));
+
+    await tester.tap(find.byTooltip('More often').first);
+    await tester.pump();
+    expect(find.text('2'), findsOneWidget);
+    expect(find.text('67 %'), findsOneWidget);
+    expect(find.text('33 %'), findsOneWidget);
+  });
 }

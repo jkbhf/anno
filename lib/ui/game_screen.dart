@@ -30,6 +30,7 @@ Future<void> openGame(
   required List<SongCategory> categories,
   required List<GamePlayer> players,
   required int targetScore,
+  Map<String, int> weights = const {},
   List<String> played = const [],
 }) async {
   final scope = AppScope.of(context);
@@ -43,6 +44,7 @@ Future<void> openGame(
     players: players,
     categories: categories,
     years: scope.years,
+    weights: weights,
     targetScore: targetScore,
     persist: GameStore.save,
     discard: GameStore.clear,
@@ -344,6 +346,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         final target = _game.targetScore;
         final played = _game.played.toList();
         final selected = {for (final c in _game.categories) c.id};
+        final weights = {
+          for (final c in _game.categories) c.id: _game.weightOf(c),
+        };
         navigator.popUntil((route) => route.isFirst);
         unawaited(
           navigator.push(
@@ -353,6 +358,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                 targetScore: target,
                 played: played,
                 initialSelection: selected,
+                initialWeights: weights,
               ),
             ),
           ),

@@ -48,6 +48,7 @@ class GameController extends ChangeNotifier {
     required this.players,
     required this.categories,
     required this.years,
+    this.weights = const {},
     this.targetScore = 10,
     this.service = MusicService.spotify,
     SongLauncher launcher = const UrlSpotifyLauncher(),
@@ -80,8 +81,17 @@ class GameController extends ChangeNotifier {
   final List<GamePlayer> players;
 
   /// The decks in play. With more than one, every round draws from a category
-  /// picked at random among those that have a song for the scanned year.
+  /// picked at random among those that have a song for the scanned year,
+  /// weighted by [weightOf].
   final List<SongCategory> categories;
+
+  /// How often each deck comes up against the others, by category id - set on
+  /// the category screen. A deck that is missing counts as 1.
+  final Map<String, int> weights;
+
+  /// The draw weight of [category], at least 1: a deck nobody wants to hear
+  /// is one to untick, not one to keep at zero.
+  int weightOf(SongCategory category) => max(1, weights[category.id] ?? 1);
 
   final YearDatabase years;
   final int targetScore;
@@ -184,6 +194,9 @@ class GameController extends ChangeNotifier {
   SavedGame get snapshot => SavedGame(
     players: players,
     categoryIds: [for (final category in categories) category.id],
+    categoryWeights: {
+      for (final category in categories) category.id: weightOf(category),
+    },
     targetScore: targetScore,
     played: [..._played],
   );
@@ -479,9 +492,10 @@ class GameController extends ChangeNotifier {
   /// songs.
   ///
   /// Categories that still hold something unplayed are preferred over ones
-  /// that are used up, and every category gets the same chance regardless of
-  /// how many songs it has for the year - otherwise a well filled deck would
-  /// crowd out a thin one.
+  /// that are used up. Among those the chance is [weightOf], regardless of
+  /// how many songs a deck has for the year - otherwise a well filled deck
+  /// would crowd out a thin one. A deck without a song for the year drops out
+  /// and the others share its part.
   ///
   /// Within the category the song is drawn by [_weightOf]: the core of a year
   /// comes up [_tierOneWeight] times as often as its long tail. In a game a
@@ -516,7 +530,7 @@ class GameController extends ChangeNotifier {
     final candidates = withFresh.isNotEmpty ? withFresh : withAny;
     if (candidates.isEmpty) return null;
 
-    final category = candidates[_random.nextInt(candidates.length)];
+    final category = _pickCategory(candidates);
     final pool = poolOf(category);
     var songs = [
       for (final song in pool)
@@ -534,6 +548,22 @@ class GameController extends ChangeNotifier {
     }
 
     return (category: category, song: _pickWeighted(category, songs));
+  }
+
+  /// Picks from a non-empty list, each deck weighted by [weightOf]. With every
+  /// weight at 1 this is the same single `nextInt` as a plain pick.
+  SongCategory _pickCategory(List<SongCategory> candidates) {
+    var total = 0;
+    for (final category in candidates) {
+      total += weightOf(category);
+    }
+
+    var roll = _random.nextInt(total);
+    for (final category in candidates) {
+      roll -= weightOf(category);
+      if (roll < 0) return category;
+    }
+    return candidates.last;
   }
 
   /// How much more often a `tier: 1` song is drawn than a `tier: 2` one.

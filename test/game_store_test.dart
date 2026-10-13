@@ -16,6 +16,7 @@ void main() {
         players: [GamePlayer(name: 'Anna', score: 3)],
         categoryIds: const ['esc', 'hits'],
         targetScore: 10,
+        categoryWeights: const {'esc': 3, 'hits': 1},
         played: const ['esc|a', 'hits|b'],
       ),
     );
@@ -27,6 +28,7 @@ void main() {
     expect(game.categoryIds, ['esc', 'hits']);
     expect(game.targetScore, 10);
     expect(game.played, ['esc|a', 'hits|b']);
+    expect(game.categoryWeights, {'esc': 3, 'hits': 1});
   });
 
   test('a game saved before played songs were kept still loads', () async {
@@ -40,6 +42,7 @@ void main() {
 
     expect(game!.categoryIds, ['esc']);
     expect(game.played, isEmpty);
+    expect(game.categoryWeights, isEmpty);
   });
 
   test('a value of the wrong shape is no game, not a crash', () async {

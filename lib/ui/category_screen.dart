@@ -9,13 +9,15 @@ import 'game_screen.dart';
 /// Second screen: which decks the game is played from.
 ///
 /// More than one is allowed - each round then draws from a category picked at
-/// random among those that have a song for the scanned year.
+/// random among those that have a song for the scanned year, weighted by the
+/// number on its card.
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({
     required this.players,
     required this.targetScore,
     this.played = const [],
     this.initialSelection = const {},
+    this.initialWeights = const {},
     super.key,
   });
 
@@ -29,12 +31,38 @@ class CategoryScreen extends StatefulWidget {
   /// The category ids ticked when the screen opens.
   final Set<String> initialSelection;
 
+  /// The draw weights to open with, by category id. Missing ones start at 1.
+  final Map<String, int> initialWeights;
+
+  /// The range of the weight a card can be set to.
+  static const int minWeight = 1;
+  static const int maxWeight = 10;
+
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
   late final Set<String> _selected = {...widget.initialSelection};
+  late final Map<String, int> _weights = {...widget.initialWeights};
+
+  int _weightOf(SongCategory category) => (_weights[category.id] ?? 1).clamp(
+    CategoryScreen.minWeight,
+    CategoryScreen.maxWeight,
+  );
+
+  void _setWeight(SongCategory category, int weight) {
+    setState(() => _weights[category.id] = weight);
+  }
+
+  /// The share of rounds [category] gets while every chosen deck has a song
+  /// for the year - a year one of them lacks goes to the others.
+  int _percentOf(SongCategory category, List<SongCategory> chosen) {
+    final playable = chosen.where((c) => !c.isEmpty);
+    final total = playable.fold<int>(0, (sum, c) => sum + _weightOf(c));
+    if (total == 0) return 0;
+    return (_weightOf(category) * 100 / total).round();
+  }
 
   void _toggle(SongCategory category) {
     setState(() {
@@ -56,6 +84,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       categories: chosen,
       players: widget.players,
       targetScore: widget.targetScore,
+      weights: {
+        for (final category in chosen) category.id: _weightOf(category),
+      },
       played: widget.played,
     );
   }
@@ -89,7 +120,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Text(
                     playable > 1
                         ? 'Pick one or several - every round then draws from '
-                              'one of them at random.'
+                              'one of them at random. The number on a card '
+                              'makes it come up more often.'
                         : 'Pick what you want to play.',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
@@ -102,6 +134,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: _CategoryCard(
                         category: category,
                         selected: _selected.contains(category.id),
+                        weight: _weightOf(category),
+                        percent: chosen.length > 1
+                            ? _percentOf(category, chosen)
+                            : null,
+                        onWeight: (weight) => _setWeight(category, weight),
                         onTap: category.isEmpty
                             ? null
                             : () => _toggle(category),
@@ -137,11 +174,23 @@ class _CategoryCard extends StatelessWidget {
   const _CategoryCard({
     required this.category,
     required this.selected,
+    required this.weight,
+    required this.onWeight,
+    this.percent,
     this.onTap,
   });
 
   final SongCategory category;
   final bool selected;
+
+  /// The draw weight, shown and changeable only while the card is selected.
+  final int weight;
+  final ValueChanged<int> onWeight;
+
+  /// The card's share of the rounds; null with only one deck chosen, where
+  /// a share would always read 100 %.
+  final int? percent;
+
   final VoidCallback? onTap;
 
   @override
@@ -191,6 +240,12 @@ class _CategoryCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (enabled && selected && percent != null)
+                  _WeightStepper(
+                    weight: weight,
+                    percent: percent!,
+                    onChanged: onWeight,
+                  ),
                 if (enabled)
                   Icon(
                     selected
@@ -204,6 +259,69 @@ class _CategoryCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The draw weight of a selected card, with its share of the rounds.
+class _WeightStepper extends StatelessWidget {
+  const _WeightStepper({
+    required this.weight,
+    required this.percent,
+    required this.onChanged,
+  });
+
+  final int weight;
+  final int percent;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = theme.colorScheme.onPrimaryContainer;
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                tooltip: 'Less often',
+                visualDensity: VisualDensity.compact,
+                color: color,
+                onPressed: weight > CategoryScreen.minWeight
+                    ? () => onChanged(weight - 1)
+                    : null,
+                icon: const Icon(Icons.remove),
+              ),
+              SizedBox(
+                width: 24,
+                child: Text(
+                  '$weight',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(color: color),
+                ),
+              ),
+              IconButton(
+                tooltip: 'More often',
+                visualDensity: VisualDensity.compact,
+                color: color,
+                onPressed: weight < CategoryScreen.maxWeight
+                    ? () => onChanged(weight + 1)
+                    : null,
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          Text(
+            '$percent %',
+            style: theme.textTheme.labelMedium?.copyWith(color: color),
+          ),
+        ],
       ),
     );
   }
