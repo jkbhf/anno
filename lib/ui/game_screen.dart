@@ -10,6 +10,7 @@ import '../models/player.dart';
 import '../models/song.dart';
 import '../models/song_category.dart';
 import '../music/in_app_launcher.dart';
+import '../music/lyrics.dart';
 import '../music/music_service.dart';
 import '../music/spotify_session.dart';
 import '../music/youtube_music_launcher.dart';
@@ -18,6 +19,7 @@ import 'category_screen.dart';
 import 'centered_body.dart';
 import 'countdown_screen.dart';
 import 'haptics/haptics.dart';
+import 'lyrics_sheet.dart';
 import 'scanner_screen.dart';
 import 'song_progress_bar.dart';
 import 'theme.dart';
@@ -81,9 +83,12 @@ bool needsCountdown(MusicService service, {required bool sessionReady}) =>
 
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
-  const GameScreen({required this.controller, super.key});
+  const GameScreen({required this.controller, this.lyrics, super.key});
 
   final GameController controller;
+
+  /// Where the words behind the lyrics button come from. Null is LRCLIB.
+  final LyricsSource? lyrics;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -161,6 +166,23 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       unawaited(WakeLock.hold());
       _game.onAppResumed();
     }
+  }
+
+  /// The words of the running song, over the round. While the room guesses
+  /// the sheet leaves the name off; in a round played in this tab the text
+  /// follows the song.
+  void _showLyrics() {
+    final song = _game.currentSong;
+    if (song == null) return;
+    unawaited(
+      showLyricsSheet(
+        context,
+        song: song,
+        source: widget.lyrics ?? sharedLyrics,
+        session: _game.playingInApp ? _spotify : null,
+        hideSong: !_game.isRevealed,
+      ),
+    );
   }
 
   /// Pushes the camera and returns the scanned code, or null when it was
@@ -466,9 +488,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           game: _game,
           spotify: AppScope.of(context).spotify,
           onRedraw: _redraw,
+          onLyrics: _showLyrics,
         );
       case RoundPhase.revealed:
-        return _RevealBody(game: _game, onNextRound: _nextRound);
+        return _RevealBody(
+          game: _game,
+          onNextRound: _nextRound,
+          onLyrics: _showLyrics,
+        );
       case RoundPhase.finished:
         return _FinishedBody(
           game: _game,
@@ -625,11 +652,13 @@ class _PlayingBody extends StatelessWidget {
     required this.game,
     required this.spotify,
     required this.onRedraw,
+    required this.onLyrics,
   });
 
   final GameController game;
   final SpotifySession spotify;
   final VoidCallback onRedraw;
+  final VoidCallback onLyrics;
 
   @override
   Widget build(BuildContext context) {
@@ -677,6 +706,13 @@ class _PlayingBody extends StatelessWidget {
                 label: Text('Open in ${game.service.label}'),
               ),
             ),
+          Center(
+            child: TextButton.icon(
+              onPressed: onLyrics,
+              icon: const Icon(Icons.lyrics_outlined),
+              label: const Text('Lyrics'),
+            ),
+          ),
           if (message != null) ...[
             const SizedBox(height: 8),
             Text(
@@ -838,10 +874,15 @@ String? _originLine(GameController game, Song? song) {
 }
 
 class _RevealBody extends StatelessWidget {
-  const _RevealBody({required this.game, required this.onNextRound});
+  const _RevealBody({
+    required this.game,
+    required this.onNextRound,
+    required this.onLyrics,
+  });
 
   final GameController game;
   final VoidCallback onNextRound;
+  final VoidCallback onLyrics;
 
   @override
   Widget build(BuildContext context) {
@@ -913,7 +954,15 @@ class _RevealBody extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton.icon(
+              onPressed: onLyrics,
+              icon: const Icon(Icons.lyrics_outlined),
+              label: const Text('Lyrics'),
+            ),
+          ),
+          const SizedBox(height: 24),
           _SectionHeading(
             title: 'Who got it right?',
             targetScore: game.targetScore,

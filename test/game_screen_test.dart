@@ -5,6 +5,7 @@ import 'package:anno/game/game_controller.dart';
 import 'package:anno/models/player.dart';
 import 'package:anno/models/song.dart';
 import 'package:anno/models/song_category.dart';
+import 'package:anno/music/lyrics.dart';
 import 'package:anno/music/music_service.dart';
 import 'package:anno/music/song_launcher.dart';
 import 'package:anno/music/spotify_session.dart';
@@ -115,14 +116,31 @@ class SeekableSession extends FakeSession {
   Future<void> seek(Duration position) async => seeks.add(position);
 }
 
-Widget wrap(GameController game, {SpotifySession? spotify}) => AppScope(
+/// Words for every song, timed at 0:00, 0:40 and 1:00 - the fake session
+/// sits at 0:42, so the second line is the one being sung.
+class FakeLyrics implements LyricsSource {
+  FakeLyrics({this.lyrics});
+
+  final Lyrics? lyrics;
+
+  @override
+  Future<Lyrics?> find(Song song, {Duration? duration}) async =>
+      lyrics ??
+      Lyrics.fromLrc('[00:00.00] First\n[00:40.00] Second\n[01:00.00] Third');
+}
+
+Widget wrap(
+  GameController game, {
+  SpotifySession? spotify,
+  LyricsSource? lyrics,
+}) => AppScope(
   years: game.years,
   categories: game.categories,
   spotify: spotify ?? NoSpotifySession(),
   service: ValueNotifier(game.service),
   child: MaterialApp(
     theme: buildTheme(),
-    home: GameScreen(controller: game),
+    home: GameScreen(controller: game, lyrics: lyrics ?? FakeLyrics()),
   ),
 );
 
@@ -593,4 +611,93 @@ void main() {
 
     expect(find.text('2 categories'), findsOneWidget);
   });
+
+  testWidgets('the lyrics open while guessing, without the name', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lyrics'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Second'), findsOneWidget);
+    // The words are the hint, the name would be the answer.
+    expect(find.textContaining('My Number One'), findsNothing);
+    expect(find.textContaining('Helena Paparizou'), findsNothing);
+  });
+
+  testWidgets('after the reveal the lyrics carry the name', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    await reveal(game);
+
+    await tester.pumpWidget(wrap(game));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lyrics'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('My Number One · Helena Paparizou'), findsOneWidget);
+    expect(find.text('First'), findsOneWidget);
+  });
+
+  testWidgets('in the tab the lyrics follow the song and seek on a tap', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final session = SeekableSession();
+    final game = buildGame(launcher: const InTabLauncher());
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game, spotify: session));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lyrics'));
+    await tester.pumpAndSettle();
+    // The sheet catches up with the player on its own tick.
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+
+    final second = tester.widget<Text>(find.text('Second'));
+    final third = tester.widget<Text>(find.text('Third'));
+    final style = DefaultTextStyle.of(
+      tester.element(find.text('Second')),
+    ).style;
+    final thirdStyle = DefaultTextStyle.of(
+      tester.element(find.text('Third')),
+    ).style;
+    expect(second.data, 'Second');
+    expect(third.data, 'Third');
+    expect(style.fontWeight, FontWeight.w700);
+    expect(thirdStyle.fontWeight, isNot(FontWeight.w700));
+
+    await tester.tap(find.text('Third'));
+    expect(session.seeks, [const Duration(minutes: 1)]);
+
+    // The ticker stops with the sheet.
+    Navigator.of(tester.element(find.text('Third'))).pop();
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('a song without lyrics says so', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    await reveal(game);
+
+    await tester.pumpWidget(wrap(game, lyrics: _NoLyrics()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lyrics'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('No lyrics found for this song.'), findsOneWidget);
+  });
+}
+
+class _NoLyrics implements LyricsSource {
+  @override
+  Future<Lyrics?> find(Song song, {Duration? duration}) async => null;
 }

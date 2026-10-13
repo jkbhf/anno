@@ -107,6 +107,16 @@ The catalog is not in the way here. An entry without `spotifyTrackId` is looked
 up through the Spotify search first and played from that, so a song plays even
 before the resolver has run.
 
+**Lyrics.** The playing screen and the reveal both carry a **Lyrics** button.
+Spotify's Web API has no lyrics endpoint, so the words come from
+[LRCLIB](https://lrclib.net) (no key, CORS open); what Spotify adds is the
+timing: in a round played in the tab a synced text follows the player, the
+line being sung is lit, and a tap on a line seeks there. A synced text whose
+length is more than five seconds off the recording is shown as plain words
+rather than laid over the wrong cut. In a link round, or on YouTube Music, the
+sheet is the words alone. While the room is still guessing the sheet leaves
+title and artist off.
+
 ## Deploying to GitHub Pages
 
 `.github/workflows/pages.yml` builds the web app on every push to `main` and
