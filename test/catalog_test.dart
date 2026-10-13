@@ -59,18 +59,40 @@ void main() {
     expect(canCarryGame(_load()), isTrue);
   });
 
+  // A personal deck holds what its owner liked, and Jakob liked nothing from
+  // 1994. Starting the deck above it would drop every older song, and a song
+  // put on 1994 to close the hole would be a wrong card - see CLAUDE.md.
+  const knownGaps = {
+    'jakob': {1994},
+  };
+
   test('every deck holds songs and covers its years without a gap', () {
     // A deck played on its own answers a card inside its span, so a hole in
     // the middle of the range is a dead round, not a deliberate thin year.
     for (final category in _load()) {
       expect(category.isEmpty, isFalse, reason: '${category.id} is empty');
 
+      final skip = knownGaps[category.id] ?? const <int>{};
       final years = category.songs.map((s) => s.year).toSet().toList()..sort();
       for (var year = years.first; year <= years.last; year++) {
+        if (skip.contains(year)) continue;
         expect(
           category.songsForYear(year),
           isNotEmpty,
           reason: '${category.id} has nothing for $year',
+        );
+      }
+    }
+  });
+
+  test('the known gaps are still gaps', () {
+    // A year that gets a song should be taken out of knownGaps.
+    for (final category in _load()) {
+      for (final year in knownGaps[category.id] ?? const <int>{}) {
+        expect(
+          category.songsForYear(year),
+          isEmpty,
+          reason: '${category.id} has $year now - take it out of knownGaps',
         );
       }
     }

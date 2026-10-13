@@ -336,6 +336,25 @@ Three things were decided when it was built (2026-10-13):
 - **Everything is tier 1.** A personal library has no core and tail, and
   1999-2009 and 2022-2024 are thin anyway.
 
+## The Jakob deck
+
+`assets/songs/jakob.json`, built the same way as Anthony from a Spotify export
+(`Liked_Songs.csv`, kept out of the repo). Unlike Anthony's library it reaches
+back to the 60s, and the old songs are where the export lies: Spotify dates
+the pressing it carries, and for Hey Jude that is a 2015 best-of. So here the
+export date was **not** taken on trust below ~2010. Every song whose album is a
+best-of, remaster, soundtrack or reissue was moved to its hit year by hand -
+52 of them (2026-10-13); the commit that added the deck names them in its
+message. A
+year that could not be confirmed stays on the export date rather than a guess
+(Mark 'Oh "Let This Party Never End").
+
+**1994 is a hole and stays one.** Nothing in the library is from that year, a
+song moved there would be a wrong card, and starting the deck at 1995 would
+drop everything older. `catalog_test.dart` lists it in `knownGaps`; played
+alone, a 1994 card asks for another card. Everything is tier 1, duplicates keep
+their earliest year.
+
 ## Draw weight: `tier`
 
 Within a year not everything should come up equally often. The core of a year

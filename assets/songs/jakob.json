@@ -1,0 +1,4400 @@
+{
+  "id": "jakob",
+  "name": "Jakob",
+  "description": "Jakob's liked songs",
+  "_comment": "Built from Jakob's Spotify liked songs export (Liked_Songs.csv). year is the release date in that export, moved by hand to the hit year where the export dates a best-of, remaster, soundtrack or reissue. Every entry is tier 1. See CLAUDE.md.",
+  "songs": [
+    {
+      "year": 1964,
+      "title": "Anyone Who Had A Heart",
+      "artist": "Cilla Black",
+      "spotifyTrackId": "3MIU2qXpJi93WAZjAxv1Ia"
+    },
+    {
+      "year": 1964,
+      "title": "You’re My World",
+      "artist": "Cilla Black",
+      "spotifyTrackId": "2uWIBHFfL9p29fCBJczL4K"
+    },
+    {
+      "year": 1964,
+      "title": "A World Without Love",
+      "artist": "Peter And Gordon",
+      "spotifyTrackId": "3DpYBBaZMUvSOo6pKRZ7ff"
+    },
+    {
+      "year": 1965,
+      "title": "Downtown",
+      "artist": "Petula Clark",
+      "spotifyTrackId": "0ZQ6ckgerHYM5mOUxTl99Q"
+    },
+    {
+      "year": 1966,
+      "title": "Eleanor Rigby",
+      "artist": "The Beatles",
+      "spotifyTrackId": "6EOKwO6WaLal58MSsi6U4W"
+    },
+    {
+      "year": 1967,
+      "title": "Girl, You'll Be A Woman Soon",
+      "artist": "Neil Diamond",
+      "spotifyTrackId": "1BmVQ5RGqqtF5cnsv6cQYu"
+    },
+    {
+      "year": 1967,
+      "title": "Penny Lane - Remastered 2015",
+      "artist": "The Beatles",
+      "spotifyTrackId": "7afyyi8zn4FzWbcJ70F56V"
+    },
+    {
+      "year": 1968,
+      "title": "Eloise",
+      "artist": "Barry Ryan",
+      "spotifyTrackId": "4oaIc5g4FTo34um3kU81VY"
+    },
+    {
+      "year": 1968,
+      "title": "Hey Jude - Remastered 2015",
+      "artist": "The Beatles",
+      "spotifyTrackId": "0aym2LBJBk9DAYuHHutrIl"
+    },
+    {
+      "year": 1969,
+      "title": "Sweet Caroline",
+      "artist": "Neil Diamond",
+      "spotifyTrackId": "62AuGbAkt8Ox2IrFFb8GKV"
+    },
+    {
+      "year": 1970,
+      "title": "My Sweet Lord - 2014 Remaster",
+      "artist": "George Harrison",
+      "spotifyTrackId": "0KZodeWxqxd88F9wY1cqgs"
+    },
+    {
+      "year": 1970,
+      "title": "Father And Son",
+      "artist": "Yusuf / Cat Stevens",
+      "spotifyTrackId": "476V2d6iA2tWXgQboKmTtA"
+    },
+    {
+      "year": 1970,
+      "title": "Wild World",
+      "artist": "Yusuf / Cat Stevens",
+      "spotifyTrackId": "7mjSHL2Eb0kAwiKbvNNyD9"
+    },
+    {
+      "year": 1970,
+      "title": "Don't Let It Bring You Down",
+      "artist": "Neil Young",
+      "spotifyTrackId": "4rylUVBblCUdmtDuYql6oI"
+    },
+    {
+      "year": 1971,
+      "title": "Imagine - Remastered 2010",
+      "artist": "John Lennon",
+      "spotifyTrackId": "7pKfPomDEeI4TPT6EOYjn9"
+    },
+    {
+      "year": 1971,
+      "title": "Without You",
+      "artist": "Harry Nilsson",
+      "spotifyTrackId": "6MrILERJLA3Jcq0E9poZsp"
+    },
+    {
+      "year": 1972,
+      "title": "Perfect Day",
+      "artist": "Lou Reed",
+      "spotifyTrackId": "4TOMI010Sd4ZAX4aZ5TS85"
+    },
+    {
+      "year": 1972,
+      "title": "Starman - 2012 Remaster",
+      "artist": "David Bowie",
+      "spotifyTrackId": "0pQskrTITgmCMyr85tb9qq"
+    },
+    {
+      "year": 1972,
+      "title": "You're So Vain - 2015 Remaster",
+      "artist": "Carly Simon",
+      "spotifyTrackId": "6mSqWR95teJI6AXdMzDrjx"
+    },
+    {
+      "year": 1972,
+      "title": "It Never Rains in Southern California",
+      "artist": "Albert Hammond",
+      "spotifyTrackId": "6tunhVGD8C05MZNjSVIsjw"
+    },
+    {
+      "year": 1973,
+      "title": "Turandot, Act III: Nessun dorma!",
+      "artist": "Giacomo Puccini, Luciano Pavarotti, John Alldis Choir, Wandsworth School Boys Choir, London Philharmonic Orchestra, Zubin Mehta",
+      "spotifyTrackId": "3uX11UryFh2ujpeZBWYgkv"
+    },
+    {
+      "year": 1973,
+      "title": "Tie a Yellow Ribbon Round the Ole Oak Tree (feat. Tony Orlando) - 1998 Remastered",
+      "artist": "Dawn, Tony Orlando",
+      "spotifyTrackId": "12UzVR0M7asW2MHAZRJk0I"
+    },
+    {
+      "year": 1973,
+      "title": "Goodbye Yellow Brick Road - Remastered 2014",
+      "artist": "Elton John",
+      "spotifyTrackId": "4IRHwIZHzlHT1FQpRa5RdE"
+    },
+    {
+      "year": 1973,
+      "title": "Wenn ein Mensch lebt",
+      "artist": "Puhdys",
+      "spotifyTrackId": "3fV5cSPMx9ATqtNN0NWqvN"
+    },
+    {
+      "year": 1974,
+      "title": "Hasta Manana",
+      "artist": "ABBA",
+      "spotifyTrackId": "0ymYtcrJsfwI4y5Zdsj0WB"
+    },
+    {
+      "year": 1974,
+      "title": "Seasons in the Sun",
+      "artist": "Terry Jacks",
+      "spotifyTrackId": "7pGMRy91RcQT9oHdPgYz3A"
+    },
+    {
+      "year": 1974,
+      "title": "Griechischer Wein",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "452WSSzuklpg0w4RKTlkvn"
+    },
+    {
+      "year": 1974,
+      "title": "Honey, Honey",
+      "artist": "ABBA",
+      "spotifyTrackId": "2w6JXokk0F8i241Y8C0Mn6"
+    },
+    {
+      "year": 1974,
+      "title": "Annie's Song",
+      "artist": "John Denver",
+      "spotifyTrackId": "5WbvxOO06T9UYOTByyEHsm"
+    },
+    {
+      "year": 1974,
+      "title": "Killer Queen",
+      "artist": "Queen",
+      "spotifyTrackId": "300YN8ebGB90nDuzgz0f3O"
+    },
+    {
+      "year": 1975,
+      "title": "I Do, I Do, I Do, I Do, I Do",
+      "artist": "ABBA",
+      "spotifyTrackId": "0x5BKBAcia1th7UzcoHnD1"
+    },
+    {
+      "year": 1975,
+      "title": "Bohemian Rhapsody",
+      "artist": "Queen",
+      "spotifyTrackId": "3z8h0TU7ReDPLIbEnYhWZb"
+    },
+    {
+      "year": 1976,
+      "title": "Knowing Me, Knowing You",
+      "artist": "ABBA",
+      "spotifyTrackId": "798cuJeotvXP8UVa8GJPnD"
+    },
+    {
+      "year": 1976,
+      "title": "You're The Reason Why",
+      "artist": "The Rubettes",
+      "spotifyTrackId": "6UL9qC3ASsKJfkPkOPVxwV"
+    },
+    {
+      "year": 1976,
+      "title": "Living Next Door to Alice",
+      "artist": "Smokie",
+      "spotifyTrackId": "57TaM8GozkJBz90xvQ1xME"
+    },
+    {
+      "year": 1976,
+      "title": "Alt wie ein Baum",
+      "artist": "Puhdys",
+      "spotifyTrackId": "05MArDzHlmGFezNMU2BR3S"
+    },
+    {
+      "year": 1976,
+      "title": "Tchaikovsky: Swan Lake, Op. 20, Act 2: No. 10, Scene. Moderato",
+      "artist": "Pyotr Ilyich Tchaikovsky, André Previn, London Symphony Orchestra",
+      "spotifyTrackId": "2xizRhme7pYeITbH1NLLGt"
+    },
+    {
+      "year": 1976,
+      "title": "Good Old-Fashioned Lover Boy - Remastered 2011",
+      "artist": "Queen",
+      "spotifyTrackId": "1n7xFAY4xoPeqRvrkzAtsw"
+    },
+    {
+      "year": 1977,
+      "title": "Easy",
+      "artist": "Commodores",
+      "spotifyTrackId": "1JQ6Xm1JrvHfvAqhl5pwaA"
+    },
+    {
+      "year": 1977,
+      "title": "Lost in France",
+      "artist": "Bonnie Tyler",
+      "spotifyTrackId": "2ZhdzJmAjMKgdt5caPAg70"
+    },
+    {
+      "year": 1977,
+      "title": "Im Wagen vor mir",
+      "artist": "Henry Valentino, Daffi Cramer",
+      "spotifyTrackId": "0ZvRbLOqsKlHQwshZoGN7H"
+    },
+    {
+      "year": 1977,
+      "title": "Tür an Tür mit Alice",
+      "artist": "Howard Carpendale",
+      "spotifyTrackId": "5xhHDc9Il8aUrAu4ijixDg"
+    },
+    {
+      "year": 1977,
+      "title": "Thank You For The Music",
+      "artist": "ABBA",
+      "spotifyTrackId": "08GOw3NsrJ0LsCCeyqzt3b"
+    },
+    {
+      "year": 1977,
+      "title": "Lay Back in the Arms of Someone",
+      "artist": "Smokie",
+      "spotifyTrackId": "1r9QBciQVM1BnW72cQUA4R"
+    },
+    {
+      "year": 1977,
+      "title": "Needles and Pins",
+      "artist": "Smokie",
+      "spotifyTrackId": "7MXA6SQO94JALqhIc0W209"
+    },
+    {
+      "year": 1978,
+      "title": "Über sieben Brücken musst du gehn",
+      "artist": "Karat",
+      "spotifyTrackId": "6lhzUwb3Ggfi1tPR3YoIh6"
+    },
+    {
+      "year": 1978,
+      "title": "I Will Survive",
+      "artist": "Gloria Gaynor",
+      "spotifyTrackId": "7rIovIsXE6kMn629b7kDig"
+    },
+    {
+      "year": 1978,
+      "title": "YMCA",
+      "artist": "Village People",
+      "spotifyTrackId": "3ypMsqUwfNFMiooMLVHfkp"
+    },
+    {
+      "year": 1978,
+      "title": "It's a Heartache",
+      "artist": "Bonnie Tyler",
+      "spotifyTrackId": "1Y7VG310Lf5IYP7sVOob4X"
+    },
+    {
+      "year": 1978,
+      "title": "Me Olvide De Vivir",
+      "artist": "Julio Iglesias",
+      "spotifyTrackId": "0kVOor973ijVqOBhYqvaE8"
+    },
+    {
+      "year": 1978,
+      "title": "Stumblin' In",
+      "artist": "Suzi Quatro, Chris Norman",
+      "spotifyTrackId": "2NKZe36oAGEpBx26OoBFLj"
+    },
+    {
+      "year": 1979,
+      "title": "I Was Made For Lovin' You",
+      "artist": "KISS",
+      "spotifyTrackId": "6S9q9mEifNdnTNlli2xSuD"
+    },
+    {
+      "year": 1980,
+      "title": "The Winner Takes It All",
+      "artist": "ABBA",
+      "spotifyTrackId": "3oEkrIfXfSh9zGnE7eBzSV"
+    },
+    {
+      "year": 1980,
+      "title": "Lay All Your Love On Me",
+      "artist": "ABBA",
+      "spotifyTrackId": "4euAGZTszWPrriggYK0HG9"
+    },
+    {
+      "year": 1980,
+      "title": "Hungry Heart",
+      "artist": "Bruce Springsteen",
+      "spotifyTrackId": "1KsI8NEeAna8ZIdojI3FiT"
+    },
+    {
+      "year": 1981,
+      "title": "One Of Us",
+      "artist": "ABBA",
+      "spotifyTrackId": "40IHflbrHcOuC8ZcYxUSAC"
+    },
+    {
+      "year": 1981,
+      "title": "Head Over Heels",
+      "artist": "ABBA",
+      "spotifyTrackId": "5boJKR3VLBW0dc5167wKDE"
+    },
+    {
+      "year": 1981,
+      "title": "Under Pressure - Remastered 2011",
+      "artist": "Queen, David Bowie",
+      "spotifyTrackId": "2fuCquhmrzHpu5xcA1ci9x"
+    },
+    {
+      "year": 1982,
+      "title": "Felicità",
+      "artist": "Al Bano And Romina Power",
+      "spotifyTrackId": "7sXTcibuNYugjjYNfgf2kY"
+    },
+    {
+      "year": 1982,
+      "title": "Nur geträumt",
+      "artist": "Nena",
+      "spotifyTrackId": "0ukySDr4uEzZE36s7t7X8E"
+    },
+    {
+      "year": 1982,
+      "title": "Major Tom (Völlig losgelöst) - Single Version",
+      "artist": "Peter Schilling",
+      "spotifyTrackId": "6u0F8YTqdUic3gMpgTcNDX"
+    },
+    {
+      "year": 1982,
+      "title": "Come On Eileen",
+      "artist": "Dexys Midnight Runners",
+      "spotifyTrackId": "3MrWxJaD2AT0W9DjWF64Vm"
+    },
+    {
+      "year": 1982,
+      "title": "Ich war noch niemals in New York",
+      "artist": "Udo Jürgens",
+      "spotifyTrackId": "18q9XvWQgY1iO3PLGMit8l"
+    },
+    {
+      "year": 1983,
+      "title": "Baby Jane",
+      "artist": "Rod Stewart",
+      "spotifyTrackId": "2wPycOabj69Q2qMYWuU4P4"
+    },
+    {
+      "year": 1983,
+      "title": "Flashdance...What a Feeling - Radio Edit",
+      "artist": "Irene Cara",
+      "spotifyTrackId": "3cbV252akVZInSvJk7jAYX"
+    },
+    {
+      "year": 1983,
+      "title": "Words - Original Version 1983",
+      "artist": "F.R. David",
+      "spotifyTrackId": "1HPJOoIVdUPuaebxzMrVaD"
+    },
+    {
+      "year": 1983,
+      "title": "Moonlight Shadow",
+      "artist": "Mike Oldfield",
+      "spotifyTrackId": "4WpmwEdc4RBos8W8icSSxW"
+    },
+    {
+      "year": 1983,
+      "title": "Total Eclipse of the Heart",
+      "artist": "Bonnie Tyler",
+      "spotifyTrackId": "7wuJGgpTNzbUyn26IOY6rj"
+    },
+    {
+      "year": 1983,
+      "title": "Liebe ohne Leiden",
+      "artist": "Udo Jürgens, Jenny",
+      "spotifyTrackId": "7yCoQpAiuxiJk3ES5HiAEH"
+    },
+    {
+      "year": 1984,
+      "title": "Summer Of '69",
+      "artist": "Bryan Adams",
+      "spotifyTrackId": "0GONea6G2XdnHWjNZd6zt3"
+    },
+    {
+      "year": 1984,
+      "title": "Sounds Like a Melody - 2019 Remaster",
+      "artist": "Alphaville",
+      "spotifyTrackId": "4yDCTzaFfr7YOuYKpwgidL"
+    },
+    {
+      "year": 1984,
+      "title": "1000 und 1 Nacht (Zoom!)",
+      "artist": "Klaus Lage",
+      "spotifyTrackId": "4WMgPbwKrdjFLmuun8U6b6"
+    },
+    {
+      "year": 1984,
+      "title": "Forever Young",
+      "artist": "Alphaville",
+      "spotifyTrackId": "4S1VYqwfkLit9mKVY3MXoo"
+    },
+    {
+      "year": 1984,
+      "title": "Dancing In the Dark",
+      "artist": "Bruce Springsteen",
+      "spotifyTrackId": "7FwBtcecmlpc1sLySPXeGE"
+    },
+    {
+      "year": 1984,
+      "title": "When the Rain Begins to Fall",
+      "artist": "Jermaine Jackson, Pia Zadora",
+      "spotifyTrackId": "030RDC2ayPOUM32F9IH7eE"
+    },
+    {
+      "year": 1984,
+      "title": "Holding Out for a Hero - Single Version",
+      "artist": "Bonnie Tyler",
+      "spotifyTrackId": "3qE6p9fN4YeILT0cQcY1cD"
+    },
+    {
+      "year": 1984,
+      "title": "Such a Shame",
+      "artist": "Talk Talk",
+      "spotifyTrackId": "4BixGe6AcqJU2etTzeh2cN"
+    },
+    {
+      "year": 1984,
+      "title": "To France - Remastered 2015",
+      "artist": "Mike Oldfield",
+      "spotifyTrackId": "2qIWvQsisYABbppFUkBsdj"
+    },
+    {
+      "year": 1984,
+      "title": "I Want to Know What Love Is - 1999 Remaster",
+      "artist": "Foreigner",
+      "spotifyTrackId": "1JLn8RhQzHz3qDqsChcmBl"
+    },
+    {
+      "year": 1985,
+      "title": "Fang das Licht",
+      "artist": "Karel Gott, Darinka",
+      "spotifyTrackId": "4Ov2I9GCsSQN90lSX6EDuo"
+    },
+    {
+      "year": 1985,
+      "title": "Take on Me",
+      "artist": "a-ha",
+      "spotifyTrackId": "2WfaOiMkCvy7F5fcp2zZ8L"
+    },
+    {
+      "year": 1986,
+      "title": "Ohne Dich (schlaf' ich heut Nacht nicht ein)",
+      "artist": "Münchener Freiheit",
+      "spotifyTrackId": "7JM1dFLOa1kI5MqGnDufiY"
+    },
+    {
+      "year": 1986,
+      "title": "(I Just) Died In Your Arms",
+      "artist": "Cutting Crew",
+      "spotifyTrackId": "4ByEFOBuLXpCqvO1kw8Wdm"
+    },
+    {
+      "year": 1986,
+      "title": "Horizont",
+      "artist": "Udo Lindenberg",
+      "spotifyTrackId": "6oXjl47yMZ8AigDIqyMx0I"
+    },
+    {
+      "year": 1986,
+      "title": "Don't Get Me Wrong",
+      "artist": "Pretenders",
+      "spotifyTrackId": "4I3nztDQ3cPajQtzg59tWx"
+    },
+    {
+      "year": 1987,
+      "title": "Als ich fortging",
+      "artist": "Karussell",
+      "spotifyTrackId": "1WINcEKbdMkFHF1px8uzEG"
+    },
+    {
+      "year": 1987,
+      "title": "It's a Sin - 2018 Remaster",
+      "artist": "Pet Shop Boys",
+      "spotifyTrackId": "5fy4vfEtv6lzqLx2Mt7stF"
+    },
+    {
+      "year": 1987,
+      "title": "Hungry Eyes",
+      "artist": "Eric Carmen",
+      "spotifyTrackId": "3sTSo8X7UCDTVUVMJ63LJO"
+    },
+    {
+      "year": 1987,
+      "title": "Seven Wonders - 2017 Remaster",
+      "artist": "Fleetwood Mac",
+      "spotifyTrackId": "1VN2vWSkSmMKOhxr8lHzSx"
+    },
+    {
+      "year": 1988,
+      "title": "Always on My Mind",
+      "artist": "Pet Shop Boys",
+      "spotifyTrackId": "07ABETRdek3ACMpRPvQuaT"
+    },
+    {
+      "year": 1988,
+      "title": "Driving Home for Christmas",
+      "artist": "Chris Rea",
+      "spotifyTrackId": "3Z3QhZAZpqwZa1phsbQ3JZ"
+    },
+    {
+      "year": 1989,
+      "title": "Poison",
+      "artist": "Alice Cooper",
+      "spotifyTrackId": "5XcZRgJv3zMhTqCyESjQrF"
+    },
+    {
+      "year": 1989,
+      "title": "Eternal Flame",
+      "artist": "The Bangles, Susanna Hoffs",
+      "spotifyTrackId": "5MoDQWMDMaAGDEiWsJfeCi"
+    },
+    {
+      "year": 1990,
+      "title": "Verdammt ich lieb dich - 2020 Remaster",
+      "artist": "Matthias Reim",
+      "spotifyTrackId": "4C9fCiueWcpCpnS47sFrsZ"
+    },
+    {
+      "year": 1990,
+      "title": "Wind Of Change",
+      "artist": "Scorpions",
+      "spotifyTrackId": "3ovjw5HZZv43SxTwApooCM"
+    },
+    {
+      "year": 1991,
+      "title": "The Show Must Go On - Remastered 2011",
+      "artist": "Queen",
+      "spotifyTrackId": "7ofV2J7Ndzo2s5NBEgfpxl"
+    },
+    {
+      "year": 1991,
+      "title": "Losing My Religion",
+      "artist": "R.E.M.",
+      "spotifyTrackId": "31AOj9sFz2gM0O3hMARRBx"
+    },
+    {
+      "year": 1992,
+      "title": "Sing Hallelujah!",
+      "artist": "Dr. Alban",
+      "spotifyTrackId": "2qjDNbgLzfBpCvDwfw11Qg"
+    },
+    {
+      "year": 1992,
+      "title": "Gras",
+      "artist": "Gerhard Gundermann",
+      "spotifyTrackId": "5JxQYCbEXf7tY9tKiy6f9I"
+    },
+    {
+      "year": 1992,
+      "title": "Lotosblume - DAS ORIGINAL",
+      "artist": "Die Flippers",
+      "spotifyTrackId": "6Q4jqkegYVAewgSxOXFXRv"
+    },
+    {
+      "year": 1992,
+      "title": "Runaway Train (2022 Remaster)",
+      "artist": "Soul Asylum",
+      "spotifyTrackId": "3TW48DvQ7ChwY1Yy1tkMaP"
+    },
+    {
+      "year": 1993,
+      "title": "Under Stjernerne På Himlen",
+      "artist": "Tommy Seebach",
+      "spotifyTrackId": "0ZcKEZQMJECZZZkqLYl3CR"
+    },
+    {
+      "year": 1993,
+      "title": "Go West - 2003 Remaster",
+      "artist": "Pet Shop Boys",
+      "spotifyTrackId": "5Klo65Y9uouLjNVDV3pqh7"
+    },
+    {
+      "year": 1993,
+      "title": "I'd Do Anything For Love (But I Won't Do That) - Single Edit",
+      "artist": "Meat Loaf",
+      "spotifyTrackId": "3IuSgREoO5y88HdIcE2Xee"
+    },
+    {
+      "year": 1995,
+      "title": "Have You Ever Seen the Rain",
+      "artist": "Smokie",
+      "spotifyTrackId": "5RDuitr7B8gv9lQXgaaW43"
+    },
+    {
+      "year": 1996,
+      "title": "Freed From Desire",
+      "artist": "Gala, Molella, Phil Jay",
+      "spotifyTrackId": "3u5N55tHf7hXATSQrjBh2q"
+    },
+    {
+      "year": 1997,
+      "title": "Kiss Me",
+      "artist": "Sixpence None The Richer",
+      "spotifyTrackId": "754kgU5rWscRTfvlsuEwFp"
+    },
+    {
+      "year": 1997,
+      "title": "You're Still The One",
+      "artist": "Shania Twain",
+      "spotifyTrackId": "1wb4P4F0sxAQ2KXrRvsx6n"
+    },
+    {
+      "year": 1998,
+      "title": "No Matter What",
+      "artist": "Boyzone",
+      "spotifyTrackId": "5KVPav34JaKkXwBTJHnPgo"
+    },
+    {
+      "year": 1999,
+      "title": "The Riddle",
+      "artist": "GIGI D'AGOSTINO",
+      "spotifyTrackId": "0ZqveF2rEFlz2oqF2xrriP"
+    },
+    {
+      "year": 1999,
+      "title": "Du trägst keine Liebe in dir",
+      "artist": "Echt",
+      "spotifyTrackId": "21aT5lIYHjyBIFrXNbNY5U"
+    },
+    {
+      "year": 2000,
+      "title": "She's Got That Light",
+      "artist": "Orange Blue",
+      "spotifyTrackId": "4DRqC64lihScDSfDRLVHrX"
+    },
+    {
+      "year": 2000,
+      "title": "Ich liebe das Leben",
+      "artist": "Vicky Leandros",
+      "spotifyTrackId": "3c12xbWbu6Xv3oeoV2upg6"
+    },
+    {
+      "year": 2001,
+      "title": "Murder On The Dancefloor",
+      "artist": "Sophie Ellis-Bextor",
+      "spotifyTrackId": "4tKGFmENO69tZR9ahgZu48"
+    },
+    {
+      "year": 2002,
+      "title": "The Scientist",
+      "artist": "Coldplay",
+      "spotifyTrackId": "75JFxkI2RXiU7L9VXzMkle"
+    },
+    {
+      "year": 2002,
+      "title": "The Ketchup Song (Aserejé) - Spanglish Version",
+      "artist": "Las Ketchup",
+      "spotifyTrackId": "6UEfyhyfhYQsyipxOd95Ie"
+    },
+    {
+      "year": 2002,
+      "title": "Homeland",
+      "artist": "Hans Zimmer",
+      "spotifyTrackId": "6sNfKtgLF8AgFApf3ENVBe"
+    },
+    {
+      "year": 2002,
+      "title": "Ein Kompliment",
+      "artist": "Sportfreunde Stiller",
+      "spotifyTrackId": "5QRkWkMabF6HJmQQm2HBVX"
+    },
+    {
+      "year": 2002,
+      "title": "All The Things She Said",
+      "artist": "t.A.T.u.",
+      "spotifyTrackId": "4bJygwUKrRgq1stlNXcgMg"
+    },
+    {
+      "year": 2003,
+      "title": "The Reason",
+      "artist": "Hoobastank",
+      "spotifyTrackId": "77loZpT5Y5PRP1S451P9Yz"
+    },
+    {
+      "year": 2003,
+      "title": "Cry on My Shoulder",
+      "artist": "Deutschland sucht den Superstar",
+      "spotifyTrackId": "6usmG2MoD0C0Lc2pNgCVWV"
+    },
+    {
+      "year": 2003,
+      "title": "Star - Single Edit",
+      "artist": "Reamonn",
+      "spotifyTrackId": "13dUMz3cEokiudAEj8FQkC"
+    },
+    {
+      "year": 2004,
+      "title": "Somewhere Only We Know",
+      "artist": "Keane",
+      "spotifyTrackId": "1SKPmfSYaPsETbRHaiA18G"
+    },
+    {
+      "year": 2004,
+      "title": "Irgendwie, irgendwo, irgendwann",
+      "artist": "Nena",
+      "spotifyTrackId": "5i30V8zohIAzKiu617O3cL"
+    },
+    {
+      "year": 2004,
+      "title": "Vois sur ton chemin",
+      "artist": "Bruno Coulais, La Maîtrise de Saint Marc - LES CHORISTES",
+      "spotifyTrackId": "1W2jX1ZlE8ePFeVLZzTjzI"
+    },
+    {
+      "year": 2005,
+      "title": "How to Save a Life",
+      "artist": "The Fray",
+      "spotifyTrackId": "5fVZC9GiM4e8vu99W0Xf6J"
+    },
+    {
+      "year": 2006,
+      "title": "Tonight",
+      "artist": "Reamonn",
+      "spotifyTrackId": "1VIMJ84snstO50Bf9uXcdJ"
+    },
+    {
+      "year": 2006,
+      "title": "Stars Are Blind",
+      "artist": "Paris Hilton",
+      "spotifyTrackId": "5EpWjbFgQMddxO89H5i99c"
+    },
+    {
+      "year": 2007,
+      "title": "Junge",
+      "artist": "Die Ärzte",
+      "spotifyTrackId": "10waMsh44ojvTwXAIy213n"
+    },
+    {
+      "year": 2007,
+      "title": "Ein Stern (der deinen Namen trägt) - Party Mix",
+      "artist": "DJ Ötzi, Nik P.",
+      "spotifyTrackId": "1o5evgltJughVgrPinzAOV"
+    },
+    {
+      "year": 2007,
+      "title": "Arrival to Earth",
+      "artist": "Steve Jablonsky",
+      "spotifyTrackId": "4u4VElxO7JM4IR4jR4TL1s"
+    },
+    {
+      "year": 2007,
+      "title": "Summer Wine - Single Edit",
+      "artist": "Ville Valo & Natalia Avelon",
+      "spotifyTrackId": "1Qscmhz38SgCSiH6WfzqJ4"
+    },
+    {
+      "year": 2008,
+      "title": "Viva La Vida",
+      "artist": "Coldplay",
+      "spotifyTrackId": "3Fcfwhm8oRrBvBZ8KGhtea"
+    },
+    {
+      "year": 2008,
+      "title": "Allein Allein",
+      "artist": "Polarkreis 18",
+      "spotifyTrackId": "4HyJ1VGNu3IszMV0sTsqKP"
+    },
+    {
+      "year": 2008,
+      "title": "The Winner Takes It All - From \"Mamma Mia!\"",
+      "artist": "Meryl Streep",
+      "spotifyTrackId": "0YiBAt98gQSW0fHppSqf4C"
+    },
+    {
+      "year": 2008,
+      "title": "Für immer jung",
+      "artist": "Bushido, Karel Gott",
+      "spotifyTrackId": "3tv1DRqL9KRuIUawu6eYG0"
+    },
+    {
+      "year": 2008,
+      "title": "Lay All Your Love On Me - From 'Mamma Mia!' Original Motion Picture Soundtrack",
+      "artist": "Dominic Cooper, Amanda Seyfried",
+      "spotifyTrackId": "74wySERHHxB8Ul9A0CNBla"
+    },
+    {
+      "year": 2008,
+      "title": "Our Last Summer - From 'Mamma Mia!' Original Motion Picture Soundtrack",
+      "artist": "Colin Firth, Pierce Brosnan, Stellan Skarsgård, Amanda Seyfried, Meryl Streep",
+      "spotifyTrackId": "0WOV6BjaZ2maR1LKc7SiyB"
+    },
+    {
+      "year": 2008,
+      "title": "Voyage voyage",
+      "artist": "Kate Ryan",
+      "spotifyTrackId": "4HsvdyB7HDERx46V8Q8dV8"
+    },
+    {
+      "year": 2008,
+      "title": "Love Story",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1D4PL9B8gOg78jiHg3FvBb"
+    },
+    {
+      "year": 2008,
+      "title": "Slipping Through My Fingers - From 'Mamma Mia!' Original Motion Picture Soundtrack",
+      "artist": "Meryl Streep, Amanda Seyfried",
+      "spotifyTrackId": "1v9X60HXT7T6QiDYRKfcG8"
+    },
+    {
+      "year": 2008,
+      "title": "Hot N Cold",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "0iGckQFyv6svOfAbAY9aWJ"
+    },
+    {
+      "year": 2008,
+      "title": "Aeroplane",
+      "artist": "Reamonn",
+      "spotifyTrackId": "41SpNXYnI4qtnmo0ltiVFK"
+    },
+    {
+      "year": 2008,
+      "title": "Faith",
+      "artist": "Reamonn",
+      "spotifyTrackId": "1QsILjGth5XA2cDJ2KeRfV"
+    },
+    {
+      "year": 2008,
+      "title": "Free Like A Bird",
+      "artist": "Reamonn",
+      "spotifyTrackId": "7BN7QSebz6NCXgqM28U1OJ"
+    },
+    {
+      "year": 2009,
+      "title": "Let This Party Never End",
+      "artist": "Mark 'Oh",
+      "spotifyTrackId": "0ObRC3dRhPZr3HRCkYf25O"
+    },
+    {
+      "year": 2009,
+      "title": "Fuck You",
+      "artist": "Lily Allen",
+      "spotifyTrackId": "435Q3jRK0ZB2Lokr6H6BuZ"
+    },
+    {
+      "year": 2009,
+      "title": "Fireflies",
+      "artist": "Owl City",
+      "spotifyTrackId": "3DamFFqW32WihKkTVlwTYQ"
+    },
+    {
+      "year": 2009,
+      "title": "Oh No!",
+      "artist": "MARINA",
+      "spotifyTrackId": "4sNwdacKyi2S26WrRtNama"
+    },
+    {
+      "year": 2009,
+      "title": "Dance With Somebody - Radio Version",
+      "artist": "Mando Diao",
+      "spotifyTrackId": "5BncQXZqKNmcoy6TRN0IYi"
+    },
+    {
+      "year": 2009,
+      "title": "We Are The People",
+      "artist": "Empire Of The Sun",
+      "spotifyTrackId": "57RHMnLMQx8Qz5V6c0E8dF"
+    },
+    {
+      "year": 2010,
+      "title": "On Melancholy Hill",
+      "artist": "Gorillaz",
+      "spotifyTrackId": "0q6LuUqGLUiCPP1cbdwFs3"
+    },
+    {
+      "year": 2010,
+      "title": "Geboren um zu leben",
+      "artist": "Unheilig",
+      "spotifyTrackId": "1VU8t2MpJRLG5iFEIxqq7z"
+    },
+    {
+      "year": 2010,
+      "title": "Grenade",
+      "artist": "Bruno Mars",
+      "spotifyTrackId": "2tJulUYLDKOg9XrtVkMgcJ"
+    },
+    {
+      "year": 2010,
+      "title": "Talking to the Moon",
+      "artist": "Bruno Mars",
+      "spotifyTrackId": "161DnLWsx1i3u1JT05lzqU"
+    },
+    {
+      "year": 2010,
+      "title": "If a Song Could Get Me You",
+      "artist": "Marit Larsen",
+      "spotifyTrackId": "6w2qPbyRiVYRxHny8dLVfL"
+    },
+    {
+      "year": 2010,
+      "title": "Because the Night",
+      "artist": "Bruce Springsteen",
+      "spotifyTrackId": "47pgnnmY0R0spkwAMMWpNq"
+    },
+    {
+      "year": 2010,
+      "title": "Moments Like This",
+      "artist": "Reamonn",
+      "spotifyTrackId": "5Lc1Kh0xqfqUs09gWO88kq"
+    },
+    {
+      "year": 2010,
+      "title": "Supergirl",
+      "artist": "Reamonn",
+      "spotifyTrackId": "0ebpQJLgkXCsFNJb44nIjB"
+    },
+    {
+      "year": 2010,
+      "title": "Through The Eyes Of A Child",
+      "artist": "Reamonn",
+      "spotifyTrackId": "1e8QVhhw6eBVsffrIAxN7b"
+    },
+    {
+      "year": 2010,
+      "title": "Time",
+      "artist": "Hans Zimmer",
+      "spotifyTrackId": "6ZFbXIJkuI1dVNWvzJzown"
+    },
+    {
+      "year": 2011,
+      "title": "Hollywood Hills",
+      "artist": "Sunrise Avenue",
+      "spotifyTrackId": "2TABt0nj3WNPXbka7nzwIt"
+    },
+    {
+      "year": 2011,
+      "title": "jar of hearts",
+      "artist": "Christina Perri",
+      "spotifyTrackId": "0HZhYMZOcUzZKSFwPOti6m"
+    },
+    {
+      "year": 2011,
+      "title": "The Everlasting Guilty Crown",
+      "artist": "EGOIST",
+      "spotifyTrackId": "76jRSSkd4pLwUflgwSeuB0"
+    },
+    {
+      "year": 2011,
+      "title": "Shooting Stars",
+      "artist": "Bag Raiders",
+      "spotifyTrackId": "2lZHCWCUkxLuQ5skJhkoyS"
+    },
+    {
+      "year": 2011,
+      "title": "Bloody Mary",
+      "artist": "Lady Gaga",
+      "spotifyTrackId": "53jnnqFSRGMDB9ADrNriCA"
+    },
+    {
+      "year": 2011,
+      "title": "Lights",
+      "artist": "Ellie Goulding",
+      "spotifyTrackId": "4QCnMOWxfDkTsGt82HULFb"
+    },
+    {
+      "year": 2011,
+      "title": "Happiness",
+      "artist": "Alexis Jordan",
+      "spotifyTrackId": "3eZixX4yXHV1jMqZrrqHsF"
+    },
+    {
+      "year": 2011,
+      "title": "Love You Like A Love Song",
+      "artist": "Selena Gomez & The Scene",
+      "spotifyTrackId": "0laYHRpNTS6i8FXdupHkJ4"
+    },
+    {
+      "year": 2011,
+      "title": "オレンジ",
+      "artist": "7!!",
+      "spotifyTrackId": "7p30D2KjK2XW7YUvI6nH3o"
+    },
+    {
+      "year": 2011,
+      "title": "It Will Rain",
+      "artist": "Bruno Mars",
+      "spotifyTrackId": "0M3HkE321xpCbCYqVKzr1q"
+    },
+    {
+      "year": 2011,
+      "title": "Departures 〜あなたにおくるアイの歌〜",
+      "artist": "EGOIST",
+      "spotifyTrackId": "5iScqgKQne0dNnlI8MAytp"
+    },
+    {
+      "year": 2011,
+      "title": "a thousand years",
+      "artist": "Christina Perri",
+      "spotifyTrackId": "6z5Yh7kOKeLjqIsNdokIpU"
+    },
+    {
+      "year": 2011,
+      "title": "Judas",
+      "artist": "Lady Gaga",
+      "spotifyTrackId": "7F25roCtYi55JouckaayPC"
+    },
+    {
+      "year": 2012,
+      "title": "No Communication",
+      "artist": "Delta Goodrem",
+      "spotifyTrackId": "5raBWgOa9UpAtnSZX5cRi9"
+    },
+    {
+      "year": 2012,
+      "title": "CASTLE OF GLASS",
+      "artist": "Linkin Park",
+      "spotifyTrackId": "1r1fPuhj9H4VdXr7OK6FL5"
+    },
+    {
+      "year": 2012,
+      "title": "Mystic Land",
+      "artist": "Yoshihisa Hirano",
+      "spotifyTrackId": "2bMkC9ceeNHgh1wDcXDq3A"
+    },
+    {
+      "year": 2012,
+      "title": "departure!",
+      "artist": "Masatoshi Ono",
+      "spotifyTrackId": "68XJP1sxQ5aiwbDJ8McUSr"
+    },
+    {
+      "year": 2012,
+      "title": "Ansatsu Ikka no Yakata",
+      "artist": "Yoshihisa Hirano",
+      "spotifyTrackId": "77zojCpdYn6CvCYh9FeXMj"
+    },
+    {
+      "year": 2012,
+      "title": "Can't Hold Us (feat. Ray Dalton)",
+      "artist": "Macklemore, Ryan Lewis, Macklemore & Ryan Lewis, Ray Dalton",
+      "spotifyTrackId": "3bidbhpOYeV4knp8AIu8Xn"
+    },
+    {
+      "year": 2012,
+      "title": "Simple Song",
+      "artist": "The Shins, James Mercer",
+      "spotifyTrackId": "48bo7uexDvAThcRDvEB2W7"
+    },
+    {
+      "year": 2012,
+      "title": "Radio",
+      "artist": "Lana Del Rey",
+      "spotifyTrackId": "7oqabZXW9Q8p8szD7G8cTg"
+    },
+    {
+      "year": 2012,
+      "title": "Let Your Heart Hold Fast",
+      "artist": "Fort Atlantic",
+      "spotifyTrackId": "0umRfhrhFEz9jkEMTrUSkQ"
+    },
+    {
+      "year": 2012,
+      "title": "Primadonna",
+      "artist": "MARINA",
+      "spotifyTrackId": "4sOX1nhpKwFWPvoMMExi3q"
+    },
+    {
+      "year": 2012,
+      "title": "Locked out of Heaven",
+      "artist": "Bruno Mars",
+      "spotifyTrackId": "3w3y8KPTfNeOKPiqUTakBh"
+    },
+    {
+      "year": 2012,
+      "title": "Bubblegum Bitch",
+      "artist": "MARINA",
+      "spotifyTrackId": "6IbnUaczZBT34DhaD6S18F"
+    },
+    {
+      "year": 2012,
+      "title": "Beauty And A Beat",
+      "artist": "Justin Bieber, Nicki Minaj",
+      "spotifyTrackId": "190jyVPHYjAqEaOGmMzdyk"
+    },
+    {
+      "year": 2012,
+      "title": "Try",
+      "artist": "P!nk",
+      "spotifyTrackId": "01DSvNTUsVROjnSF5j3UbD"
+    },
+    {
+      "year": 2012,
+      "title": "Feel This Moment (feat. Christina Aguilera)",
+      "artist": "Pitbull, Christina Aguilera",
+      "spotifyTrackId": "0Hf4aIJpsN4Os2f0y0VqWl"
+    },
+    {
+      "year": 2012,
+      "title": "E.T.",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "4z8ssgZfs5TzKiO8HaGWXO"
+    },
+    {
+      "year": 2012,
+      "title": "Summertime Sadness",
+      "artist": "Lana Del Rey",
+      "spotifyTrackId": "7sZUHAC6nadme4EwrLe99Q"
+    },
+    {
+      "year": 2013,
+      "title": "바보같은 Story",
+      "artist": "J.Fla",
+      "spotifyTrackId": "3F7Y0zehUKDJYsDMZsSFrF"
+    },
+    {
+      "year": 2013,
+      "title": "Lieder",
+      "artist": "Adel Tawil",
+      "spotifyTrackId": "2ZoO0uLQRp2WhTlyIH8PJf"
+    },
+    {
+      "year": 2013,
+      "title": "The Fox (What Does the Fox Say?)",
+      "artist": "Ylvis",
+      "spotifyTrackId": "5HOpkTTVcmZHnthgyxrIL8"
+    },
+    {
+      "year": 2013,
+      "title": "Kingdom of Predators",
+      "artist": "Yoshihisa Hirano",
+      "spotifyTrackId": "3qwH6U7aDLebQijfmalwvw"
+    },
+    {
+      "year": 2013,
+      "title": "くじら島より",
+      "artist": "Yoshihisa Hirano",
+      "spotifyTrackId": "3getZG2l2s1asy62qO77yD"
+    },
+    {
+      "year": 2013,
+      "title": "You & I",
+      "artist": "One Direction",
+      "spotifyTrackId": "2afCBiru10AFckfOa49wIa"
+    },
+    {
+      "year": 2013,
+      "title": "Elegy of the Dynast",
+      "artist": "Yoshihisa Hirano",
+      "spotifyTrackId": "0uCgEJ9Md7vyyZuRRMqxbI"
+    },
+    {
+      "year": 2013,
+      "title": "Legend of the Martial Artist",
+      "artist": "Yoshihisa Hirano",
+      "spotifyTrackId": "6nBCSvioSDFhZ1RaH6nlA5"
+    },
+    {
+      "year": 2013,
+      "title": "Reason",
+      "artist": "YUZU",
+      "spotifyTrackId": "4YgEwanzISFU4xa27saTux"
+    },
+    {
+      "year": 2013,
+      "title": "Heart Attack",
+      "artist": "Demi Lovato",
+      "spotifyTrackId": "1V6gIisPpYqgFeWbMLI0bA"
+    },
+    {
+      "year": 2013,
+      "title": "Rude",
+      "artist": "MAGIC!",
+      "spotifyTrackId": "3tCwjWLicbjsMCvXhN0WOE"
+    },
+    {
+      "year": 2013,
+      "title": "Mirrors",
+      "artist": "Justin Timberlake",
+      "spotifyTrackId": "4rHZZAmHpZrA3iH5zx8frV"
+    },
+    {
+      "year": 2013,
+      "title": "Sweater Weather",
+      "artist": "The Neighbourhood",
+      "spotifyTrackId": "2QjOHCTQ1Jl3zawyYOpxh6"
+    },
+    {
+      "year": 2013,
+      "title": "Why'd You Only Call Me When You're High?",
+      "artist": "Arctic Monkeys",
+      "spotifyTrackId": "086myS9r57YsLbJpU0TgK9"
+    },
+    {
+      "year": 2013,
+      "title": "Out Of My Head",
+      "artist": "John Newman",
+      "spotifyTrackId": "4cBxS9ozaFa9hTkrV5yQdX"
+    },
+    {
+      "year": 2013,
+      "title": "Story of My Life",
+      "artist": "One Direction",
+      "spotifyTrackId": "4nVBt6MZDDP6tRVdQTgxJg"
+    },
+    {
+      "year": 2013,
+      "title": "Junge",
+      "artist": "Heino",
+      "spotifyTrackId": "1U9UGZpqVvbuPjtDk494Sf"
+    },
+    {
+      "year": 2013,
+      "title": "Another Love",
+      "artist": "Tom Odell",
+      "spotifyTrackId": "3JvKfv6T31zO0ini8iNItO"
+    },
+    {
+      "year": 2013,
+      "title": "Hush",
+      "artist": "miss A",
+      "spotifyTrackId": "0K2UTvyyBPSmr0IccCWNZm"
+    },
+    {
+      "year": 2013,
+      "title": "Young And Beautiful",
+      "artist": "Lana Del Rey",
+      "spotifyTrackId": "2nMeu6UenVvwUktBCpLMK9"
+    },
+    {
+      "year": 2013,
+      "title": "Counting Stars",
+      "artist": "OneRepublic",
+      "spotifyTrackId": "2tpWsVSb9UEmDRxAl1zhX1"
+    },
+    {
+      "year": 2013,
+      "title": "Let Her Go",
+      "artist": "Passenger",
+      "spotifyTrackId": "2qJVWASyvSOwSeSyX2pT5m"
+    },
+    {
+      "year": 2014,
+      "title": "Me And My Broken Heart",
+      "artist": "Rixton",
+      "spotifyTrackId": "1oew3nFNY3vMacJAsvry0S"
+    },
+    {
+      "year": 2014,
+      "title": "unravel",
+      "artist": "TK from Ling tosite sigure",
+      "spotifyTrackId": "1rN9QoVxw5U7TJkyaUR8C1"
+    },
+    {
+      "year": 2014,
+      "title": "Mountains",
+      "artist": "Hans Zimmer",
+      "spotifyTrackId": "0Sg3UL7f40ulmTh0Xwr6qY"
+    },
+    {
+      "year": 2014,
+      "title": "Style",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "0ug5NqcwcFR2xrfTkc7k8e"
+    },
+    {
+      "year": 2014,
+      "title": "Night Changes",
+      "artist": "One Direction",
+      "spotifyTrackId": "5O2P9iiztwhomNh8xkR9lJ"
+    },
+    {
+      "year": 2014,
+      "title": "Wildest Dreams",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "3fVnlF4pGqWI9flVENcT28"
+    },
+    {
+      "year": 2014,
+      "title": "I'm Gonna Show You Crazy",
+      "artist": "Bebe Rexha",
+      "spotifyTrackId": "5LtNBCM2ve0SxP0dlRVvMu"
+    },
+    {
+      "year": 2014,
+      "title": "One Last Time",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "7xoUc6faLbCqZO6fQEYprd"
+    },
+    {
+      "year": 2014,
+      "title": "Fallen",
+      "artist": "EGOIST",
+      "spotifyTrackId": "5AngW69uAboljtCBHZ6AsT"
+    },
+    {
+      "year": 2014,
+      "title": "I Swear",
+      "artist": "SISTAR",
+      "spotifyTrackId": "23InoX4hVLESdcJfSTlxjq"
+    },
+    {
+      "year": 2014,
+      "title": "Moment",
+      "artist": "Glasperlenspiel",
+      "spotifyTrackId": "2ZmpOu1yEv2nRvs5RSm4ra"
+    },
+    {
+      "year": 2014,
+      "title": "Shower",
+      "artist": "Becky G",
+      "spotifyTrackId": "3DmW6y7wTEYHJZlLo1r6XJ"
+    },
+    {
+      "year": 2014,
+      "title": "Beauty And A Beat",
+      "artist": "Alex Goot, ATC, Kurt Hugo Schneider",
+      "spotifyTrackId": "692mV5nN8lLqr2DJMd6h8W"
+    },
+    {
+      "year": 2015,
+      "title": "Color Of Your Life",
+      "artist": "Michał Szpak",
+      "spotifyTrackId": "1zBK0FGAcAGCxAxO6jC680"
+    },
+    {
+      "year": 2015,
+      "title": "Beautiful Now",
+      "artist": "Zedd, Jon Bellion",
+      "spotifyTrackId": "2ISSQPb9LHHiV6ng2NXosL"
+    },
+    {
+      "year": 2015,
+      "title": "Goodbye To Yesterday",
+      "artist": "Elina Born, Stig Rästa",
+      "spotifyTrackId": "4K1MaVNELfr2Vktqgcpn1w"
+    },
+    {
+      "year": 2015,
+      "title": "One Last Breath - Eurovision Version",
+      "artist": "Maria Elena Kyriakou",
+      "spotifyTrackId": "2fBHIfKDD61I5G10SPBOuJ"
+    },
+    {
+      "year": 2015,
+      "title": "Hollywood",
+      "artist": "The Black Skirts",
+      "spotifyTrackId": "3XPD2voMhtskeDqtClsbaU"
+    },
+    {
+      "year": 2015,
+      "title": "Comes and Goes",
+      "artist": "HYUKOH",
+      "spotifyTrackId": "0Nld5ohgWfoPueMEtYNbgE"
+    },
+    {
+      "year": 2015,
+      "title": "IGNITE",
+      "artist": "Eir Aoi",
+      "spotifyTrackId": "5ivhfpfnoHhD8rUI2t3aJG"
+    },
+    {
+      "year": 2015,
+      "title": "Perfect",
+      "artist": "One Direction",
+      "spotifyTrackId": "3NLnwwAQbbFKcEcV8hDItk"
+    },
+    {
+      "year": 2015,
+      "title": "Drag Me Down",
+      "artist": "One Direction",
+      "spotifyTrackId": "2K87XMYnUMqLcX3zvtAF4G"
+    },
+    {
+      "year": 2015,
+      "title": "Play Date",
+      "artist": "Melanie Martinez",
+      "spotifyTrackId": "4DpNNXFMMxQEKl7r0ykkWA"
+    },
+    {
+      "year": 2015,
+      "title": "Can't Feel My Face",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "22VdIZQfgXJea34mQxlt81"
+    },
+    {
+      "year": 2015,
+      "title": "FOOLS",
+      "artist": "Troye Sivan",
+      "spotifyTrackId": "5lMgUPtlARalVIGxl0xE3J"
+    },
+    {
+      "year": 2015,
+      "title": "Ice Cream Cake",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "5vCuawHQ8Poch1odz9JDpB"
+    },
+    {
+      "year": 2015,
+      "title": "Star Sky",
+      "artist": "Two Steps from Hell, Thomas Bergersen",
+      "spotifyTrackId": "06AMpcajziFnEKniV25fiU"
+    },
+    {
+      "year": 2015,
+      "title": "Victory",
+      "artist": "Two Steps from Hell, Thomas Bergersen",
+      "spotifyTrackId": "2F9xBxKbx2M0pbgtSu8fLf"
+    },
+    {
+      "year": 2015,
+      "title": "I Really Like You",
+      "artist": "Carly Rae Jepsen",
+      "spotifyTrackId": "2hHLbkatPwOOmrNxTiD41L"
+    },
+    {
+      "year": 2015,
+      "title": "L$D",
+      "artist": "A$AP Rocky",
+      "spotifyTrackId": "4S7YHmlWwfwArgd8LfSPud"
+    },
+    {
+      "year": 2015,
+      "title": "Lean On",
+      "artist": "Major Lazer, DJ Snake, MØ",
+      "spotifyTrackId": "2YWjW3wwQIBLNhxWKBQd16"
+    },
+    {
+      "year": 2016,
+      "title": "Endless Beauty",
+      "artist": "Soviet Soviet",
+      "spotifyTrackId": "66McPSJxgjh8C9kCsywavU"
+    },
+    {
+      "year": 2016,
+      "title": "Rise",
+      "artist": "Katy Perry",
+      "spotifyTrackId": "1CwNogTShsnsn1C8UhRmYX"
+    },
+    {
+      "year": 2016,
+      "title": "Rough",
+      "artist": "GFRIEND",
+      "spotifyTrackId": "75vepksethG7GrRn815ZYH"
+    },
+    {
+      "year": 2016,
+      "title": "バイバイ YESTERDAY",
+      "artist": "3年E組うた担(渚&茅野&業&磯貝&前原)",
+      "spotifyTrackId": "66lF1QWtLZXJofJ3x388RV"
+    },
+    {
+      "year": 2016,
+      "title": "Main Title Theme - Westworld",
+      "artist": "Ramin Djawadi",
+      "spotifyTrackId": "2sw8teIvVMRZKKYD5p795f"
+    },
+    {
+      "year": 2016,
+      "title": "PLAYING WITH FIRE",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "7qmvLmX9tyaTiBAVNI6YEn"
+    },
+    {
+      "year": 2016,
+      "title": "Someone In The Crowd",
+      "artist": "Emma Stone, Callie Hernandez, Sonoya Mizuno, Jessica Rothe",
+      "spotifyTrackId": "39ncDMVidHOeQgeC5anYZM"
+    },
+    {
+      "year": 2016,
+      "title": "WHISTLE",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "6NEoeBLQbOMw92qMeLfI40"
+    },
+    {
+      "year": 2016,
+      "title": "Lost on You",
+      "artist": "LP",
+      "spotifyTrackId": "40x5K8xyIWVmSeUrYjj0os"
+    },
+    {
+      "year": 2016,
+      "title": "Touch It",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "6WikCGNUbXFmXoLre7vjeW"
+    },
+    {
+      "year": 2016,
+      "title": "Atlantis",
+      "artist": "Seafret",
+      "spotifyTrackId": "1Fid2jjqsHViMX6xNH70hE"
+    },
+    {
+      "year": 2016,
+      "title": "Blood",
+      "artist": "Starbenders",
+      "spotifyTrackId": "27g189cnIDD0IEub9InaBH"
+    },
+    {
+      "year": 2016,
+      "title": "J'ai cherché",
+      "artist": "Amir",
+      "spotifyTrackId": "1lzRxwbdl86iJlYMz48KoD"
+    },
+    {
+      "year": 2016,
+      "title": "STAY",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4TWHREp4wv0TmewqR6rgRd"
+    },
+    {
+      "year": 2016,
+      "title": "I Feel It Coming",
+      "artist": "The Weeknd, Daft Punk",
+      "spotifyTrackId": "3dhjNA0jGA8vHBQ1VdD6vV"
+    },
+    {
+      "year": 2016,
+      "title": "Paint It, Black",
+      "artist": "Ramin Djawadi",
+      "spotifyTrackId": "6rSVuRt7xl4GsEQv4tphSl"
+    },
+    {
+      "year": 2016,
+      "title": "goosebumps",
+      "artist": "Travis Scott",
+      "spotifyTrackId": "6gBFPUFcJLzWGx4lenP6h2"
+    },
+    {
+      "year": 2016,
+      "title": "Breathe",
+      "artist": "Seeb, Neev",
+      "spotifyTrackId": "0CvTKt7jr68v4YEg9oATjX"
+    },
+    {
+      "year": 2016,
+      "title": "Paris",
+      "artist": "Else",
+      "spotifyTrackId": "2H7F7EfsVhy0jNLsVz8MLH"
+    },
+    {
+      "year": 2016,
+      "title": "In the Name of Love",
+      "artist": "Martin Garrix, Bebe Rexha",
+      "spotifyTrackId": "23L5CiUhw2jV1OIMwthR3S"
+    },
+    {
+      "year": 2016,
+      "title": "Blood Sweat & Tears",
+      "artist": "BTS",
+      "spotifyTrackId": "5RGf8qn1TBWVplLyyKUsuV"
+    },
+    {
+      "year": 2016,
+      "title": "Monster",
+      "artist": "EXO",
+      "spotifyTrackId": "7GbUWl6qLW1gdngbEV2WDJ"
+    },
+    {
+      "year": 2016,
+      "title": "I Like That",
+      "artist": "SISTAR",
+      "spotifyTrackId": "4wAjmojVxc6Wbeca9XvnDo"
+    },
+    {
+      "year": 2016,
+      "title": "Hotline Bling",
+      "artist": "Drake",
+      "spotifyTrackId": "0wwPcA6wtMf6HUMpIRdeP7"
+    },
+    {
+      "year": 2016,
+      "title": "False Alarm",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "4oeaIftdpT3JuZLcCkKmVE"
+    },
+    {
+      "year": 2016,
+      "title": "Firestone",
+      "artist": "Kygo, Conrad Sewell",
+      "spotifyTrackId": "1I8tHoNBFTuoJAlh4hfVVE"
+    },
+    {
+      "year": 2016,
+      "title": "Sound of Silence",
+      "artist": "Dami Im",
+      "spotifyTrackId": "2b9czDPSLTI88694CIqCy3"
+    },
+    {
+      "year": 2017,
+      "title": "Apocalypse",
+      "artist": "Cigarettes After Sex",
+      "spotifyTrackId": "1oAwsWBovWRIp7qLMGPIet"
+    },
+    {
+      "year": 2017,
+      "title": "1:05",
+      "artist": "The Black Skirts",
+      "spotifyTrackId": "4bjNOhOMvqFPflwHIaS7Fw"
+    },
+    {
+      "year": 2017,
+      "title": "Where I Am",
+      "artist": "Anja Nissen",
+      "spotifyTrackId": "5jlAXQ3tNhVFR151OGDq6b"
+    },
+    {
+      "year": 2017,
+      "title": "Dusk Till Dawn (feat. Sia) - Radio Edit",
+      "artist": "ZAYN, Sia",
+      "spotifyTrackId": "1j4kHkkpqZRBwE0A4CN4Yv"
+    },
+    {
+      "year": 2017,
+      "title": "Infinity",
+      "artist": "Jaymes Young",
+      "spotifyTrackId": "1SOClUWhOi8vHZYMz3GluK"
+    },
+    {
+      "year": 2017,
+      "title": "We Have to Go",
+      "artist": "Steve Jablonsky",
+      "spotifyTrackId": "3dCr7eI0FcNh3pJdVlM4sr"
+    },
+    {
+      "year": 2017,
+      "title": "Bongzimmer",
+      "artist": "SXTN",
+      "spotifyTrackId": "5peJfpkLPMilv44VqUa2AS"
+    },
+    {
+      "year": 2017,
+      "title": "Passionfruit",
+      "artist": "Drake",
+      "spotifyTrackId": "5mCPDVBb16L4XQwDdbRUpz"
+    },
+    {
+      "year": 2017,
+      "title": "This Is Love",
+      "artist": "Demy",
+      "spotifyTrackId": "0TEOunZoX7nLnt7SRd2g48"
+    },
+    {
+      "year": 2017,
+      "title": "MY FRIEND",
+      "artist": "Jacques Houdek",
+      "spotifyTrackId": "184cjXwukXedpuWm4Xl6X7"
+    },
+    {
+      "year": 2017,
+      "title": "Sorry",
+      "artist": "The Rose",
+      "spotifyTrackId": "7zmrZMinkTMJ2kZgM9Kqgp"
+    },
+    {
+      "year": 2017,
+      "title": "Beautiful Mess",
+      "artist": "Kristian Kostov",
+      "spotifyTrackId": "54ibWn7vBabFt6srLwccav"
+    },
+    {
+      "year": 2017,
+      "title": "Swish Swish",
+      "artist": "Katy Perry, Nicki Minaj",
+      "spotifyTrackId": "3OtMnyUaiipcAT23A8liyi"
+    },
+    {
+      "year": 2017,
+      "title": "Rewrite The Stars",
+      "artist": "Zac Efron, Zendaya",
+      "spotifyTrackId": "630sXRhIcfwr2e4RdNtjKN"
+    },
+    {
+      "year": 2017,
+      "title": "Wolves",
+      "artist": "Selena Gomez, Marshmello",
+      "spotifyTrackId": "0tBbt8CrmxbjRP0pueQkyU"
+    },
+    {
+      "year": 2017,
+      "title": "Unforgettable",
+      "artist": "French Montana, Swae Lee",
+      "spotifyTrackId": "3B54sVLJ402zGa6Xm4YGNe"
+    },
+    {
+      "year": 2017,
+      "title": "Perfect",
+      "artist": "Ed Sheeran",
+      "spotifyTrackId": "0tgVpDi06FyKpA1z0VMD4v"
+    },
+    {
+      "year": 2017,
+      "title": "unendlichkeit - Video Edit",
+      "artist": "CRO",
+      "spotifyTrackId": "3vx9PLd8ugX0jahSUY4ZvO"
+    },
+    {
+      "year": 2017,
+      "title": "Don't Dream It's Over",
+      "artist": "Shane Filan, Paul Meehan",
+      "spotifyTrackId": "3T4UQhYQkZkpIP6GAvITyi"
+    },
+    {
+      "year": 2017,
+      "title": "Likey",
+      "artist": "TWICE",
+      "spotifyTrackId": "4P66rfizAl2nIJCICSMymC"
+    },
+    {
+      "year": 2017,
+      "title": "MOVE",
+      "artist": "TAEMIN",
+      "spotifyTrackId": "1cgBWgoL6520lR2QZDzdGN"
+    },
+    {
+      "year": 2017,
+      "title": "Not Today",
+      "artist": "BTS",
+      "spotifyTrackId": "4hrpoqJMVE7FxBu1YWx0eQ"
+    },
+    {
+      "year": 2017,
+      "title": "Spring Day",
+      "artist": "BTS",
+      "spotifyTrackId": "0WNGsQ1oAuHzNTk8jivBKW"
+    },
+    {
+      "year": 2017,
+      "title": "Gashina",
+      "artist": "SUNMI",
+      "spotifyTrackId": "0jFHMDRXxKaREor3hBEEST"
+    },
+    {
+      "year": 2017,
+      "title": "Anywhere",
+      "artist": "Rita Ora",
+      "spotifyTrackId": "7EI6Iki24tBHAMxtb4xQN2"
+    },
+    {
+      "year": 2017,
+      "title": "Dein Lied",
+      "artist": "Kraftklub",
+      "spotifyTrackId": "4xi57OmBqOQCiULOwUSRW9"
+    },
+    {
+      "year": 2017,
+      "title": "Kiss And Make Up",
+      "artist": "Dua Lipa, BLACKPINK",
+      "spotifyTrackId": "0UFm20Nq9Si8dynAEFsUQ3"
+    },
+    {
+      "year": 2017,
+      "title": "Schule",
+      "artist": "SXTN",
+      "spotifyTrackId": "37vWFbIbAHWeXuwr1Zgv12"
+    },
+    {
+      "year": 2017,
+      "title": "Your Song",
+      "artist": "Rita Ora",
+      "spotifyTrackId": "4c2W3VKsOFoIg2SFaO6DY5"
+    },
+    {
+      "year": 2018,
+      "title": "DNA",
+      "artist": "BTS",
+      "spotifyTrackId": "2ngmiq1KoYn3x25VOmvd8F"
+    },
+    {
+      "year": 2018,
+      "title": "House On Fire",
+      "artist": "Ivy Quainoo",
+      "spotifyTrackId": "7iTm9uXuGGo3lOh3x0meXa"
+    },
+    {
+      "year": 2018,
+      "title": "See U Later",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "2REoTZjaB3jyAt5dgkV5GK"
+    },
+    {
+      "year": 2018,
+      "title": "Super Trouper",
+      "artist": "Cher, Meryl Streep, Christine Baranski, Julie Walters, Pierce Brosnan, Colin Firth, Stellan Skarsgård, Andy Garcia, Amanda Seyfried, Dominic Cooper",
+      "spotifyTrackId": "1QWJmDzpPKqewtg0abEyq8"
+    },
+    {
+      "year": 2018,
+      "title": "La Forza",
+      "artist": "Elina Nechayeva",
+      "spotifyTrackId": "32GxSibwrYAGW4ZZ45CGHA"
+    },
+    {
+      "year": 2018,
+      "title": "Die Reise",
+      "artist": "Max Giesinger",
+      "spotifyTrackId": "16T5RlI2lJeubKQaFQTo1B"
+    },
+    {
+      "year": 2018,
+      "title": "Washing Machine Heart",
+      "artist": "Mitski",
+      "spotifyTrackId": "3jjsRKEsF42ccXf8kWR3nu"
+    },
+    {
+      "year": 2018,
+      "title": "Tempo",
+      "artist": "EXO",
+      "spotifyTrackId": "4EjUFjzi4ErWjklOA3Aslu"
+    },
+    {
+      "year": 2018,
+      "title": "Forever Young",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "6veFyjNycn6EaNCKhkPXUY"
+    },
+    {
+      "year": 2018,
+      "title": "Nothing Breaks Like a Heart (feat. Miley Cyrus)",
+      "artist": "Mark Ronson, Miley Cyrus",
+      "spotifyTrackId": "27rdGxbavYJeBphck5MZAF"
+    },
+    {
+      "year": 2018,
+      "title": "Water Fountain",
+      "artist": "Alec Benjamin",
+      "spotifyTrackId": "4IhKLu7Vk3j2TLmnFPl6To"
+    },
+    {
+      "year": 2018,
+      "title": "Nobody",
+      "artist": "Mitski",
+      "spotifyTrackId": "2P5yIMu2DNeMXTyOANKS6k"
+    },
+    {
+      "year": 2018,
+      "title": "Little Dark Age",
+      "artist": "MGMT",
+      "spotifyTrackId": "2Y0iGXY6m6immVb2ktbseM"
+    },
+    {
+      "year": 2018,
+      "title": "One Of Us",
+      "artist": "Amanda Seyfried, Dominic Cooper",
+      "spotifyTrackId": "71CU7N8x2l4b5DEHPXxZfE"
+    },
+    {
+      "year": 2018,
+      "title": "Mine",
+      "artist": "Bazzi",
+      "spotifyTrackId": "7uzmGiiJyRfuViKKK3lVmR"
+    },
+    {
+      "year": 2018,
+      "title": "The Number Song",
+      "artist": "Logan Paul",
+      "spotifyTrackId": "3heKPJzaCsmjROJMzBsCkO"
+    },
+    {
+      "year": 2018,
+      "title": "Let's Fall in Love for the Night",
+      "artist": "FINNEAS",
+      "spotifyTrackId": "7kQkmyoHCEqwe7QwDbkSXM"
+    },
+    {
+      "year": 2018,
+      "title": "HANN (Alone)",
+      "artist": "i-dle",
+      "spotifyTrackId": "7gr57cYekMWriyJYbT7oZ4"
+    },
+    {
+      "year": 2018,
+      "title": "She′s In The Rain",
+      "artist": "The Rose",
+      "spotifyTrackId": "2I0LNCqlQpAPJlwOEWaefE"
+    },
+    {
+      "year": 2018,
+      "title": "No Lie",
+      "artist": "Sean Paul, Dua Lipa",
+      "spotifyTrackId": "48QmG1dfvMuYLxMPt7KSRA"
+    },
+    {
+      "year": 2018,
+      "title": "YEAH RIGHT",
+      "artist": "Joji",
+      "spotifyTrackId": "1VGzxJnVQND7Cg5H5wGj14"
+    },
+    {
+      "year": 2018,
+      "title": "all my friends",
+      "artist": "21 Savage",
+      "spotifyTrackId": "4paAidoE8VAemwU4jgCc6l"
+    },
+    {
+      "year": 2018,
+      "title": "Snowman",
+      "artist": "Sia",
+      "spotifyTrackId": "7uoFMmxln0GPXQ0AcCBXRq"
+    },
+    {
+      "year": 2018,
+      "title": "breathin",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "4OafepJy2teCjYJbvFE60J"
+    },
+    {
+      "year": 2018,
+      "title": "Just My Type",
+      "artist": "The Vamps",
+      "spotifyTrackId": "29VLdEqFvd0l4JFscCnrp7"
+    },
+    {
+      "year": 2018,
+      "title": "Beautiful (feat. Camila Cabello)",
+      "artist": "Bazzi, Camila Cabello",
+      "spotifyTrackId": "4VUwkH455At9kENOfzTqmF"
+    },
+    {
+      "year": 2018,
+      "title": "Forever",
+      "artist": "CHVRCHES",
+      "spotifyTrackId": "1QHzf28GKB4xblsVPS6LPs"
+    },
+    {
+      "year": 2018,
+      "title": "Better Now",
+      "artist": "Post Malone",
+      "spotifyTrackId": "7dt6x5M1jzdTEt8oCbisTK"
+    },
+    {
+      "year": 2018,
+      "title": "Love Shot",
+      "artist": "EXO",
+      "spotifyTrackId": "0yB4jrSwN0bFtFRDR5vyMj"
+    },
+    {
+      "year": 2018,
+      "title": "Flames",
+      "artist": "David Guetta, Sia",
+      "spotifyTrackId": "66BjcDhhwWCcQIBxHMpKXh"
+    },
+    {
+      "year": 2018,
+      "title": "BUTTERFLY EFFECT",
+      "artist": "Travis Scott",
+      "spotifyTrackId": "2cYqizR4lgvp4Qu6IQ3qGN"
+    },
+    {
+      "year": 2018,
+      "title": "Girls (feat. Cardi B, Bebe Rexha & Charli XCX)",
+      "artist": "Rita Ora, Bebe Rexha, Charli xcx, Cardi B",
+      "spotifyTrackId": "1YNQscOx6OqBQjxgJVhEeW"
+    },
+    {
+      "year": 2018,
+      "title": "For You (Fifty Shades Freed)",
+      "artist": "Liam Payne, Rita Ora",
+      "spotifyTrackId": "1iyiw6QLmbqeSWYKUKXebG"
+    },
+    {
+      "year": 2018,
+      "title": "Happier",
+      "artist": "Marshmello, Bastille",
+      "spotifyTrackId": "2dpaYNEQHiRxtZbfNsse99"
+    },
+    {
+      "year": 2018,
+      "title": "Heroine",
+      "artist": "SUNMI",
+      "spotifyTrackId": "5gA9Xn8oPts2aewPgxVkPD"
+    },
+    {
+      "year": 2018,
+      "title": "I'm a Mess",
+      "artist": "Bebe Rexha",
+      "spotifyTrackId": "04ZTP5KsCypmtCmQg5tH9R"
+    },
+    {
+      "year": 2018,
+      "title": "Let You Love Me",
+      "artist": "Rita Ora",
+      "spotifyTrackId": "5Fla3zyOCcIRqrDoKLU0DP"
+    },
+    {
+      "year": 2018,
+      "title": "Rooftop",
+      "artist": "Nico Santos",
+      "spotifyTrackId": "6QYaCtC92p4KzAFew3b6Lh"
+    },
+    {
+      "year": 2018,
+      "title": "Safe",
+      "artist": "Nico Santos",
+      "spotifyTrackId": "1dbFH12UsEcYpyckHiRQDD"
+    },
+    {
+      "year": 2018,
+      "title": "Shallow",
+      "artist": "Lady Gaga, Bradley Cooper",
+      "spotifyTrackId": "2VxeLyX666F8uXCJ0dZF8B"
+    },
+    {
+      "year": 2018,
+      "title": "Solo (feat. Demi Lovato)",
+      "artist": "Clean Bandit, Demi Lovato",
+      "spotifyTrackId": "6kPJZM97LwdG9QIsT7khp6"
+    },
+    {
+      "year": 2018,
+      "title": "SICKO MODE",
+      "artist": "Travis Scott",
+      "spotifyTrackId": "2xLMifQCjDGFmkHkpNLD9h"
+    },
+    {
+      "year": 2018,
+      "title": "Sweet but Psycho",
+      "artist": "Ava Max",
+      "spotifyTrackId": "25sgk305KZfyuqVBQIahim"
+    },
+    {
+      "year": 2018,
+      "title": "Unforgettable",
+      "artist": "Nico Santos",
+      "spotifyTrackId": "30f7TNgvsS1AWtyuVqMucH"
+    },
+    {
+      "year": 2019,
+      "title": "MIROH",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "2sFWzfV3kqAwXEWM9BjzwH"
+    },
+    {
+      "year": 2019,
+      "title": "Let It Snow",
+      "artist": "Andrej Hermlin and his Swing Dance Orchestra",
+      "spotifyTrackId": "2y86q7qXqwelq4MGjPA2Rb"
+    },
+    {
+      "year": 2019,
+      "title": "Mượn Rượu Tỏ Tình",
+      "artist": "BigDaddy, Emily",
+      "spotifyTrackId": "21PfXNAfEIaw1XZeSFGHkt"
+    },
+    {
+      "year": 2019,
+      "title": "Ritual",
+      "artist": "Tiësto, Jonas Blue, Rita Ora",
+      "spotifyTrackId": "3M9Apu4OZfylLTFKvgEtKa"
+    },
+    {
+      "year": 2019,
+      "title": "Too Late For Love",
+      "artist": "John Lundvik",
+      "spotifyTrackId": "6kIdjk3D8XxA2UafE0THGK"
+    },
+    {
+      "year": 2019,
+      "title": "Don't Give Up On Me",
+      "artist": "Andy Grammer",
+      "spotifyTrackId": "0fiijtFXDJ9MOVwgSaEQJ5"
+    },
+    {
+      "year": 2019,
+      "title": "Don't Know What To Do",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "38SKB7UfhL6Sd6Joxex5yK"
+    },
+    {
+      "year": 2019,
+      "title": "Cruel Summer",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "1BxfuPKGuaTgP7aM0Bbdwr"
+    },
+    {
+      "year": 2019,
+      "title": "夜に駆ける",
+      "artist": "YOASOBI",
+      "spotifyTrackId": "3dPtXHP0oXQ4HCWHsOA9js"
+    },
+    {
+      "year": 2019,
+      "title": "Strangers",
+      "artist": "Sigrid",
+      "spotifyTrackId": "3CWuU5kIw8zsWJTcgreUwl"
+    },
+    {
+      "year": 2019,
+      "title": "Say So",
+      "artist": "Doja Cat",
+      "spotifyTrackId": "3Dv1eDb0MEgF93GpLXlucZ"
+    },
+    {
+      "year": 2019,
+      "title": "double take",
+      "artist": "Dhruv",
+      "spotifyTrackId": "2CVChktEKBsM6v4IfdFU5k"
+    },
+    {
+      "year": 2019,
+      "title": "Love Talk - English Version",
+      "artist": "WayV",
+      "spotifyTrackId": "2e3cJdJ8xWwydl8JIYlCqB"
+    },
+    {
+      "year": 2019,
+      "title": "Power is Power (feat. The Weeknd & Travis Scott)",
+      "artist": "SZA, The Weeknd, Travis Scott, Game of Thrones",
+      "spotifyTrackId": "4cbdPT6uaBOgOQe3fLMofl"
+    },
+    {
+      "year": 2019,
+      "title": "Allergic",
+      "artist": "Post Malone",
+      "spotifyTrackId": "4LIbjDbLweGCrHVw8QbMSb"
+    },
+    {
+      "year": 2019,
+      "title": "Alone, Pt. II",
+      "artist": "Alan Walker, Ava Max",
+      "spotifyTrackId": "0bMbDctzMmTyK2j74j3nF3"
+    },
+    {
+      "year": 2019,
+      "title": "Say Na Na Na",
+      "artist": "Serhat",
+      "spotifyTrackId": "1QiX3OmiJ3AyClandLJoEj"
+    },
+    {
+      "year": 2019,
+      "title": "Spirit in the Sky",
+      "artist": "KEiiNO",
+      "spotifyTrackId": "7B7O5jgFpWfc9orZw6FN4K"
+    },
+    {
+      "year": 2019,
+      "title": "ily (i love you baby) (feat. Emilee)",
+      "artist": "Surf Mesa, Emilee",
+      "spotifyTrackId": "62aP9fBQKYKxi7PDXwcUAS"
+    },
+    {
+      "year": 2019,
+      "title": "Make You Mine",
+      "artist": "PUBLIC",
+      "spotifyTrackId": "5iFwAOB2TFkPJk8sMlxP8g"
+    },
+    {
+      "year": 2019,
+      "title": "Tokyo Ghoul Opening (Unravel)",
+      "artist": "Yung Anime",
+      "spotifyTrackId": "3mT02eyUNN7Kis4MaGqLtH"
+    },
+    {
+      "year": 2019,
+      "title": "Someone To You",
+      "artist": "BANNERS",
+      "spotifyTrackId": "2f0pn9DkEJwAzXApnFh5cr"
+    },
+    {
+      "year": 2019,
+      "title": "Hollywood's Bleeding",
+      "artist": "Post Malone",
+      "spotifyTrackId": "01iuzK2ziYAVE2n9aSXbWp"
+    },
+    {
+      "year": 2019,
+      "title": "Circles",
+      "artist": "Post Malone",
+      "spotifyTrackId": "21jGcNKet2qwijlDFuPiPb"
+    },
+    {
+      "year": 2019,
+      "title": "Before You Go",
+      "artist": "Lewis Capaldi",
+      "spotifyTrackId": "2gMXnyrvIjhVBUZwvLZDMP"
+    },
+    {
+      "year": 2019,
+      "title": "Why Do You Love Me",
+      "artist": "Charlotte Lawrence",
+      "spotifyTrackId": "2y8iBf0QRqCKFtePi9Rl2H"
+    },
+    {
+      "year": 2019,
+      "title": "Easier - Seeb Remix",
+      "artist": "5 Seconds of Summer, Seeb",
+      "spotifyTrackId": "6GIRtKNXokeu25nn7U6Hu8"
+    },
+    {
+      "year": 2019,
+      "title": "Kein Stolz",
+      "artist": "Anderson Rey",
+      "spotifyTrackId": "060zzUG6vbfViwKMcHxwh9"
+    },
+    {
+      "year": 2019,
+      "title": "LET IT BE〜 YOU&I〜 ONLY LOOK AT ME / ROSÉ - BLACKPINK ARENA TOUR 2018 \"SPECIAL FINAL IN KYOCERA DOME OSAKA\"",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "7Iv6YcXoLNhTPYhHqtyNUy"
+    },
+    {
+      "year": 2019,
+      "title": "parents",
+      "artist": "YUNGBLUD",
+      "spotifyTrackId": "68rVGSTnCiFOET9k5Vd8Se"
+    },
+    {
+      "year": 2019,
+      "title": "Boy With Luv (feat. Halsey)",
+      "artist": "BTS, Halsey",
+      "spotifyTrackId": "5KawlOMHjWeUjQtnuRs22c"
+    },
+    {
+      "year": 2019,
+      "title": "i'm so tired...",
+      "artist": "Lauv, Troye Sivan",
+      "spotifyTrackId": "7COXchtUOMd6uIT6HvmRaI"
+    },
+    {
+      "year": 2019,
+      "title": "Paradise",
+      "artist": "Bazzi",
+      "spotifyTrackId": "7njKgVl3AnLflRad38o7AG"
+    },
+    {
+      "year": 2019,
+      "title": "Tag ein Tag aus",
+      "artist": "MAJAN",
+      "spotifyTrackId": "3r0V6TPxdwcXP5CGQM4FbQ"
+    },
+    {
+      "year": 2019,
+      "title": "Feeling",
+      "artist": "APRIL",
+      "spotifyTrackId": "6AwCOL4f2R8KVSNpomNmqy"
+    },
+    {
+      "year": 2019,
+      "title": "gogobebe",
+      "artist": "MAMAMOO",
+      "spotifyTrackId": "6E7jAJN2e3znSHyPCdQqx8"
+    },
+    {
+      "year": 2019,
+      "title": "Gotta Go",
+      "artist": "CHUNG HA",
+      "spotifyTrackId": "0xq4ZTcmwBfkPGo4RRKmMe"
+    },
+    {
+      "year": 2019,
+      "title": "Psycho",
+      "artist": "Red Velvet",
+      "spotifyTrackId": "3CYH422oy1cZNoo0GTG1TK"
+    },
+    {
+      "year": 2019,
+      "title": "Feel Special",
+      "artist": "TWICE",
+      "spotifyTrackId": "2HtcPHFdo7eu4Ilbvb0BVI"
+    },
+    {
+      "year": 2019,
+      "title": "Staring At The Sun (feat. SZA)",
+      "artist": "Post Malone, SZA",
+      "spotifyTrackId": "5KE9b4x7Zj2A8XtbkqhqTe"
+    },
+    {
+      "year": 2019,
+      "title": "Watermelon Sugar",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "6UelLqGlWMcVH1E5c4H7lY"
+    },
+    {
+      "year": 2019,
+      "title": "Wow.",
+      "artist": "Post Malone",
+      "spotifyTrackId": "7xQAfvXzm3AkraOtGPWIZg"
+    },
+    {
+      "year": 2019,
+      "title": "HIGHEST IN THE ROOM",
+      "artist": "Travis Scott",
+      "spotifyTrackId": "3eekarcy7kvN4yt5ZFzltW"
+    },
+    {
+      "year": 2019,
+      "title": "Better",
+      "artist": "Lena, Nico Santos",
+      "spotifyTrackId": "5Pwu8NkDhEkObPp8TvHMUn"
+    },
+    {
+      "year": 2019,
+      "title": "Salt",
+      "artist": "Ava Max",
+      "spotifyTrackId": "7vgv8KZBSo0TPzyIWG9yzV"
+    },
+    {
+      "year": 2019,
+      "title": "Sucker",
+      "artist": "Alex Goot, Jada Facer, Kurt Hugo Schneider",
+      "spotifyTrackId": "7duvDAECVSLi3SLEs3rA1E"
+    },
+    {
+      "year": 2019,
+      "title": "thank you",
+      "artist": "Lena",
+      "spotifyTrackId": "7mIYFzxKWOYejNfMsjBStw"
+    },
+    {
+      "year": 2020,
+      "title": "God’s Menu",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "4XPXrcpyNr30Km6aPiflJy"
+    },
+    {
+      "year": 2020,
+      "title": "Universe",
+      "artist": "LOONA",
+      "spotifyTrackId": "1ysk5bCUyzG7b2JitNkEpW"
+    },
+    {
+      "year": 2020,
+      "title": "All I Want",
+      "artist": "Olivia Rodrigo, Disney",
+      "spotifyTrackId": "1v6svH1Fyx9C1nIt1mA2DT"
+    },
+    {
+      "year": 2020,
+      "title": "WANNABE",
+      "artist": "ITZY",
+      "spotifyTrackId": "4pspYVQGFHLPEFgQPD1J7e"
+    },
+    {
+      "year": 2020,
+      "title": "紅蓮華",
+      "artist": "LiSA",
+      "spotifyTrackId": "0qMip0B2D4ePEjBJvAtYre"
+    },
+    {
+      "year": 2020,
+      "title": "Crazy Over You",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "7qq0EOPW4RRlqdvMBmdd73"
+    },
+    {
+      "year": 2020,
+      "title": "Lose You To Love Me",
+      "artist": "Selena Gomez",
+      "spotifyTrackId": "4l0Mvzj72xxOpRrp6h8nHi"
+    },
+    {
+      "year": 2020,
+      "title": "Jerusalema (feat. Nomcebo Zikode)",
+      "artist": "Master KG, Nomcebo Zikode",
+      "spotifyTrackId": "2MlOUXmcofMackX3bxfSwi"
+    },
+    {
+      "year": 2020,
+      "title": "eight(Prod.&Feat. SUGA of BTS)",
+      "artist": "IU, SUGA",
+      "spotifyTrackId": "0pYacDCZuRhcrwGUA5nTBe"
+    },
+    {
+      "year": 2020,
+      "title": "Drown",
+      "artist": "milet",
+      "spotifyTrackId": "5f9RyYycXAdDHNJvmCnPgh"
+    },
+    {
+      "year": 2020,
+      "title": "Earthbound",
+      "artist": "Trent Reznor and Atticus Ross",
+      "spotifyTrackId": "4ZqTL8uzWJJEQmRtagpABf"
+    },
+    {
+      "year": 2020,
+      "title": "Love Again",
+      "artist": "Dua Lipa",
+      "spotifyTrackId": "45BZcKdKl8OXpuGSlSvEun"
+    },
+    {
+      "year": 2020,
+      "title": "Übermorgen",
+      "artist": "Mark Forster",
+      "spotifyTrackId": "1NP7bzm8UksJUWXsuFoOwE"
+    },
+    {
+      "year": 2020,
+      "title": "Friends",
+      "artist": "BTS",
+      "spotifyTrackId": "5RjUtRlDonw3TBgGGMLC5b"
+    },
+    {
+      "year": 2020,
+      "title": "In Your Eyes (feat. Alida)",
+      "artist": "Robin Schulz, Alida",
+      "spotifyTrackId": "61ZM92T2zaXIVsqncThQzC"
+    },
+    {
+      "year": 2020,
+      "title": "Come & Go (with Marshmello)",
+      "artist": "Juice WRLD, Marshmello",
+      "spotifyTrackId": "2Y0wPrPQBrGhoLn14xRYCG"
+    },
+    {
+      "year": 2020,
+      "title": "you broke me first",
+      "artist": "Tate McRae",
+      "spotifyTrackId": "45bE4HXI0AwGZXfZtMp8JR"
+    },
+    {
+      "year": 2020,
+      "title": "Heather",
+      "artist": "Conan Gray",
+      "spotifyTrackId": "4xqrdfXkTW4T0RauPLv3WA"
+    },
+    {
+      "year": 2020,
+      "title": "What A Life",
+      "artist": "Scarlet Pleasure",
+      "spotifyTrackId": "4MhUUmTRFAthkbFpkA25aC"
+    },
+    {
+      "year": 2020,
+      "title": "Voilà",
+      "artist": "Barbara Pravi",
+      "spotifyTrackId": "1uAOCTevGnyKIDbgZdOCnE"
+    },
+    {
+      "year": 2020,
+      "title": "Run",
+      "artist": "Joji",
+      "spotifyTrackId": "3AkdSFo7quCZ781KCqNK0T"
+    },
+    {
+      "year": 2020,
+      "title": "Kibou No Uta (Food Wars! Shokugeki No Soma)",
+      "artist": "Miura Jam",
+      "spotifyTrackId": "1SqKx8ek6w2v6XYPQROobR"
+    },
+    {
+      "year": 2020,
+      "title": "WINTER FLOWER(Feat.RM)",
+      "artist": "Younha, RM",
+      "spotifyTrackId": "4Eefey3uN90Abhbr47zKmC"
+    },
+    {
+      "year": 2020,
+      "title": "Save Your Tears",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "5QO79kh1waicV47BqGRL3g"
+    },
+    {
+      "year": 2020,
+      "title": "My Head & My Heart",
+      "artist": "Ava Max",
+      "spotifyTrackId": "1KixkQVDUHggZMU9dUobgm"
+    },
+    {
+      "year": 2020,
+      "title": "Midnight Sky",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "27ycaQnQAxaPiyeg3nr2aB"
+    },
+    {
+      "year": 2020,
+      "title": "Love To Hate Me",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "7iKDsPfLT0d5mu2htfMKBZ"
+    },
+    {
+      "year": 2020,
+      "title": "How You Like That",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4SFknyjLcyTLJFPKD2m96o"
+    },
+    {
+      "year": 2020,
+      "title": "CRY FOR ME",
+      "artist": "TWICE",
+      "spotifyTrackId": "2xtP8RNbo2BEMzLX7tK7aq"
+    },
+    {
+      "year": 2020,
+      "title": "hot girl bummer",
+      "artist": "blackbear",
+      "spotifyTrackId": "2mt1IqcFyY1zmYZT8Q3xw9"
+    },
+    {
+      "year": 2020,
+      "title": "Jenny (I Wanna Ruin Our Friendship)",
+      "artist": "Studio Killers",
+      "spotifyTrackId": "4JLBDUYSaOMPYND0iWeSWQ"
+    },
+    {
+      "year": 2020,
+      "title": "Wonder",
+      "artist": "Shawn Mendes",
+      "spotifyTrackId": "5KCbr5ndeby4y4ggthdiAb"
+    },
+    {
+      "year": 2020,
+      "title": "Glücklicher allein",
+      "artist": "Julia Beautx",
+      "spotifyTrackId": "3bbycVrQ8mnccrBsZrihF5"
+    },
+    {
+      "year": 2020,
+      "title": "Girl mit den Likes",
+      "artist": "Julia Beautx",
+      "spotifyTrackId": "70z3fEuIAdHAncj4dcRIOF"
+    },
+    {
+      "year": 2020,
+      "title": "Let's Love",
+      "artist": "David Guetta, Sia",
+      "spotifyTrackId": "6lhZLbb0czULpjb2kFryPS"
+    },
+    {
+      "year": 2020,
+      "title": "Mad at Disney",
+      "artist": "salem ilese",
+      "spotifyTrackId": "7aGyRfJWtLqgJaZoG9lJhE"
+    },
+    {
+      "year": 2020,
+      "title": "Lovesick Girls",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "4Ws314Ylb27BVsvlZOy30C"
+    },
+    {
+      "year": 2020,
+      "title": "Pretty Savage",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "1XnpzbOGptRwfJhZgLbmSr"
+    },
+    {
+      "year": 2020,
+      "title": "I CAN'T STOP ME",
+      "artist": "TWICE",
+      "spotifyTrackId": "37ZtpRBkHcaq6hHy0X98zn"
+    },
+    {
+      "year": 2020,
+      "title": "What You Waiting For",
+      "artist": "JEON SOMI",
+      "spotifyTrackId": "4CoxD8tetisleUQDA7vn1B"
+    },
+    {
+      "year": 2020,
+      "title": "Blinding Lights",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "0VjIjW4GlUZAMYd2vXMi3b"
+    },
+    {
+      "year": 2020,
+      "title": "Paradise",
+      "artist": "VIZE, Joker Bra, Leony",
+      "spotifyTrackId": "0BDQlse1DeRbOnVPY3YA5z"
+    },
+    {
+      "year": 2020,
+      "title": "3AM",
+      "artist": "Russ, Ty Dolla $ign",
+      "spotifyTrackId": "6xRNqXP3baPR9buXr8vreM"
+    },
+    {
+      "year": 2020,
+      "title": "You Never Know",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "39kzWAiVPpycdMpr745oPj"
+    },
+    {
+      "year": 2020,
+      "title": "Baby",
+      "artist": "Madison Beer",
+      "spotifyTrackId": "7LjEQ8GsQiUNVakV6TZI0e"
+    },
+    {
+      "year": 2020,
+      "title": "pporappippam",
+      "artist": "SUNMI",
+      "spotifyTrackId": "7oQh96s9YemWG3A4zkIbrU"
+    },
+    {
+      "year": 2020,
+      "title": "District 9",
+      "artist": "Stray Kids",
+      "spotifyTrackId": "58XXaW1pFAiXZRouc7ulaJ"
+    },
+    {
+      "year": 2020,
+      "title": "All We Are",
+      "artist": "Giant Rooks",
+      "spotifyTrackId": "5qvImv7TRpDhlcLZZmDruU"
+    },
+    {
+      "year": 2020,
+      "title": "Pretty Girls",
+      "artist": "iann dior",
+      "spotifyTrackId": "3fKdTr6Uv8HTb92Ih3QWxa"
+    },
+    {
+      "year": 2020,
+      "title": "Dynamite",
+      "artist": "BTS",
+      "spotifyTrackId": "0v1x6rN6JHRapa03JElljE"
+    },
+    {
+      "year": 2020,
+      "title": "In Your Eyes",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "7szuecWAPwGoV1e5vGu8tl"
+    },
+    {
+      "year": 2020,
+      "title": "Midnight (feat. Liam Payne)",
+      "artist": "Alesso, Liam Payne",
+      "spotifyTrackId": "4ZTTUAjJCd4NMZmIU7RB4c"
+    },
+    {
+      "year": 2020,
+      "title": "After Hours",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "2p8IUWQDrpjuFltbdgLOag"
+    },
+    {
+      "year": 2020,
+      "title": "Airwaves",
+      "artist": "Pashanim",
+      "spotifyTrackId": "5CqkgDH8QZjSqqI3HmYxDD"
+    },
+    {
+      "year": 2020,
+      "title": "ROCKSTAR (feat. Roddy Ricch)",
+      "artist": "DaBaby, Roddy Ricch",
+      "spotifyTrackId": "7ytR5pFWmSjzHJIeQkgog4"
+    },
+    {
+      "year": 2020,
+      "title": "Changed",
+      "artist": "Nico Santos",
+      "spotifyTrackId": "3vQ1PkxYEooDh4IS6MnfKi"
+    },
+    {
+      "year": 2020,
+      "title": "HOLO",
+      "artist": "LEEHI",
+      "spotifyTrackId": "7Acvy2L38SCipAeMPOK8Ro"
+    },
+    {
+      "year": 2020,
+      "title": "Like I Love You",
+      "artist": "Nico Santos, Topic",
+      "spotifyTrackId": "7hr6WRm7HUlVdkfnhSTm0G"
+    },
+    {
+      "year": 2020,
+      "title": "MORE & MORE",
+      "artist": "TWICE",
+      "spotifyTrackId": "3omvXShuRPM3zbDpWYqf5g"
+    },
+    {
+      "year": 2020,
+      "title": "Nothing To Lose",
+      "artist": "ToTheMoon, Nico Santos",
+      "spotifyTrackId": "1GRNlNBGXpEBAp8ZN0IIrx"
+    },
+    {
+      "year": 2020,
+      "title": "ON",
+      "artist": "BTS",
+      "spotifyTrackId": "2QyuXBcV1LJ2rq01KhreMF"
+    },
+    {
+      "year": 2020,
+      "title": "Sour Candy (with BLACKPINK)",
+      "artist": "Lady Gaga, BLACKPINK",
+      "spotifyTrackId": "1IWNylpZ477gIVUDpJL66u"
+    },
+    {
+      "year": 2020,
+      "title": "Stay Gold",
+      "artist": "BTS",
+      "spotifyTrackId": "0UwQTbq7ZtBJ7v530mpaxP"
+    },
+    {
+      "year": 2020,
+      "title": "Speechless",
+      "artist": "Kurt Hugo Schneider, Bethany Mota, Matt Yoakum",
+      "spotifyTrackId": "2ZexuMPKqgRPqb7g2b2hzn"
+    },
+    {
+      "year": 2020,
+      "title": "Tears Getting Sober",
+      "artist": "VICTORIA",
+      "spotifyTrackId": "4S4mUQoI7yqnnyEAfh7MAP"
+    },
+    {
+      "year": 2020,
+      "title": "Kings & Queens",
+      "artist": "Ava Max",
+      "spotifyTrackId": "76nqCfJOcFFWBJN32PAksn"
+    },
+    {
+      "year": 2021,
+      "title": "DAHLIA",
+      "artist": "i-dle",
+      "spotifyTrackId": "2CxgY4VvTNA0bG2nVtmgPg"
+    },
+    {
+      "year": 2021,
+      "title": "Crocodiles",
+      "artist": "Cian Ducrot",
+      "spotifyTrackId": "03pMITmL4qouGlrfTAhX9W"
+    },
+    {
+      "year": 2021,
+      "title": "God Must Hate Me",
+      "artist": "Catie Turner",
+      "spotifyTrackId": "21xzFXSL2XkZ2mIzDDAqTK"
+    },
+    {
+      "year": 2021,
+      "title": "Cry Baby",
+      "artist": "OFFICIAL HIGE DANDISM",
+      "spotifyTrackId": "3IDF7N86lrcWaJEt9C1gbS"
+    },
+    {
+      "year": 2021,
+      "title": "The Best Is yet to Come",
+      "artist": "Bonnie Tyler",
+      "spotifyTrackId": "19r05Wla47lmDXlDd0Y8FK"
+    },
+    {
+      "year": 2021,
+      "title": "29",
+      "artist": "Nerd Connection",
+      "spotifyTrackId": "0c9cXXQGM6KFwl6wC0t9hI"
+    },
+    {
+      "year": 2021,
+      "title": "0X1=LOVESONG (I Know I Love You) feat. Seori",
+      "artist": "TOMORROW X TOGETHER, Seori",
+      "spotifyTrackId": "1Z8TPHiKeCUyClxV6WTTIf"
+    },
+    {
+      "year": 2021,
+      "title": "traitor",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "5CZ40GBx1sQ9agT82CLQCT"
+    },
+    {
+      "year": 2021,
+      "title": "good 4 u",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "4ZtFanR9U6ndgddUvNcjcG"
+    },
+    {
+      "year": 2021,
+      "title": "Happier Than Ever",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "4RVwu0g32PAqgUiJoXsdF8"
+    },
+    {
+      "year": 2021,
+      "title": "Jacob's Prayer",
+      "artist": "Emile Mosseri",
+      "spotifyTrackId": "6fHdMf1m47mDBcwvOiRGxQ"
+    },
+    {
+      "year": 2021,
+      "title": "Big Country",
+      "artist": "Emile Mosseri",
+      "spotifyTrackId": "2FH1R4lNVQQx64VLEPLOhF"
+    },
+    {
+      "year": 2021,
+      "title": "Jacob and the Stone",
+      "artist": "Emile Mosseri",
+      "spotifyTrackId": "2nltARCkZyrzjQANViDpuX"
+    },
+    {
+      "year": 2021,
+      "title": "Until I Found You",
+      "artist": "Stephen Sanchez",
+      "spotifyTrackId": "0T5iIrXA4p5GsubkhuBIKV"
+    },
+    {
+      "year": 2021,
+      "title": "Wer wenn nicht wir",
+      "artist": "Wincent Weiss",
+      "spotifyTrackId": "5jYDCxuSx1mfApeWA4SlqX"
+    },
+    {
+      "year": 2021,
+      "title": "Memory",
+      "artist": "Kane Brown, blackbear",
+      "spotifyTrackId": "34chhNX59Wo9HMFCsI3K8Y"
+    },
+    {
+      "year": 2021,
+      "title": "Good Ones",
+      "artist": "Charli xcx",
+      "spotifyTrackId": "6PZpNMstpIiRenGK5UyG5D"
+    },
+    {
+      "year": 2021,
+      "title": "I Love You But I Love Me More (feat. Beach Bunny)",
+      "artist": "MARINA, Beach Bunny",
+      "spotifyTrackId": "6CpeA8nhcJO9zdRsrJwLE8"
+    },
+    {
+      "year": 2021,
+      "title": "Pump It",
+      "artist": "Electric Callboy",
+      "spotifyTrackId": "3iXNlPQNYPrtimAEM49PsG"
+    },
+    {
+      "year": 2021,
+      "title": "Happier Than Ever - Edit",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "32BeYxKPrig1LefHsC0Xuo"
+    },
+    {
+      "year": 2021,
+      "title": "Cold Heart - PNAU Remix",
+      "artist": "Elton John, Dua Lipa, PNAU",
+      "spotifyTrackId": "6zSpb8dQRaw0M1dK8PBwQz"
+    },
+    {
+      "year": 2021,
+      "title": "Gar Nix (Außer dir)",
+      "artist": "HE/RO",
+      "spotifyTrackId": "5pHNTM9GUzrwc9OvSMWgkX"
+    },
+    {
+      "year": 2021,
+      "title": "Die For You",
+      "artist": "VALORANT, Grabbitz",
+      "spotifyTrackId": "2lz3zjQ5QCVXiyOzIk02vW"
+    },
+    {
+      "year": 2021,
+      "title": "Gone",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "2dHoVW9AxJVSRebPRyV2aA"
+    },
+    {
+      "year": 2021,
+      "title": "Eleanor Rigby",
+      "artist": "Cody Fry",
+      "spotifyTrackId": "62P3CMQAknHW4iftsBD41Y"
+    },
+    {
+      "year": 2021,
+      "title": "Need to Know",
+      "artist": "Doja Cat",
+      "spotifyTrackId": "3Vi5XqYrmQgOYBajMWSvCi"
+    },
+    {
+      "year": 2021,
+      "title": "Catch Me",
+      "artist": "WizTheMc, MAJAN",
+      "spotifyTrackId": "5q0CgAV5RnmtYH0oTf4gA8"
+    },
+    {
+      "year": 2021,
+      "title": "LO$ER=LO♡ER",
+      "artist": "TOMORROW X TOGETHER",
+      "spotifyTrackId": "21aOLk12MksET8AsbU0SI6"
+    },
+    {
+      "year": 2021,
+      "title": "Kiss Me More (feat. SZA)",
+      "artist": "Doja Cat, SZA",
+      "spotifyTrackId": "748mdHapucXQri7IAO8yFK"
+    },
+    {
+      "year": 2021,
+      "title": "STAY (with Justin Bieber)",
+      "artist": "The Kid LAROI, Justin Bieber",
+      "spotifyTrackId": "5HCyWlXZPP0y6Gqq8TgA20"
+    },
+    {
+      "year": 2021,
+      "title": "Smells Like Teen Spirit",
+      "artist": "Malia J",
+      "spotifyTrackId": "1gnSosKDAUGYPTkTLiG5DW"
+    },
+    {
+      "year": 2021,
+      "title": "Permission to Dance",
+      "artist": "BTS",
+      "spotifyTrackId": "0LThjFY2iTtNdd4wviwVV2"
+    },
+    {
+      "year": 2021,
+      "title": "happier",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "2tGvwE8GcFKwNdAXMnlbfl"
+    },
+    {
+      "year": 2021,
+      "title": "Amore (feat. Rick Ross)",
+      "artist": "Bebe Rexha, Rick Ross",
+      "spotifyTrackId": "4V29M6XHoKPXKasohTqkwN"
+    },
+    {
+      "year": 2021,
+      "title": "Alcohol-Free",
+      "artist": "TWICE",
+      "spotifyTrackId": "6HTwoo4dUOvePNqMsTarPA"
+    },
+    {
+      "year": 2021,
+      "title": "Tout l'univers",
+      "artist": "Gjon's Tears",
+      "spotifyTrackId": "3MvY2XbGYFi6p2dgmdcOYG"
+    },
+    {
+      "year": 2021,
+      "title": "Fallen Angel",
+      "artist": "TIX",
+      "spotifyTrackId": "1ISMa0THMDKFBq2UMfm02e"
+    },
+    {
+      "year": 2021,
+      "title": "Butter",
+      "artist": "BTS",
+      "spotifyTrackId": "3VqeTFIvhxu3DIe4eZVzGq"
+    },
+    {
+      "year": 2021,
+      "title": "El Diablo",
+      "artist": "Elena Tsagrinou",
+      "spotifyTrackId": "4TAttqXwjj56xZQVKvlX0K"
+    },
+    {
+      "year": 2021,
+      "title": "Dynamite",
+      "artist": "ILIRA, VIZE",
+      "spotifyTrackId": "3HqQpSTLHJRKDhulVacRFb"
+    },
+    {
+      "year": 2021,
+      "title": "Anytime",
+      "artist": "Phil The Beat, ILIRA",
+      "spotifyTrackId": "58VgSGe9D9xz3BSvY9Gpua"
+    },
+    {
+      "year": 2021,
+      "title": "On The Ground",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "2pn8dNVSpYnAtlKFC8Q0DJ"
+    },
+    {
+      "year": 2021,
+      "title": "Faded Love",
+      "artist": "Leony",
+      "spotifyTrackId": "0HzHUF33G1dPmd2eNULyfa"
+    },
+    {
+      "year": 2021,
+      "title": "Follow You",
+      "artist": "Imagine Dragons",
+      "spotifyTrackId": "7FdUvDkaE24o3FPIWTvzv2"
+    },
+    {
+      "year": 2021,
+      "title": "deja vu",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "61KpQadow081I2AsbeLcsb"
+    },
+    {
+      "year": 2021,
+      "title": "help herself",
+      "artist": "bbno$, Diamond Pistols",
+      "spotifyTrackId": "4YMc3A256xFBS0xcT77Qce"
+    },
+    {
+      "year": 2021,
+      "title": "After School",
+      "artist": "Weeekly",
+      "spotifyTrackId": "52CBUrIdyf8tbZaUY9iawE"
+    },
+    {
+      "year": 2021,
+      "title": "Bicycle",
+      "artist": "CHUNG HA",
+      "spotifyTrackId": "7wDVvxMUdW5MtJUqFtuXUz"
+    },
+    {
+      "year": 2021,
+      "title": "Celebrity",
+      "artist": "IU",
+      "spotifyTrackId": "4RewTiGEGoO7FWNZUmp1f4"
+    },
+    {
+      "year": 2021,
+      "title": "White Lies",
+      "artist": "VIZE, Tokio Hotel",
+      "spotifyTrackId": "2QuQkdLLzgktXwruPAz6f4"
+    },
+    {
+      "year": 2022,
+      "title": "Hype Boy",
+      "artist": "NewJeans",
+      "spotifyTrackId": "0a4MMyCrzT0En247IhqZbD"
+    },
+    {
+      "year": 2022,
+      "title": "Hard to Love",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "3MJhPqL2IgGs7gHEB2M35q"
+    },
+    {
+      "year": 2022,
+      "title": "Memories",
+      "artist": "Conan Gray",
+      "spotifyTrackId": "5UXJzLFdBn6u9FJTCnoHrH"
+    },
+    {
+      "year": 2022,
+      "title": "Hold Me Closer",
+      "artist": "Cornelia Jakobs",
+      "spotifyTrackId": "697bFWgzBRm6bmnYWd8GyD"
+    },
+    {
+      "year": 2022,
+      "title": "It's Corn",
+      "artist": "Tariq, The Gregory Brothers, Recess Therapy",
+      "spotifyTrackId": "15iXvMt4bYvp1xfIscveRW"
+    },
+    {
+      "year": 2022,
+      "title": "After LIKE",
+      "artist": "IVE",
+      "spotifyTrackId": "2gYj9lubBorOPIVWsTXugG"
+    },
+    {
+      "year": 2022,
+      "title": "Moth To A Flame (with The Weeknd)",
+      "artist": "Swedish House Mafia, The Weeknd",
+      "spotifyTrackId": "7kfOEMJBJwdCYqyJeEnNhr"
+    },
+    {
+      "year": 2022,
+      "title": "Party Sahne",
+      "artist": "Ski Aggu, Endzone, Ericson",
+      "spotifyTrackId": "2hFOXN8Eq2gXIGGMIdHdWJ"
+    },
+    {
+      "year": 2022,
+      "title": "Give Me a Kiss",
+      "artist": "Crash Adams",
+      "spotifyTrackId": "0OXdfW3Q6VJGpg1k5Ik1SW"
+    },
+    {
+      "year": 2022,
+      "title": "LOVE DIVE",
+      "artist": "IVE",
+      "spotifyTrackId": "0Q5VnK2DYzRyfqQRJuUtvi"
+    },
+    {
+      "year": 2022,
+      "title": "Betty (Get Money)",
+      "artist": "Yung Gravy",
+      "spotifyTrackId": "1JCrXIeI6a9qRIkfAEz7J1"
+    },
+    {
+      "year": 2022,
+      "title": "The Ballet Girl",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "1yVBxI8TaIL86Rrmah83fd"
+    },
+    {
+      "year": 2022,
+      "title": "Hal5",
+      "artist": "Lostboi Lino, Sharaktah",
+      "spotifyTrackId": "6Gu99KX4HbEJX5aRoSAYgJ"
+    },
+    {
+      "year": 2022,
+      "title": "TV",
+      "artist": "Billie Eilish",
+      "spotifyTrackId": "3GYlZ7tbxLOxe6ewMNVTkw"
+    },
+    {
+      "year": 2022,
+      "title": "Zu wenig Zeit",
+      "artist": "Julien Bam, Joon Kim",
+      "spotifyTrackId": "27Q9A4F8B54K0lkq0qi9sJ"
+    },
+    {
+      "year": 2022,
+      "title": "Có Chơi Có Chịu",
+      "artist": "Karik, Only C",
+      "spotifyTrackId": "2pYFHEy0xp48Le5Bfw5vcX"
+    },
+    {
+      "year": 2022,
+      "title": "See Tình - Cukak Remix",
+      "artist": "Hoàng Thùy Linh, Cukak",
+      "spotifyTrackId": "2QqUfCa7GbxQm6gB3K4hhi"
+    },
+    {
+      "year": 2022,
+      "title": "Thế Giới Trong Em (Remix)",
+      "artist": "Duzme Music, Hương Ly",
+      "spotifyTrackId": "3pZ6RdKWLXZ8pjwOham9Zn"
+    },
+    {
+      "year": 2022,
+      "title": "10:35",
+      "artist": "Tiësto, Tate McRae",
+      "spotifyTrackId": "6BePGk3eCan4FqaW2X8Qy3"
+    },
+    {
+      "year": 2022,
+      "title": "In The Dark",
+      "artist": "Purple Disco Machine, Sophie and the Giants",
+      "spotifyTrackId": "52qTK7CEx1Vso4Evkx6ZCM"
+    },
+    {
+      "year": 2022,
+      "title": "Another Love",
+      "artist": "OSTEKKE",
+      "spotifyTrackId": "6Hh6pxNSScePI9zjKBIUg2"
+    },
+    {
+      "year": 2022,
+      "title": "Worst Day",
+      "artist": "ILLENIUM, MAX",
+      "spotifyTrackId": "7Bx0oBgnEfVR2bCs6Aul0X"
+    },
+    {
+      "year": 2022,
+      "title": "STAR WALKIN' (League of Legends Worlds Anthem)",
+      "artist": "Lil Nas X",
+      "spotifyTrackId": "38T0tPVZHcPZyhtOcCP7pF"
+    },
+    {
+      "year": 2022,
+      "title": "golden hour",
+      "artist": "JVKE",
+      "spotifyTrackId": "4yNk9iz9WVJikRFle3XEvn"
+    },
+    {
+      "year": 2022,
+      "title": "Merry X (Santa der Boss)",
+      "artist": "Julien Bam, Mark Forster",
+      "spotifyTrackId": "1S0lvPbrlaHD53wTOxotKX"
+    },
+    {
+      "year": 2022,
+      "title": "The Happiest Girl",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "1XoY4WZrvPIphBaikXGjF8"
+    },
+    {
+      "year": 2022,
+      "title": "Less Than Zero",
+      "artist": "The Weeknd",
+      "spotifyTrackId": "2D4dV2KXDTszzJ3p3cFqhA"
+    },
+    {
+      "year": 2022,
+      "title": "Yeah Yeah Yeah",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "5TfKoQg9AjmDIWYKFoDqMN"
+    },
+    {
+      "year": 2022,
+      "title": "I Ain't Worried",
+      "artist": "OneRepublic",
+      "spotifyTrackId": "4h9wh7iOZ0GGn8QVp4RAOB"
+    },
+    {
+      "year": 2022,
+      "title": "Pink Venom",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "0skYUMpS0AcbpjcGsAbRGj"
+    },
+    {
+      "year": 2022,
+      "title": "Come Back Home",
+      "artist": "Sofia Carson",
+      "spotifyTrackId": "1I4dwH7C0jBAEtz5DjlJgQ"
+    },
+    {
+      "year": 2022,
+      "title": "die first",
+      "artist": "Nessa Barrett",
+      "spotifyTrackId": "21szgNA72iLwvBxHQLgwBh"
+    },
+    {
+      "year": 2022,
+      "title": "Maybe My Soulmate Died",
+      "artist": "iamnotshane",
+      "spotifyTrackId": "7N1bEUVuQo8HHuikDgJ10c"
+    },
+    {
+      "year": 2022,
+      "title": "We Made It",
+      "artist": "t-low, Miksu / Macloud",
+      "spotifyTrackId": "5IQvs70wHdurk63TnCV6ZP"
+    },
+    {
+      "year": 2022,
+      "title": "Glimpse of Us",
+      "artist": "Joji",
+      "spotifyTrackId": "6xGruZOHLs39ZbVccQTuPZ"
+    },
+    {
+      "year": 2022,
+      "title": "Could've Just Left Me Alone",
+      "artist": "Alexa Cappelli",
+      "spotifyTrackId": "03qh7qUB2zEPVWUc9isLCW"
+    },
+    {
+      "year": 2022,
+      "title": "When You're Gone",
+      "artist": "Shawn Mendes",
+      "spotifyTrackId": "0U1W2LZVUX7qTm7dDpqxh6"
+    },
+    {
+      "year": 2022,
+      "title": "As It Was",
+      "artist": "Harry Styles",
+      "spotifyTrackId": "4LRPiXqCikLlN15c3yImP7"
+    },
+    {
+      "year": 2022,
+      "title": "I Believe",
+      "artist": "KAMRAD",
+      "spotifyTrackId": "3vhq6ywD3amyfzFnwA3CfI"
+    },
+    {
+      "year": 2022,
+      "title": "Entertain Me",
+      "artist": "Ylona Garcia",
+      "spotifyTrackId": "5TclgAYTVdTRLnHvTUhyIP"
+    },
+    {
+      "year": 2023,
+      "title": "Better Off (Alone, Pt. III)",
+      "artist": "Alan Walker, Dash Berlin, Vikkstar",
+      "spotifyTrackId": "0SML6wWerD0yI2Xd4OUC1R"
+    },
+    {
+      "year": 2023,
+      "title": "Seven (feat. Latto) (Explicit Ver.)",
+      "artist": "Jung Kook, Latto",
+      "spotifyTrackId": "2HRgqmZQC0MC7GeNuDIXHN"
+    },
+    {
+      "year": 2023,
+      "title": "Hold On Tight",
+      "artist": "aespa",
+      "spotifyTrackId": "1o844wI52S3TjXGBwvGcc7"
+    },
+    {
+      "year": 2023,
+      "title": "Off The Record",
+      "artist": "IVE",
+      "spotifyTrackId": "3G7MgLuWLzUJQflWOCDZit"
+    },
+    {
+      "year": 2023,
+      "title": "ZORRA",
+      "artist": "Nebulossa",
+      "spotifyTrackId": "4ypCNolz6aRYZPO3UOGp8Z"
+    },
+    {
+      "year": 2023,
+      "title": "Blueberry Mojito",
+      "artist": "Elli Moore",
+      "spotifyTrackId": "0ajLglsDN2MJlf4pX6EpaP"
+    },
+    {
+      "year": 2023,
+      "title": "Schick mit Scheck",
+      "artist": "BIBIZA",
+      "spotifyTrackId": "0FmMsF3ptcfuZWW1HmvaRQ"
+    },
+    {
+      "year": 2023,
+      "title": "One Of The Girls (with JENNIE, Lily Rose Depp)",
+      "artist": "The Weeknd, JENNIE, Lily-Rose Depp",
+      "spotifyTrackId": "7CyPwkp0oE8Ro9Dd5CUDjW"
+    },
+    {
+      "year": 2023,
+      "title": "Billiardär",
+      "artist": "Julien Bam, Knossi",
+      "spotifyTrackId": "1JmhLsvn2J4NEeCyDO5Q9k"
+    },
+    {
+      "year": 2023,
+      "title": "Anytime Anywhere",
+      "artist": "milet",
+      "spotifyTrackId": "7FeEiAWqWScpMFnlLSUvX2"
+    },
+    {
+      "year": 2023,
+      "title": "HUSO",
+      "artist": "Ritter Lean, Ski Aggu",
+      "spotifyTrackId": "37h4oEmchSH4UXFXq5NQbT"
+    },
+    {
+      "year": 2023,
+      "title": "Pedestal",
+      "artist": "Aiko",
+      "spotifyTrackId": "3GNmo4ljOTnd8k6VKug1Ut"
+    },
+    {
+      "year": 2023,
+      "title": "destroyer of worlds",
+      "artist": "Aaron Hibell",
+      "spotifyTrackId": "4l8xoLKkJXhqqfbWdXcs93"
+    },
+    {
+      "year": 2023,
+      "title": "Kitsch",
+      "artist": "IVE",
+      "spotifyTrackId": "7foeH2Emgq8A3LWk3q6dat"
+    },
+    {
+      "year": 2023,
+      "title": "Paradox",
+      "artist": "Survive Said The Prophet",
+      "spotifyTrackId": "6A7sTvj68RJAVgTduJEQnA"
+    },
+    {
+      "year": 2023,
+      "title": "MANIAC",
+      "artist": "VIVIZ",
+      "spotifyTrackId": "618OKP1lBkNJL8uZdNSvQE"
+    },
+    {
+      "year": 2023,
+      "title": "vampire",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "3k79jB4aGmMDUQzEwa46Rz"
+    },
+    {
+      "year": 2023,
+      "title": "Other Side of the Moon",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "1w5r3hEoLfLaltoXj1AwW4"
+    },
+    {
+      "year": 2023,
+      "title": "I'll Be There",
+      "artist": "Robin Schulz, Rita Ora, Tiago PZK",
+      "spotifyTrackId": "0JwXH0xA7o7HUfVfyFh1H6"
+    },
+    {
+      "year": 2023,
+      "title": "Due Vite",
+      "artist": "Marco Mengoni",
+      "spotifyTrackId": "5htUUUBlgHZ9fztWTTDEFm"
+    },
+    {
+      "year": 2023,
+      "title": "MAXIMUM RIZZ",
+      "artist": "Ski Aggu",
+      "spotifyTrackId": "73JHeIhYKRV1c6RI4ZXsjW"
+    },
+    {
+      "year": 2023,
+      "title": "we're all eating each other",
+      "artist": "Juliet Ivy",
+      "spotifyTrackId": "6BrfgV35h3NfTtIdMqhmFQ"
+    },
+    {
+      "year": 2023,
+      "title": "Mountains of Uttarakhand",
+      "artist": "Aiyo",
+      "spotifyTrackId": "2CGcEQxt7SOFnJZP3por5S"
+    },
+    {
+      "year": 2023,
+      "title": "wasted shadow",
+      "artist": "Naits, benny mayne",
+      "spotifyTrackId": "6FKV0v8gcZsiWegPbBMhWC"
+    },
+    {
+      "year": 2023,
+      "title": "Overdrive (feat. Norma Jean Martine)",
+      "artist": "Ofenbach, Norma Jean Martine",
+      "spotifyTrackId": "3bK1zVFBKIzYjmptmI4NsJ"
+    },
+    {
+      "year": 2023,
+      "title": "One Of Your Girls",
+      "artist": "Troye Sivan",
+      "spotifyTrackId": "5Eh1nj7IjV9lwpcKAkidyY"
+    },
+    {
+      "year": 2023,
+      "title": "You & Me",
+      "artist": "JENNIE",
+      "spotifyTrackId": "6gcuJpHu0Ey30D5WR76y98"
+    },
+    {
+      "year": 2023,
+      "title": "Strangers",
+      "artist": "Kenya Grace",
+      "spotifyTrackId": "5mjYQaktjmjcMKcUIcqz4s"
+    },
+    {
+      "year": 2023,
+      "title": "Der dicke Dachdecker",
+      "artist": "Bodo Wartke, Matthias Kräutli",
+      "spotifyTrackId": "4gy7eIqvO3rRSnPLk9KhRf"
+    },
+    {
+      "year": 2023,
+      "title": "Fast Car",
+      "artist": "Luke Combs",
+      "spotifyTrackId": "1Lo0QY9cvc8sUB2vnIOxDT"
+    },
+    {
+      "year": 2023,
+      "title": "Prada",
+      "artist": "cassö, RAYE, D-Block Europe",
+      "spotifyTrackId": "59NraMJsLaMCVtwXTSia8i"
+    },
+    {
+      "year": 2023,
+      "title": "Dilara (Hup Hup)",
+      "artist": "Danergy",
+      "spotifyTrackId": "6dVA0PFhis5KqBPooYmhV0"
+    },
+    {
+      "year": 2023,
+      "title": "Galileo Galilei",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "3Ox5iyqF3SeTC2bqOA9V9u"
+    },
+    {
+      "year": 2023,
+      "title": "Vertigo",
+      "artist": "Griff",
+      "spotifyTrackId": "7KQejvX8GC4qMjB8vWSp2p"
+    },
+    {
+      "year": 2023,
+      "title": "Feather",
+      "artist": "Sabrina Carpenter",
+      "spotifyTrackId": "2Zo1PcszsT9WQ0ANntJbID"
+    },
+    {
+      "year": 2023,
+      "title": "Enough Is Enough",
+      "artist": "Post Malone",
+      "spotifyTrackId": "3BHFResGQiUvbYToUdaDQz"
+    },
+    {
+      "year": 2023,
+      "title": "My Darling",
+      "artist": "Becca Means",
+      "spotifyTrackId": "1CXmvVb4ksUFjOTHf13kZE"
+    },
+    {
+      "year": 2023,
+      "title": "Carpe Diem",
+      "artist": "Joker Out",
+      "spotifyTrackId": "14ibwN44PVKuvEqLiaNkKu"
+    },
+    {
+      "year": 2023,
+      "title": "Gió (Remix)",
+      "artist": "Duzme Music, Jank",
+      "spotifyTrackId": "5gcLiSWhLmNFFOTjItnio9"
+    },
+    {
+      "year": 2023,
+      "title": "This City is a Graveyard",
+      "artist": "Baby Storme",
+      "spotifyTrackId": "7KCgYJ7DF33PpPU3UF6NBH"
+    },
+    {
+      "year": 2023,
+      "title": "Chemical",
+      "artist": "Post Malone",
+      "spotifyTrackId": "5w40ZYhbBMAlHYNDaVJIUu"
+    },
+    {
+      "year": 2023,
+      "title": "Hare Hare",
+      "artist": "TWICE",
+      "spotifyTrackId": "0h3dJV8JA5oxPzSF4tkz2t"
+    },
+    {
+      "year": 2023,
+      "title": "Friesenjung",
+      "artist": "Ski Aggu, Joost, Otto Waalkes",
+      "spotifyTrackId": "6tAKikIvnoWfUeZrfkopLL"
+    },
+    {
+      "year": 2023,
+      "title": "golden Hour (feat. the Sun) - Sunlover-Starchaser Edit",
+      "artist": "JVKE",
+      "spotifyTrackId": "58n3bg9saqFarNfxcpHw81"
+    },
+    {
+      "year": 2023,
+      "title": "Unicorn",
+      "artist": "Noa Kirel, כאן - תאגיד השידור הישראלי",
+      "spotifyTrackId": "6dUregFbvUNqHP5nphqesK"
+    },
+    {
+      "year": 2023,
+      "title": "Tattoo",
+      "artist": "Loreen",
+      "spotifyTrackId": "1DmW5Ep6ywYwxc2HMT5BG6"
+    },
+    {
+      "year": 2023,
+      "title": "Heaven",
+      "artist": "Niall Horan",
+      "spotifyTrackId": "1yHVHoz6Ny29gbbWJYVnFt"
+    },
+    {
+      "year": 2023,
+      "title": "I AM",
+      "artist": "IVE",
+      "spotifyTrackId": "70t7Q6AYG6ZgTYmJWcnkUM"
+    },
+    {
+      "year": 2023,
+      "title": "Cupid - Twin Ver.",
+      "artist": "FIFTY FIFTY",
+      "spotifyTrackId": "3Kw7zkALCVxY4wmlnh2IWC"
+    },
+    {
+      "year": 2023,
+      "title": "LLYLM",
+      "artist": "ROSALÍA",
+      "spotifyTrackId": "2SiAcexM2p1yX6joESbehd"
+    },
+    {
+      "year": 2023,
+      "title": "PANDORA",
+      "artist": "MAVE:",
+      "spotifyTrackId": "70yszWsLJvNZuZwaHNMROf"
+    },
+    {
+      "year": 2023,
+      "title": "ceilings - sped up + reverb",
+      "artist": "pearl, fast forward >>, Tazzy",
+      "spotifyTrackId": "0akIVqzM6zzbzZmCXQCp7i"
+    },
+    {
+      "year": 2023,
+      "title": "Shakira: Bzrp Music Sessions, Vol. 53/66",
+      "artist": "Bizarrap, Shakira",
+      "spotifyTrackId": "4nrPB8O7Y7wsOCJdgXkthe"
+    },
+    {
+      "year": 2023,
+      "title": "Komet",
+      "artist": "Udo Lindenberg, Apache 207",
+      "spotifyTrackId": "7oQepKHmXDaPC3rgeLRvQu"
+    },
+    {
+      "year": 2023,
+      "title": "Flowers",
+      "artist": "Miley Cyrus",
+      "spotifyTrackId": "0yLdNVWF3Srea0uzk55zFn"
+    },
+    {
+      "year": 2024,
+      "title": "Love Is Lonely",
+      "artist": "NMIXX",
+      "spotifyTrackId": "4IAjCbrxOPyfMqbVasSjwc"
+    },
+    {
+      "year": 2024,
+      "title": "Who",
+      "artist": "Jimin",
+      "spotifyTrackId": "7tI8dRuH2Yc6RuoTjxo4dU"
+    },
+    {
+      "year": 2024,
+      "title": "Imaginary Friend",
+      "artist": "ITZY",
+      "spotifyTrackId": "06BeeZaS4YArThfTMu80QS"
+    },
+    {
+      "year": 2024,
+      "title": "toxic till the end",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "1z5ebC9238uGoBgzYyvGpQ"
+    },
+    {
+      "year": 2024,
+      "title": "we can't be friends (wait for your love)",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "46kspZSY3aKmwQe7O77fCC"
+    },
+    {
+      "year": 2024,
+      "title": "How Sweet",
+      "artist": "NewJeans",
+      "spotifyTrackId": "38tXZcL1gZRfbqfOG0VMTH"
+    },
+    {
+      "year": 2024,
+      "title": "Perfect Day - Piano Komorebi Version",
+      "artist": "Patrick Watson",
+      "spotifyTrackId": "6jSMELQEPoqPSvGmjjvuLG"
+    },
+    {
+      "year": 2024,
+      "title": "FOREVER",
+      "artist": "BABYMONSTER",
+      "spotifyTrackId": "0Md02V4hwKO5Vu5B7GD8tQ"
+    },
+    {
+      "year": 2024,
+      "title": "Espresso Macchiato",
+      "artist": "Tommy Cash",
+      "spotifyTrackId": "4zpNfuWJA3K4d9TS4qnOIB"
+    },
+    {
+      "year": 2024,
+      "title": "Love Me Not",
+      "artist": "Ravyn Lenae",
+      "spotifyTrackId": "1UNEuG9DYOWiikf00ayr52"
+    },
+    {
+      "year": 2024,
+      "title": "meant to be",
+      "artist": "bbno$",
+      "spotifyTrackId": "7jkFQSEaJGfteJFj3UdGop"
+    },
+    {
+      "year": 2024,
+      "title": "Nothing Matters",
+      "artist": "The Last Dinner Party",
+      "spotifyTrackId": "5crY7axm3GejOxy5PsnnPk"
+    },
+    {
+      "year": 2024,
+      "title": "Legenden im Wind",
+      "artist": "Reeze, Merle",
+      "spotifyTrackId": "3VR0pqQsbGR4VuwMrqpqkh"
+    },
+    {
+      "year": 2024,
+      "title": "Tick-Tack",
+      "artist": "ILLIT",
+      "spotifyTrackId": "0znsc67nMhP4X9hjhvoyeP"
+    },
+    {
+      "year": 2024,
+      "title": "I Was Made For Lovin’ You - from The Fall Guy",
+      "artist": "YUNGBLUD",
+      "spotifyTrackId": "55ikcenXPbQdzCnO1sOuYg"
+    },
+    {
+      "year": 2024,
+      "title": "stay a little longer",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "5OdI6v2L7Aez4cclpbojiZ"
+    },
+    {
+      "year": 2024,
+      "title": "too bad for us",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "3tDF6qjNrabjnb23RB2rpa"
+    },
+    {
+      "year": 2024,
+      "title": "two years",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "4HxGH28DitgAuuKpEVrLzN"
+    },
+    {
+      "year": 2024,
+      "title": "number one girl",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "02CrqOYzrJR8fYOffhvRZZ"
+    },
+    {
+      "year": 2024,
+      "title": "That’s So True",
+      "artist": "Gracie Abrams",
+      "spotifyTrackId": "7ne4VBA60CxGM75vw0EYad"
+    },
+    {
+      "year": 2024,
+      "title": "so american",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "5Jh1i0no3vJ9u4deXkb4aV"
+    },
+    {
+      "year": 2024,
+      "title": "Supernova Love",
+      "artist": "IVE, David Guetta",
+      "spotifyTrackId": "5sTLGx6c7YRwnrWm6O091n"
+    },
+    {
+      "year": 2024,
+      "title": "Those Were The Days",
+      "artist": "Jude York",
+      "spotifyTrackId": "1dlrW5uLrr1h7PpGA2bduV"
+    },
+    {
+      "year": 2024,
+      "title": "The Emptiness Machine",
+      "artist": "Linkin Park",
+      "spotifyTrackId": "2PnlsTsOTLE5jnBnNe2K0A"
+    },
+    {
+      "year": 2024,
+      "title": "APT.",
+      "artist": "ROSÉ, Bruno Mars",
+      "spotifyTrackId": "5vNRhkKd0yEAg8suGBpjeY"
+    },
+    {
+      "year": 2024,
+      "title": "Küss dein Herz",
+      "artist": "REEZA, arella, Marisabelle",
+      "spotifyTrackId": "29XhSOvXu5snR24ovAE9Rv"
+    },
+    {
+      "year": 2024,
+      "title": "Revolve",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "4c4SBx9iL4E8qqxOCNBHLP"
+    },
+    {
+      "year": 2024,
+      "title": "Moonlit Floor (Kiss Me)",
+      "artist": "LISA",
+      "spotifyTrackId": "3yDRcs0Y4pPzkvMbUfeF9H"
+    },
+    {
+      "year": 2024,
+      "title": "Tonight I Might",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "2Ih0CPdyK7SwbTUUkpun16"
+    },
+    {
+      "year": 2024,
+      "title": "the cutest pair",
+      "artist": "Regina Song",
+      "spotifyTrackId": "0VVD95cRAppHSOGPYrfIG2"
+    },
+    {
+      "year": 2024,
+      "title": "New Woman (feat. ROSALÍA)",
+      "artist": "LISA, ROSALÍA",
+      "spotifyTrackId": "7ov3TDp5D00Rnu5R1viX4w"
+    },
+    {
+      "year": 2024,
+      "title": "Touch",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "6aJn7Cst74cj4lNIiPRgav"
+    },
+    {
+      "year": 2024,
+      "title": "My Brother, I",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "5VoNLvhJK6k7iJVawi2XGJ"
+    },
+    {
+      "year": 2024,
+      "title": "DEUTSCHLAND 🇩🇪 (MIT IKKIMEL)",
+      "artist": "Ski Aggu, Ikkimel",
+      "spotifyTrackId": "1No9gdv9NdknsaVA4Zdbku"
+    },
+    {
+      "year": 2024,
+      "title": "Close To You",
+      "artist": "Gracie Abrams",
+      "spotifyTrackId": "2bl81llf715VEEbAx03yvB"
+    },
+    {
+      "year": 2024,
+      "title": "Good Luck, Babe!",
+      "artist": "Chappell Roan",
+      "spotifyTrackId": "0WbMK4wrZ1wFSty9F7FCgu"
+    },
+    {
+      "year": 2024,
+      "title": "Please Please Please",
+      "artist": "Sabrina Carpenter",
+      "spotifyTrackId": "5N3hjp1WNayUPZrA8kJmJP"
+    },
+    {
+      "year": 2024,
+      "title": "Dizzy",
+      "artist": "Olly Alexander (Years & Years)",
+      "spotifyTrackId": "4GEmQTg7yfnfZoNhgpCg61"
+    },
+    {
+      "year": 2024,
+      "title": "Coming Home (California)",
+      "artist": "Anica Russo",
+      "spotifyTrackId": "5wh6M6rmdoIeVGlOLqGnFG"
+    },
+    {
+      "year": 2024,
+      "title": "BEFORE THE PARTY'S OVER",
+      "artist": "Mustii",
+      "spotifyTrackId": "1A4pbfIyAuyZkIrRr4tK2X"
+    },
+    {
+      "year": 2024,
+      "title": "Europapa",
+      "artist": "Joost",
+      "spotifyTrackId": "0uHrMbMv3c78398pIANDqR"
+    },
+    {
+      "year": 2024,
+      "title": "Queen of the Night",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "7LJmjOVuQWui5qdrVWeKDx"
+    },
+    {
+      "year": 2024,
+      "title": "Parachute",
+      "artist": "Elevator Boys",
+      "spotifyTrackId": "29XEpol5ZSi4LVrtdTzDxe"
+    },
+    {
+      "year": 2024,
+      "title": "Espresso",
+      "artist": "Sabrina Carpenter",
+      "spotifyTrackId": "2qSkIjg1o9h3YT9RAgYN75"
+    },
+    {
+      "year": 2024,
+      "title": "Magnetic",
+      "artist": "ILLIT",
+      "spotifyTrackId": "1aKvZDoLGkNMxoRYgkckZG"
+    },
+    {
+      "year": 2024,
+      "title": "i like the way you kiss me",
+      "artist": "Artemas",
+      "spotifyTrackId": "2GxrNKugF82CnoRFbQfzPf"
+    },
+    {
+      "year": 2024,
+      "title": "Before You Leave Me",
+      "artist": "Alex Warren",
+      "spotifyTrackId": "7qoxdajngC0j9VXrcnephA"
+    },
+    {
+      "year": 2024,
+      "title": "make you mine",
+      "artist": "Madison Beer",
+      "spotifyTrackId": "48vIfHaK7by6x0T6ucpODL"
+    },
+    {
+      "year": 2024,
+      "title": "Love Me Not",
+      "artist": "Emei",
+      "spotifyTrackId": "6UumSbVp1ae6IfcOWDo1oL"
+    },
+    {
+      "year": 2024,
+      "title": "Hello Radio",
+      "artist": "Aden Foyer",
+      "spotifyTrackId": "5ry7JlYd3Y0M6g0oBrwWcM"
+    },
+    {
+      "year": 2024,
+      "title": "yes, and?",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "7gaA3wERFkFkgivjwbSvkG"
+    },
+    {
+      "year": 2025,
+      "title": "start a war",
+      "artist": "JENNIE",
+      "spotifyTrackId": "6SaSFVlIQC1L6Fh1QKLeFi"
+    },
+    {
+      "year": 2025,
+      "title": "I DONT CARE",
+      "artist": "Baby DONT Cry",
+      "spotifyTrackId": "7h6DJy4HspkjUtOdYtfqv4"
+    },
+    {
+      "year": 2025,
+      "title": "Cánh Hoa Héo Tàn - Remix",
+      "artist": "Mochiii, Zenky",
+      "spotifyTrackId": "5Fvjiep2IzjtMND4jWNBPf"
+    },
+    {
+      "year": 2025,
+      "title": "6 DE FEBRERO",
+      "artist": "Aitana",
+      "spotifyTrackId": "6l18mUHOGVZRr5wTyITX0M"
+    },
+    {
+      "year": 2025,
+      "title": "街角的晚风",
+      "artist": "Jordan Chan",
+      "spotifyTrackId": "5LE2xsJWML9rsuEr2cly8R"
+    },
+    {
+      "year": 2025,
+      "title": "暗流",
+      "artist": "石凯, Vinida Weng",
+      "spotifyTrackId": "1N3Y6V0gu9RyCqvLwggU1t"
+    },
+    {
+      "year": 2025,
+      "title": "Miami",
+      "artist": "Gabi Sklar",
+      "spotifyTrackId": "6TPVmKeDnOFLrSRMD4ECGd"
+    },
+    {
+      "year": 2025,
+      "title": "Pazifik",
+      "artist": "Provinz",
+      "spotifyTrackId": "14F1zH9ZynOh2SuHCOskCO"
+    },
+    {
+      "year": 2025,
+      "title": "Walzer",
+      "artist": "Provinz",
+      "spotifyTrackId": "605G7F1FEjm60IdXmLhlNN"
+    },
+    {
+      "year": 2025,
+      "title": "STRESS",
+      "artist": "CHUNG HA",
+      "spotifyTrackId": "0PYJrdwnsSDtk3G76yV1dj"
+    },
+    {
+      "year": 2025,
+      "title": "BEBE",
+      "artist": "STAYC",
+      "spotifyTrackId": "5iXD5rOKV99XGtkaiucHpM"
+    },
+    {
+      "year": 2025,
+      "title": "Born With a Broken Heart",
+      "artist": "Damiano David",
+      "spotifyTrackId": "7B9zspndqbrSXXUwVNeTCe"
+    },
+    {
+      "year": 2025,
+      "title": "JUMP",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "5H1sKFMzDeMtXwND3V6hRY"
+    },
+    {
+      "year": 2025,
+      "title": "Opalite",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "3yWuTOYDztXjZxdE2cIRUa"
+    },
+    {
+      "year": 2025,
+      "title": "FOCUS",
+      "artist": "Hearts2Hearts",
+      "spotifyTrackId": "6jYiHr12NVKLzn0X7K8aSK"
+    },
+    {
+      "year": 2025,
+      "title": "Blue Valentine",
+      "artist": "NMIXX",
+      "spotifyTrackId": "4i0HNuFEH6P6K4UnsY5uUh"
+    },
+    {
+      "year": 2025,
+      "title": "ZEN",
+      "artist": "JENNIE",
+      "spotifyTrackId": "2chbuybiy6aDDBC985tJcP"
+    },
+    {
+      "year": 2025,
+      "title": "Deslocado",
+      "artist": "NAPA",
+      "spotifyTrackId": "31CsSZ9KlQmEu0JvWSkM3j"
+    },
+    {
+      "year": 2025,
+      "title": "Lovers on Mars",
+      "artist": "LYZA",
+      "spotifyTrackId": "5NS5o1w6a8blYJRjVJSOJI"
+    },
+    {
+      "year": 2025,
+      "title": "iLy",
+      "artist": "SAY MY NAME",
+      "spotifyTrackId": "4L43LBtfaYIFH1ECv3Xxyz"
+    },
+    {
+      "year": 2025,
+      "title": "The Fate of Ophelia",
+      "artist": "Taylor Swift",
+      "spotifyTrackId": "31TXxq8gfgYyrYClnYY48m"
+    },
+    {
+      "year": 2025,
+      "title": "REBEL HEART",
+      "artist": "IVE",
+      "spotifyTrackId": "0qdPpfbrgdBs6ie9bTtQ1d"
+    },
+    {
+      "year": 2025,
+      "title": "Somewhere In Time",
+      "artist": "Tokyo Chill",
+      "spotifyTrackId": "5Jrlr6CHgPoafMvEl8f946"
+    },
+    {
+      "year": 2025,
+      "title": "Golden",
+      "artist": "HUNTR/X, EJAE, AUDREY NUNA, REI AMI, KPop Demon Hunters Cast",
+      "spotifyTrackId": "1CPZ5BxNNd0n0nF4Orb9JS"
+    },
+    {
+      "year": 2025,
+      "title": "Lose My Mind (feat. Doja Cat) [From F1® The Movie]",
+      "artist": "Don Toliver, Doja Cat, F1 The Album",
+      "spotifyTrackId": "02BcXEH1zJYbXSabPtNlKf"
+    },
+    {
+      "year": 2025,
+      "title": "C'est La Vie",
+      "artist": "Claude",
+      "spotifyTrackId": "0b9RNAzGtDRRMQS1cF9HXT"
+    },
+    {
+      "year": 2025,
+      "title": "On My Mind",
+      "artist": "Alex Warren, ROSÉ",
+      "spotifyTrackId": "1tMRh8jiYlmatpVeWWesCe"
+    },
+    {
+      "year": 2025,
+      "title": "Tango",
+      "artist": "Damiano David",
+      "spotifyTrackId": "0aKx8FgaSWgTnXeZK6GLD5"
+    },
+    {
+      "year": 2025,
+      "title": "Zombie Lady",
+      "artist": "Damiano David",
+      "spotifyTrackId": "1fUZ5sHQqV6AMCwV5KtbgV"
+    },
+    {
+      "year": 2025,
+      "title": "The First Time",
+      "artist": "Damiano David",
+      "spotifyTrackId": "7ETIZFr7163zFcz3RxKk5O"
+    },
+    {
+      "year": 2025,
+      "title": "Wenn das Liebe ist",
+      "artist": "Nina Chuba",
+      "spotifyTrackId": "1E7xmNFzqkkh1DMwBomBg3"
+    },
+    {
+      "year": 2025,
+      "title": "Mystical Magical",
+      "artist": "Benson Boone",
+      "spotifyTrackId": "221eHga9f9Ne4f8D7WVgPT"
+    },
+    {
+      "year": 2025,
+      "title": "Messy (From F1® The Movie)",
+      "artist": "ROSÉ, F1 The Album",
+      "spotifyTrackId": "6Wobsw9uZ0D0xkfOjxXSq9"
+    },
+    {
+      "year": 2025,
+      "title": "Whiplash!",
+      "artist": "Jude York",
+      "spotifyTrackId": "6TxQkaH04LTk0J65AwXvqj"
+    },
+    {
+      "year": 2025,
+      "title": "bad bunnies",
+      "artist": "Zsá Zsá, Replay Okay",
+      "spotifyTrackId": "4aAZTaXHlm625nZhF6Zr12"
+    },
+    {
+      "year": 2025,
+      "title": "Mona Lisa Motion (Einmal um die Welt)",
+      "artist": "ZAH1DE",
+      "spotifyTrackId": "2xlCVJw334z27pGN8P7dhc"
+    },
+    {
+      "year": 2025,
+      "title": "Live Big, Love Fast",
+      "artist": "Phake",
+      "spotifyTrackId": "6K6QKDnDptftlui2ZEaBL6"
+    },
+    {
+      "year": 2025,
+      "title": "Unsicher",
+      "artist": "Nina Chuba",
+      "spotifyTrackId": "2GN2pbQi4Yz7Qp99Wbp2vZ"
+    },
+    {
+      "year": 2025,
+      "title": "Winnetou",
+      "artist": "Abor & Tynna",
+      "spotifyTrackId": "1H92AxiNEizRr0crbIJRGo"
+    },
+    {
+      "year": 2025,
+      "title": "Wasted Love",
+      "artist": "JJ",
+      "spotifyTrackId": "321yySUTzRXUbzkRTeTzDB"
+    },
+    {
+      "year": 2025,
+      "title": "lass es gehen (feat. Max Raabe)",
+      "artist": "Zartmann, Max Raabe",
+      "spotifyTrackId": "177wfMc2GyarTDKEAkdlY8"
+    },
+    {
+      "year": 2025,
+      "title": "Born Again (feat. Doja Cat & RAYE)",
+      "artist": "LISA, Doja Cat, RAYE",
+      "spotifyTrackId": "4CPuDVC8jhhK6lA2DIt8Cf"
+    },
+    {
+      "year": 2025,
+      "title": "earthquake",
+      "artist": "JISOO",
+      "spotifyTrackId": "10zywlg5b0gQOC3q1A7ADx"
+    },
+    {
+      "year": 2025,
+      "title": "SUPERMAN",
+      "artist": "Ana Kohler",
+      "spotifyTrackId": "5HcJD3CyW0FdhwDCQnvXoy"
+    },
+    {
+      "year": 2025,
+      "title": "Slipping Through My Fingers",
+      "artist": "Jude York",
+      "spotifyTrackId": "1p29fXoNNK6vTX0mMI3XhG"
+    },
+    {
+      "year": 2025,
+      "title": "Love Hangover (feat. Dominic Fike)",
+      "artist": "JENNIE, Dominic Fike",
+      "spotifyTrackId": "2P6YMsU9jt22CXfizfudi3"
+    },
+    {
+      "year": 2025,
+      "title": "WENN DU DUMM BiST",
+      "artist": "FiNCH",
+      "spotifyTrackId": "6IFqLvemScAOurr8RxZ50B"
+    },
+    {
+      "year": 2025,
+      "title": "Half Horse Half Man",
+      "artist": "OCT",
+      "spotifyTrackId": "1xlPeQm5LICSUONSh6atX0"
+    },
+    {
+      "year": 2026,
+      "title": "Self Aware",
+      "artist": "LUM!X",
+      "spotifyTrackId": "6xupcsJHo3wW2tSVKwu4mf"
+    },
+    {
+      "year": 2026,
+      "title": "New Religion",
+      "artist": "Bebe Rexha, Faithless",
+      "spotifyTrackId": "3TWpz0iK17gFlxWlIs3MIQ"
+    },
+    {
+      "year": 2026,
+      "title": "hate that i made you love me",
+      "artist": "Ariana Grande",
+      "spotifyTrackId": "3iy2QuCtCzpWnR6tia39AB"
+    },
+    {
+      "year": 2026,
+      "title": "High Sierra Call",
+      "artist": "Roy Edwin Williams, Francie",
+      "spotifyTrackId": "7xPPn0rARbERK8Y07RM5Z1"
+    },
+    {
+      "year": 2026,
+      "title": "new trick",
+      "artist": "ROSÉ",
+      "spotifyTrackId": "5GKBPdWbW4RQtx9VkQ6xKO"
+    },
+    {
+      "year": 2026,
+      "title": "SaWaDiKa",
+      "artist": "LISA",
+      "spotifyTrackId": "1VWiDyYTrqQhhmnWANWkFa"
+    },
+    {
+      "year": 2026,
+      "title": "Bel Air",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "6G38IZWN4qvVqxavzepr0I"
+    },
+    {
+      "year": 2026,
+      "title": "Less than a Lover",
+      "artist": "JENNIE",
+      "spotifyTrackId": "19UnXjpLshSLobPspdyxlD"
+    },
+    {
+      "year": 2026,
+      "title": "Handlebars - Just JENNIE",
+      "artist": "JENNIE",
+      "spotifyTrackId": "6d611NNmXpV1Upyja5RNOY"
+    },
+    {
+      "year": 2026,
+      "title": "Animal",
+      "artist": "KATSEYE",
+      "spotifyTrackId": "3ouNEk0tv5TTi8VWMe1xbX"
+    },
+    {
+      "year": 2026,
+      "title": "Taste",
+      "artist": "AIDAN",
+      "spotifyTrackId": "3jkAwfvckmnFQCcmWLusDf"
+    },
+    {
+      "year": 2026,
+      "title": "It's Me",
+      "artist": "ILLIT",
+      "spotifyTrackId": "1D5L58KLBbceOynTP4DQnY"
+    },
+    {
+      "year": 2026,
+      "title": "the cure",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "55pBIZO1cqoldeqpp5WR7H"
+    },
+    {
+      "year": 2026,
+      "title": "借过一下 - Live",
+      "artist": "Jordan Chan",
+      "spotifyTrackId": "5GylfM4jd1fGkSvnpIKXtO"
+    },
+    {
+      "year": 2026,
+      "title": "Heavy Serenade",
+      "artist": "NMIXX",
+      "spotifyTrackId": "1404zSB6dqMIiStHLI7gg4"
+    },
+    {
+      "year": 2026,
+      "title": "Champagne Drop",
+      "artist": "赵露思 Rosy",
+      "spotifyTrackId": "03FcmQm20DwzSr4YEcmhkr"
+    },
+    {
+      "year": 2026,
+      "title": "maggots for brains",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "22l7ocwYpEYGvYpM9T2C5K"
+    },
+    {
+      "year": 2026,
+      "title": "stupid song",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "4LfCY65LvojKjWEnU7fNN4"
+    },
+    {
+      "year": 2026,
+      "title": "My Love",
+      "artist": "王宇驰",
+      "spotifyTrackId": "0mxBiusygLcvILj8ECVCAK"
+    },
+    {
+      "year": 2026,
+      "title": "drop dead",
+      "artist": "Olivia Rodrigo",
+      "spotifyTrackId": "6gkbtMtioHgtyGjrMel6ei"
+    },
+    {
+      "year": 2026,
+      "title": "Bella",
+      "artist": "AIDAN",
+      "spotifyTrackId": "6xMZVKtQ76THTiJBntzmwz"
+    },
+    {
+      "year": 2026,
+      "title": "Choke Me",
+      "artist": "Alexandra Căpitănescu",
+      "spotifyTrackId": "0itI8ykSUDp4dfwiHY6fnw"
+    },
+    {
+      "year": 2026,
+      "title": "Per sempre sì",
+      "artist": "Sal Da Vinci",
+      "spotifyTrackId": "5W1mx7Oeg2HxmASrth1nTt"
+    },
+    {
+      "year": 2026,
+      "title": "My System",
+      "artist": "FELICIA",
+      "spotifyTrackId": "1XmLPHkuv95o5NUodggzfv"
+    },
+    {
+      "year": 2026,
+      "title": "Sólo Quiero Más",
+      "artist": "Lion Ceccah",
+      "spotifyTrackId": "1av4wp2KoCwn9P151n45WV"
+    },
+    {
+      "year": 2026,
+      "title": "lulu.",
+      "artist": "Mrs. GREEN APPLE",
+      "spotifyTrackId": "0vE1WglBbhmd5wDO49lcih"
+    },
+    {
+      "year": 2026,
+      "title": "Dancing In CoDE",
+      "artist": "Sam Ock",
+      "spotifyTrackId": "3mPI7R1KwsupWiriG2AjsP"
+    },
+    {
+      "year": 2026,
+      "title": "black glitter",
+      "artist": "wavvyboi",
+      "spotifyTrackId": "5zvJPpuJu8J4lOXSfSiTYZ"
+    },
+    {
+      "year": 2026,
+      "title": "GO",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "0mYa3o6tlUN5HRippmKmwH"
+    },
+    {
+      "year": 2026,
+      "title": "Champion",
+      "artist": "BLACKPINK",
+      "spotifyTrackId": "3oraRy91vke1aof4tIrQfr"
+    },
+    {
+      "year": 2026,
+      "title": "Velvet",
+      "artist": "Koven Wei, SUGAR",
+      "spotifyTrackId": "2DTXnbUZxoqNP47ng9UmVH"
+    }
+  ]
+}

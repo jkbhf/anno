@@ -259,12 +259,13 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 2 is refused at startup. `CLAUDE.md` holds the rule for how many entries a
 contest year gets, which ones, and which of them are core.
 
-ESC, German Songs, International Hits, K-Pop, White Girl Music and Anthony
-exist; ESC
+ESC, German Songs, International Hits, K-Pop, White Girl Music, Anthony and
+Jakob exist; ESC
 is filled with 415 entries from 1956 to 2026, International Hits with 576 from
 1950 to 2026, German Songs with 535 from 1950 to 2026, K-Pop with 115 from 2016
 to 2026, White Girl Music with 200 from 2007 to 2026 and Anthony with 1265
-from 1999 to 2024 - the last three only cover part of the century. The intent is at least one
+from 1999 to 2024 and Jakob with 732 from 1964 to 2026 - K-Pop, White Girl
+Music and Anthony only cover part of the century. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956, and K-Pop and White Girl Music do not
 try to because what the room knows of them starts later - for how many entries a year gets
