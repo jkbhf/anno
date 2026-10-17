@@ -192,6 +192,18 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
+  /// Asks for the words while the countdown runs, so the sheet has them when
+  /// somebody taps. A failure here is no matter: the sheet asks again.
+  void _prefetchLyrics() {
+    final song = _game.currentSong;
+    if (song == null) return;
+    unawaited(
+      (widget.lyrics ?? sharedLyrics)
+          .find(song)
+          .then<void>((_) {}, onError: (Object _) {}),
+    );
+  }
+
   /// Pushes the camera and returns the scanned code, or null when it was
   /// cancelled.
   Future<String?> _scanCode() async {
@@ -255,6 +267,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
         return;
       case ScanOutcome.started:
+        _prefetchLyrics();
         if (!await _runCountdown()) {
           _game.cancelRound();
           return;
@@ -275,6 +288,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       return;
     }
     Haptics.tick();
+    _prefetchLyrics();
     _busy = true;
     try {
       if (!await _runCountdown()) {

@@ -58,10 +58,10 @@ class LyricsSheet extends StatefulWidget {
 }
 
 class _LyricsSheetState extends State<LyricsSheet> {
-  late final Future<Lyrics?> _lyrics = widget.source.find(
-    widget.song,
-    duration: widget.session?.duration,
-  );
+  late Future<Lyrics?> _lyrics = _load();
+
+  Future<Lyrics?> _load() =>
+      widget.source.find(widget.song, duration: widget.session?.duration);
 
   /// The player reports on changes only; between two reports the line moves on
   /// the clock - the same tick as the seek bar.
@@ -135,6 +135,9 @@ class _LyricsSheetState extends State<LyricsSheet> {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(child: CircularProgressIndicator());
               }
+              if (snapshot.hasError) {
+                return _failed(context);
+              }
               final lyrics = snapshot.data;
               if (lyrics == null || lyrics.lines.isEmpty) {
                 return _message(
@@ -161,6 +164,33 @@ class _LyricsSheetState extends State<LyricsSheet> {
         style: theme.textTheme.bodyLarge?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
         ),
+      ),
+    );
+  }
+
+  /// The source did not answer - not the same as a song without words, so
+  /// the sheet says so and asks again on a tap instead of on a reopen.
+  Widget _failed(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'The lyrics could not be loaded.',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 16),
+          FilledButton.tonalIcon(
+            onPressed: () => setState(() {
+              _lyrics = _load();
+            }),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Try again'),
+          ),
+        ],
       ),
     );
   }

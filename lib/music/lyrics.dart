@@ -85,7 +85,20 @@ abstract class LyricsSource {
   /// The text of [song], or null when the source has none. [duration] is the
   /// length of the recording that plays, when it is known, so a synced text
   /// for a different cut is not laid over it.
+  ///
+  /// Throws [LyricsUnavailable] when the source could not be asked - that is
+  /// not the same as a song without words, and the sheet says so.
   Future<Lyrics?> find(Song song, {Duration? duration});
+}
+
+/// The source did not answer. Asking again later may work.
+class LyricsUnavailable implements Exception {
+  const LyricsUnavailable(this.reason);
+
+  final String reason;
+
+  @override
+  String toString() => 'LyricsUnavailable: $reason';
 }
 
 /// The one source the game uses, kept for the whole visit so its cache is.
@@ -94,13 +107,19 @@ final LyricsSource sharedLyrics = LrclibLyrics();
 /// [LRCLIB](https://lrclib.net): open, no key, CORS allowed, and synced texts
 /// for most of what the decks hold.
 class LrclibLyrics implements LyricsSource {
-  LrclibLyrics({http.Client? client}) : _client = client ?? http.Client();
+  LrclibLyrics({http.Client? client, Duration retryDelay = _retryDelay})
+    : _client = client ?? http.Client(),
+      _baseDelay = retryDelay;
 
   final http.Client _client;
+  final Duration _baseDelay;
 
-  /// One evening asks for the same song twice at most - but the sheet is opened
-  /// and closed again, and that should not go out again each time.
-  final Map<String, Lyrics?> _cache = {};
+  /// The search hits per song, kept as the request itself: a sheet opened
+  /// again while the first one is still loading waits for that one instead of
+  /// starting over, and a round that prefetched leaves the sheet nothing to
+  /// wait for. The hits rather than the pick, because the length of the
+  /// recording is only known once it plays.
+  final Map<String, Future<List<Map<String, dynamic>>>> _cache = {};
 
   static const String _host = 'lrclib.net';
 
@@ -108,35 +127,59 @@ class LrclibLyrics implements LyricsSource {
   /// trusted to follow it. Radio edit against album version is more than that.
   static const Duration _durationSlack = Duration(seconds: 5);
 
+  /// LRCLIB throttles with a 429 and is a single server that now and then
+  /// answers late or not at all. Each try gets [_timeout], and a failed one is
+  /// tried again before the sheet gives up.
+  static const int _attempts = 3;
+  static const Duration _timeout = Duration(seconds: 8);
+  static const Duration _retryDelay = Duration(seconds: 1);
+  static const Duration _maxRetryAfter = Duration(seconds: 5);
+
   @override
   Future<Lyrics?> find(Song song, {Duration? duration}) async {
     final key = song.key;
-    if (_cache.containsKey(key)) return _cache[key];
-    final found = await _lookUp(song, duration);
-    // A failed request is not cached: the next open asks again.
-    if (found != _failed) _cache[key] = found;
-    return found == _failed ? null : found;
+    final results = _cache[key] ??= _search(song);
+    try {
+      return pick(await results, duration);
+    } on Object {
+      // A failed request is not kept: the next open asks again.
+      if (identical(_cache[key], results)) _cache.remove(key);
+      rethrow;
+    }
   }
 
-  static const Lyrics _failed = Lyrics([]);
-
-  Future<Lyrics?> _lookUp(Song song, Duration? duration) async {
-    try {
-      final response = await _client.get(
-        Uri.https(_host, '/api/search', {
-          'track_name': song.title,
-          'artist_name': song.artist,
-        }),
-      );
-      if (response.statusCode != 200) return _failed;
-      final results = (jsonDecode(response.body) as List<dynamic>)
-          .whereType<Map<String, dynamic>>()
-          .toList();
-      return pick(results, duration);
-    } on Object catch (error) {
-      debugPrint('Lyrics for $song not readable: $error');
-      return _failed;
+  Future<List<Map<String, dynamic>>> _search(Song song) async {
+    final uri = Uri.https(_host, '/api/search', {
+      'track_name': song.title,
+      'artist_name': song.artist,
+    });
+    Object? last;
+    for (var attempt = 1; attempt <= _attempts; attempt++) {
+      Duration wait = _baseDelay * attempt;
+      try {
+        final response = await _client.get(uri).timeout(_timeout);
+        if (response.statusCode == 200) {
+          // LRCLIB sends `application/json` without a charset, which
+          // `response.body` would read as Latin-1 - every umlaut garbled.
+          return (jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>)
+              .whereType<Map<String, dynamic>>()
+              .toList();
+        }
+        last = 'HTTP ${response.statusCode}';
+        final retryAfter = int.tryParse(response.headers['retry-after'] ?? '');
+        if (retryAfter != null) {
+          final asked = Duration(seconds: retryAfter);
+          wait = asked < _maxRetryAfter ? asked : _maxRetryAfter;
+        }
+        // Anything but throttling or a server error will not get better.
+        if (response.statusCode != 429 && response.statusCode < 500) break;
+      } on Object catch (error) {
+        last = error;
+      }
+      if (attempt < _attempts) await Future<void>.delayed(wait);
     }
+    debugPrint('Lyrics for $song not readable: $last');
+    throw LyricsUnavailable('$last');
   }
 
   /// The best of LRCLIB's search hits: a synced text that fits the length of

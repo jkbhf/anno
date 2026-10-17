@@ -749,6 +749,40 @@ void main() {
 
     expect(find.text('No lyrics found for this song.'), findsOneWidget);
   });
+
+  testWidgets('lyrics that could not be loaded are asked for again on a tap', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    await reveal(game);
+    final lyrics = _FlakyLyrics();
+
+    await tester.pumpWidget(wrap(game, lyrics: lyrics));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lyrics'));
+    await tester.pumpAndSettle();
+
+    // Not the same as a song without words.
+    expect(find.text('No lyrics found for this song.'), findsNothing);
+    expect(find.text('The lyrics could not be loaded.'), findsOneWidget);
+
+    lyrics.down = false;
+    await tester.tap(find.text('Try again'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Back again'), findsOneWidget);
+  });
+}
+
+class _FlakyLyrics implements LyricsSource {
+  bool down = true;
+
+  @override
+  Future<Lyrics?> find(Song song, {Duration? duration}) async {
+    if (down) throw const LyricsUnavailable('HTTP 429');
+    return Lyrics.plain('Back again');
+  }
 }
 
 class _NoLyrics implements LyricsSource {
