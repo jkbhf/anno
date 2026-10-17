@@ -83,9 +83,17 @@ bool needsCountdown(MusicService service, {required bool sessionReady}) =>
 
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
-  const GameScreen({required this.controller, this.lyrics, super.key});
+  const GameScreen({
+    required this.controller,
+    this.lyrics,
+    this.scanner,
+    super.key,
+  });
 
   final GameController controller;
+
+  /// The screen a scan opens. Null is the camera; a test hands in a stand-in.
+  final WidgetBuilder? scanner;
 
   /// Where the words behind the lyrics button come from. Null is LRCLIB.
   final LyricsSource? lyrics;
@@ -197,7 +205,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _busy = true;
     try {
       return await Navigator.of(context).push<String>(
-        MaterialPageRoute<String>(builder: (_) => const ScannerScreen()),
+        MaterialPageRoute<String>(
+          builder: widget.scanner ?? (_) => const ScannerScreen(),
+        ),
       );
     } finally {
       _busy = false;
@@ -312,6 +322,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// The round is only cleared once the camera closes again. Ending it first
   /// would drop the screen back to the big scan button for the length of the
   /// route animation, and that flash is exactly what this avoids.
+  ///
+  /// Backing out of the camera keeps the reveal: whoever opened it may still
+  /// want to hand out a point, or simply tapped too early.
   Future<void> _nextRound() async {
     if (_busy) return;
 
@@ -321,9 +334,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
 
     final code = await _scanCode();
-    if (!mounted) return;
+    if (!mounted || code == null) return;
     _game.nextRound();
-    if (code == null) return;
     await _handleCode(code);
   }
 

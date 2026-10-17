@@ -133,6 +133,7 @@ Widget wrap(
   GameController game, {
   SpotifySession? spotify,
   LyricsSource? lyrics,
+  WidgetBuilder? scanner,
 }) => AppScope(
   years: game.years,
   categories: game.categories,
@@ -140,7 +141,11 @@ Widget wrap(
   service: ValueNotifier(game.service),
   child: MaterialApp(
     theme: buildTheme(),
-    home: GameScreen(controller: game, lyrics: lyrics ?? FakeLyrics()),
+    home: GameScreen(
+      controller: game,
+      lyrics: lyrics ?? FakeLyrics(),
+      scanner: scanner,
+    ),
   ),
 );
 
@@ -327,6 +332,55 @@ void main() {
     );
     expect(tester.getRect(find.text('Next round')).width, lessThan(atFullSize));
     expect(tester.takeException(), isNull);
+  });
+
+  /// Stands in for the camera: a back arrow, and a button that scans [card].
+  Widget fakeScanner(BuildContext context) => Scaffold(
+    appBar: AppBar(),
+    body: TextButton(
+      onPressed: () => Navigator.of(context).pop(card),
+      child: const Text('Scan the card'),
+    ),
+  );
+
+  testWidgets('backing out of the camera after a reveal keeps the reveal', (
+    tester,
+  ) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    await reveal(game);
+
+    await tester.pumpWidget(wrap(game, scanner: fakeScanner));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Next round'));
+    await tester.pumpAndSettle();
+    expect(find.text('Scan the card'), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(game.phase, RoundPhase.revealed);
+    expect(find.text('My Number One'), findsOneWidget);
+    expect(find.text('Next round'), findsOneWidget);
+  });
+
+  testWidgets('a scan from the reveal starts the next round', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame();
+    await reveal(game);
+
+    await tester.pumpWidget(wrap(game, scanner: fakeScanner));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Next round'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Scan the card'));
+    await tester.pump();
+
+    // The countdown is up over the screen now, the reveal is gone.
+    expect(game.phase, RoundPhase.countdown);
+    expect(game.isRevealed, isFalse);
   });
 
   testWidgets('a tap on a tile scores a point and flashes', (tester) async {
