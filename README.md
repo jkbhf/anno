@@ -158,8 +158,8 @@ lives in the environment; a PKCE login in a browser must never carry one.
    says (1-10, the card shows the share in percent) and regardless of how many
    songs it holds for that year. A deck without a song for the scanned year
    sits out and the others share its part. Categories without songs cannot be
-   selected. K-Pop (2016 on), White Girl Music (2007 on) and Anthony
-   (1999-2024) cover only part of the years and can still be played alone -
+   selected. K-Pop (2016 on), White Girl Music (2007 on), Anthony
+   (1999-2024) and Anthony All (1999-2026) cover only part of the years and can still be played alone -
    the card shows the span, and a card outside it only asks for another card.
 3. **Game** - scan a card and the song starts. The screen that follows is the
    scoreboard with a "Reveal the year" button where the song card will be: the
@@ -269,13 +269,13 @@ often, `2` is its long tail. It defaults to `1` when missing, anything but 1 or
 2 is refused at startup. `CLAUDE.md` holds the rule for how many entries a
 contest year gets, which ones, and which of them are core.
 
-ESC, German Songs, International Hits, K-Pop, White Girl Music, Anthony and
-Jakob exist; ESC
+ESC, German Songs, International Hits, K-Pop, White Girl Music, Anthony,
+Anthony All and Jakob exist; ESC
 is filled with 415 entries from 1956 to 2026, International Hits with 576 from
 1950 to 2026, German Songs with 535 from 1950 to 2026, K-Pop with 115 from 2016
 to 2026, White Girl Music with 200 from 2007 to 2026 and Anthony with 1265
-from 1999 to 2024 and Jakob with 732 from 1964 to 2026 - K-Pop, White Girl
-Music and Anthony only cover part of the century. The intent is at least one
+from 1999 to 2024, Anthony All with 2104 from 1999 to 2026 and Jakob with 732
+from 1964 to 2026 - K-Pop, White Girl Music and both Anthony decks only cover part of the century. The intent is at least one
 song per year from 1950 to 2026, which ESC cannot reach at the bottom because
 the contest did not exist before 1956, and K-Pop and White Girl Music do not
 try to because what the room knows of them starts later - for how many entries a year gets

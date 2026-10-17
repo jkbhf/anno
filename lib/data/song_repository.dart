@@ -15,6 +15,7 @@ const List<String> categoryAssets = [
   'assets/songs/kpop.json',
   'assets/songs/white_girl_music.json',
   'assets/songs/anthony.json',
+  'assets/songs/anthony_all.json',
   'assets/songs/jakob.json',
 ];
 

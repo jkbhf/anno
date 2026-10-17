@@ -336,6 +336,20 @@ Three things were decided when it was built (2026-10-13):
 - **Everything is tier 1.** A personal library has no core and tail, and
   1999-2009 and 2022-2024 are thin anyway.
 
+## The Anthony All deck
+
+`assets/songs/anthony_all.json` is the same library from a later, fuller
+export (`all_the_music_i_know (1).csv`, 2238 rows, kept out of the repo), added
+on 2026-10-17 as a deck of its own beside Anthony rather than replacing it.
+The export holds every row of the first one, so those rows keep the year
+`anthony.json` gave them, hand corrections included; everything new takes the
+export date, and a duplicate keeps its earliest year - which puts TT on 2016
+and The One That Got Away on 2010, where the new export has the earlier
+pressing. The one exception is Kiss And Make Up, whose second pressing carries
+the 2017 date of the Dua Lipa album it was added to later - it stays on 2018. Billie Jean 1982 and Mariah
+Carey 1994 are left out for the same reason as in Anthony: alone they would
+open a hole inside the span. 2104 songs, 1999-2026, all tier 1.
+
 ## The Jakob deck
 
 `assets/songs/jakob.json`, built the same way as Anthony from a Spotify export
