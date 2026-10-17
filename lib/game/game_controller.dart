@@ -56,9 +56,8 @@ class GameController extends ChangeNotifier {
     Future<void> Function(SavedGame)? persist,
     Future<void> Function()? discard,
     Future<void> Function()? stopMusic,
-    void Function(String key)? onPlayed,
+    void Function(Set<String> played)? onPlayedChanged,
     Iterable<String> played = const [],
-    Set<String> recentlyPlayed = const {},
     Random? random,
   }) : assert(categories.isNotEmpty, 'A game needs at least one category.'),
        _launcher = launcher,
@@ -66,8 +65,7 @@ class GameController extends ChangeNotifier {
        _persist = persist,
        _discard = discard,
        _stopMusic = stopMusic,
-       _onPlayed = onPlayed,
-       _recentlyPlayed = recentlyPlayed,
+       _onPlayedChanged = onPlayedChanged,
        _random = random ?? Random() {
     _played.addAll(played);
   }
@@ -116,18 +114,18 @@ class GameController extends ChangeNotifier {
   /// round was already over.
   final Future<void> Function()? _stopMusic;
 
-  /// Told about every song that really went out, for the memory across
-  /// evenings in `RecentSongsStore`.
-  final void Function(String key)? _onPlayed;
-
-  /// Songs of the last evenings, see [_weightOf].
-  final Set<String> _recentlyPlayed;
+  /// Told the whole of [played] whenever it changes - a song went out, or a
+  /// used up year started over - for the memory across games in
+  /// `PlayedSongsStore`.
+  final void Function(Set<String> played)? _onPlayedChanged;
 
   final Random _random;
 
-  /// Songs already played, so a game does not repeat itself. Part of the saved
-  /// game, so a resume after Android killed the app does not start every year
-  /// over.
+  /// Songs already played - by this game and, through `PlayedSongsStore`, by
+  /// every game on this device before it. A song in here does not come back
+  /// until the rest of its year in its deck has been heard, see [_draw]. Also
+  /// part of the saved game, so a resume after Android killed the app does not
+  /// start every year over.
   final Set<String> _played = <String>{};
 
   /// The song that went out last, so a year that starts over does not open
@@ -465,7 +463,8 @@ class GameController extends ChangeNotifier {
     for (final player in players) {
       player.score = 0;
     }
-    _played.clear();
+    // [_played] stays: the rematch is still the same room, and what it heard
+    // a minute ago is the last thing it should hear again.
     _lastPlayedKey = null;
     _finishingRound = null;
     currentSong = null;
@@ -501,6 +500,9 @@ class GameController extends ChangeNotifier {
   /// comes up [_tierOneWeight] times as often as its long tail. In a game a
   /// year is usually scanned once or twice, so the tier decides which of its
   /// songs the room gets to hear at all.
+  ///
+  /// Played means played across games: nothing comes back while its year
+  /// still holds a song this device has not played.
   ///
   /// Once everything is used up the year starts over: a repeat beats a dead
   /// card. Over means over - the year's songs leave [_played], so it runs
@@ -540,6 +542,7 @@ class GameController extends ChangeNotifier {
       for (final song in songsFor(category, year)) {
         _played.remove(_playedKey(category, song));
       }
+      _onPlayedChanged?.call({..._played});
       songs = [
         for (final song in pool)
           if (_playedKey(category, song) != _lastPlayedKey) song,
@@ -547,7 +550,7 @@ class GameController extends ChangeNotifier {
       if (songs.isEmpty) songs = pool;
     }
 
-    return (category: category, song: _pickWeighted(category, songs));
+    return (category: category, song: _pickWeighted(songs));
   }
 
   /// Picks from a non-empty list, each deck weighted by [weightOf]. With every
@@ -569,32 +572,18 @@ class GameController extends ChangeNotifier {
   /// How much more often a `tier: 1` song is drawn than a `tier: 2` one.
   static const int _tierOneWeight = 3;
 
-  /// How much more often a song is drawn that the last evenings did not play,
-  /// against one they did.
-  ///
-  /// [_played] only guards a single game. Across evenings the draw would be
-  /// plain random, and on the narrow range of cards that actually gets played
-  /// the same core songs come back week after week. A factor rather than a ban:
-  /// a thin year has to be able to play its songs again, and among the songs
-  /// the last evenings did not play, the tier still decides.
-  static const int _freshAcrossEveningsWeight = 4;
-
-  int _weightOf(SongCategory category, Song song) {
-    final tier = song.tier == 1 ? _tierOneWeight : 1;
-    final recent = _recentlyPlayed.contains(_playedKey(category, song));
-    return recent ? tier : tier * _freshAcrossEveningsWeight;
-  }
+  int _weightOf(Song song) => song.tier == 1 ? _tierOneWeight : 1;
 
   /// Picks from a non-empty list, each song weighted by [_weightOf].
-  Song _pickWeighted(SongCategory category, List<Song> songs) {
+  Song _pickWeighted(List<Song> songs) {
     var total = 0;
     for (final song in songs) {
-      total += _weightOf(category, song);
+      total += _weightOf(song);
     }
 
     var roll = _random.nextInt(total);
     for (final song in songs) {
-      roll -= _weightOf(category, song);
+      roll -= _weightOf(song);
       if (roll < 0) return song;
     }
     return songs.last;
@@ -604,7 +593,7 @@ class GameController extends ChangeNotifier {
     final key = _playedKey(category, song);
     _played.add(key);
     _lastPlayedKey = key;
-    _onPlayed?.call(key);
+    _onPlayedChanged?.call({..._played});
   }
 
   /// The same song can sit in two categories - it counts as played per deck.

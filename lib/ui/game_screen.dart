@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../data/game_store.dart';
-import '../data/recent_songs_store.dart';
+import '../data/played_songs_store.dart';
 import '../game/game_controller.dart';
 import '../models/player.dart';
 import '../models/song.dart';
@@ -40,7 +40,7 @@ Future<void> openGame(
   final spotify = scope.spotify;
   // Read per game, not once at startup: the game before this one tonight is
   // part of what the next one should not play again.
-  final recent = await RecentSongsStore.load();
+  final playedBefore = await PlayedSongsStore.load();
   final inApp = InAppSpotifyLauncher(spotify);
   final controller = GameController(
     players: players,
@@ -51,9 +51,8 @@ Future<void> openGame(
     persist: GameStore.save,
     discard: GameStore.clear,
     stopMusic: spotify.stop,
-    onPlayed: (key) => unawaited(RecentSongsStore.add(key)),
-    played: played,
-    recentlyPlayed: recent.toSet(),
+    onPlayedChanged: (keys) => unawaited(PlayedSongsStore.save(keys)),
+    played: {...playedBefore, ...played},
     service: service,
     launcher: switch (service) {
       MusicService.spotify => inApp,

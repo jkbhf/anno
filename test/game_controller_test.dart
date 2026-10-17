@@ -592,37 +592,6 @@ void main() {
 
       expect(second.title, isNot(first.title));
     });
-
-    test('the songs of the last evenings come up less often', () {
-      final category = SongCategory(
-        id: 'esc',
-        name: 'ESC',
-        description: '',
-        songs: [tiered('core'), tiered('tail', tier: 2)],
-      );
-      final game = GameController(
-        players: [GamePlayer(name: 'Anna')],
-        categories: [category],
-        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
-        launcher: FakeLauncher(),
-        random: Random(7),
-        recentlyPlayed: {
-          GameController.playedKey(category, category.songs.first),
-        },
-      );
-
-      const rounds = 700;
-      var core = 0;
-      for (var round = 0; round < rounds; round++) {
-        game.scan(card2005);
-        if (game.currentSong!.title == 'core') core++;
-        game.cancelRound();
-      }
-
-      // A recent core song weighs 3, a tail song nobody heard lately 1 x 4:
-      // the tail now comes up more often than the core.
-      expect(core / rounds, closeTo(3 / 7, 0.06));
-    });
   });
 
   group('played songs', () {
@@ -676,13 +645,13 @@ void main() {
     });
 
     test('only a song that went out is remembered for later', () async {
-      final remembered = <String>[];
+      final remembered = <Set<String>>[];
       final game = GameController(
         players: [GamePlayer(name: 'Anna')],
         categories: [buildCategory(songs)],
         years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
         launcher: FakeLauncher(),
-        onPlayed: remembered.add,
+        onPlayedChanged: remembered.add,
       );
 
       game.scan(card2005);
@@ -691,7 +660,40 @@ void main() {
 
       game.scan(card2005);
       await game.startPlayback();
-      expect(remembered, ['esc|${game.currentSong!.key}']);
+      expect(remembered.last, {'esc|${game.currentSong!.key}'});
+    });
+
+    test('what earlier games played waits until its year is used up', () async {
+      final category = buildCategory(songs);
+      final remembered = <Set<String>>[];
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [category],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        played: {
+          GameController.playedKey(category, songs[0]),
+          GameController.playedKey(category, songs[1]),
+        },
+        onPlayedChanged: remembered.add,
+      );
+
+      expect((await playRound(game)).title, 'C');
+
+      // Now the year is used up: it starts over, and the memory forgets it.
+      final again = await playRound(game);
+      expect(again.title, isNot('C'));
+      expect(remembered.last, {GameController.playedKey(category, again)});
+    });
+
+    test('a rematch does not start the years over', () async {
+      final game = buildGame(category: buildCategory(songs));
+      final first = await playRound(game);
+
+      game.resetScores();
+
+      expect(game.played, {'esc|${first.key}'});
+      expect((await playRound(game)).title, isNot(first.title));
     });
   });
 

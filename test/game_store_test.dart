@@ -3,7 +3,7 @@
 // a page that never starts.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/data/game_store.dart';
-import 'package:anno/data/recent_songs_store.dart';
+import 'package:anno/data/played_songs_store.dart';
 import 'package:anno/models/player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,31 +61,23 @@ void main() {
     }
   });
 
-  group('recent songs', () {
-    test('a song played again moves to the end instead of twice', () {
-      expect(RecentSongsStore.remember(['a', 'b', 'c'], 'a'), ['b', 'c', 'a']);
-    });
-
-    test('the oldest fall out beyond the capacity', () {
-      final full = [for (var i = 0; i < RecentSongsStore.capacity; i++) '$i'];
-
-      final next = RecentSongsStore.remember(full, 'new');
-
-      expect(next, hasLength(RecentSongsStore.capacity));
-      expect(next.first, '1');
-      expect(next.last, 'new');
-    });
-
+  group('played songs', () {
     test('they survive a round trip', () async {
-      await RecentSongsStore.add('esc|a');
-      await RecentSongsStore.add('esc|b');
+      await PlayedSongsStore.save({'esc|a', 'esc|b'});
 
-      expect(await RecentSongsStore.load(), ['esc|a', 'esc|b']);
+      expect(await PlayedSongsStore.load(), {'esc|a', 'esc|b'});
+    });
+
+    test('the memory of the last 300 is carried over', () async {
+      SharedPreferences.setMockInitialValues({
+        'songs.recent': '["esc|a","esc|b"]',
+      });
+      expect(await PlayedSongsStore.load(), {'esc|a', 'esc|b'});
     });
 
     test('a broken value is an empty memory', () async {
       SharedPreferences.setMockInitialValues({'songs.recent': '{"a":1}'});
-      expect(await RecentSongsStore.load(), isEmpty);
+      expect(await PlayedSongsStore.load(), isEmpty);
     });
   });
 }

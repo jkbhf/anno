@@ -198,10 +198,10 @@ does not start its years over. That save is cleared when a game ends; the
 roster in `RosterStore` is not, which is the whole point of keeping the two
 apart.
 
-Across games, `RecentSongsStore` keeps the last 300 songs this device played.
-They are drawn a quarter as often as the others, so the next evening does not
-open with last week's songs - less often, not never, so a thin year can still
-play its few.
+Across games, `PlayedSongsStore` keeps every song this device has played. A
+played song only comes back once every other song of its year in its deck has
+been heard; then that year starts over. Resetting the scores for a rematch
+keeps that memory too.
 
 No screen of a running game scrolls. The phone is passed around and tapped by
 whoever is holding it, so a tile that has to be scrolled into view is a tile in
