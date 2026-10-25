@@ -490,19 +490,20 @@ class GameController extends ChangeNotifier {
   /// Draws a song for that year: first a category at random, then one of its
   /// songs.
   ///
-  /// Categories that still hold something unplayed are preferred over ones
-  /// that are used up. Among those the chance is [weightOf], regardless of
-  /// how many songs a deck has for the year - otherwise a well filled deck
-  /// would crowd out a thin one. A deck without a song for the year drops out
-  /// and the others share its part.
+  /// The chance of a category is [weightOf], regardless of how many songs it
+  /// has for the year - otherwise a well filled deck would crowd out a thin
+  /// one - and regardless of what has been played: a deck that has used up
+  /// the year keeps its part and starts the year over, otherwise the one deck
+  /// with something unplayed would take every card of that year. A deck
+  /// without a song for the year drops out and the others share its part.
   ///
   /// Within the category the song is drawn by [_weightOf]: the core of a year
   /// comes up [_tierOneWeight] times as often as its long tail. In a game a
   /// year is usually scanned once or twice, so the tier decides which of its
   /// songs the room gets to hear at all.
   ///
-  /// Played means played across games: nothing comes back while its year
-  /// still holds a song this device has not played.
+  /// Played means played across games: nothing comes back while its year in
+  /// its deck still holds a song this device has not played.
   ///
   /// Once everything is used up the year starts over: a repeat beats a dead
   /// card. Over means over - the year's songs leave [_played], so it runs
@@ -517,19 +518,10 @@ class GameController extends ChangeNotifier {
         if (_playedKey(category, song) != exclude) song,
     ];
 
-    final withFresh = <SongCategory>[];
-    final withAny = <SongCategory>[];
-
-    for (final category in categories) {
-      final pool = poolOf(category);
-      if (pool.isEmpty) continue;
-      withAny.add(category);
-      if (pool.any((song) => !_played.contains(_playedKey(category, song)))) {
-        withFresh.add(category);
-      }
-    }
-
-    final candidates = withFresh.isNotEmpty ? withFresh : withAny;
+    final candidates = [
+      for (final category in categories)
+        if (poolOf(category).isNotEmpty) category,
+    ];
     if (candidates.isEmpty) return null;
 
     final category = _pickCategory(candidates);

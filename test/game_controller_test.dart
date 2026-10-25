@@ -465,24 +465,29 @@ void main() {
       expect(game.currentCategory, isNull);
     });
 
-    test(
-      'the fresh song of the other deck beats a repeat of the first',
-      () async {
-        final game = withDecks([
-          categoryWith('esc', 'A'),
-          categoryWith('rock', 'B'),
-        ]);
+    test('a deck that used up the year keeps its share', () {
+      final hits = categoryWith('hits', 'A');
+      final library = categoryWith('library', 'B');
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [hits, library],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        played: {GameController.playedKey(hits, hits.songs.single)},
+        random: Random(1),
+      );
 
+      var fromHits = 0;
+      const rounds = 400;
+      for (var round = 0; round < rounds; round++) {
         game.scan(card2005);
-        final first = game.currentCategory!.id;
-        await game.startPlayback();
-        game.reveal();
-        game.nextRound();
+        if (game.currentCategory!.id == 'hits') fromHits++;
+        game.cancelRound();
+      }
 
-        game.scan(card2005);
-        expect(game.currentCategory!.id, isNot(first));
-      },
-    );
+      // The unplayed song of the other deck used to take every round.
+      expect(fromHits / rounds, closeTo(0.5, 0.08));
+    });
   });
 
   group('contest entries', () {
