@@ -52,15 +52,19 @@ GameController buildGame({
   List<SongCategory>? categories,
   SongLauncher launcher = const SilentLauncher(),
   MusicService service = MusicService.spotify,
+  Map<String, int> years = const {'182ca01194a98f0b': 2005},
 }) => GameController(
   players: [
     for (var i = 0; i < players; i++) GamePlayer(name: 'Player ${i + 1}'),
   ],
   categories: categories ?? [escCategory],
-  years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+  years: YearDatabase.inMemory(defaults: years),
   launcher: launcher,
   service: service,
 );
+
+/// A second card, for the round after the one on [card].
+const otherCard = 'https://play-the-music.com/de/year/91bd5e0e2c7a4f31';
 
 final escCategory = SongCategory(
   id: 'esc',
@@ -903,7 +907,6 @@ void main() {
         // a button it cannot reach was taking the words' room.
         expect(find.text('Reveal the year'), findsOneWidget);
         expect(find.text('Player 1'), findsOneWidget);
-        expect(find.text('Next card after the reveal'), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
 
@@ -945,6 +948,121 @@ void main() {
       expect(find.textContaining('My Number One'), findsNothing);
       expect(find.textContaining('Helena Paparizou'), findsNothing);
       expect(find.text('2005'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the reveal is the camera\'s own slot', (tester) async {
+      useWideScreen(tester, size: const Size(893, 412));
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, camera: fakeCamera));
+      await tester.pumpAndSettle();
+
+      // Where the camera will be, and where it was last pressed.
+      final slot = tester.getRect(find.byKey(revealInColumnKey));
+      await tester.tap(find.byKey(revealInColumnKey));
+      await tester.pumpAndSettle();
+
+      expect(game.isRevealed, isTrue);
+      // The year went to the stage, the camera came up in the slot by itself.
+      expect(find.text('2005'), findsOneWidget);
+      expect(find.text('Scan the card'), findsOneWidget);
+      expect(
+        tester.getRect(find.text('Scan the card')).center.dx,
+        slot.center.dx,
+      );
+      expect(find.text('Next round'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the card it is still looking at does not count', (
+      tester,
+    ) async {
+      useWideScreen(tester, size: const Size(893, 412));
+      final game = buildGame(
+        years: const {'182ca01194a98f0b': 2005, '91bd5e0e2c7a4f31': 2005},
+      );
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(
+          game,
+          camera: (context, onCode) => Column(
+            children: [
+              TextButton(
+                onPressed: () => onCode(card),
+                child: const Text('Scan the card'),
+              ),
+              TextButton(
+                onPressed: () => onCode(otherCard),
+                child: const Text('Scan another'),
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(revealInColumnKey));
+      await tester.pumpAndSettle();
+
+      // The card that was just played is lying in front of the camera. It
+      // would otherwise start its own round again, right over the reveal.
+      await tester.tap(find.text('Scan the card'));
+      await tester.pumpAndSettle();
+
+      expect(game.phase, RoundPhase.revealed);
+      expect(find.text('2005'), findsOneWidget);
+      expect(find.text('Scan another'), findsOneWidget);
+
+      // A card somebody held up does.
+      await tester.tap(find.text('Scan another'));
+      await tester.pumpAndSettle();
+
+      expect(game.phase, isNot(RoundPhase.revealed));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a game won while the camera waits ends', (tester) async {
+      useWideScreen(tester, size: const Size(893, 412));
+      final game = GameController(
+        players: [GamePlayer(name: 'Player 1')],
+        categories: [escCategory],
+        years: YearDatabase.inMemory(
+          defaults: const {'182ca01194a98f0b': 2005, '91bd5e0e2c7a4f31': 2005},
+        ),
+        launcher: const SilentLauncher(),
+        targetScore: 1,
+      );
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(
+          game,
+          camera: (context, onCode) => TextButton(
+            onPressed: () => onCode(otherCard),
+            child: const Text('Scan another'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(revealInColumnKey));
+      await tester.pumpAndSettle();
+
+      // The camera is already waiting when the winning point is given.
+      await tester.tap(find.text('Player 1'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Scan another'));
+      await tester.pumpAndSettle();
+
+      // The card goes unused: what comes next is the finish.
+      expect(game.phase, RoundPhase.finished);
+      expect(find.text('Player 1 wins'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
@@ -1174,7 +1292,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('the reveal puts the year beside the words', (tester) async {
+    testWidgets('the reveal gives the stage to the year', (tester) async {
       useWideScreen(tester);
       final game = buildGame();
       await reveal(game);
@@ -1186,8 +1304,11 @@ void main() {
       expect(find.text('My Number One'), findsOneWidget);
       expect(find.text('Helena Paparizou'), findsOneWidget);
       expect(find.text('ESC  ·  Greece  ·  1st place'), findsOneWidget);
-      expect(find.text('First'), findsOneWidget);
       expect(find.text('Who got it right?'), findsOneWidget);
+      // The words step aside for the answer - the round is over and the
+      // camera is already waiting for the next card.
+      expect(find.text('First'), findsNothing);
+      expect(find.byType(LyricsView), findsNothing);
 
       await tester.tap(find.text('Player 1'));
       await tester.pumpAndSettle();
@@ -1325,7 +1446,8 @@ void main() {
       }
       // Readable from the back of the room: rendered size, scale included.
       expect(tester.getRect(find.text('Player 1')).height, greaterThan(16));
-      expect(find.text('Next round'), findsOneWidget);
+      // The camera opened itself, so the slot holds it rather than a button.
+      expect(find.text('Scan the card'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });

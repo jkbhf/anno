@@ -9,6 +9,7 @@ import '../data/lyrics_scale_store.dart';
 import '../data/played_songs_store.dart';
 import '../data/show_scores_store.dart';
 import '../data/skipped_songs_store.dart';
+import '../data/year_database.dart';
 import '../game/game_controller.dart';
 import '../models/player.dart';
 import '../models/song.dart';
@@ -89,8 +90,9 @@ Future<void> openGame(
 bool needsCountdown(MusicService service, {required bool sessionReady}) =>
     !(service == MusicService.spotify && sessionReady);
 
-/// The reveal in the side column. It carries the same words as the card on the
-/// stage, which reveals too, so a test needs something to tell them apart.
+/// The reveal in the side column - the camera's slot while a round plays, see
+/// [_CameraSlot]. Named so a test can press the panel rather than the words
+/// on it.
 @visibleForTesting
 const Key revealInColumnKey = Key('reveal-in-column');
 
@@ -139,6 +141,16 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   /// Whether the scoreboard is on the screen, see [ShowScoresStore].
   bool _showScores = true;
+
+  /// Whether the layout the last frame drew was the wide one. Read by the
+  /// phase listener, which runs outside a build and must not go looking for a
+  /// MediaQuery of its own.
+  bool _wide = false;
+
+  /// Whether the camera open right now opened itself, see [_onPhaseChanged].
+  /// A scan the operator asked for reads any card, this one skips the card it
+  /// is still looking at.
+  bool _autoScan = false;
 
   @override
   void initState() {
@@ -209,6 +221,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final phase = _game.phase;
     if (phase == RoundPhase.revealed && _lastPhase != RoundPhase.revealed) {
       Haptics.reveal();
+      // The round is over, so the next card is the only thing left to do: the
+      // camera comes up by itself in the slot the reveal was just pressed in,
+      // and the year goes to the stage. Still inside the tap that revealed,
+      // which is what lets a mobile browser unlock sound for the next round.
+      if (_wide && _inlineScan == null) {
+        _autoScan = true;
+        unawaited(_nextRound());
+      }
     }
     // A song played in the app runs through the guessing and the scoring and
     // ends with the round - not at the reveal, where the points are still
@@ -290,9 +310,23 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   /// Closes the camera in the side column, with the code it read or without.
+  /// A code the inline camera read. The camera that opened itself is looking
+  /// at the card of the round that was just revealed, so that one code is
+  /// ignored and the camera stays open for the next card.
+  void _onInlineCode(String code) {
+    final inPlay = _game.lastScannedCode;
+    if (_autoScan &&
+        inPlay != null &&
+        YearDatabase.normalizeKey(code) == YearDatabase.normalizeKey(inPlay)) {
+      return;
+    }
+    _closeInlineScan(code);
+  }
+
   void _closeInlineScan([String? code]) {
     final scan = _inlineScan;
     if (scan == null) return;
+    _autoScan = false;
     setState(() => _inlineScan = null);
     scan.complete(code);
   }
@@ -431,6 +465,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
     final code = await _scanCode();
     if (!mounted || code == null) return;
+    // The camera opens at the reveal and waits there while the points are
+    // handed out, so the game can be won after it opened. The card then goes
+    // unused: what comes next is the finish, not another round.
+    if (_game.winners.isNotEmpty) {
+      _game.nextRound();
+      return;
+    }
     _game.nextRound();
     await _handleCode(code);
   }
@@ -559,6 +600,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   Widget _scaffold(BuildContext context) {
     final wide = isWideScreen(MediaQuery.sizeOf(context));
+    _wide = wide;
     // A window made narrow while the camera waits in the side column has no
     // side column left to show it in.
     if (!wide && _inlineScan != null) {
@@ -637,7 +679,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       camera: _inlineScan == null
           ? null
           : widget.camera ?? (context, onCode) => ScannerView(onCode: onCode),
-      onCode: _closeInlineScan,
+      onCode: _onInlineCode,
       onCloseCamera: _closeInlineScan,
       onScan: _startRound,
       onNextRound: _nextRound,
@@ -1618,6 +1660,7 @@ class _WideRound extends StatelessWidget {
                                 onClose: onCloseCamera,
                                 onScan: onScan,
                                 onNextRound: onNextRound,
+                                onReveal: game.reveal,
                               ),
                             ),
                           ),
@@ -1646,21 +1689,6 @@ class _WideRound extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // The reveal is the one thing the room must not
-                              // do by itself, and on a wall it is out of
-                              // reach: the card on the stage is the button
-                              // there, but whoever runs the game sits at the
-                              // device. So it is here too, where every other
-                              // control of theirs is.
-                              if (playing) ...[
-                                FilledButton.icon(
-                                  key: revealInColumnKey,
-                                  onPressed: game.reveal,
-                                  icon: const Icon(Icons.visibility_outlined),
-                                  label: const Text('Reveal the year'),
-                                ),
-                                const SizedBox(height: 12),
-                              ],
                               if (game.currentSong != null) ...[
                                 _LyricsSize(
                                   scale: lyricsScale,
@@ -1787,6 +1815,7 @@ class _CameraSlot extends StatelessWidget {
     required this.onClose,
     required this.onScan,
     required this.onNextRound,
+    required this.onReveal,
   });
 
   final RoundPhase phase;
@@ -1795,6 +1824,7 @@ class _CameraSlot extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback onScan;
   final VoidCallback onNextRound;
+  final VoidCallback onReveal;
 
   @override
   Widget build(BuildContext context) {
@@ -1833,13 +1863,17 @@ class _CameraSlot extends StatelessWidget {
         scheme.primary,
         scheme.onPrimary,
       ),
+      // The slot is always what to do next, and during a round that is the
+      // reveal - here, where the hand already is and where the camera comes
+      // up a moment later. It used to say "Next card after the reveal" and do
+      // nothing at all.
       RoundPhase.playing => (
-        Icons.qr_code_scanner,
-        'Next card after the reveal',
-        null,
-        null,
-        scheme.surfaceContainerHighest,
-        scheme.onSurfaceVariant,
+        Icons.visibility_outlined,
+        'Reveal the year',
+        'The camera then opens for the next card',
+        onReveal,
+        scheme.primary,
+        scheme.onPrimary,
       ),
       _ => (
         Icons.qr_code_scanner,
@@ -1852,6 +1886,7 @@ class _CameraSlot extends StatelessWidget {
     };
 
     return Material(
+      key: phase == RoundPhase.playing ? revealInColumnKey : null,
       color: background,
       shape: RoundedRectangleBorder(borderRadius: radius),
       clipBehavior: Clip.antiAlias,
@@ -1868,16 +1903,16 @@ class _CameraSlot extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge?.copyWith(color: foreground),
               ),
-              if (hint != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  hint,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: foreground.withValues(alpha: 0.8),
-                  ),
+              const SizedBox(height: 4),
+              // Every state of the slot says what the tap does next, because
+              // every one of them leads to the camera.
+              Text(
+                hint,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: foreground.withValues(alpha: 0.8),
                 ),
-              ],
+              ),
             ],
           ),
         ),
@@ -1941,7 +1976,6 @@ class _Stage extends StatelessWidget {
         // goes - whoever hands out points is holding the device and does not
         // read a wall to find that out.
         final short = height < 520;
-        final top = (height * 0.24).clamp(0.0, 220.0);
         final tile = (height * (short ? 0.11 : 0.14)).clamp(0.0, 132.0);
         // The size the height gives, times what the room asked for. The cap
         // is the stage's, the factor is not: a wall far enough away can want
@@ -1955,19 +1989,14 @@ class _Stage extends StatelessWidget {
             children: [
               if (song == null)
                 const Expanded(child: _StageIdle())
+              else if (revealed)
+                // The round is over and the answer is the whole point of it,
+                // so it gets the stage. The words did their work while the
+                // room was guessing and nothing is sung along to a song that
+                // is about to be cut - the camera in the column is already
+                // waiting for the next card.
+                Expanded(child: _YearCard(game: game, wide: true))
               else ...[
-                // Only the year gets the top of the stage. While the room
-                // guesses there is nothing to put there: the reveal is a
-                // button in the column now, and a banner telling the room
-                // about a button it cannot reach was taking a fifth of the
-                // stage from the words.
-                if (revealed) ...[
-                  SizedBox(
-                    height: top,
-                    child: _YearCard(game: game, wide: true),
-                  ),
-                  const SizedBox(height: 8),
-                ],
                 Expanded(
                   // The words scroll themselves, so a scrollbar on the wall is
                   // only noise. The edges fade rather than cut a line in half.

@@ -563,15 +563,24 @@ round has neither band nor reserved room: nothing to scrub, so the words get
 those 50 pixels instead. The swap stays in the column, where the rest of the
 round's controls are.
 
-**Nothing stands above the words until the year does** (2026-10-26). The stage
-used to carry the reveal banner - "The song is playing", the hint, the pill -
-across its top while the room guessed, and the year card then took the same
-slot so nothing moved. Once the reveal became a button in the column that
-banner was a fifth of the stage spent telling the room about a button it cannot
-reach, so it is gone: the words run from the top of the stage, and the year
-card takes that strip back at the reveal. The jump is accepted, and only there
-- the reveal is the one moment the stage is meant to change. `_RevealSlot` is
-the phone's card alone now; its `wide` branch went with the banner.
+**The stage is the words, and then the answer** (2026-10-26). It used to carry
+the reveal banner - "The song is playing", the hint, the pill - across its top
+while the room guessed, with the year card taking the same slot afterwards so
+that nothing moved. Both are gone. While the room guesses the words have the
+stage from its top edge; at the reveal they step aside and the year card has
+all of it.
+
+The banner went because the reveal is a button in the column now, and a fifth
+of the stage spent telling the room about a button it cannot reach is a fifth
+too much. The words go at the reveal because the round is over: nobody sings
+along to a song that is about to be cut, the next card is already being held up
+to the camera, and squeezed in beside the answer they were down to 55 pixels on
+a phone - thin enough to be worth nothing and wide enough to cost the year its
+size. A projector's card now has air around it rather than lyrics under it;
+that is the one part of this worth looking at on a wall.
+
+`_RevealSlot` is the phone's card alone now; its `wide` branch went with the
+banner.
 
 **The scores can be switched off, and then nothing counts** (`ShowScoresStore`,
 per device). `Hide the scores` in the menu takes the strip, its heading and the
@@ -595,17 +604,37 @@ the distance to the reader is arm's length, whatever the room looks like.
 the room reads: reveal or year, words, scores. The column is for whoever runs
 the game: camera and song controls. New things go on the side they are for.
 
-**The words are up for the whole round, guessing included.** That is the
+**The words are up for the whole round the room is guessing in.** That is the
 reason to put the game on a wall, and it was the ask. The phone keeps them
 behind the button. Title and artist stay off the stage until the reveal,
-exactly as in the sheet - the words are a hint, the name is the answer.
+exactly as in the sheet - the words are a hint, the name is the answer. At the
+reveal they hand the stage to the answer, see below.
 
-**The camera opens on demand, never kept running.** A running camera would read
-the card still lying in front of it and start the next round before the points
-are handed out. It opens in the column, and the reveal stays on the stage while
-the next card comes up; closing it keeps the reveal, as on the phone.
-`_scanCode` hides the difference: it awaits the inline camera the same way it
-awaits the scanner page, so the round flow behind it has one path.
+**The camera opens on demand - and the reveal is a demand** (2026-10-26). It
+used to open only on a tap, because a running camera reads the card still lying
+in front of it and starts the next round over the reveal. That danger is real
+and it is handled by name rather than by keeping the camera shut: the camera
+that opens itself ignores exactly one code, the card of the round on screen
+(`_onInlineCode` against `GameController.lastScannedCode`), so only a card
+somebody holds up starts the next round. A scan the operator asked for has no
+such guard - scanning the same card again is then a decision, not a leftover.
+
+So the slot in the column is always the one thing to do next: `Scan a card`,
+then `Reveal the year` during the round, then the live camera. The reveal moved
+in there (`revealInColumnKey` is that panel now) because it is where the hand
+already is, and pressing it hands the slot straight over to the camera - the
+next card can go up while the room is still reading the year. Closing the
+camera keeps the reveal and falls back to `Next round`, as before.
+
+Two things follow that are easy to get wrong. The auto-scan is started from
+inside the tap that revealed, which is what lets a mobile browser unlock sound
+for the next round - do not defer it. And `_nextRound` now awaits a card while
+the points are being handed out, so the game can be won after the camera
+opened: it checks the winners **again** after the scan and drops the card, or
+the finish screen would be skipped by a round nobody asked for.
+
+`_scanCode` hides the rest of the difference: it awaits the inline camera the
+same way it awaits the scanner page, so the round flow behind it has one path.
 
 **The stage's lyrics outlive the launch.** They are built with the round, before
 the launch says whether the song plays in the tab, so `LyricsView` picks the

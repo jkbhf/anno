@@ -134,16 +134,19 @@ the window is clearly wider than tall (`isWideScreen` in `lib/ui/layout.dart`),
 with no size floor under it.
 
 - **The stage**, on the right, is for the room: the lyrics, large, from the top
-  of the screen while the room guesses, the year card above them once it is
-  out, and the scores as one row along the bottom. Everything there is a share
-  of the height of the picture, so it fits a 1080p wall, a 720p one and a
-  phone's 412 pixels alike; up to eight players fit a 720p projector.
-- **The column**, on the left, is for whoever runs the game. The camera opens
-  there in a small box - "Scan a card", or "Next round" once the year is out -
-  while the stage keeps the reveal and the scores. Under it: "Reveal the year",
-  the size of the words on the stage, and during a round "Open in Spotify" and
-  the swap. The menu sits in the corner of the camera box, and carries the way
-  out of the game - this layout has no app bar.
+  of the screen while the room guesses, and the year card in their place once
+  the year is out, with the scores as one row along the bottom. Everything
+  there is a share of the height of the picture, so it fits a 1080p wall, a
+  720p one and a phone's 412 pixels alike; up to eight players fit a 720p
+  projector.
+- **The column**, on the left, is for whoever runs the game, and its big box is
+  always the next thing to do: "Scan a card", then "Reveal the year" while the
+  song runs, and then the camera, which opens by itself so the next card can go
+  up while the room is still reading the year. The card just played is ignored
+  while it does - only a new card starts the next round. Under the box: the
+  size of the words on the stage, and during a round "Open in Spotify" and the
+  swap. The menu sits in the corner of the box and carries the way out of the
+  game - this layout has no app bar.
 - **The player** is a band along the bottom, under both halves: pause, ±10
   seconds, back to the start, jump to the middle, and the track across the rest
   of the screen. Only an in-app Spotify round has one - a song handed over by
