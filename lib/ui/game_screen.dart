@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -80,19 +81,27 @@ Future<void> openGame(
 bool needsCountdown(MusicService service, {required bool sessionReady}) =>
     !(service == MusicService.spotify && sessionReady);
 
+/// Whether the round gets the wide layout: a stage for the room and a column
+/// beside it for whoever runs the game - a laptop on a projector, a tablet on
+/// its side. A phone keeps its one column even turned, where the stage would
+/// be a strip.
+bool isWideScreen(Size size) =>
+    size.width >= 900 && size.width >= size.height * 1.2;
+
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
   const GameScreen({
     required this.controller,
     this.lyrics,
-    this.scanner,
+    this.camera,
     super.key,
   });
 
   final GameController controller;
 
-  /// The screen a scan opens. Null is the camera; a test hands in a stand-in.
-  final WidgetBuilder? scanner;
+  /// What reads the card, on its own page or in the side column of the wide
+  /// layout. Null is the device camera; a test hands in a stand-in.
+  final CameraBuilder? camera;
 
   /// Where the words behind the lyrics button come from. Null is LRCLIB.
   final LyricsSource? lyrics;
@@ -112,6 +121,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Only needed to silence the in-app player; the screen itself reads the
   /// session out of the scope where it draws with it.
   SpotifySession? _spotify;
+
+  /// The camera open in the side column of the wide layout, waiting for a
+  /// card. Null while it is closed. See [_scanCode].
+  Completer<String?>? _inlineScan;
 
   @override
   void initState() {
@@ -134,6 +147,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    // Lets the round that waits on it run out, instead of hanging on.
+    _inlineScan?.complete();
+    _inlineScan = null;
     unawaited(WakeLock.release());
     _spotify?.removeListener(_onSessionChanged);
     unawaited(_spotify?.stop());
@@ -204,8 +220,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
-  /// Pushes the camera and returns the scanned code, or null when it was
-  /// cancelled.
+  /// Opens the camera and returns the scanned code, or null when it was
+  /// closed without one.
+  ///
+  /// On a wide screen the camera opens small, in the side column, instead of
+  /// as a page over everything: the room keeps the stage - the year that was
+  /// just revealed, the scores - while the next card is held up.
   Future<String?> _scanCode() async {
     if (_busy) return null;
     // Still inside the tap: a mobile browser grants sound from here, not from
@@ -215,14 +235,27 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
     _busy = true;
     try {
+      if (isWideScreen(MediaQuery.sizeOf(context))) {
+        final scan = Completer<String?>();
+        setState(() => _inlineScan = scan);
+        return await scan.future;
+      }
       return await Navigator.of(context).push<String>(
         MaterialPageRoute<String>(
-          builder: widget.scanner ?? (_) => const ScannerScreen(),
+          builder: (_) => ScannerScreen(camera: widget.camera),
         ),
       );
     } finally {
       _busy = false;
     }
+  }
+
+  /// Closes the camera in the side column, with the code it read or without.
+  void _closeInlineScan([String? code]) {
+    final scan = _inlineScan;
+    if (scan == null) return;
+    setState(() => _inlineScan = null);
+    scan.complete(code);
   }
 
   Future<void> _startRound() async {
@@ -468,11 +501,29 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   Widget _scaffold(BuildContext context) {
+    final wide = isWideScreen(MediaQuery.sizeOf(context));
+    // A window made narrow while the camera waits in the side column has no
+    // side column left to show it in.
+    if (!wide && _inlineScan != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _closeInlineScan();
+      });
+    }
+
     return ListenableBuilder(
       listenable: _game,
       builder: (context, _) {
+        // The finish has one thing to say, and says it the same everywhere.
+        final body = wide && _game.phase != RoundPhase.finished
+            ? _wideBody(context)
+            : CenteredBody(child: _body(context));
         return Scaffold(
           appBar: AppBar(
+            // On the wide layout the only thing that scrolls is the words, in
+            // their own box - no page goes under the bar for it to tint over.
+            notificationPredicate: wide
+                ? (_) => false
+                : defaultScrollNotificationPredicate,
             title: Text(
               _game.categories.length == 1
                   ? _game.categories.single.name
@@ -493,9 +544,29 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-          body: SafeArea(child: CenteredBody(child: _body(context))),
+          body: SafeArea(child: body),
         );
       },
+    );
+  }
+
+  /// The round on a wide screen, see [_WideRound].
+  Widget _wideBody(BuildContext context) {
+    // As on the phone: the countdown is up over the screen, or the song is
+    // starting within the frame.
+    if (_game.phase == RoundPhase.countdown) return const SizedBox.shrink();
+    return _WideRound(
+      game: _game,
+      spotify: AppScope.of(context).spotify,
+      lyrics: widget.lyrics ?? sharedLyrics,
+      camera: _inlineScan == null
+          ? null
+          : widget.camera ?? (context, onCode) => ScannerView(onCode: onCode),
+      onCode: _closeInlineScan,
+      onCloseCamera: _closeInlineScan,
+      onScan: _startRound,
+      onNextRound: _nextRound,
+      onRedraw: _redraw,
     );
   }
 
@@ -544,7 +615,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 /// eight there is not - and then everything gets smaller together instead of
 /// half of it going off the bottom edge.
 class _FitBody extends StatelessWidget {
-  const _FitBody({required this.child, this.center = true});
+  const _FitBody({
+    required this.child,
+    this.center = true,
+    this.padding = const EdgeInsets.fromLTRB(20, 24, 20, 28),
+  });
 
   final Widget child;
 
@@ -553,9 +628,11 @@ class _FitBody extends StatelessWidget {
   /// left over fall below the last button.
   final bool center;
 
+  /// The margin of a whole screen. A panel of the wide layout brings its own.
+  final EdgeInsets padding;
+
   @override
   Widget build(BuildContext context) {
-    const padding = EdgeInsets.fromLTRB(20, 24, 20, 28);
     final alignment = center ? Alignment.center : Alignment.topCenter;
 
     return Padding(
@@ -687,6 +764,54 @@ class _PlayingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _FitBody(
+      center: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _RevealSlot(
+            onReveal: game.reveal,
+            inApp: game.playingInApp,
+            service: game.service,
+          ),
+          const SizedBox(height: 20),
+          _SongControls(
+            game: game,
+            spotify: spotify,
+            onRedraw: onRedraw,
+            onLyrics: onLyrics,
+          ),
+          const SizedBox(height: 32),
+          _SectionHeading(title: 'Scores', targetScore: game.targetScore),
+          const SizedBox(height: 16),
+          // The same tiles as the reveal, but inert: points are handed out
+          // once the year is up, not while the group is still guessing.
+          _PlayerGrid(game: game),
+        ],
+      ),
+    );
+  }
+}
+
+/// What can be done with the song while the room guesses: move around in it,
+/// get back to the service, swap it for one somebody knows.
+class _SongControls extends StatelessWidget {
+  const _SongControls({
+    required this.game,
+    required this.spotify,
+    required this.onRedraw,
+    this.onLyrics,
+  });
+
+  final GameController game;
+  final SpotifySession spotify;
+  final VoidCallback onRedraw;
+
+  /// Null where the words are up anyway - the stage of the wide layout.
+  final VoidCallback? onLyrics;
+
+  @override
+  Widget build(BuildContext context) {
     // The pause button and the "Premium needed" line both come out of the
     // session, which changes without the game noticing.
     return ListenableBuilder(
@@ -698,6 +823,7 @@ class _PlayingBody extends StatelessWidget {
   Widget _content(BuildContext context) {
     final theme = Theme.of(context);
     final message = game.launchMessage;
+    final lyrics = onLyrics;
 
     // Playing in the app is the good case: nobody leaves the game, so there is
     // nothing to come back from and the year waits for the button.
@@ -708,68 +834,54 @@ class _PlayingBody extends StatelessWidget {
     // that is the only way back to a popup the browser swallowed.
     final inApp = game.playingInApp;
 
-    return _FitBody(
-      center: false,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _RevealSlot(
-            onReveal: game.reveal,
-            inApp: inApp,
-            service: game.service,
-          ),
-          const SizedBox(height: 20),
-          if (inApp)
-            SongProgressBar(session: spotify)
-          // On the web a blocked popup looks exactly like a successful one, so
-          // the way to the service stays reachable by hand.
-          else if (kIsWeb)
-            Center(
-              child: TextButton.icon(
-                onPressed: game.reopen,
-                icon: const Icon(Icons.open_in_new),
-                label: Text('Open in ${game.service.label}'),
-              ),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (inApp)
+          SongProgressBar(session: spotify)
+        // On the web a blocked popup looks exactly like a successful one, so
+        // the way to the service stays reachable by hand.
+        else if (kIsWeb)
           Center(
             child: TextButton.icon(
-              onPressed: onLyrics,
+              onPressed: game.reopen,
+              icon: const Icon(Icons.open_in_new),
+              label: Text('Open in ${game.service.label}'),
+            ),
+          ),
+        if (lyrics != null)
+          Center(
+            child: TextButton.icon(
+              onPressed: lyrics,
               icon: const Icon(Icons.lyrics_outlined),
               label: const Text('Lyrics'),
             ),
           ),
-          if (message != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
+        if (message != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.error,
             ),
-          ],
-          // For the song nobody in the room knows - that round is a coin flip.
-          if (game.canRedraw) ...[
-            const SizedBox(height: 4),
-            Center(
-              child: TextButton.icon(
-                onPressed: onRedraw,
-                icon: const Icon(Icons.shuffle),
-                label: const Text('Nobody knows it? Draw another'),
-                style: TextButton.styleFrom(
-                  foregroundColor: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ],
-          const SizedBox(height: 32),
-          _SectionHeading(title: 'Scores', targetScore: game.targetScore),
-          const SizedBox(height: 16),
-          // The same tiles as the reveal, but inert: points are handed out
-          // once the year is up, not while the group is still guessing.
-          _PlayerGrid(game: game),
+          ),
         ],
-      ),
+        // For the song nobody in the room knows - that round is a coin flip.
+        if (game.canRedraw) ...[
+          const SizedBox(height: 4),
+          Center(
+            child: TextButton.icon(
+              onPressed: onRedraw,
+              icon: const Icon(Icons.shuffle),
+              label: const Text('Nobody knows it? Draw another'),
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -788,11 +900,16 @@ class _RevealSlot extends StatelessWidget {
     required this.onReveal,
     required this.inApp,
     required this.service,
+    this.wide = false,
   });
 
   final VoidCallback onReveal;
   final bool inApp;
   final MusicService service;
+
+  /// A banner across the top of the stage instead of a card: the words below
+  /// it need the height more than the slot does.
+  final bool wide;
 
   @override
   Widget build(BuildContext context) {
@@ -802,78 +919,103 @@ class _RevealSlot extends StatelessWidget {
       side: BorderSide(color: theme.colorScheme.outlineVariant, width: 2),
     );
 
+    final icon = Icon(
+      Icons.music_note,
+      size: 56,
+      color: theme.colorScheme.primary,
+    );
+    final title = Text(
+      inApp ? 'The song is playing' : 'The song is playing in ${service.label}',
+      textAlign: wide ? TextAlign.start : TextAlign.center,
+      style: wide
+          ? theme.textTheme.headlineMedium
+          : theme.textTheme.titleMedium,
+    );
+    final hint = Text(
+      inApp
+          ? 'Everyone guesses the year.'
+          : 'Everyone guesses the year. Coming back to the app reveals it too.',
+      textAlign: wide ? TextAlign.start : TextAlign.center,
+      style: (wide ? theme.textTheme.titleMedium : theme.textTheme.bodySmall)
+          ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+    );
+    final pill = Container(
+      padding: wide
+          ? const EdgeInsets.symmetric(horizontal: 28, vertical: 16)
+          : const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      // The label is the one thing here that cannot wrap, so on a narrow
+      // phone - or with the text scaled up - it shrinks instead of running
+      // over the edge.
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.visibility_outlined,
+              size: wide ? 26 : 20,
+              color: theme.colorScheme.onPrimary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Reveal the year',
+              style:
+                  (wide
+                          ? theme.textTheme.titleLarge
+                          : theme.textTheme.labelLarge)
+                      ?.copyWith(color: theme.colorScheme.onPrimary),
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Material(
       color: theme.colorScheme.surfaceContainerHighest,
       shape: shape,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onReveal,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.music_note,
-                size: 56,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                inApp
-                    ? 'The song is playing'
-                    : 'The song is playing in ${service.label}',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                inApp
-                    ? 'Everyone guesses the year.'
-                    : 'Everyone guesses the year. Coming back to the app '
-                          'reveals it too.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 28),
-              Container(
+        child: wide
+            ? _FitBody(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
+                  horizontal: 32,
+                  vertical: 20,
                 ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(100),
+                child: Row(
+                  children: [
+                    icon,
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [title, const SizedBox(height: 6), hint],
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    pill,
+                  ],
                 ),
-                // The label is the one thing here that cannot wrap, so on a
-                // narrow phone - or with the text scaled up - it shrinks
-                // instead of running over the edge.
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.visibility_outlined,
-                        size: 20,
-                        color: theme.colorScheme.onPrimary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Reveal the year',
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: theme.colorScheme.onPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
+              )
+            : Padding(
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    icon,
+                    const SizedBox(height: 16),
+                    title,
+                    const SizedBox(height: 6),
+                    hint,
+                    const SizedBox(height: 28),
+                    pill,
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -898,6 +1040,122 @@ String? _originLine(GameController game, Song? song) {
   return parts.isEmpty ? null : parts.join('  ·  ');
 }
 
+void _givePoint(GameController game, GamePlayer player) {
+  Haptics.point();
+  game.addPoint(player);
+}
+
+void _takePoint(GameController game, GamePlayer player) {
+  Haptics.undo();
+  game.removePoint(player);
+}
+
+/// The answer: the year, tinted by its decade, with the song under it - or,
+/// on the stage of the wide layout, beside it.
+class _YearCard extends StatelessWidget {
+  const _YearCard({required this.game, this.wide = false});
+
+  final GameController game;
+  final bool wide;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final song = game.currentSong;
+    final year = game.currentYear ?? song?.year ?? 0;
+    final accent = decadeColor(year);
+    final align = wide ? TextAlign.start : TextAlign.center;
+
+    final origin = switch (_originLine(game, song)) {
+      final line? => Text(
+        line,
+        textAlign: align,
+        style: (wide ? theme.textTheme.titleMedium : theme.textTheme.labelLarge)
+            ?.copyWith(color: accent, letterSpacing: 0.4),
+      ),
+      null => null,
+    };
+    final yearText = Text(
+      '$year',
+      maxLines: 1,
+      style: TextStyle(
+        fontSize: wide ? 140 : 84,
+        fontWeight: FontWeight.w800,
+        height: 1,
+        letterSpacing: wide ? -3 : -2,
+        color: accent,
+      ),
+    );
+    final name = [
+      if (song != null) ...[
+        Text(
+          song.title,
+          textAlign: align,
+          style:
+              (wide
+                      ? theme.textTheme.displaySmall
+                      : theme.textTheme.headlineSmall)
+                  ?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          song.artist,
+          textAlign: align,
+          style:
+              (wide ? theme.textTheme.headlineSmall : theme.textTheme.bodyLarge)
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+      ],
+    ];
+
+    final decoration = BoxDecoration(
+      color: accent.withValues(alpha: 0.16),
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: accent, width: 2),
+    );
+
+    if (wide) {
+      return DecoratedBox(
+        decoration: decoration,
+        child: _FitBody(
+          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+          child: Row(
+            children: [
+              yearText,
+              const SizedBox(width: 40),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (origin != null) ...[origin, const SizedBox(height: 8)],
+                    ...name,
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
+      decoration: decoration,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (origin != null) ...[origin, const SizedBox(height: 10)],
+          // Scales down rather than wrapping: a broken year is the one thing
+          // on this screen that must stay readable.
+          FittedBox(fit: BoxFit.scaleDown, child: yearText),
+          if (song != null) const SizedBox(height: 18),
+          ...name,
+        ],
+      ),
+    );
+  }
+}
+
 class _RevealBody extends StatelessWidget {
   const _RevealBody({
     required this.game,
@@ -912,73 +1170,13 @@ class _RevealBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final song = game.currentSong;
-    final year = game.currentYear ?? song?.year ?? 0;
-    final accent = decadeColor(year);
 
     return _FitBody(
       center: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
-            decoration: BoxDecoration(
-              color: accent.withValues(alpha: 0.16),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: accent, width: 2),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_originLine(game, song) case final origin?) ...[
-                  Text(
-                    origin,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: accent,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                ],
-                // Scales down rather than wrapping: a broken year is the one
-                // thing on this screen that must stay readable.
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    '$year',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 84,
-                      fontWeight: FontWeight.w800,
-                      height: 1,
-                      letterSpacing: -2,
-                      color: accent,
-                    ),
-                  ),
-                ),
-                if (song != null) ...[
-                  const SizedBox(height: 18),
-                  Text(
-                    song.title,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    song.artist,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
+          _YearCard(game: game),
           const SizedBox(height: 8),
           Center(
             child: TextButton.icon(
@@ -1002,14 +1200,8 @@ class _RevealBody extends StatelessWidget {
           const SizedBox(height: 16),
           _PlayerGrid(
             game: game,
-            onTap: (player) {
-              Haptics.point();
-              game.addPoint(player);
-            },
-            onLongPress: (player) {
-              Haptics.undo();
-              game.removePoint(player);
-            },
+            onTap: (player) => _givePoint(game, player),
+            onLongPress: (player) => _takePoint(game, player),
           ),
           const SizedBox(height: 40),
           // Tall for the same reason the reveal panel is: the phone is being
@@ -1074,12 +1266,18 @@ class _PlayerTile extends StatefulWidget {
     required this.targetScore,
     this.onTap,
     this.onLongPress,
+    this.large = false,
   });
 
   final GamePlayer player;
   final int targetScore;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+
+  /// Sized for the stage, read across a room. The tile then shrinks what it
+  /// holds rather than overflowing - eight of them in a row on a 720p
+  /// projector are short.
+  final bool large;
 
   @override
   State<_PlayerTile> createState() => _PlayerTileState();
@@ -1115,32 +1313,37 @@ class _PlayerTileState extends State<_PlayerTile> {
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.primary;
 
-    final content = Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            player.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.titleMedium,
+    final large = widget.large;
+    final column = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          player.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: large
+              ? theme.textTheme.titleLarge
+              : theme.textTheme.titleMedium,
+        ),
+        const SizedBox(height: 4),
+        AnimatedScale(
+          scale: _flashing ? 1.15 : 1,
+          duration: const Duration(milliseconds: 120),
+          child: Text(
+            '${player.score}',
+            style:
+                (large
+                        ? theme.textTheme.displayMedium
+                        : theme.textTheme.displaySmall)
+                    ?.copyWith(fontWeight: FontWeight.w700, color: foreground),
           ),
-          const SizedBox(height: 4),
-          AnimatedScale(
-            scale: _flashing ? 1.15 : 1,
-            duration: const Duration(milliseconds: 120),
-            child: Text(
-              '${player.score}',
-              style: theme.textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: foreground,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
+    const padding = EdgeInsets.all(12);
+    final content = large
+        ? _FitBody(padding: padding, child: column)
+        : Padding(padding: padding, child: column);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
@@ -1162,6 +1365,419 @@ class _PlayerTileState extends State<_PlayerTile> {
               child: content,
             )
           : content,
+    );
+  }
+}
+
+/// The round on a wide screen - a laptop on a projector, a tablet on its side.
+///
+/// Two halves for two audiences. The stage on the right is for the room: the
+/// reveal, the words, the scores, sized to be read from the sofa. The column
+/// on the left is for whoever runs the game: the camera opens there, small,
+/// instead of as a page over everything, and the controls for the song sit
+/// under it.
+class _WideRound extends StatelessWidget {
+  const _WideRound({
+    required this.game,
+    required this.spotify,
+    required this.lyrics,
+    required this.camera,
+    required this.onCode,
+    required this.onCloseCamera,
+    required this.onScan,
+    required this.onNextRound,
+    required this.onRedraw,
+  });
+
+  final GameController game;
+  final SpotifySession spotify;
+  final LyricsSource lyrics;
+
+  /// The camera while it is open, null while it is closed.
+  final CameraBuilder? camera;
+  final ValueChanged<String> onCode;
+  final VoidCallback onCloseCamera;
+  final VoidCallback onScan;
+  final VoidCallback onNextRound;
+  final VoidCallback onRedraw;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = (constraints.maxWidth * 0.28).clamp(300.0, 420.0);
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              width: side,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 12, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: _CameraSlot(
+                        phase: game.phase,
+                        camera: camera,
+                        onCode: onCode,
+                        onClose: onCloseCamera,
+                        onScan: onScan,
+                        onNextRound: onNextRound,
+                      ),
+                    ),
+                    if (game.phase == RoundPhase.playing)
+                      Expanded(
+                        child: _FitBody(
+                          center: false,
+                          padding: const EdgeInsets.only(top: 20),
+                          child: _SongControls(
+                            game: game,
+                            spotify: spotify,
+                            onRedraw: onRedraw,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: _Stage(game: game, spotify: spotify, lyrics: lyrics),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// The place in the side column where the camera opens.
+///
+/// Closed, it is the button for what the camera is needed for next: the first
+/// card, or the next round once the year is out. The camera only runs while
+/// it is asked for - kept running, it would read the card still lying in front
+/// of it and start the next round before the points are handed out.
+class _CameraSlot extends StatelessWidget {
+  const _CameraSlot({
+    required this.phase,
+    required this.camera,
+    required this.onCode,
+    required this.onClose,
+    required this.onScan,
+    required this.onNextRound,
+  });
+
+  final RoundPhase phase;
+  final CameraBuilder? camera;
+  final ValueChanged<String> onCode;
+  final VoidCallback onClose;
+  final VoidCallback onScan;
+  final VoidCallback onNextRound;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final radius = BorderRadius.circular(24);
+
+    final open = camera;
+    if (open != null) {
+      return ClipRRect(
+        borderRadius: radius,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            open(context, onCode),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton.filledTonal(
+                tooltip: 'Close the camera',
+                onPressed: onClose,
+                icon: const Icon(Icons.close),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final scheme = theme.colorScheme;
+    final (icon, title, hint, onTap, background, foreground) = switch (phase) {
+      RoundPhase.revealed => (
+        Icons.arrow_forward,
+        'Next round',
+        'Opens the camera for the next card',
+        onNextRound,
+        scheme.primary,
+        scheme.onPrimary,
+      ),
+      RoundPhase.playing => (
+        Icons.qr_code_scanner,
+        'Next card after the reveal',
+        null,
+        null,
+        scheme.surfaceContainerHighest,
+        scheme.onSurfaceVariant,
+      ),
+      _ => (
+        Icons.qr_code_scanner,
+        'Scan a card',
+        'Opens the camera here',
+        onScan,
+        scheme.primaryContainer,
+        scheme.onPrimaryContainer,
+      ),
+    };
+
+    return Material(
+      color: background,
+      shape: RoundedRectangleBorder(borderRadius: radius),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: _FitBody(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Icon(icon, size: 56, color: foreground),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(color: foreground),
+              ),
+              if (hint != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  hint,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: foreground.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// What the room looks at: the reveal or the year on top, the words in the
+/// middle, the scores along the bottom.
+///
+/// The words are up for the whole round, from the first note on - the reason
+/// to put the game on a wall. While the room guesses they carry no name, the
+/// same as the sheet on the phone; the year card above names the song once it
+/// is out. In a round played in this tab they follow the song.
+///
+/// The top slot keeps one height across the reveal, so the words do not jump
+/// when the banner turns into the year.
+class _Stage extends StatelessWidget {
+  const _Stage({
+    required this.game,
+    required this.spotify,
+    required this.lyrics,
+  });
+
+  final GameController game;
+  final SpotifySession spotify;
+  final LyricsSource lyrics;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final song = game.currentSong;
+    final revealed = game.phase == RoundPhase.revealed;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Everything grows with the height of the picture, which is what a
+        // projector varies: 720p is still common, and a 1080p wall has twice
+        // the room for words.
+        final height = constraints.maxHeight;
+        final top = (height * 0.24).clamp(120.0, 220.0);
+        final tile = (height * 0.14).clamp(96.0, 132.0);
+        final line = (height / 28).clamp(20.0, 36.0);
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(12, 24, 24, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (song == null)
+                const Expanded(child: _StageIdle())
+              else ...[
+                SizedBox(
+                  height: top,
+                  child: revealed
+                      ? _YearCard(game: game, wide: true)
+                      : _RevealSlot(
+                          onReveal: game.reveal,
+                          inApp: game.playingInApp,
+                          service: game.service,
+                          wide: true,
+                        ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  // The words scroll themselves, so a scrollbar on the wall is
+                  // only noise. The edges fade rather than cut a line in half.
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(
+                      context,
+                    ).copyWith(scrollbars: false),
+                    child: ShaderMask(
+                      blendMode: BlendMode.dstIn,
+                      shaderCallback: (bounds) => const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.white,
+                          Colors.white,
+                          Colors.transparent,
+                        ],
+                        stops: [0, 0.06, 0.88, 1],
+                      ).createShader(bounds),
+                      child: LyricsView(
+                        key: ValueKey(song.key),
+                        song: song,
+                        source: lyrics,
+                        session: game.playingInApp ? spotify : null,
+                        lineStyle: theme.textTheme.headlineSmall?.copyWith(
+                          fontSize: line,
+                          height: 1.25,
+                        ),
+                        padding: const EdgeInsets.fromLTRB(24, 28, 24, 72),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+              _SectionHeading(
+                title: revealed ? 'Who got it right?' : 'Scores',
+                targetScore: game.targetScore,
+              ),
+              if (revealed) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Tap to give a point, long press to take one away.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 12),
+              _ScoreStrip(
+                game: game,
+                height: tile,
+                onTap: revealed ? (player) => _givePoint(game, player) : null,
+                onLongPress: revealed
+                    ? (player) => _takePoint(game, player)
+                    : null,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// The stage between two rounds, pointing at the pile of cards.
+class _StageIdle extends StatelessWidget {
+  const _StageIdle();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return _FitBody(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          Icon(
+            Icons.style_outlined,
+            size: 96,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Draw a card',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.displaySmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'and hold its QR code up to the camera',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The scores in one row along the bottom of the stage. Up to eight tiles fit
+/// a 720p picture side by side; with only a few they keep a tile's width
+/// rather than stretching across the wall.
+class _ScoreStrip extends StatelessWidget {
+  const _ScoreStrip({
+    required this.game,
+    required this.height,
+    this.onTap,
+    this.onLongPress,
+  });
+
+  final GameController game;
+  final double height;
+  final void Function(GamePlayer player)? onTap;
+  final void Function(GamePlayer player)? onLongPress;
+
+  @override
+  Widget build(BuildContext context) {
+    final tap = onTap;
+    final longPress = onLongPress;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const gap = 16.0;
+        final count = game.players.length;
+        final width = min(
+          280.0,
+          (constraints.maxWidth - gap * (count - 1)) / count,
+        );
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final (index, player) in game.players.indexed) ...[
+              if (index > 0) const SizedBox(width: gap),
+              SizedBox(
+                width: width,
+                height: height,
+                child: _PlayerTile(
+                  player: player,
+                  targetScore: game.targetScore,
+                  onTap: tap == null ? null : () => tap(player),
+                  onLongPress: longPress == null
+                      ? null
+                      : () => longPress(player),
+                  large: true,
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }

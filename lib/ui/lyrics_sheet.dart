@@ -39,7 +39,9 @@ Future<void> showLyricsSheet(
   );
 }
 
-class LyricsSheet extends StatefulWidget {
+/// The sheet: the words under a line that names the song once it is no
+/// secret any more.
+class LyricsSheet extends StatelessWidget {
   const LyricsSheet({
     required this.song,
     required this.source,
@@ -54,14 +56,76 @@ class LyricsSheet extends StatefulWidget {
   final bool hideSong;
 
   @override
-  State<LyricsSheet> createState() => _LyricsSheetState();
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+          child: Text(
+            hideSong ? 'Lyrics' : '${song.title} · ${song.artist}',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium,
+          ),
+        ),
+        Expanded(
+          child: LyricsView(song: song, source: source, session: session),
+        ),
+      ],
+    );
+  }
 }
 
-class _LyricsSheetState extends State<LyricsSheet> {
+/// The words of [song], line by line - in the sheet, and on the stage of the
+/// wide layout, where they stay up for the whole round.
+///
+/// With a [session] a synced text follows the player and a tap on a line seeks
+/// there. The session can turn up after the view does: the stage is built as
+/// soon as the round is, and only the launch says a moment later whether the
+/// song plays in this tab. It can go again too, when Spotify takes the song and
+/// then cannot play it.
+class LyricsView extends StatefulWidget {
+  const LyricsView({
+    required this.song,
+    required this.source,
+    this.session,
+    this.lineStyle,
+    this.padding = const EdgeInsets.fromLTRB(24, 8, 24, 48),
+    super.key,
+  });
+
+  final Song song;
+  final LyricsSource source;
+  final SpotifySession? session;
+
+  /// The size of a line. Null is the sheet's; the stage is read across a room.
+  final TextStyle? lineStyle;
+
+  /// Around the lines, inside the scrolling.
+  final EdgeInsets padding;
+
+  @override
+  State<LyricsView> createState() => _LyricsViewState();
+}
+
+class _LyricsViewState extends State<LyricsView> {
   late Future<Lyrics?> _lyrics = _load();
 
-  Future<Lyrics?> _load() =>
-      widget.source.find(widget.song, duration: widget.session?.duration);
+  /// The recording length the text was picked for. A synced text is only laid
+  /// over a recording of its own length, and that length is only known once
+  /// the player has said - so the pick is made again when it does.
+  Duration? _pickedFor;
+
+  Future<Lyrics?> _load() {
+    _pickedFor = _knownDuration;
+    return widget.source.find(widget.song, duration: _pickedFor);
+  }
+
+  Duration? get _knownDuration {
+    final duration = widget.session?.duration;
+    return duration == null || duration == Duration.zero ? null : duration;
+  }
 
   /// The player reports on changes only; between two reports the line moves on
   /// the clock - the same tick as the seek bar.
@@ -74,16 +138,50 @@ class _LyricsSheetState extends State<LyricsSheet> {
   @override
   void initState() {
     super.initState();
-    if (widget.session != null) {
-      _ticker = Timer.periodic(
-        const Duration(milliseconds: 250),
-        (_) => _follow(),
-      );
+    _attach();
+  }
+
+  @override
+  void didUpdateWidget(LyricsView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.song.key != widget.song.key ||
+        oldWidget.source != widget.source) {
+      _loaded = null;
+      _current = -1;
+      _lyrics = _load();
     }
+    if (!identical(oldWidget.session, widget.session)) {
+      oldWidget.session?.removeListener(_onSession);
+      _ticker?.cancel();
+      _ticker = null;
+      _current = -1;
+      _attach();
+      if (_pickIsStale) _lyrics = _load();
+    }
+  }
+
+  void _attach() {
+    final session = widget.session;
+    if (session == null) return;
+    session.addListener(_onSession);
+    _ticker = Timer.periodic(
+      const Duration(milliseconds: 250),
+      (_) => _follow(),
+    );
+  }
+
+  bool get _pickIsStale {
+    final duration = _knownDuration;
+    return duration != null && duration != _pickedFor;
+  }
+
+  void _onSession() {
+    if (_pickIsStale) setState(() => _lyrics = _load());
   }
 
   @override
   void dispose() {
+    widget.session?.removeListener(_onSession);
     _ticker?.cancel();
     _scroll.dispose();
     super.dispose();
@@ -115,44 +213,31 @@ class _LyricsSheetState extends State<LyricsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final song = widget.song;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-          child: Text(
-            widget.hideSong ? 'Lyrics' : '${song.title} · ${song.artist}',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium,
-          ),
-        ),
-        Expanded(
-          child: FutureBuilder<Lyrics?>(
-            future: _lyrics,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasError) {
-                return _failed(context);
-              }
-              final lyrics = snapshot.data;
-              if (lyrics == null || lyrics.lines.isEmpty) {
-                return _message(
-                  context,
-                  lyrics?.instrumental ?? false
-                      ? 'This one has no words.'
-                      : 'No lyrics found for this song.',
-                );
-              }
-              _loaded = lyrics;
-              return _lines(context, lyrics);
-            },
-          ),
-        ),
-      ],
+    return FutureBuilder<Lyrics?>(
+      future: _lyrics,
+      builder: (context, snapshot) {
+        // A pick made again for the length of the recording keeps the
+        // words up while it runs, instead of a spinner over them.
+        final ready = snapshot.connectionState == ConnectionState.done;
+        if (!ready && _loaded == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (ready && snapshot.hasError) {
+          return _failed(context);
+        }
+        final lyrics = ready ? snapshot.data : _loaded;
+        if (lyrics == null || lyrics.lines.isEmpty) {
+          _loaded = null;
+          return _message(
+            context,
+            lyrics?.instrumental ?? false
+                ? 'This one has no words.'
+                : 'No lyrics found for this song.',
+          );
+        }
+        _loaded = lyrics;
+        return _lines(context, lyrics);
+      },
     );
   }
 
@@ -205,7 +290,7 @@ class _LyricsSheetState extends State<LyricsSheet> {
 
     return SingleChildScrollView(
       controller: _scroll,
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 48),
+      padding: widget.padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -247,7 +332,7 @@ class _LyricsSheetState extends State<LyricsSheet> {
     VoidCallback? onTap,
   }) {
     final theme = Theme.of(context);
-    final base = theme.textTheme.titleLarge!;
+    final base = widget.lineStyle ?? theme.textTheme.titleLarge!;
     final style = switch (state) {
       _LineState.current => base.copyWith(
         color: theme.colorScheme.primary,

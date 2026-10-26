@@ -455,6 +455,48 @@ new that awaits a launch needs the same check.
 
 `README.md` has the setup under "Playing in the tab".
 
+## The wide layout is for the projector
+
+The game screen has a second layout for wide screens (`isWideScreen`,
+`_WideRound` in `lib/ui/game_screen.dart`), added 2026-10-26 so the game can
+run from a laptop on a projector. It picks itself by size, not by a setting:
+the laptop is the device then, and a phone column in the middle of a wall is
+never what anybody wants. A phone turned sideways stays narrow - its stage would
+be a strip.
+
+**Two halves for two audiences.** The stage is for the room and holds only what
+the room reads: reveal or year, words, scores. The column is for whoever runs
+the game: camera and song controls. New things go on the side they are for.
+
+**The words are up for the whole round, guessing included.** That is the
+reason to put the game on a wall, and it was the ask. The phone keeps them
+behind the button. Title and artist stay off the stage until the reveal,
+exactly as in the sheet - the words are a hint, the name is the answer.
+
+**The camera opens on demand, never kept running.** A running camera would read
+the card still lying in front of it and start the next round before the points
+are handed out. It opens in the column, and the reveal stays on the stage while
+the next card comes up; closing it keeps the reveal, as on the phone.
+`_scanCode` hides the difference: it awaits the inline camera the same way it
+awaits the scanner page, so the round flow behind it has one path.
+
+**The stage's lyrics outlive the launch.** They are built with the round, before
+the launch says whether the song plays in the tab, so `LyricsView` picks the
+session up when it arrives and picks the text again once the recording's length
+is known. Anything else on the stage that depends on the session has to cope
+with it turning up late, or going away on a `playbackError`.
+
+**The link path gives the answer away on a wall.** The Spotify tab opens on the
+projected screen with title and cover, and coming back to the game tab reveals
+the year. It still has to work - the in-app player is never a requirement - but
+the projector is played through the tab. Do not change what a `resumed` does
+for wide screens without asking: the link round on a laptop is the same round
+as on the web anywhere else.
+
+**No right click on the tiles.** It looked like the desktop way to take a point
+back, but Flutter web shows the browser's context menu on every right click.
+Long press works with a mouse too.
+
 ## The page's script sources are a list
 
 `web/index.html` carries a Content-Security-Policy that names every host a

@@ -1,35 +1,118 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'text_input_dialog.dart';
 
+/// Builds what reads a card and hands its code to [onCode]. The real one is a
+/// [ScannerView]; a test hands in a stand-in.
+typedef CameraBuilder =
+    Widget Function(BuildContext context, ValueChanged<String> onCode);
+
 /// Camera screen for the QR cards. Returns the scanned raw value.
 class ScannerScreen extends StatefulWidget {
-  const ScannerScreen({super.key});
+  const ScannerScreen({this.camera, super.key});
+
+  /// Null is the device camera.
+  final CameraBuilder? camera;
 
   @override
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
 class _ScannerScreenState extends State<ScannerScreen> {
-  final MobileScannerController _controller = MobileScannerController(
+  /// Owned here rather than by the view, because the torch sits in the app
+  /// bar. None for a stand-in, which has no torch to switch.
+  late final MobileScannerController? _controller = widget.camera == null
+      ? ScannerView.newController()
+      : null;
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller;
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Scan QR code'),
+        actions: [
+          if (controller != null)
+            ValueListenableBuilder<MobileScannerState>(
+              valueListenable: controller,
+              builder: (context, state, _) => IconButton(
+                tooltip: 'Torch',
+                icon: Icon(
+                  state.torchState == TorchState.on
+                      ? Icons.flashlight_on
+                      : Icons.flashlight_off,
+                ),
+                onPressed: state.isInitialized ? controller.toggleTorch : null,
+              ),
+            ),
+        ],
+      ),
+      body:
+          widget.camera?.call(context, _submit) ??
+          ScannerView(controller: controller, onCode: _submit),
+    );
+  }
+
+  void _submit(String code) {
+    if (!mounted) return;
+    Navigator.of(context).pop(code);
+  }
+}
+
+/// The camera with what belongs to it: the frame to aim at, the way to type a
+/// code in, and what to say when there is no camera. Reports the first code
+/// it reads, once.
+///
+/// Fills whatever it is given - the whole phone screen, or the small box in the
+/// side column of the wide layout.
+class ScannerView extends StatefulWidget {
+  const ScannerView({required this.onCode, this.controller, super.key});
+
+  final ValueChanged<String> onCode;
+
+  /// Null makes one of its own.
+  final MobileScannerController? controller;
+
+  static MobileScannerController newController() => MobileScannerController(
     detectionSpeed: DetectionSpeed.noDuplicates,
     formats: const [BarcodeFormat.qrCode],
   );
 
-  /// Keeps two quick hits from popping the route twice.
+  @override
+  State<ScannerView> createState() => _ScannerViewState();
+}
+
+class _ScannerViewState extends State<ScannerView> {
+  MobileScannerController? _own;
+
+  MobileScannerController get _controller =>
+      widget.controller ?? (_own ??= ScannerView.newController());
+
+  /// Keeps two quick hits from reporting twice.
   bool _handled = false;
 
   @override
   void dispose() {
-    _controller.dispose();
+    _own?.dispose();
     super.dispose();
   }
 
   void _submit(String code) {
     if (_handled || !mounted) return;
     _handled = true;
-    Navigator.of(context).pop(code);
+    widget.onCode(code);
   }
 
   void _onDetect(BarcodeCapture capture) {
@@ -56,67 +139,64 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text('Scan QR code'),
-        actions: [
-          ValueListenableBuilder<MobileScannerState>(
-            valueListenable: _controller,
-            builder: (context, state, _) => IconButton(
-              tooltip: 'Torch',
-              icon: Icon(
-                state.torchState == TorchState.on
-                    ? Icons.flashlight_on
-                    : Icons.flashlight_off,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // The box in the side column is a fraction of a phone screen; the
+        // frame and the margins shrink with it rather than filling it up.
+        final compact = constraints.biggest.shortestSide < 400;
+        final controller = _controller;
+
+        return ColoredBox(
+          color: Colors.black,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              MobileScanner(
+                controller: controller,
+                onDetect: _onDetect,
+                errorBuilder: (context, error) => _ScannerError(
+                  message: _explain(error),
+                  onManual: _enterManually,
+                  compact: compact,
+                ),
               ),
-              onPressed: state.isInitialized ? _controller.toggleTorch : null,
-            ),
-          ),
-        ],
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          MobileScanner(
-            controller: _controller,
-            onDetect: _onDetect,
-            errorBuilder: (context, error) => _ScannerError(
-              message: _explain(error),
-              onManual: _enterManually,
-            ),
-          ),
-          // The frame and the second button belong to a working camera. Over
-          // the error they cut through the message and say the same thing
-          // twice.
-          ValueListenableBuilder<MobileScannerState>(
-            valueListenable: _controller,
-            builder: (context, state, _) => state.error != null
-                ? const SizedBox.shrink()
-                : Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      const _ScanFrame(),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: TextButton.icon(
-                            onPressed: _enterManually,
-                            icon: const Icon(Icons.keyboard),
-                            label: const Text('Enter the code by hand'),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
+              // The frame and the second button belong to a working camera.
+              // Over the error they cut through the message and say the same
+              // thing twice.
+              ValueListenableBuilder<MobileScannerState>(
+                valueListenable: controller,
+                builder: (context, state, _) => state.error != null
+                    ? const SizedBox.shrink()
+                    : Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          _ScanFrame(
+                            size: min(
+                              240,
+                              constraints.biggest.shortestSide * 0.6,
                             ),
                           ),
-                        ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: EdgeInsets.all(compact ? 4 : 24),
+                              child: TextButton.icon(
+                                onPressed: _enterManually,
+                                icon: const Icon(Icons.keyboard),
+                                label: const Text('Enter the code by hand'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -134,17 +214,19 @@ String _explain(MobileScannerException error) => switch (error.errorCode) {
 };
 
 class _ScanFrame extends StatelessWidget {
-  const _ScanFrame();
+  const _ScanFrame({required this.size});
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 240,
-        height: 240,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white70, width: 3),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(size / 10),
         ),
       ),
     );
@@ -152,36 +234,51 @@ class _ScanFrame extends StatelessWidget {
 }
 
 class _ScannerError extends StatelessWidget {
-  const _ScannerError({required this.message, required this.onManual});
+  const _ScannerError({
+    required this.message,
+    required this.onManual,
+    required this.compact,
+  });
 
   final String message;
   final VoidCallback onManual;
 
+  /// In the small box the message would not fit at full size; it scales down
+  /// together with its button rather than being cut off.
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.no_photography, size: 48, color: Colors.white54),
+        const SizedBox(height: 16),
+        Text(
+          'Camera unavailable\n$message',
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: onManual,
+          icon: const Icon(Icons.keyboard),
+          label: const Text('Enter the code by hand'),
+        ),
+      ],
+    );
+
     return ColoredBox(
       color: Colors.black,
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.no_photography, size: 48, color: Colors.white54),
-              const SizedBox(height: 16),
-              Text(
-                'Camera unavailable\n$message',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white70),
-              ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: onManual,
-                icon: const Icon(Icons.keyboard),
-                label: const Text('Enter the code by hand'),
-              ),
-            ],
-          ),
+          padding: EdgeInsets.all(compact ? 16 : 32),
+          child: compact
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(width: 320, child: content),
+                )
+              : content,
         ),
       ),
     );

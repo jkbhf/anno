@@ -115,7 +115,31 @@ line being sung is lit, and a tap on a line seeks there. A synced text whose
 length is more than five seconds off the recording is shown as plain words
 rather than laid over the wrong cut. In a link round, or on YouTube Music, the
 sheet is the words alone. While the room is still guessing the sheet leaves
-title and artist off.
+title and artist off. On a wide screen there is no button: the words are on the
+stage for the whole round, see below.
+
+## On a projector
+
+A laptop on a projector, or a tablet on its side, gets a layout of its own. It
+switches on by itself on a window at least 900 px wide that is clearly wider
+than tall (`isWideScreen` in `lib/ui/game_screen.dart`); a phone keeps its one
+column even when it is turned.
+
+- **The stage**, on the right, is for the room: the reveal banner, which turns
+  into the year card, then the lyrics, large, for the whole round, and the
+  scores as one row along the bottom. Everything there grows with the height of
+  the picture, and up to eight players fit a 720p projector.
+- **The column**, on the left, is for whoever runs the game. The camera opens
+  there in a small box - "Scan a card", or "Next round" once the year is out -
+  while the stage keeps the reveal and the scores. Under it, during a round:
+  the seek bar, "Open in Spotify" and "Nobody knows it? Draw another".
+
+**Play through the tab.** The link path does work on a projector, but it gives
+the answer away: Spotify opens in a new tab with title and cover on the wall,
+and coming back to the game tab reveals the year. With
+[Playing in the tab](#playing-in-the-tab) the song never leaves the page, the
+lyrics follow it, and the year waits for the button. Put the browser in
+fullscreen (F11) for the most room.
 
 ## Deploying to GitHub Pages
 
@@ -206,7 +230,9 @@ keeps that memory too.
 No screen of a running game scrolls. The phone is passed around and tapped by
 whoever is holding it, so a tile that has to be scrolled into view is a tile in
 the wrong place - from five players the tiles go into three columns, and what
-still does not fit is scaled down together instead.
+still does not fit is scaled down together instead. The one exception is the
+lyrics on the stage of the wide layout, which scroll by themselves with the
+song.
 
 ## The two data sources
 

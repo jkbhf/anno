@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/data/year_database.dart';
@@ -11,6 +13,7 @@ import 'package:anno/music/song_launcher.dart';
 import 'package:anno/music/spotify_session.dart';
 import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/game_screen.dart';
+import 'package:anno/ui/scanner_screen.dart';
 import 'package:anno/ui/theme.dart';
 
 /// Hands the song over without a word - the link path, as on a phone.
@@ -27,6 +30,15 @@ class InTabLauncher implements SongLauncher {
 
   @override
   Future<LaunchResult> open(Song song) async => const LaunchResult.inTab();
+}
+
+/// Plays in the tab, but only says so once the test lets it - the stretch
+/// between the round screen going up and the launch coming back.
+class LateInTabLauncher implements SongLauncher {
+  final Completer<LaunchResult> answer = Completer();
+
+  @override
+  Future<LaunchResult> open(Song song) => answer.future;
 }
 
 const card = 'https://play-the-music.com/de/year/182ca01194a98f0b';
@@ -123,17 +135,22 @@ class FakeLyrics implements LyricsSource {
 
   final Lyrics? lyrics;
 
+  /// The recording length of every request, in order.
+  final List<Duration?> asked = [];
+
   @override
-  Future<Lyrics?> find(Song song, {Duration? duration}) async =>
-      lyrics ??
-      Lyrics.fromLrc('[00:00.00] First\n[00:40.00] Second\n[01:00.00] Third');
+  Future<Lyrics?> find(Song song, {Duration? duration}) async {
+    asked.add(duration);
+    return lyrics ??
+        Lyrics.fromLrc('[00:00.00] First\n[00:40.00] Second\n[01:00.00] Third');
+  }
 }
 
 Widget wrap(
   GameController game, {
   SpotifySession? spotify,
   LyricsSource? lyrics,
-  WidgetBuilder? scanner,
+  CameraBuilder? camera,
 }) => AppScope(
   years: game.years,
   categories: game.categories,
@@ -144,7 +161,7 @@ Widget wrap(
     home: GameScreen(
       controller: game,
       lyrics: lyrics ?? FakeLyrics(),
-      scanner: scanner,
+      camera: camera,
     ),
   ),
 );
@@ -334,14 +351,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  /// Stands in for the camera: a back arrow, and a button that scans [card].
-  Widget fakeScanner(BuildContext context) => Scaffold(
-    appBar: AppBar(),
-    body: TextButton(
-      onPressed: () => Navigator.of(context).pop(card),
-      child: const Text('Scan the card'),
-    ),
-  );
+  /// Stands in for the camera: a button that scans [card].
+  Widget fakeCamera(BuildContext context, ValueChanged<String> onCode) =>
+      TextButton(
+        onPressed: () => onCode(card),
+        child: const Text('Scan the card'),
+      );
 
   testWidgets('backing out of the camera after a reveal keeps the reveal', (
     tester,
@@ -350,7 +365,7 @@ void main() {
     final game = buildGame();
     await reveal(game);
 
-    await tester.pumpWidget(wrap(game, scanner: fakeScanner));
+    await tester.pumpWidget(wrap(game, camera: fakeCamera));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Next round'));
@@ -370,7 +385,7 @@ void main() {
     final game = buildGame();
     await reveal(game);
 
-    await tester.pumpWidget(wrap(game, scanner: fakeScanner));
+    await tester.pumpWidget(wrap(game, camera: fakeCamera));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Next round'));
@@ -772,6 +787,207 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Back again'), findsOneWidget);
+  });
+
+  group('on a wide screen', () {
+    /// A laptop on a projector, the browser in fullscreen.
+    void useWideScreen(
+      WidgetTester tester, {
+      Size size = const Size(1920, 1080),
+    }) {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+    }
+
+    test('only a landscape screen with room for the stage counts', () {
+      expect(isWideScreen(const Size(1920, 1080)), isTrue);
+      expect(isWideScreen(const Size(1280, 720)), isTrue);
+      // A tablet on its side.
+      expect(isWideScreen(const Size(1180, 820)), isTrue);
+      // A phone, upright or turned: the one column it was built for.
+      expect(isWideScreen(const Size(390, 844)), isFalse);
+      expect(isWideScreen(const Size(844, 390)), isFalse);
+      // A tablet upright, and a narrow browser window.
+      expect(isWideScreen(const Size(820, 1180)), isFalse);
+      expect(isWideScreen(const Size(1000, 1100)), isFalse);
+    });
+
+    testWidgets('the words are up while the room guesses', (tester) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      // No button to press first: the stage is where the words live.
+      expect(find.text('Second'), findsOneWidget);
+      expect(find.text('Lyrics'), findsNothing);
+      expect(find.text('Reveal the year'), findsOneWidget);
+      expect(find.text('Player 1'), findsOneWidget);
+      // The words are the hint, the name and the year are the answer.
+      expect(find.textContaining('My Number One'), findsNothing);
+      expect(find.textContaining('Helena Paparizou'), findsNothing);
+      expect(find.text('2005'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the reveal puts the year beside the words', (tester) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      expect(find.text('2005'), findsOneWidget);
+      expect(find.text('My Number One'), findsOneWidget);
+      expect(find.text('Helena Paparizou'), findsOneWidget);
+      expect(find.text('ESC  ·  Greece  ·  1st place'), findsOneWidget);
+      expect(find.text('First'), findsOneWidget);
+      expect(find.text('Who got it right?'), findsOneWidget);
+
+      await tester.tap(find.text('Player 1'));
+      await tester.pumpAndSettle();
+      expect(game.players.first.score, 1);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the camera opens in the column, beside the reveal', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game, camera: fakeCamera));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Next round'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Scan the card'), findsOneWidget);
+      expect(find.byType(ScannerScreen), findsNothing, reason: 'no new page');
+      // The room still has the year to look at while the next card comes up.
+      expect(find.text('2005'), findsOneWidget);
+
+      await tester.tap(find.text('Scan the card'));
+      await tester.pump();
+
+      expect(game.phase, RoundPhase.countdown);
+      expect(find.text('Scan the card'), findsNothing);
+    });
+
+    testWidgets('closing the camera keeps the reveal', (tester) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game, camera: fakeCamera));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Next round'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Close the camera'));
+      await tester.pumpAndSettle();
+
+      expect(game.phase, RoundPhase.revealed);
+      expect(find.text('Scan the card'), findsNothing);
+      expect(find.text('Next round'), findsOneWidget);
+      expect(find.text('2005'), findsOneWidget);
+
+      // And it opens again, nothing left stuck from the first time.
+      await tester.tap(find.text('Next round'));
+      await tester.pumpAndSettle();
+      expect(find.text('Scan the card'), findsOneWidget);
+    });
+
+    testWidgets('the first card is scanned from the column too', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final game = buildGame();
+
+      await tester.pumpWidget(wrap(game, camera: fakeCamera));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Scores'), findsOneWidget);
+      await tester.tap(find.text('Scan a card'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Scan the card'));
+      await tester.pump();
+
+      expect(game.phase, RoundPhase.countdown);
+    });
+
+    testWidgets('the words follow the player once the launch says so', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final session = SeekableSession();
+      final lyrics = FakeLyrics();
+      final launcher = LateInTabLauncher();
+      final game = buildGame(launcher: launcher);
+      game.scan(card);
+      final playback = game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: session, lyrics: lyrics));
+      await tester.pumpAndSettle();
+
+      FontWeight? weightOf(String line) =>
+          DefaultTextStyle.of(tester.element(find.text(line))).style.fontWeight;
+
+      // Where the song plays is not known yet, so nothing is lit.
+      expect(find.text('Second'), findsOneWidget);
+      expect(weightOf('Second'), isNot(FontWeight.w700));
+
+      launcher.answer.complete(const LaunchResult.inTab());
+      await playback;
+      await tester.pump();
+      // The stage catches up with the player on its own tick.
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
+
+      expect(game.playingInApp, isTrue);
+      expect(weightOf('Second'), FontWeight.w700);
+      expect(weightOf('Third'), isNot(FontWeight.w700));
+      // Picked again for the recording that plays, now that its length is in.
+      expect(lyrics.asked.last, const Duration(seconds: 200));
+
+      await tester.tap(find.text('Third'));
+      expect(session.seeks, [const Duration(minutes: 1)]);
+    });
+
+    testWidgets('eight players fit a 720p projector', (tester) async {
+      useWideScreen(tester, size: const Size(1280, 720));
+      final game = buildGame(players: 8, launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(game, spotify: SeekableSession(), camera: fakeCamera),
+      );
+      await tester.pump();
+      expect(find.byType(Slider), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      game.reveal();
+      await tester.pumpAndSettle();
+
+      for (var index = 1; index <= 8; index++) {
+        expect(find.text('Player $index'), findsOneWidget);
+        expect(
+          tester.getBottomLeft(find.text('Player $index')).dy,
+          lessThan(720),
+        );
+      }
+      // Readable from the back of the room: rendered size, scale included.
+      expect(tester.getRect(find.text('Player 1')).height, greaterThan(16));
+      expect(find.text('Next round'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
   });
 }
 
