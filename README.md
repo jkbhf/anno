@@ -48,6 +48,14 @@ pins in `lib/src/web/web_library_versions.dart`: 3.1.1 for `mobile_scanner`
 7.4.0. `mobile_scanner` is pinned exactly for that reason; upgrading it means
 replacing both files with the matching version.
 
+The camera runs only while a scanner is on screen. `mobile_scanner` 7.4.0
+never stops a camera stream in the browser - closed, the scanner left the
+camera on and opened one more with every scan - so `CameraStreams`
+(`lib/ui/camera_streams/`) notes every stream the page opens and stops it
+when the scanner goes. A scanner that is still open stops the camera too while
+the tab is hidden or the phone is in another app, and starts it again on the
+way back.
+
 **Opening Spotify.** Custom schemes are out: `url_launcher` only knows http(s)
 in the browser, so the web build always uses `https://open.spotify.com/track/…`
 and opens it in a new tab, which keeps the game tab and its scores alive.

@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import 'camera_streams/camera_streams.dart';
 import 'text_input_dialog.dart';
 
 /// Builds what reads a card and hands its code to [onCode]. The real one is a
@@ -77,6 +79,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
 ///
 /// Fills whatever it is given - the whole phone screen, or the small box in the
 /// side column of the wide layout.
+///
+/// The camera runs only while the view is on screen and in sight: it stops
+/// when the view goes, see [CameraStreams], and while the page is out of view
+/// - a hidden tab, the phone switched over to Spotify - with the scanner still
+/// open.
 class ScannerView extends StatefulWidget {
   const ScannerView({required this.onCode, this.controller, super.key});
 
@@ -94,7 +101,7 @@ class ScannerView extends StatefulWidget {
   State<ScannerView> createState() => _ScannerViewState();
 }
 
-class _ScannerViewState extends State<ScannerView> {
+class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
   MobileScannerController? _own;
 
   MobileScannerController get _controller =>
@@ -103,10 +110,54 @@ class _ScannerViewState extends State<ScannerView> {
   /// Keeps two quick hits from reporting twice.
   bool _handled = false;
 
+  /// The camera was stopped because the page went out of view, and starts
+  /// again when it comes back.
+  bool _away = false;
+
+  @override
+  void initState() {
+    super.initState();
+    CameraStreams.hold();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _own?.dispose();
+    CameraStreams.release();
     super.dispose();
+  }
+
+  /// `mobile_scanner` would do this itself, but only for a controller it made
+  /// - and every one here is handed in.
+  ///
+  /// Only out of view counts, not `inactive`: on the web the camera permission
+  /// prompt takes the focus, and stopping there would stop a camera that is
+  /// just being asked for.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.hidden || AppLifecycleState.paused:
+        if (_away) return;
+        _away = true;
+        unawaited(_controller.stop());
+        CameraStreams.stopAll();
+      case AppLifecycleState.resumed:
+        if (!_away) return;
+        _away = false;
+        unawaited(_restart());
+      case AppLifecycleState.inactive || AppLifecycleState.detached:
+        break;
+    }
+  }
+
+  Future<void> _restart() async {
+    try {
+      await _controller.start();
+    } on MobileScannerException {
+      // Still starting from before, or refused - the error view says which.
+    }
   }
 
   void _submit(String code) {

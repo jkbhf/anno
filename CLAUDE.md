@@ -512,6 +512,37 @@ at the version `mobile_scanner` pins, and `mobile_scanner` is pinned exactly in
 `pubspec.yaml` so the two cannot drift apart. Upgrading it means copying the
 matching zxing-wasm files - `README.md`, "Camera".
 
+## The camera runs only while a scanner is on screen
+
+`mobile_scanner` 7.4.0 never stops a camera stream on the web: `stop` and
+`dispose` drop the stream without ending its tracks. Measured on 2026-10-26 in
+Chrome with a fake camera: two scans, two camera streams still live, no
+scanner on screen. Every scan opens one more and leaves the ones before it
+running - an evening of thirty rounds would end with thirty. 7.4.1 and 7.4.2
+do not touch it.
+
+`CameraStreams` (`lib/ui/camera_streams/`) works around it from outside,
+because the plugin keeps the stream to itself: it wraps
+`navigator.mediaDevices.getUserMedia`, notes every stream, and stops them all
+once no `ScannerView` holds the camera any more - a stream that only arrives
+after its scanner closed is stopped as it arrives. The game asks the browser
+for nothing else, so every stream is the camera. **When upgrading
+`mobile_scanner`**, check whether it stops its tracks itself now; the wrapper
+does no harm either way, but it should not outlive its reason unnoticed.
+
+Every scanner is handed its controller, and the plugin only pauses a camera on
+the app lifecycle for a controller it made itself. So `ScannerView` does it:
+it stops the camera when the page goes `hidden` or `paused` - a hidden tab,
+the phone switched over to Spotify - and starts it again on `resumed`. Not on
+`inactive`: the browser's camera permission prompt takes the focus, and
+stopping there stops the camera that is just being asked for.
+
+Checking this needs a browser, not a widget test: headless Chrome with
+`--use-fake-device-for-media-stream --use-fake-ui-for-media-stream`, and a hook
+on `getUserMedia` that counts the video tracks still `live`. Simulate a hidden
+tab with a `visibilitychange` event, not by freezing the page - a frozen page
+stops rendering frames, and the scanner is then never taken down at all.
+
 ## YouTube Music: a link, never a player
 
 The second service, picked per device on the setup screen (`MusicService`,
