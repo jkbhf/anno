@@ -95,12 +95,18 @@ class _SongProgressBarState extends State<SongProgressBar> {
         .clamp(0.0, known ? durationMs : 0.0);
     final muted = theme.colorScheme.onSurfaceVariant;
     final oneRow = widget.inOneRow;
+    final side = oneRow ? 28.0 : 24.0;
 
+    // The band is dragged and tapped at, so it is built for a finger: a
+    // thicker track, a bigger grip, and an overlay wide enough that a tap
+    // near the line counts as a tap on it. The sheet on the phone keeps the
+    // slimmer one - there the bar sits under the reveal card, which is the
+    // one thing on that screen the room is meant to go for.
     final slider = SliderTheme(
       data: SliderTheme.of(context).copyWith(
-        trackHeight: 4,
-        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
-        overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+        trackHeight: oneRow ? 10 : 4,
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: oneRow ? 11 : 7),
+        overlayShape: RoundSliderOverlayShape(overlayRadius: oneRow ? 26 : 18),
         activeTrackColor: theme.colorScheme.primary,
         inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
         thumbColor: theme.colorScheme.primary,
@@ -118,13 +124,19 @@ class _SongProgressBarState extends State<SongProgressBar> {
       ),
     );
 
+    final timeStyle =
+        (oneRow ? theme.textTheme.labelLarge : theme.textTheme.labelSmall)
+            ?.copyWith(
+              color: muted,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            );
     final elapsed = Text(
       _format(Duration(milliseconds: positionMs.round())),
-      style: theme.textTheme.labelSmall?.copyWith(color: muted),
+      style: timeStyle,
     );
     final total = Text(
       known ? _format(session.duration) : '--:--',
-      style: theme.textTheme.labelSmall?.copyWith(color: muted),
+      style: timeStyle,
     );
 
     final buttons = [
@@ -132,19 +144,21 @@ class _SongProgressBarState extends State<SongProgressBar> {
         tooltip: 'From the start',
         onPressed: known ? () => session.seek(Duration.zero) : null,
         icon: const Icon(Icons.skip_previous_rounded),
+        iconSize: side,
         color: muted,
       ),
       IconButton(
         tooltip: '10 seconds back',
         onPressed: known ? () => _seekBy(-SongProgressBar.skip) : null,
         icon: const Icon(Icons.replay_10_rounded),
+        iconSize: side,
         color: muted,
       ),
       const SizedBox(width: 8),
       IconButton.filledTonal(
         tooltip: session.isPlaying ? 'Pause' : 'Play on',
         onPressed: session.togglePause,
-        iconSize: oneRow ? 28 : 32,
+        iconSize: oneRow ? 36 : 32,
         icon: Icon(
           session.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
         ),
@@ -154,12 +168,14 @@ class _SongProgressBarState extends State<SongProgressBar> {
         tooltip: '10 seconds ahead',
         onPressed: known ? () => _seekBy(SongProgressBar.skip) : null,
         icon: const Icon(Icons.forward_10_rounded),
+        iconSize: side,
         color: muted,
       ),
       IconButton(
         tooltip: 'To the middle',
         onPressed: known ? () => session.seek(session.duration ~/ 2) : null,
         icon: const Icon(Icons.align_horizontal_center_rounded),
+        iconSize: side,
         color: muted,
       ),
     ];

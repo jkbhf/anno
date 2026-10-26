@@ -994,6 +994,49 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('the keys sit on the floor of the column', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      useWideScreen(tester, size: const Size(1280, 720));
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(game, spotify: SeekableSession(), camera: fakeCamera),
+      );
+      await tester.pumpAndSettle();
+
+      // The lowest key row, whichever it is.
+      double lowestKey() {
+        var low = 0.0;
+        for (final shortcut in GameShortcut.values) {
+          final found = find.text(shortcut.label);
+          if (found.evaluate().isEmpty) continue;
+          final bottom = tester.getRect(found).bottom;
+          if (bottom > low) low = bottom;
+        }
+        return low;
+      }
+
+      // No camera yet, so the keys are at the foot of the column: the band
+      // below them is the whole screen's, not the column's. As a Flexible
+      // beside the controls they used to stop in the middle of it.
+      final floor = tester.getRect(find.byType(AnimatedSize)).top;
+      expect(lowestKey(), closeTo(floor, 2));
+
+      game.reveal();
+      await tester.pumpAndSettle();
+
+      // And straight above the preview once that is there.
+      expect(
+        lowestKey(),
+        closeTo(tester.getRect(find.byType(AnimatedSize)).top, 2),
+      );
+      expect(tester.takeException(), isNull);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
+
     testWidgets('the camera slides in and the keys slide up', (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       useWideScreen(tester, size: const Size(1280, 720));

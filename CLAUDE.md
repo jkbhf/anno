@@ -551,9 +551,12 @@ music per pixel, which is not a bar anybody finds a chorus with. Across the
 screen it is 501, so 0.4 seconds per pixel. The buttons came along and stand
 to the left of the track, under the column they belong to, rather than beneath
 it: height is what the stage is short of, and a tap gains nothing from width.
-They keep their 48 pixel targets, which is what costs the track the last ~100
-pixels of the screen - that trade can be reopened, the buttons are tapped a
-few times a round and the track is dragged.
+
+**It is built for a finger** (2026-10-27): a 10 pixel track, an 11 pixel grip
+and a 26 pixel overlay, which puts the row at 52 and every button at 52 by 52.
+`inOneRow` is what that hangs off - the sheet on the phone keeps the slimmer
+one, because there the bar sits under the reveal card, which is the one thing
+on that screen the room is meant to go for.
 
 The band is kept 8 pixels off the bottom edge, because a drag down there fights
 the phone's own home gesture. It shows while `playingInApp` and its room is
@@ -684,13 +687,17 @@ a column too narrow for two of anything. The year is deliberately not the
 biggest thing in it: four digits are read at a glance, and the title is what
 the room talks about at the reveal, so the name got the size the year gave up.
 
-**The keyboard hints sit directly above the camera**, at the foot of the
-column: out of the way of the round's controls, and where the eye goes between
-two rounds anyway. They live inside the same bounded box as the controls and
-scale as one block from a width of their own - wrapped to the column's width
-instead, a single chip is wider than a phone's column, and the overflow moved
-from the side to the bottom, where it ran under the preview. Under 30 pixels of
-room they go entirely: scaled into nothing says less than the air it takes.
+**The keyboard hints sit on the floor of the column**, straight above the
+camera once that is there and against the bottom edge while it is not. Two
+things were wrong with that before (2026-10-27): as a `Flexible` beside the
+controls' `Expanded` they were given half the middle and settled at the bottom
+of *that*, leaving the lower half of the column empty under them - they take a
+height of their own now, capped at 0.22 of the column so a third row cannot
+push the controls out. And they scale as one block from a width of their own,
+because wrapped to the column's width a single chip is wider than a phone's
+column and the overflow only moved from the side to the bottom, where it ran
+under the preview. Under 30 pixels of room they go entirely: scaled into
+nothing says less than the air it takes.
 
 **The camera grows into place** (`AnimatedSize`, 240ms), so the keys above it
 slide up rather than jump. It is the one animation in the layout and it is

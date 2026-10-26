@@ -1931,70 +1931,58 @@ class _ShortcutHints extends StatelessWidget {
     ];
     if (shown.isEmpty) return const SizedBox.shrink();
 
-    // The whole block scales into whatever room is left above the camera
-    // rather than wrapping to the column's width: one chip is wider than a
-    // phone's column, so wrapping only moved the overflow from the side to
-    // the bottom, where it ran under the preview. Laid out at a width of its
-    // own and shrunk to fit, the way every other panel here does it.
-    return Flexible(
-      child: LayoutBuilder(
-        builder: (context, box) {
-          // Scaled into nothing is worse than gone: on a short column the
-          // keys would end up a few pixels tall, which says less than the
-          // air they would be taking.
-          if (box.maxHeight < 30) return const SizedBox.shrink();
-          return Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                width: 260,
-                child: Wrap(
-                  spacing: 10,
-                  runSpacing: 4,
-                  alignment: WrapAlignment.center,
+    // The whole block scales into the room it is given rather than wrapping
+    // to the column's width: one chip is wider than a phone's column, so
+    // wrapping only moved the overflow from the side to the bottom, where it
+    // ran under the preview. Laid out at a width of its own and shrunk to
+    // fit, the way every other panel here does it.
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.bottomCenter,
+        child: SizedBox(
+          width: 260,
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: [
+              for (final shortcut in shown)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (final shortcut in shown)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 1,
-                              ),
-                              child: Text(
-                                shortcut.label,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                  fontFeatures: const [
-                                    FontFeature.tabularFigures(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            shortcut.does,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(6),
                       ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 1,
+                        ),
+                        child: Text(
+                          shortcut.label,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      shortcut.does,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -2165,7 +2153,7 @@ class _ColumnYear extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: beside ? TextAlign.start : TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(
+                style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -2174,7 +2162,7 @@ class _ColumnYear extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: beside ? TextAlign.start : TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: theme.textTheme.titleLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
