@@ -563,24 +563,25 @@ round has neither band nor reserved room: nothing to scrub, so the words get
 those 50 pixels instead. The swap stays in the column, where the rest of the
 round's controls are.
 
-**The stage is the words, and then the answer** (2026-10-26). It used to carry
-the reveal banner - "The song is playing", the hint, the pill - across its top
-while the room guessed, with the year card taking the same slot afterwards so
-that nothing moved. Both are gone. While the room guesses the words have the
-stage from its top edge; at the reveal they step aside and the year card has
-all of it.
+**The stage is the words, from the first note to the next card** (2026-10-27).
+It used to carry the reveal banner across its top while the room guessed, and
+then the year card - first beside the words, then instead of them. All of that
+is gone: the stage holds the words and the scores, and nothing else ever.
 
-The banner went because the reveal is a button in the column now, and a fifth
-of the stage spent telling the room about a button it cannot reach is a fifth
-too much. The words go at the reveal because the round is over: nobody sings
-along to a song that is about to be cut, the next card is already being held up
-to the camera, and squeezed in beside the answer they were down to 55 pixels on
-a phone - thin enough to be worth nothing and wide enough to cost the year its
-size. A projector's card now has air around it rather than lyrics under it;
-that is the one part of this worth looking at on a wall.
+The banner went because the reveal is a button in the column, and a fifth of
+the stage spent telling the room about a button it cannot reach is a fifth too
+much. The year card went because an answer laid over the words takes away what
+the room was reading - the words are the reason to put the game on a wall, and
+they now keep their full height through the reveal (213 pixels on a landscape
+phone, the same before and after it). The answer is top left in the column
+(`_ColumnYear`): on a projector that box is on the same wall, so the room reads
+it there, and next to it the camera is already waiting for the next card.
 
-`_RevealSlot` is the phone's card alone now; its `wide` branch went with the
-banner.
+So `_YearCard` is the phone's card alone, and `_RevealSlot` too; both lost
+their `wide` branch with the thing it was drawn for. The deck-and-place line
+(`_originLine`) moved into the column's box - it is what makes a year read as
+the year of that contest, and that box is the only card the wide layout has
+left.
 
 **The scores can be switched off, and then nothing counts** (`ShowScoresStore`,
 per device). `Hide the scores` in the menu takes the strip, its heading and the
@@ -590,15 +591,21 @@ any of this. With nothing to tap there are no points and the game never reaches
 its target: that is the option working, not a bug to fix. A game's scores are
 kept while they are hidden and come back with them.
 
-**The size of the words is set in the column and kept per device**
+**The size of the words is set from the menu and kept per device**
 (`LyricsScaleStore`, a factor on the size the stage reads off its height).
 It belongs to the room - how far the sofa is from the wall, what the projector
 does to a 24pt line - not to a game, so it outlives every game like the music
 service does. A press is a factor (1.2) rather than a step, so it does the same
-amount of work at either end of the 0.6-2.4 range, and the percentage stands
-beside the buttons so the end of the range reads as the end rather than as a
-dead button. The sheet on the phone has its own size and is not affected: there
-the distance to the reader is arm's length, whatever the room looks like.
+amount of work at either end of the 0.6-2.4 range; the menu carries the current
+percentage as a disabled row above the two entries, and an entry greys out at
+the end of the range rather than going dead without saying so.
+
+It started as a row of two buttons in the column and moved into the menu on
+2026-10-27. A press closes the menu, so a second step is a second trip through
+it - the fair price for a setting that is made once for a room and then left
+alone, and it buys the column the room back. The sheet on the phone has its own
+size and is not affected: there the distance to the reader is arm's length,
+whatever the room looks like.
 
 **Two halves for two audiences.** The stage is for the room and holds only what
 the room reads: reveal or year, words, scores. The column is for whoever runs
@@ -626,6 +633,11 @@ year it produced, small, for whoever runs the game. The camera lives at the
 foot of the column. Neither displaces the other, so nothing in the column moves
 from one round to the next; the reveal panel in particular is always in the
 same place, which it was not while one slot morphed between button and preview.
+
+**The two boxes of the column are one width.** The camera is as wide as the
+slot above it and takes its height from that width, capped at a third of the
+column; where the cap bites it crops rather than narrowing itself, because what
+the scanner reads is the camera's frame and not the painted preview.
 
 **The camera box is off screen while a round plays.** There is nothing to look
 at then, and a grey placeholder earns its space less than the air around the

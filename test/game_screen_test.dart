@@ -929,10 +929,9 @@ void main() {
         await tester.pumpWidget(wrap(game));
         await tester.pumpAndSettle();
 
-        // Twice now: the big one on the stage for the room, the small one in
-        // the column for whoever runs the game.
-        expect(find.text('2005'), findsNWidgets(2));
-        expect(find.text('My Number One'), findsNWidgets(2));
+        // In the column, where the whole answer lives.
+        expect(find.text('2005'), findsOneWidget);
+        expect(find.text('My Number One'), findsOneWidget);
         expect(find.text('Who got it right?'), findsOneWidget);
         expect(find.text('Player 1'), findsOneWidget);
         expect(tester.takeException(), isNull);
@@ -982,9 +981,8 @@ void main() {
 
       expect(game.isRevealed, isTrue);
       // The year went to the stage, the camera came up in the slot by itself.
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
       expect(find.text('Scan the card'), findsOneWidget);
       // The camera has its own place at the foot of the column, under the
       // slot that just became the year. Neither displaces the other.
@@ -1033,9 +1031,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(game.phase, RoundPhase.revealed);
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
       expect(find.text('Scan another'), findsOneWidget);
 
       // A card somebody held up does.
@@ -1190,9 +1187,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(game.isRevealed, isTrue);
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
       expect(find.text('Reveal the year'), findsNothing);
     });
 
@@ -1319,9 +1315,8 @@ void main() {
 
       // The year is the whole stage. Nothing to tap, so nothing is counted -
       // that is what the option is for.
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
       expect(find.text('Who got it right?'), findsNothing);
       expect(find.text('Player 1'), findsNothing);
       expect(game.players.first.score, 0);
@@ -1373,19 +1368,29 @@ void main() {
           .style
           .fontSize!;
       final normal = lineSize();
-      expect(find.text('Words 100%'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('Bigger words'));
-      await tester.pumpAndSettle();
+      // Through the menu, which is where the size lives now - a press closes
+      // it, so a second step is a second trip.
+      Future<void> step(String entry) async {
+        await tester.tap(find.byTooltip('Menu'));
+        await tester.pumpAndSettle();
+        expect(find.text('Words 100%'), findsOneWidget);
+        await tester.tap(find.text(entry));
+        await tester.pumpAndSettle();
+      }
 
+      await step('Bigger words');
       expect(lineSize(), closeTo(normal * LyricsScaleStore.step, 0.01));
-      expect(find.text('Words 120%'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('Smaller words'));
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      expect(find.text('Words 120%'), findsOneWidget);
+      await tester.tap(find.text('Smaller words'));
       await tester.pumpAndSettle();
 
       expect(lineSize(), closeTo(normal, 0.01));
-      expect(find.text('Words 100%'), findsOneWidget);
+      // Nothing of it on the screen itself: the column has the room back.
+      expect(find.textContaining('Words '), findsNothing);
     });
 
     testWidgets('the size stays set after the reveal', (tester) async {
@@ -1396,15 +1401,19 @@ void main() {
       await tester.pumpWidget(wrap(game));
       await tester.pumpAndSettle();
 
-      // The words stay up with the year, so their size is still adjustable.
-      await tester.tap(find.byTooltip('Bigger words'));
+      // The words stay up through the reveal, so their size still matters.
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Bigger words'));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
       expect(find.text('Words 120%'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('the reveal gives the stage to the year', (tester) async {
+    testWidgets('the reveal leaves the words on the stage', (tester) async {
       useWideScreen(tester);
       final game = buildGame();
       await reveal(game);
@@ -1412,17 +1421,20 @@ void main() {
       await tester.pumpWidget(wrap(game));
       await tester.pumpAndSettle();
 
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
-      expect(find.text('My Number One'), findsNWidgets(2));
-      expect(find.text('Helena Paparizou'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
+      expect(find.text('My Number One'), findsOneWidget);
+      expect(find.text('Helena Paparizou'), findsOneWidget);
       expect(find.text('ESC  ·  Greece  ·  1st place'), findsOneWidget);
       expect(find.text('Who got it right?'), findsOneWidget);
-      // The words step aside for the answer - the round is over and the
-      // camera is already waiting for the next card.
-      expect(find.text('First'), findsNothing);
-      expect(find.byType(LyricsView), findsNothing);
+      // The answer is in the column and nowhere near the words, which the
+      // room is still reading.
+      expect(find.byType(LyricsView), findsOneWidget);
+      expect(find.text('First'), findsOneWidget);
+      expect(
+        tester.getCenter(find.text('2005')).dx,
+        lessThan(tester.getRect(find.byType(LyricsView)).left),
+      );
 
       await tester.tap(find.text('Player 1'));
       await tester.pumpAndSettle();
@@ -1446,9 +1458,8 @@ void main() {
       expect(find.text('Scan the card'), findsOneWidget);
       expect(find.byType(ScannerScreen), findsNothing, reason: 'no new page');
       // The room still has the year to look at while the next card comes up.
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
 
       await tester.tap(find.text('Scan the card'));
       await tester.pump();
@@ -1473,9 +1484,8 @@ void main() {
       expect(game.phase, RoundPhase.revealed);
       expect(find.text('Scan the card'), findsNothing);
       expect(find.text('Next round'), findsOneWidget);
-      // Twice now: the big one on the stage for the room, the small one in
-      // the column for whoever runs the game.
-      expect(find.text('2005'), findsNWidgets(2));
+      // Only in the column: the stage keeps the words.
+      expect(find.text('2005'), findsOneWidget);
 
       // And it opens again, nothing left stuck from the first time.
       await tester.tap(find.text('Next round'));

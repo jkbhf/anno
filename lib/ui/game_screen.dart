@@ -589,6 +589,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
       case 'scores':
         _toggleScores();
+      case 'words.bigger':
+        _stepLyricsScale(bigger: true);
+      case 'words.smaller':
+        _stepLyricsScale(bigger: false);
       case 'fullscreen':
         // A gesture is what the browser grants it to, and this is one.
         await Fullscreen.toggle();
@@ -743,6 +747,24 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           value: 'scores',
           child: Text(_showScores ? 'Hide the scores' : 'Show the scores'),
         ),
+        // The size of the words on the stage. A press closes the menu, which
+        // is the cost of having it in here rather than as a row in the column
+        // - it is set once for the room and then left alone, so a second trip
+        // through the menu for a second step is a fair price for the space.
+        PopupMenuItem(
+          enabled: false,
+          child: Text('Words ${(_lyricsScale * 100).round()}%'),
+        ),
+        PopupMenuItem(
+          value: 'words.bigger',
+          enabled: _lyricsScale < LyricsScaleStore.max,
+          child: const Text('Bigger words'),
+        ),
+        PopupMenuItem(
+          value: 'words.smaller',
+          enabled: _lyricsScale > LyricsScaleStore.min,
+          child: const Text('Smaller words'),
+        ),
         const PopupMenuItem(value: 'reset', child: Text('Reset scores')),
         const PopupMenuItem(value: 'category', child: Text('Change category')),
         const PopupMenuItem(value: 'years', child: Text('Year database')),
@@ -778,7 +800,6 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onRedraw: _redraw,
       onUndoRedraw: _undoRedraw,
       lyricsScale: _lyricsScale,
-      onLyricsScale: _stepLyricsScale,
       showScores: _showScores,
       menu: _menu(wide: true),
       shortcuts: hasKeyboard,
@@ -1328,13 +1349,13 @@ void _takePoint(GameController game, GamePlayer player) {
   game.removePoint(player);
 }
 
-/// The answer: the year, tinted by its decade, with the song under it - or,
-/// on the stage of the wide layout, beside it.
+/// The answer on the phone: the year, tinted by its decade, with the song
+/// under it. The wide layout keeps the words on its stage and shows the year
+/// in the column instead, see [_ColumnYear].
 class _YearCard extends StatelessWidget {
-  const _YearCard({required this.game, this.wide = false});
+  const _YearCard({required this.game});
 
   final GameController game;
-  final bool wide;
 
   @override
   Widget build(BuildContext context) {
@@ -1342,97 +1363,64 @@ class _YearCard extends StatelessWidget {
     final song = game.currentSong;
     final year = game.currentYear ?? song?.year ?? 0;
     final accent = decadeColor(year);
-    final align = wide ? TextAlign.start : TextAlign.center;
 
     final origin = switch (_originLine(game, song)) {
       final line? => Text(
         line,
-        textAlign: align,
-        style: (wide ? theme.textTheme.titleMedium : theme.textTheme.labelLarge)
-            ?.copyWith(color: accent, letterSpacing: 0.4),
+        textAlign: TextAlign.center,
+        style: theme.textTheme.labelLarge?.copyWith(
+          color: accent,
+          letterSpacing: 0.4,
+        ),
       ),
       null => null,
     };
-    final yearText = Text(
-      '$year',
-      maxLines: 1,
-      style: TextStyle(
-        fontSize: wide ? 140 : 84,
-        fontWeight: FontWeight.w800,
-        height: 1,
-        letterSpacing: wide ? -3 : -2,
-        color: accent,
-      ),
-    );
-    final name = [
-      if (song != null) ...[
-        Text(
-          song.title,
-          textAlign: align,
-          style:
-              (wide
-                      ? theme.textTheme.displaySmall
-                      : theme.textTheme.headlineSmall)
-                  ?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          song.artist,
-          textAlign: align,
-          style:
-              (wide ? theme.textTheme.headlineSmall : theme.textTheme.bodyLarge)
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-        ),
-      ],
-    ];
-
-    final decoration = BoxDecoration(
-      color: accent.withValues(alpha: 0.16),
-      borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: accent, width: 2),
-    );
-
-    if (wide) {
-      return DecoratedBox(
-        decoration: decoration,
-        child: _FitBody(
-          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
-          child: Row(
-            children: [
-              // Scales down rather than pushing the name off the card: on a
-              // phone turned over the stage is a third of a projector's width
-              // and 140pt of year does not fit beside anything.
-              Flexible(
-                child: FittedBox(fit: BoxFit.scaleDown, child: yearText),
-              ),
-              const SizedBox(width: 40),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (origin != null) ...[origin, const SizedBox(height: 8)],
-                    ...name,
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
 
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
-      decoration: decoration,
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: accent, width: 2),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (origin != null) ...[origin, const SizedBox(height: 10)],
           // Scales down rather than wrapping: a broken year is the one thing
           // on this screen that must stay readable.
-          FittedBox(fit: BoxFit.scaleDown, child: yearText),
-          if (song != null) const SizedBox(height: 18),
-          ...name,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '$year',
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 84,
+                fontWeight: FontWeight.w800,
+                height: 1,
+                letterSpacing: -2,
+                color: accent,
+              ),
+            ),
+          ),
+          if (song != null) ...[
+            const SizedBox(height: 18),
+            Text(
+              song.title,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              song.artist,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -1676,7 +1664,6 @@ class _WideRound extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     required this.lyricsScale,
-    required this.onLyricsScale,
     required this.showScores,
     required this.menu,
     required this.shortcuts,
@@ -1695,9 +1682,8 @@ class _WideRound extends StatelessWidget {
   final VoidCallback onRedraw;
   final VoidCallback onUndoRedraw;
 
-  /// How big the words on the stage are, and the two buttons that change it.
+  /// How big the words on the stage are, set from the menu.
   final double lyricsScale;
-  final void Function({required bool bigger}) onLyricsScale;
 
   /// Whether the scoreboard is on the stage at all, see [ShowScoresStore].
   final bool showScores;
@@ -1734,6 +1720,10 @@ class _WideRound extends StatelessWidget {
         // allows, capped at a third of the column - a projector is nowhere
         // near that cap.
         final slot = (constraints.maxHeight * 0.3).clamp(0.0, 200.0);
+        // As wide as the slot above it - the two boxes of the column are one
+        // column, not two sizes. 4:3 as far as the height allows and cropped
+        // rather than narrowed where it does not: what the scanner reads is
+        // the camera's frame, not the painted preview.
         final cameraHeight = min(
           (side - 36) * 3 / 4,
           constraints.maxHeight * 0.33,
@@ -1778,13 +1768,6 @@ class _WideRound extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            if (game.currentSong != null) ...[
-                              _LyricsSize(
-                                scale: lyricsScale,
-                                onChange: onLyricsScale,
-                              ),
-                              const SizedBox(height: 4),
-                            ],
                             if (playing)
                               _SongControls(
                                 game: game,
@@ -1805,16 +1788,11 @@ class _WideRound extends StatelessWidget {
                     if (showCamera)
                       SizedBox(
                         height: cameraHeight,
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: 4 / 3,
-                            child: _CameraBox(
-                              camera: camera,
-                              onCode: onCode,
-                              onClose: onCloseCamera,
-                              onNextRound: onNextRound,
-                            ),
-                          ),
+                        child: _CameraBox(
+                          camera: camera,
+                          onCode: onCode,
+                          onClose: onCloseCamera,
+                          onNextRound: onNextRound,
                         ),
                       ),
                   ],
@@ -1927,59 +1905,6 @@ class _ShortcutHints extends StatelessWidget {
   }
 }
 
-/// How big the words on the stage are: smaller, bigger, and what it is now.
-///
-/// It sits in the side column rather than on the stage, because it is set once
-/// for the room - how far the sofa is from the wall - and then nobody touches
-/// it again for the rest of the evening. The percentage is there so a press
-/// that hits the end of the range is visibly the end rather than a dead
-/// button.
-class _LyricsSize extends StatelessWidget {
-  const _LyricsSize({required this.scale, required this.onChange});
-
-  final double scale;
-  final void Function({required bool bigger}) onChange;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = theme.textTheme.bodySmall?.copyWith(
-      color: theme.colorScheme.onSurfaceVariant,
-    );
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          tooltip: 'Smaller words',
-          onPressed: scale <= LyricsScaleStore.min
-              ? null
-              : () => onChange(bigger: false),
-          icon: const Icon(Icons.text_decrease),
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        Flexible(
-          child: Text(
-            'Words ${(scale * 100).round()}%',
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: style,
-          ),
-        ),
-        IconButton(
-          tooltip: 'Bigger words',
-          onPressed: scale >= LyricsScaleStore.max
-              ? null
-              : () => onChange(bigger: true),
-          icon: const Icon(Icons.text_increase),
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ],
-    );
-  }
-}
-
 /// The top of the side column: what to do now, or what came of it.
 ///
 /// One fixed home for three things that never want to be on screen together -
@@ -2073,9 +1998,14 @@ class _ActionSlot extends StatelessWidget {
   }
 }
 
-/// The year in the column, small: the answer for whoever runs the game while
-/// the camera below is already waiting for the next card. The stage has the
-/// big one for the room.
+/// The answer, top left in the column: the year tinted by its decade, with the
+/// song under it.
+///
+/// It is the only place the wide layout shows it. The stage keeps the words for
+/// the whole round - they are the reason to put the game on a wall, and an
+/// answer laid over them takes away what the room was reading. On a projector
+/// this box is on the same wall anyway, so the room reads it here; next to it
+/// the camera is already waiting for the next card.
 class _ColumnYear extends StatelessWidget {
   const _ColumnYear({required this.game});
 
@@ -2088,6 +2018,11 @@ class _ColumnYear extends StatelessWidget {
     final year = game.currentYear ?? song?.year ?? 0;
     final accent = decadeColor(year);
 
+    // Where the song came from, which for a contest entry is what makes the
+    // year read as the year of that contest. It was on the stage's card and
+    // this is the only card left.
+    final origin = _originLine(game, song);
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: accent.withValues(alpha: 0.16),
@@ -2099,14 +2034,24 @@ class _ColumnYear extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (origin != null)
+              Text(
+                origin,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: accent,
+                  letterSpacing: 0.4,
+                ),
+              ),
             Text(
               '$year',
               maxLines: 1,
               style: TextStyle(
-                fontSize: 56,
+                fontSize: 88,
                 fontWeight: FontWeight.w800,
                 height: 1.1,
-                letterSpacing: -1,
+                letterSpacing: -2,
                 color: accent,
               ),
             ),
@@ -2115,7 +2060,9 @@ class _ColumnYear extends StatelessWidget {
                 song.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleSmall,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Text(
                 song.artist,
@@ -2235,8 +2182,8 @@ class _Stage extends StatelessWidget {
   final SpotifySession spotify;
   final LyricsSource lyrics;
 
-  /// What the room asked for on top of the size the height gives, see
-  /// [_LyricsSize].
+  /// What the room asked for on top of the size the height gives, set from
+  /// the menu and kept per device ([LyricsScaleStore]).
   final double lyricsScale;
 
   /// Whether the scores are along the bottom, see [ShowScoresStore]. Hidden,
@@ -2278,13 +2225,6 @@ class _Stage extends StatelessWidget {
             children: [
               if (song == null)
                 const Expanded(child: _StageIdle())
-              else if (revealed)
-                // The round is over and the answer is the whole point of it,
-                // so it gets the stage. The words did their work while the
-                // room was guessing and nothing is sung along to a song that
-                // is about to be cut - the camera in the column is already
-                // waiting for the next card.
-                Expanded(child: _YearCard(game: game, wide: true))
               else ...[
                 Expanded(
                   // The words scroll themselves, so a scrollbar on the wall is

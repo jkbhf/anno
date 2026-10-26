@@ -133,16 +133,18 @@ tablet on its side, a phone turned over. It switches on by itself as soon as
 the window is clearly wider than tall (`isWideScreen` in `lib/ui/layout.dart`),
 with no size floor under it.
 
-- **The stage**, on the right, is for the room: the lyrics, large, from the top
-  of the screen while the room guesses, and the year card in their place once
-  the year is out, with the scores as one row along the bottom. Everything
-  there is a share of the height of the picture, so it fits a 1080p wall, a
-  720p one and a phone's 412 pixels alike; up to eight players fit a 720p
-  projector.
+- **The stage**, on the right, is for the room: the lyrics, large, from the
+  first note to the next card, and the scores as one row along the bottom.
+  Nothing is ever laid over the words - the answer appears in the column
+  instead. Everything there is a share of the height of the picture, so it fits
+  a 1080p wall, a 720p one and a phone's 412 pixels alike; up to eight players
+  fit a 720p projector.
 - **The column**, on the left, is for whoever runs the game, and it has two
-  fixed places. The box on top is the next thing to do - "Scan a card", then
-  "Reveal the year" while the song runs, then the year it produced, small, with
-  title and artist. The camera sits at the foot of the column: it is off screen
+  fixed places, both the same width. The box on top is the next thing to do -
+  "Scan a card", then "Reveal the year" while the song runs, then the year it
+  produced, with title and artist: that box is where the answer lives, so the
+  words on the stage are never covered. The camera sits at the foot: it is off
+  screen
   while a round plays, and comes up by itself at the reveal so the next card can
   go up while the room is still reading the year. The card just played is
   ignored while it does - only a new card starts the next round. In between: the
@@ -153,8 +155,9 @@ with no size floor under it.
   seconds, back to the start, jump to the middle, and the track across the rest
   of the screen. Only an in-app Spotify round has one - a song handed over by
   link is out of reach, and then the words get the band's height instead.
-- **The size of the words** is set with the two buttons in the column and kept
-  on the device, so the same room gets the same size next time.
+- **The size of the words** is set in the menu - "Bigger words" and "Smaller
+  words", with the current size above them - and kept on the device, so the
+  same room gets the same size next time.
 - **Keys**, on a laptop or a desktop: space plays and pauses, enter reveals the
   year, left/A and right/D step ten seconds, up/W jumps to the middle of the
   song and down/S back to its start. They are listed at the foot of the column,
