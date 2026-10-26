@@ -490,12 +490,14 @@ class GameController extends ChangeNotifier {
   /// Draws a song for that year: first a category at random, then one of its
   /// songs.
   ///
-  /// The chance of a category is [weightOf], regardless of how many songs it
-  /// has for the year - otherwise a well filled deck would crowd out a thin
-  /// one - and regardless of what has been played: a deck that has used up
-  /// the year keeps its part and starts the year over, otherwise the one deck
-  /// with something unplayed would take every card of that year. A deck
-  /// without a song for the year drops out and the others share its part.
+  /// The chance of a category is [weightOf] times its songs for the year,
+  /// counted up to [_fullYear]: past that a well filled deck does not crowd
+  /// out a thin one, below it a year of two songs does not take half the
+  /// cards and play them to death. It does not depend on what has been
+  /// played: a deck that has used up the year keeps its part and starts the
+  /// year over, otherwise the one deck with something unplayed would take
+  /// every card of that year. A deck without a song for the year drops out
+  /// and the others share its part.
   ///
   /// Within the category the song is drawn by [_weightOf]: the core of a year
   /// comes up [_tierOneWeight] times as often as its long tail. In a game a
@@ -524,7 +526,10 @@ class GameController extends ChangeNotifier {
     ];
     if (candidates.isEmpty) return null;
 
-    final category = _pickCategory(candidates);
+    final category = _pickCategory({
+      for (final category in candidates)
+        category: weightOf(category) * min(poolOf(category).length, _fullYear),
+    });
     final pool = poolOf(category);
     var songs = [
       for (final song in pool)
@@ -545,20 +550,23 @@ class GameController extends ChangeNotifier {
     return (category: category, song: _pickWeighted(songs));
   }
 
-  /// Picks from a non-empty list, each deck weighted by [weightOf]. With every
-  /// weight at 1 this is the same single `nextInt` as a plain pick.
-  SongCategory _pickCategory(List<SongCategory> candidates) {
+  /// How many songs of a year count towards its deck's share: the size of a
+  /// curated 2000+ year. A deck with more is still one deck.
+  static const int _fullYear = 10;
+
+  /// Picks one of the non-empty [shares]' keys, each as often as its value.
+  SongCategory _pickCategory(Map<SongCategory, int> shares) {
     var total = 0;
-    for (final category in candidates) {
-      total += weightOf(category);
+    for (final share in shares.values) {
+      total += share;
     }
 
     var roll = _random.nextInt(total);
-    for (final category in candidates) {
-      roll -= weightOf(category);
+    for (final MapEntry(key: category, value: share) in shares.entries) {
+      roll -= share;
       if (roll < 0) return category;
     }
-    return candidates.last;
+    return shares.keys.last;
   }
 
   /// How much more often a `tier: 1` song is drawn than a `tier: 2` one.

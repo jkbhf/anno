@@ -55,8 +55,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
     setState(() => _weights[category.id] = weight);
   }
 
-  /// The share of rounds [category] gets while every chosen deck has a song
-  /// for the year - a year one of them lacks goes to the others.
+  /// The share of rounds [category] gets in a year every chosen deck holds
+  /// ten songs for - a thinner year gives a deck less, one it lacks goes to
+  /// the others.
   int _percentOf(SongCategory category, List<SongCategory> chosen) {
     final playable = chosen.where((c) => !c.isEmpty);
     final total = playable.fold<int>(0, (sum, c) => sum + _weightOf(c));

@@ -187,9 +187,11 @@ lives in the environment; a PKCE login in a browser must never carry one.
    left off.
 2. **Categories** - which decks to play from. Several can be picked; each round
    then draws from one of them at random, as often as the number on its card
-   says (1-10, the card shows the share in percent) and regardless of how many
-   songs it holds for that year. A deck without a song for the scanned year
-   sits out and the others share its part. Categories without songs cannot be
+   says (1-10, the card shows the share in percent) times the songs it holds
+   for that year, counted up to ten: a library with 137 songs for a year gets
+   no more than a deck with its ten, a year with two gets a fifth of that. A
+   deck without a song for the scanned year sits out and the others share its
+   part. Categories without songs cannot be
    selected. K-Pop (2016 on), White Girl Music (2007 on), Anthony
    (1999-2024) and Anthony All (1999-2026) cover only part of the years and can still be played alone -
    the card shows the span, and a card outside it only asks for another card.

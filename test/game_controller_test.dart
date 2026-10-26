@@ -422,6 +422,50 @@ void main() {
       expect(esc / rounds, closeTo(0.75, 0.04));
     });
 
+    SongCategory deckOf(String id, int songs) => SongCategory(
+      id: id,
+      name: id,
+      description: '',
+      songs: [
+        for (var i = 0; i < songs; i++)
+          Song(
+            title: '$id$i',
+            artist: 'X',
+            year: 2005,
+            spotifyTrackId: '$id$i',
+          ),
+      ],
+    );
+
+    double shareOf(GameController game, String id) {
+      var hits = 0;
+      const rounds = 2000;
+      for (var round = 0; round < rounds; round++) {
+        game.scan(card2005);
+        if (game.currentCategory!.id == id) hits++;
+        game.cancelRound();
+      }
+      return hits / rounds;
+    }
+
+    test('a thin year gets a thin share', () {
+      // Anthony All with weight 5 and two songs for 2000, the hit deck with
+      // eleven: 5 x 2 against 1 x 10. It used to be 5 against 1, and the
+      // two songs took turns on five of every six cards.
+      final game = withDecks(
+        [deckOf('library', 2), deckOf('hits', 11)],
+        weights: {'library': 5},
+      );
+
+      expect(shareOf(game, 'library'), closeTo(0.5, 0.04));
+    });
+
+    test('songs past a full year add nothing to the share', () {
+      final game = withDecks([deckOf('library', 137), deckOf('hits', 10)]);
+
+      expect(shareOf(game, 'library'), closeTo(0.5, 0.04));
+    });
+
     test('a missing or broken weight counts as 1', () {
       final esc = categoryWith('esc', 'A');
       final rock = categoryWith('rock', 'B');
