@@ -131,8 +131,11 @@ class SeekableSession extends FakeSession {
   @override
   Duration get duration => const Duration(seconds: 200);
 
+  /// Where the player is. Settable, so a test can sit just before a line.
+  Duration at = const Duration(seconds: 42);
+
   @override
-  Duration get position => const Duration(seconds: 42);
+  Duration get position => at;
 
   @override
   String? get playbackError => _playbackError;
@@ -794,6 +797,29 @@ void main() {
 
     expect(find.text('My Number One · Helena Paparizou'), findsOneWidget);
     expect(find.text('First'), findsOneWidget);
+  });
+
+  testWidgets('a line lights up just before it is sung', (tester) async {
+    usePhoneScreen(tester);
+    final session = SeekableSession();
+    // A tenth of a second before the line at 0:40 - close enough that the
+    // lead is what decides, and the only thing that can.
+    session.at = const Duration(milliseconds: 39900);
+    final game = buildGame(launcher: const InTabLauncher());
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game, spotify: session));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lyrics'));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+
+    final style = DefaultTextStyle.of(
+      tester.element(find.text('Second')),
+    ).style;
+    expect(style.fontWeight, FontWeight.w700);
   });
 
   testWidgets('in the tab the lyrics follow the song and seek on a tap', (

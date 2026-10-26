@@ -683,7 +683,10 @@ leaves a `Next round` button in its place.
 (2026-10-27). The year beside the name rather than over it leaves the year
 twice the height, so `_ColumnYear` lays itself out as a row once the box is
 wider than it is tall and stacks them when it is not - a phone turned over has
-a column too narrow for two of anything. The year is deliberately not the
+a column too narrow for two of anything. The name is `Flexible` and not
+`Expanded` in that row: expanded it took the whole rest of the card, and
+because its text is left-aligned all the air ended up on the right, which read
+as a card whose content was not centred. The year is deliberately not the
 biggest thing in it: four digits are read at a glance, and the title is what
 the room talks about at the reveal, so the name got the size the year gave up.
 
@@ -769,6 +772,25 @@ to the room, and on a projector the stage is the wall. It lists only the keys
 that do something at that moment, so a link round shows one line and an in-app
 round all six. A tablet with a keyboard is called wrong by `hasKeyboard` and
 loses the hint - the keys themselves still work wherever one is pressed.
+
+## The words run slightly ahead of the singing
+
+Two numbers in `lyrics_sheet.dart`, both from the words feeling a step behind
+the song (2026-10-27). `_tick` is how often the line being sung is looked up:
+it was the seek bar's 250ms, which is fine for a bar and a quarter of a second
+too slow for a line - an average of 125ms late for nothing. It is 80ms now.
+`_lead` is 160ms of deliberate head start, because `Lyrics.lineAt` switches
+exactly on the timestamp, which is the moment the word is sung and too late to
+read along to. Every karaoke player leads a little.
+
+**What is left is the data, and a setting is the wrong first answer.** The
+timings come from LRCLIB, typed by whoever typed them, against a pressing that
+need not be the one Spotify plays - so a song can still sit a few hundred
+milliseconds off, and no constant fixes that. A pair of menu entries to nudge
+it is the honest tool for that and is deliberately not built yet: a setting
+that has to be found and nudged per song is worse than one that is right by
+default, and the two numbers above were free. If it still reads late, that is
+the next step rather than a bigger lead.
 
 ## Fullscreen is an offer, never a state the game keeps
 

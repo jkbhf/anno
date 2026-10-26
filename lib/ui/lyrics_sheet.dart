@@ -127,8 +127,21 @@ class _LyricsViewState extends State<LyricsView> {
     return duration == null || duration == Duration.zero ? null : duration;
   }
 
+  /// How often the line being sung is looked up. The seek bar is happy with
+  /// 250ms, a line of a song is not: a quarter of a second is the difference
+  /// between a text that follows the singing and one that trails it.
+  static const Duration _tick = Duration(milliseconds: 80);
+
+  /// How far ahead of the singing a line lights up.
+  ///
+  /// [Lyrics.lineAt] switches exactly on the timestamp, which is the moment
+  /// the word is sung - too late to read along to. Every karaoke player leads
+  /// a little; this one by a sixth of a second, enough to have read the line
+  /// before it starts and not enough to look wrong.
+  static const Duration _lead = Duration(milliseconds: 160);
+
   /// The player reports on changes only; between two reports the line moves on
-  /// the clock - the same tick as the seek bar.
+  /// the clock, so it is looked up on a tick of its own.
   Timer? _ticker;
 
   final ScrollController _scroll = ScrollController();
@@ -164,10 +177,7 @@ class _LyricsViewState extends State<LyricsView> {
     final session = widget.session;
     if (session == null) return;
     session.addListener(_onSession);
-    _ticker = Timer.periodic(
-      const Duration(milliseconds: 250),
-      (_) => _follow(),
-    );
+    _ticker = Timer.periodic(_tick, (_) => _follow());
   }
 
   bool get _pickIsStale {
@@ -195,7 +205,7 @@ class _LyricsViewState extends State<LyricsView> {
     if (!mounted || lyrics == null || session == null || !lyrics.isSynced) {
       return;
     }
-    final line = lyrics.lineAt(session.position);
+    final line = lyrics.lineAt(session.position + _lead);
     if (line == _current) return;
     setState(() => _current = line);
     if (line < 0 || line >= _lineKeys.length) return;
