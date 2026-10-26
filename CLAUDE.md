@@ -619,12 +619,24 @@ that opens itself ignores exactly one code, the card of the round on screen
 somebody holds up starts the next round. A scan the operator asked for has no
 such guard - scanning the same card again is then a decision, not a leftover.
 
-So the slot in the column is always the one thing to do next: `Scan a card`,
-then `Reveal the year` during the round, then the live camera. The reveal moved
-in there (`revealInColumnKey` is that panel now) because it is where the hand
-already is, and pressing it hands the slot straight over to the camera - the
-next card can go up while the room is still reading the year. Closing the
-camera keeps the reveal and falls back to `Next round`, as before.
+**The column is two fixed homes** (`_ActionSlot`, `_CameraBox`), and that is
+the second half of the same decision. The slot on top is what to do or what
+came of it - `Scan a card`, `Reveal the year` while the song runs, then the
+year it produced, small, for whoever runs the game. The camera lives at the
+foot of the column. Neither displaces the other, so nothing in the column moves
+from one round to the next; the reveal panel in particular is always in the
+same place, which it was not while one slot morphed between button and preview.
+
+**The camera box is off screen while a round plays.** There is nothing to look
+at then, and a grey placeholder earns its space less than the air around the
+controls. It comes back with the reveal, open, and a camera closed by hand
+leaves a `Next round` button in its place.
+
+**The year is in two places on purpose.** Big on the stage for the room, small
+in the column for whoever runs the game - on a projector both are the same
+screen, so this is a duplication, and it is wanted: the slot would otherwise
+be a hole after the reveal, and the small one is the answer at a glance next
+to the camera that is about to replace the round.
 
 Two things follow that are easy to get wrong. The auto-scan is started from
 inside the tap that revealed, which is what lets a mobile browser unlock sound

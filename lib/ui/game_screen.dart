@@ -1629,6 +1629,22 @@ class _WideRound extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final side = (constraints.maxWidth * 0.28).clamp(240.0, 420.0);
+        // Two fixed homes in the column, so nothing moves from round to
+        // round: the slot on top is what to do or what came of it, the camera
+        // sits at the bottom. The camera's height is 4:3 as far as the width
+        // allows, capped at a third of the column - a projector is nowhere
+        // near that cap.
+        final slot = (constraints.maxHeight * 0.3).clamp(0.0, 200.0);
+        final cameraHeight = min(
+          (side - 36) * 3 / 4,
+          constraints.maxHeight * 0.33,
+        );
+
+        // Closed and between rounds there is nothing to look at, so the box
+        // goes rather than sitting there as a grey placeholder. After a reveal
+        // it stays as the way back to a camera that was closed by hand.
+        final showCamera = camera != null || game.isRevealed;
+
         final round = Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -1639,72 +1655,61 @@ class _WideRound extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // The camera is wanted between rounds and ignored during
-                    // them, so it does not get half of a short column: 4:3 as
-                    // far as the width allows, capped at a third of the
-                    // height. A projector is nowhere near that cap.
                     SizedBox(
-                      height: min(
-                        (side - 36) * 3 / 4,
-                        constraints.maxHeight * 0.33,
-                      ),
+                      height: slot,
                       child: Stack(
                         children: [
-                          Center(
-                            child: AspectRatio(
-                              aspectRatio: 4 / 3,
-                              child: _CameraSlot(
-                                phase: game.phase,
-                                camera: camera,
-                                onCode: onCode,
-                                onClose: onCloseCamera,
-                                onScan: onScan,
-                                onNextRound: onNextRound,
-                                onReveal: game.reveal,
-                              ),
+                          Positioned.fill(
+                            child: _ActionSlot(
+                              game: game,
+                              onScan: onScan,
+                              onReveal: game.reveal,
                             ),
                           ),
-                          // The open camera's close button is in the other
-                          // corner. The disc is for legibility over a preview.
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            child: Material(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.surface.withValues(alpha: 0.7),
-                              shape: const CircleBorder(),
-                              clipBehavior: Clip.antiAlias,
-                              child: menu,
-                            ),
-                          ),
+                          // The menu has no app bar to sit in, and a row of
+                          // its own would cost the height that bar gave back.
+                          Positioned(top: 0, right: 0, child: menu),
                         ],
                       ),
                     ),
-                    if (playing || game.currentSong != null)
-                      Expanded(
-                        child: _FitBody(
-                          center: false,
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              if (game.currentSong != null) ...[
-                                _LyricsSize(
-                                  scale: lyricsScale,
-                                  onChange: onLyricsScale,
-                                ),
-                                const SizedBox(height: 4),
-                              ],
-                              if (playing)
-                                _SongControls(
-                                  game: game,
-                                  spotify: spotify,
-                                  onRedraw: onRedraw,
-                                  onUndoRedraw: onUndoRedraw,
-                                  inColumn: true,
-                                ),
+                    Expanded(
+                      child: _FitBody(
+                        center: false,
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (game.currentSong != null) ...[
+                              _LyricsSize(
+                                scale: lyricsScale,
+                                onChange: onLyricsScale,
+                              ),
+                              const SizedBox(height: 4),
                             ],
+                            if (playing)
+                              _SongControls(
+                                game: game,
+                                spotify: spotify,
+                                onRedraw: onRedraw,
+                                onUndoRedraw: onUndoRedraw,
+                                inColumn: true,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (showCamera)
+                      SizedBox(
+                        height: cameraHeight,
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio: 4 / 3,
+                            child: _CameraBox(
+                              camera: camera,
+                              onCode: onCode,
+                              onClose: onCloseCamera,
+                              onNextRound: onNextRound,
+                            ),
                           ),
                         ),
                       ),
@@ -1801,30 +1806,177 @@ class _LyricsSize extends StatelessWidget {
   }
 }
 
-/// The place in the side column where the camera opens.
+/// The top of the side column: what to do now, or what came of it.
 ///
-/// Closed, it is the button for what the camera is needed for next: the first
-/// card, or the next round once the year is out. The camera only runs while
-/// it is asked for - kept running, it would read the card still lying in front
-/// of it and start the next round before the points are handed out.
-class _CameraSlot extends StatelessWidget {
-  const _CameraSlot({
-    required this.phase,
-    required this.camera,
-    required this.onCode,
-    required this.onClose,
+/// One fixed home for three things that never want to be on screen together -
+/// the first scan, the reveal, and the year it produced - so the column does
+/// not rearrange itself from round to round. The camera has its own place at
+/// the bottom and does not displace this.
+class _ActionSlot extends StatelessWidget {
+  const _ActionSlot({
+    required this.game,
     required this.onScan,
-    required this.onNextRound,
     required this.onReveal,
   });
 
-  final RoundPhase phase;
+  final GameController game;
+  final VoidCallback onScan;
+  final VoidCallback onReveal;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final radius = BorderRadius.circular(24);
+
+    // The year for whoever runs the game, beside the one on the stage: the
+    // room reads the wall, and this says what the camera is about to replace.
+    if (game.isRevealed) {
+      return _ColumnYear(game: game);
+    }
+
+    final (icon, title, hint, onTap) = game.phase == RoundPhase.playing
+        ? (
+            Icons.visibility_outlined,
+            'Reveal the year',
+            'The camera then opens below',
+            onReveal,
+          )
+        : (
+            Icons.qr_code_scanner,
+            'Scan a card',
+            'Opens the camera below',
+            onScan,
+          );
+
+    return Material(
+      key: game.phase == RoundPhase.playing ? revealInColumnKey : null,
+      color: game.phase == RoundPhase.playing
+          ? scheme.primary
+          : scheme.primaryContainer,
+      shape: RoundedRectangleBorder(borderRadius: radius),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: _FitBody(
+          padding: const EdgeInsets.fromLTRB(16, 16, 56, 16),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                size: 44,
+                color: game.phase == RoundPhase.playing
+                    ? scheme.onPrimary
+                    : scheme.onPrimaryContainer,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: game.phase == RoundPhase.playing
+                      ? scheme.onPrimary
+                      : scheme.onPrimaryContainer,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                hint,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color:
+                      (game.phase == RoundPhase.playing
+                              ? scheme.onPrimary
+                              : scheme.onPrimaryContainer)
+                          .withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The year in the column, small: the answer for whoever runs the game while
+/// the camera below is already waiting for the next card. The stage has the
+/// big one for the room.
+class _ColumnYear extends StatelessWidget {
+  const _ColumnYear({required this.game});
+
+  final GameController game;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final song = game.currentSong;
+    final year = game.currentYear ?? song?.year ?? 0;
+    final accent = decadeColor(year);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: accent, width: 2),
+      ),
+      child: _FitBody(
+        padding: const EdgeInsets.fromLTRB(16, 12, 56, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$year',
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 56,
+                fontWeight: FontWeight.w800,
+                height: 1.1,
+                letterSpacing: -1,
+                color: accent,
+              ),
+            ),
+            if (song != null) ...[
+              Text(
+                song.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleSmall,
+              ),
+              Text(
+                song.artist,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The bottom of the side column, where the camera runs.
+///
+/// It is not on screen at all while a round plays - there is nothing to look
+/// at and a grey placeholder is worse than the room the words get instead. It
+/// comes back with the reveal, by itself, and a camera closed by hand leaves
+/// the button that opens it again.
+class _CameraBox extends StatelessWidget {
+  const _CameraBox({
+    required this.camera,
+    required this.onCode,
+    required this.onClose,
+    required this.onNextRound,
+  });
+
   final CameraBuilder? camera;
   final ValueChanged<String> onCode;
   final VoidCallback onClose;
-  final VoidCallback onScan;
   final VoidCallback onNextRound;
-  final VoidCallback onReveal;
 
   @override
   Widget build(BuildContext context) {
@@ -1853,64 +2005,27 @@ class _CameraSlot extends StatelessWidget {
       );
     }
 
-    final scheme = theme.colorScheme;
-    final (icon, title, hint, onTap, background, foreground) = switch (phase) {
-      RoundPhase.revealed => (
-        Icons.arrow_forward,
-        'Next round',
-        'Opens the camera for the next card',
-        onNextRound,
-        scheme.primary,
-        scheme.onPrimary,
-      ),
-      // The slot is always what to do next, and during a round that is the
-      // reveal - here, where the hand already is and where the camera comes
-      // up a moment later. It used to say "Next card after the reveal" and do
-      // nothing at all.
-      RoundPhase.playing => (
-        Icons.visibility_outlined,
-        'Reveal the year',
-        'The camera then opens for the next card',
-        onReveal,
-        scheme.primary,
-        scheme.onPrimary,
-      ),
-      _ => (
-        Icons.qr_code_scanner,
-        'Scan a card',
-        'Opens the camera here',
-        onScan,
-        scheme.primaryContainer,
-        scheme.onPrimaryContainer,
-      ),
-    };
-
     return Material(
-      key: phase == RoundPhase.playing ? revealInColumnKey : null,
-      color: background,
+      color: theme.colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(borderRadius: radius),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onTap,
+        onTap: onNextRound,
         child: _FitBody(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Icon(icon, size: 56, color: foreground),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleLarge?.copyWith(color: foreground),
+              Icon(
+                Icons.qr_code_scanner,
+                size: 40,
+                color: theme.colorScheme.primary,
               ),
-              const SizedBox(height: 4),
-              // Every state of the slot says what the tap does next, because
-              // every one of them leads to the camera.
+              const SizedBox(height: 8),
               Text(
-                hint,
+                'Next round',
                 textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: foreground.withValues(alpha: 0.8),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ],

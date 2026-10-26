@@ -920,8 +920,10 @@ void main() {
         await tester.pumpWidget(wrap(game));
         await tester.pumpAndSettle();
 
-        expect(find.text('2005'), findsOneWidget);
-        expect(find.text('My Number One'), findsOneWidget);
+        // Twice now: the big one on the stage for the room, the small one in
+        // the column for whoever runs the game.
+        expect(find.text('2005'), findsNWidgets(2));
+        expect(find.text('My Number One'), findsNWidgets(2));
         expect(find.text('Who got it right?'), findsOneWidget);
         expect(find.text('Player 1'), findsOneWidget);
         expect(tester.takeException(), isNull);
@@ -960,19 +962,26 @@ void main() {
       await tester.pumpWidget(wrap(game, camera: fakeCamera));
       await tester.pumpAndSettle();
 
-      // Where the camera will be, and where it was last pressed.
+      // While the song runs there is no camera box at all - nothing to look
+      // at, and the words are better off with the room.
+      expect(find.text('Scan the card'), findsNothing);
+      expect(find.text('Next round'), findsNothing);
+
       final slot = tester.getRect(find.byKey(revealInColumnKey));
       await tester.tap(find.byKey(revealInColumnKey));
       await tester.pumpAndSettle();
 
       expect(game.isRevealed, isTrue);
       // The year went to the stage, the camera came up in the slot by itself.
-      expect(find.text('2005'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
       expect(find.text('Scan the card'), findsOneWidget);
-      expect(
-        tester.getRect(find.text('Scan the card')).center.dx,
-        slot.center.dx,
-      );
+      // The camera has its own place at the foot of the column, under the
+      // slot that just became the year. Neither displaces the other.
+      final preview = tester.getRect(find.text('Scan the card'));
+      expect(preview.top, greaterThan(slot.bottom));
+      expect(preview.center.dx, lessThan(893 * 0.33));
       expect(find.text('Next round'), findsNothing);
       expect(tester.takeException(), isNull);
     });
@@ -1015,7 +1024,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(game.phase, RoundPhase.revealed);
-      expect(find.text('2005'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
       expect(find.text('Scan another'), findsOneWidget);
 
       // A card somebody held up does.
@@ -1082,7 +1093,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(game.isRevealed, isTrue);
-      expect(find.text('2005'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
       expect(find.text('Reveal the year'), findsNothing);
     });
 
@@ -1209,7 +1222,9 @@ void main() {
 
       // The year is the whole stage. Nothing to tap, so nothing is counted -
       // that is what the option is for.
-      expect(find.text('2005'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
       expect(find.text('Who got it right?'), findsNothing);
       expect(find.text('Player 1'), findsNothing);
       expect(game.players.first.score, 0);
@@ -1300,9 +1315,11 @@ void main() {
       await tester.pumpWidget(wrap(game));
       await tester.pumpAndSettle();
 
-      expect(find.text('2005'), findsOneWidget);
-      expect(find.text('My Number One'), findsOneWidget);
-      expect(find.text('Helena Paparizou'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
+      expect(find.text('My Number One'), findsNWidgets(2));
+      expect(find.text('Helena Paparizou'), findsNWidgets(2));
       expect(find.text('ESC  ·  Greece  ·  1st place'), findsOneWidget);
       expect(find.text('Who got it right?'), findsOneWidget);
       // The words step aside for the answer - the round is over and the
@@ -1332,7 +1349,9 @@ void main() {
       expect(find.text('Scan the card'), findsOneWidget);
       expect(find.byType(ScannerScreen), findsNothing, reason: 'no new page');
       // The room still has the year to look at while the next card comes up.
-      expect(find.text('2005'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
 
       await tester.tap(find.text('Scan the card'));
       await tester.pump();
@@ -1357,7 +1376,9 @@ void main() {
       expect(game.phase, RoundPhase.revealed);
       expect(find.text('Scan the card'), findsNothing);
       expect(find.text('Next round'), findsOneWidget);
-      expect(find.text('2005'), findsOneWidget);
+      // Twice now: the big one on the stage for the room, the small one in
+      // the column for whoever runs the game.
+      expect(find.text('2005'), findsNWidgets(2));
 
       // And it opens again, nothing left stuck from the first time.
       await tester.tap(find.text('Next round'));

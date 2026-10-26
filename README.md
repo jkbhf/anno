@@ -139,14 +139,16 @@ with no size floor under it.
   there is a share of the height of the picture, so it fits a 1080p wall, a
   720p one and a phone's 412 pixels alike; up to eight players fit a 720p
   projector.
-- **The column**, on the left, is for whoever runs the game, and its big box is
-  always the next thing to do: "Scan a card", then "Reveal the year" while the
-  song runs, and then the camera, which opens by itself so the next card can go
-  up while the room is still reading the year. The card just played is ignored
-  while it does - only a new card starts the next round. Under the box: the
+- **The column**, on the left, is for whoever runs the game, and it has two
+  fixed places. The box on top is the next thing to do - "Scan a card", then
+  "Reveal the year" while the song runs, then the year it produced, small, with
+  title and artist. The camera sits at the foot of the column: it is off screen
+  while a round plays, and comes up by itself at the reveal so the next card can
+  go up while the room is still reading the year. The card just played is
+  ignored while it does - only a new card starts the next round. In between: the
   size of the words on the stage, and during a round "Open in Spotify" and the
-  swap. The menu sits in the corner of the box and carries the way out of the
-  game - this layout has no app bar.
+  swap. The menu sits in the corner of the top box and carries the way out of
+  the game - this layout has no app bar.
 - **The player** is a band along the bottom, under both halves: pause, ±10
   seconds, back to the start, jump to the middle, and the track across the rest
   of the screen. Only an in-app Spotify round has one - a song handed over by
