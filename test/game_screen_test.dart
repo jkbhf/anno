@@ -14,6 +14,8 @@ import 'package:anno/music/song_launcher.dart';
 import 'package:anno/music/spotify_session.dart';
 import 'package:anno/ui/app_scope.dart';
 import 'package:anno/ui/game_screen.dart';
+import 'package:anno/ui/layout.dart';
+import 'package:anno/ui/lyrics_sheet.dart';
 import 'package:anno/ui/scanner_screen.dart';
 import 'package:anno/ui/theme.dart';
 
@@ -957,6 +959,51 @@ void main() {
       expect(game.isRevealed, isTrue);
       expect(find.text('2005'), findsOneWidget);
       expect(find.text('Reveal the year'), findsNothing);
+    });
+
+    testWidgets('no app bar, and the menu moved into the column', (
+      tester,
+    ) async {
+      useWideScreen(tester, size: const Size(893, 412));
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      // 56 pixels of a landscape phone's 412 are the stage's instead.
+      expect(find.byType(AppBar), findsNothing);
+      expect(find.text('ESC'), findsNothing);
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Reset scores'), findsOneWidget);
+      // The bar's back arrow went with it, so the way out is in here.
+      expect(find.text('Leave the game'), findsOneWidget);
+    });
+
+    testWidgets('the words get the room on a short stage', (tester) async {
+      final padding = <double>[];
+      for (final size in [const Size(893, 412), const Size(1920, 1080)]) {
+        useWideScreen(tester, size: size);
+        final game = buildGame();
+        game.scan(card);
+        await game.startPlayback();
+
+        await tester.pumpWidget(wrap(game));
+        await tester.pumpAndSettle();
+
+        final view = tester.widget<LyricsView>(find.byType(LyricsView));
+        padding.add(view.padding.top + view.padding.bottom);
+        expect(tester.takeException(), isNull);
+      }
+
+      // A share of the box rather than the projector's fixed 28 and 72: on a
+      // phone those were most of a 109 pixel box.
+      expect(padding.first, lessThan(30));
+      expect(padding.last, greaterThan(90));
     });
 
     testWidgets('the words on the stage are sized from the column', (

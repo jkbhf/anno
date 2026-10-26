@@ -126,28 +126,34 @@ sheet is the words alone. While the room is still guessing the sheet leaves
 title and artist off. On a wide screen there is no button: the words are on the
 stage for the whole round, see below.
 
-## On a projector
+## On a projector, or a phone turned over
 
-A laptop on a projector, or a tablet on its side, gets a layout of its own. It
-switches on by itself on a window at least 900 px wide that is clearly wider
-than tall (`isWideScreen` in `lib/ui/game_screen.dart`); a phone keeps its one
-column even when it is turned.
+Every landscape screen gets a layout of its own - a laptop on a projector, a
+tablet on its side, a phone turned over. It switches on by itself as soon as
+the window is clearly wider than tall (`isWideScreen` in `lib/ui/layout.dart`),
+with no size floor under it.
 
 - **The stage**, on the right, is for the room: the reveal banner, which turns
   into the year card, then the lyrics, large, for the whole round, and the
-  scores as one row along the bottom. Everything there grows with the height of
-  the picture, and up to eight players fit a 720p projector.
+  scores as one row along the bottom. Everything there is a share of the height
+  of the picture, so it fits a 1080p wall, a 720p one and a phone's 412 pixels
+  alike; up to eight players fit a 720p projector.
 - **The column**, on the left, is for whoever runs the game. The camera opens
   there in a small box - "Scan a card", or "Next round" once the year is out -
-  while the stage keeps the reveal and the scores. Under it, during a round:
-  the seek bar, "Open in Spotify" and "Nobody knows it? Draw another".
+  while the stage keeps the reveal and the scores. Under it: "Reveal the year",
+  the size of the words on the stage, and during a round the seek bar, "Open in
+  Spotify" and the swap. The menu sits in the corner of the camera box, and
+  carries the way out of the game - this layout has no app bar.
+- **The size of the words** is set with the two buttons in the column and kept
+  on the device, so the same room gets the same size next time.
 
 **Play through the tab.** The link path does work on a projector, but it gives
 the answer away: Spotify opens in a new tab with title and cover on the wall,
 and coming back to the game tab reveals the year. With
 [Playing in the tab](#playing-in-the-tab) the song never leaves the page, the
-lyrics follow it, and the year waits for the button. Put the browser in
-fullscreen (F11) for the most room.
+lyrics follow it, and the year waits for the button. For the most room, put the
+browser in fullscreen - F11, or "Fullscreen" in the menu, which is also the way
+to get a phone's browser bars out of the picture.
 
 ## Deploying to GitHub Pages
 

@@ -527,6 +527,24 @@ theirs. Two buttons for one action, deliberately; both call
 `GameController.reveal`, and the key is only there so a test can say which one
 it pressed.
 
+**The wide layout has no app bar** (2026-10-26). 56 pixels of a landscape
+phone's 412 for a deck name the room does not need and a menu that belongs to
+whoever runs the game: the menu moved into the corner of the camera panel,
+where it costs no height, and the bar's automatic back arrow went with it - so
+the menu carries `Leave the game`, which is `_onBack` under another name. A
+game nobody can leave would be the one thing worse than a bar.
+
+Measured on an S24 Ultra's 893x412 before and after: the words' box went from
+109 to 156 pixels, about three readable lines to seven. The rest of that came
+from three things sized for a projector and wrong on a phone - the box's own
+padding (fixed 28 above and 72 below, a tenth of a 560 pixel box and most of a
+109 pixel one, now a share of it), the camera panel (4:3 whatever the height,
+160 of a 364 pixel column, now capped at a third of it), and the scores, which
+take 0.11 of a short stage instead of 0.14 and drop the line about tapping
+them. **The scores get less, not more, on a short stage**, and that is the
+owner's call: the tiles are never used in practice, the words are the whole
+reason to lay the game out sideways.
+
 **The size of the words is set in the column and kept per device**
 (`LyricsScaleStore`, a factor on the size the stage reads off its height).
 It belongs to the room - how far the sofa is from the wall, what the projector
@@ -569,6 +587,21 @@ as on the web anywhere else.
 **No right click on the tiles.** It looked like the desktop way to take a point
 back, but Flutter web shows the browser's context menu on every right click.
 Long press works with a mouse too.
+
+## Fullscreen is an offer, never a state the game keeps
+
+`lib/ui/fullscreen/`, in the shape `wake_lock/` already has: a native file that
+says no and a web file that asks `document.documentElement`. The menu entry
+only appears where `Fullscreen.isSupported` - an iframe without the permission
+and an iPhone before 16.4 do not have it - and a refusal is the normal case
+rather than an error, because a browser grants fullscreen to a gesture and to
+nothing else. The game reads `isOn` when the menu opens, so the entry says what
+the tap will do, and nothing else in the app asks: a page that came out of
+fullscreen by itself (Escape, a tab switch) is not a page in a wrong state.
+
+It earns its place twice. On a projector it takes the address bar off the wall,
+and on a phone turned over the browser's bars are a tenth of the screen the
+stage could have instead - which is the same arithmetic as the missing app bar.
 
 ## The page's script sources are a list
 

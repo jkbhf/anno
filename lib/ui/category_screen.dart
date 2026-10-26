@@ -5,6 +5,7 @@ import '../models/song_category.dart';
 import 'app_scope.dart';
 import 'centered_body.dart';
 import 'game_screen.dart';
+import 'layout.dart';
 
 /// Second screen: which decks the game is played from.
 ///
@@ -100,9 +101,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final chosen = _chosen(categories);
     final ready = canCarryGame(chosen);
 
+    // Sideways the deck cards stand in two columns: the list is long, and a
+    // landscape screen has the width to show twice as much of it at once -
+    // the same reason the game screen splits. The cap goes up with it, or the
+    // two columns would be two narrow strips in the middle.
+    final wide = isWideScreen(MediaQuery.sizeOf(context));
+
+    final cards = [
+      for (final category in categories)
+        _CategoryCard(
+          category: category,
+          selected: _selected.contains(category.id),
+          weight: _weightOf(category),
+          percent: chosen.length > 1 ? _percentOf(category, chosen) : null,
+          onWeight: (weight) => _setWeight(category, weight),
+          onTap: category.isEmpty ? null : () => _toggle(category),
+        ),
+    ];
+
     return Scaffold(
       appBar: AppBar(title: const Text('Categories')),
       body: CenteredBody(
+        maxWidth: wide ? 1040 : 560,
         child: Column(
           children: [
             Expanded(
@@ -129,22 +149,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  for (final category in categories)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: _CategoryCard(
-                        category: category,
-                        selected: _selected.contains(category.id),
-                        weight: _weightOf(category),
-                        percent: chosen.length > 1
-                            ? _percentOf(category, chosen)
-                            : null,
-                        onWeight: (weight) => _setWeight(category, weight),
-                        onTap: category.isEmpty
-                            ? null
-                            : () => _toggle(category),
+                  if (wide)
+                    _TwoColumns(cards: cards)
+                  else
+                    for (final card in cards)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: card,
                       ),
-                    ),
                 ],
               ),
             ),
@@ -167,6 +179,43 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The deck cards in two columns, read across: first card top left, second
+/// top right.
+///
+/// Two columns rather than a grid, because the cards are not the same height -
+/// a selected one carries its weight row, an empty one a line saying so - and
+/// a grid would cut them to the tallest in the row.
+class _TwoColumns extends StatelessWidget {
+  const _TwoColumns({required this.cards});
+
+  final List<Widget> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final side in [0, 1]) ...[
+          if (side == 1) const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (index, card) in cards.indexed)
+                  if (index % 2 == side)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: card,
+                    ),
+              ],
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

@@ -21,7 +21,9 @@ import 'app_scope.dart';
 import 'category_screen.dart';
 import 'centered_body.dart';
 import 'countdown_screen.dart';
+import 'fullscreen/fullscreen.dart';
 import 'haptics/haptics.dart';
+import 'layout.dart';
 import 'lyrics_sheet.dart';
 import 'scanner_screen.dart';
 import 'song_progress_bar.dart';
@@ -85,16 +87,6 @@ Future<void> openGame(
 @visibleForTesting
 bool needsCountdown(MusicService service, {required bool sessionReady}) =>
     !(service == MusicService.spotify && sessionReady);
-
-/// Whether the round gets the wide layout: a stage for the room and a column
-/// beside it for whoever runs the game - a laptop on a projector, a tablet on
-/// its side, a phone turned over.
-///
-/// Landscape is the whole question, there is no size floor under it. The one
-/// column is built for a screen that is taller than wide; laid out sideways it
-/// keeps its 560 and leaves a third of the screen empty on either side, while
-/// the height it wants is the thing a turned phone has least of.
-bool isWideScreen(Size size) => size.width >= size.height * 1.2;
 
 /// The reveal in the side column. It carries the same words as the card on the
 /// stage, which reveals too, so a test needs something to tell them apart.
@@ -487,6 +479,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             ),
           ),
         );
+      case 'fullscreen':
+        // A gesture is what the browser grants it to, and this is one.
+        await Fullscreen.toggle();
+      case 'leave':
+        await _onBack(false);
       case 'new':
         final ok = await _confirm(
           'New game?',
@@ -562,35 +559,48 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             ? _wideBody(context)
             : CenteredBody(child: _body(context));
         return Scaffold(
-          appBar: AppBar(
-            // On the wide layout the only thing that scrolls is the words, in
-            // their own box - no page goes under the bar for it to tint over.
-            notificationPredicate: wide
-                ? (_) => false
-                : defaultScrollNotificationPredicate,
-            title: Text(
-              _game.categories.length == 1
-                  ? _game.categories.single.name
-                  : '${_game.categories.length} categories',
-            ),
-            actions: [
-              PopupMenuButton<String>(
-                onSelected: _onMenu,
-                itemBuilder: (context) => const [
-                  PopupMenuItem(value: 'reset', child: Text('Reset scores')),
-                  PopupMenuItem(
-                    value: 'category',
-                    child: Text('Change category'),
+          // The wide layout has no bar: 56 pixels of a landscape phone's 412
+          // for a deck name the room does not need and a menu that belongs to
+          // whoever runs the game anyway. It moved into the side column, the
+          // way out of the game with it - the bar's back arrow went too.
+          appBar: wide
+              ? null
+              : AppBar(
+                  title: Text(
+                    _game.categories.length == 1
+                        ? _game.categories.single.name
+                        : '${_game.categories.length} categories',
                   ),
-                  PopupMenuItem(value: 'years', child: Text('Year database')),
-                  PopupMenuItem(value: 'new', child: Text('New game')),
-                ],
-              ),
-            ],
-          ),
+                  actions: [_menu(wide: false)],
+                ),
           body: SafeArea(child: body),
         );
       },
+    );
+  }
+
+  /// The menu, in the bar on a phone and in the side column on a wide screen.
+  ///
+  /// Only the wide one carries the way out: there the bar that held the back
+  /// arrow is gone, and a game nobody can leave is worse than a long menu.
+  Widget _menu({required bool wide}) {
+    return PopupMenuButton<String>(
+      tooltip: 'Menu',
+      onSelected: _onMenu,
+      itemBuilder: (context) => [
+        const PopupMenuItem(value: 'reset', child: Text('Reset scores')),
+        const PopupMenuItem(value: 'category', child: Text('Change category')),
+        const PopupMenuItem(value: 'years', child: Text('Year database')),
+        // Read as the menu opens, so the entry says what the tap will do.
+        if (Fullscreen.isSupported)
+          PopupMenuItem(
+            value: 'fullscreen',
+            child: Text(Fullscreen.isOn ? 'Leave fullscreen' : 'Fullscreen'),
+          ),
+        const PopupMenuItem(value: 'new', child: Text('New game')),
+        if (wide)
+          const PopupMenuItem(value: 'leave', child: Text('Leave the game')),
+      ],
     );
   }
 
@@ -614,6 +624,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onUndoRedraw: _undoRedraw,
       lyricsScale: _lyricsScale,
       onLyricsScale: _stepLyricsScale,
+      menu: _menu(wide: true),
     );
   }
 
@@ -865,6 +876,7 @@ class _SongControls extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     this.onLyrics,
+    this.compact = false,
   });
 
   final GameController game;
@@ -874,6 +886,10 @@ class _SongControls extends StatelessWidget {
 
   /// Null where the words are up anyway - the stage of the wide layout.
   final VoidCallback? onLyrics;
+
+  /// In the side column, which is 214 wide on a phone turned over: the full
+  /// label wraps to four lines there. A whole screen's width gets the sentence.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -967,7 +983,11 @@ class _SongControls extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: onRedraw,
                   icon: const Icon(Icons.shuffle),
-                  label: const Text('Nobody knows it? Draw another'),
+                  label: Text(
+                    compact
+                        ? 'Nobody knows it?'
+                        : 'Nobody knows it? Draw another',
+                  ),
                   style: TextButton.styleFrom(
                     foregroundColor: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -1504,6 +1524,7 @@ class _WideRound extends StatelessWidget {
     required this.onUndoRedraw,
     required this.lyricsScale,
     required this.onLyricsScale,
+    required this.menu,
   });
 
   final GameController game;
@@ -1523,6 +1544,11 @@ class _WideRound extends StatelessWidget {
   final double lyricsScale;
   final void Function({required bool bigger}) onLyricsScale;
 
+  /// What the app bar holds on a phone. There is no bar here, so it sits in
+  /// the corner of the camera panel - a row of its own would cost the height
+  /// the missing bar just gave back.
+  final Widget menu;
+
   @override
   Widget build(BuildContext context) {
     final playing = game.phase == RoundPhase.playing;
@@ -1540,15 +1566,45 @@ class _WideRound extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AspectRatio(
-                      aspectRatio: 4 / 3,
-                      child: _CameraSlot(
-                        phase: game.phase,
-                        camera: camera,
-                        onCode: onCode,
-                        onClose: onCloseCamera,
-                        onScan: onScan,
-                        onNextRound: onNextRound,
+                    // The camera is wanted between rounds and ignored during
+                    // them, so it does not get half of a short column: 4:3 as
+                    // far as the width allows, capped at a third of the
+                    // height. A projector is nowhere near that cap.
+                    SizedBox(
+                      height: min(
+                        (side - 36) * 3 / 4,
+                        constraints.maxHeight * 0.33,
+                      ),
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: AspectRatio(
+                              aspectRatio: 4 / 3,
+                              child: _CameraSlot(
+                                phase: game.phase,
+                                camera: camera,
+                                onCode: onCode,
+                                onClose: onCloseCamera,
+                                onScan: onScan,
+                                onNextRound: onNextRound,
+                              ),
+                            ),
+                          ),
+                          // The open camera's close button is in the other
+                          // corner. The disc is for legibility over a preview.
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            child: Material(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.surface.withValues(alpha: 0.7),
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAlias,
+                              child: menu,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     if (playing || game.currentSong != null)
@@ -1587,6 +1643,7 @@ class _WideRound extends StatelessWidget {
                                   spotify: spotify,
                                   onRedraw: onRedraw,
                                   onUndoRedraw: onUndoRedraw,
+                                  compact: true,
                                 ),
                             ],
                           ),
@@ -1819,8 +1876,14 @@ class _Stage extends StatelessWidget {
         // projector would want, and every block scales what it holds down
         // rather than overflowing.
         final height = constraints.maxHeight;
+        // A phone turned over, never a projector. The words are what the
+        // stage is for, so on a short one everything else gives them room:
+        // the scores take a smaller share and the line about tapping them
+        // goes - whoever hands out points is holding the device and does not
+        // read a wall to find that out.
+        final short = height < 520;
         final top = (height * 0.24).clamp(0.0, 220.0);
-        final tile = (height * 0.14).clamp(0.0, 132.0);
+        final tile = (height * (short ? 0.11 : 0.14)).clamp(0.0, 132.0);
         // The size the height gives, times what the room asked for. The cap
         // is the stage's, the factor is not: a wall far enough away can want
         // more than a 1080p share of it.
@@ -1866,16 +1929,26 @@ class _Stage extends StatelessWidget {
                         ],
                         stops: [0, 0.06, 0.88, 1],
                       ).createShader(bounds),
-                      child: LyricsView(
-                        key: ValueKey(song.key),
-                        song: song,
-                        source: lyrics,
-                        session: game.playingInApp ? spotify : null,
-                        lineStyle: theme.textTheme.headlineSmall?.copyWith(
-                          fontSize: line,
-                          height: 1.25,
+                      // The room inside the box is a share of it, not a set
+                      // number of pixels: 28 above and 72 below are a tenth
+                      // of a projector's box and most of a phone's 109.
+                      child: LayoutBuilder(
+                        builder: (context, box) => LyricsView(
+                          key: ValueKey(song.key),
+                          song: song,
+                          source: lyrics,
+                          session: game.playingInApp ? spotify : null,
+                          lineStyle: theme.textTheme.headlineSmall?.copyWith(
+                            fontSize: line,
+                            height: 1.25,
+                          ),
+                          padding: EdgeInsets.fromLTRB(
+                            24,
+                            (box.maxHeight * 0.05).clamp(2.0, 28.0),
+                            24,
+                            (box.maxHeight * 0.13).clamp(8.0, 72.0),
+                          ),
                         ),
-                        padding: const EdgeInsets.fromLTRB(24, 28, 24, 72),
                       ),
                     ),
                   ),
@@ -1886,7 +1959,7 @@ class _Stage extends StatelessWidget {
                 title: revealed ? 'Who got it right?' : 'Scores',
                 targetScore: game.targetScore,
               ),
-              if (revealed) ...[
+              if (revealed && !short) ...[
                 const SizedBox(height: 4),
                 Text(
                   'Tap to give a point, long press to take one away.',

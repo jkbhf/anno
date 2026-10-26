@@ -106,4 +106,35 @@ void main() {
     expect(find.text('67 %'), findsOneWidget);
     expect(find.text('33 %'), findsOneWidget);
   });
+
+  testWidgets('sideways the deck cards stand in two columns', (tester) async {
+    // A phone turned over: the list is the same, the shape is not.
+    tester.view.physicalSize = const Size(893, 412);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(wrap([full, short]));
+    await tester.pumpAndSettle();
+
+    final first = tester.getTopLeft(find.text('ESC'));
+    final second = tester.getTopLeft(find.text('K-Pop'));
+    // Read across: the second card is beside the first, not under it.
+    expect(second.dx, greaterThan(first.dx));
+    expect(second.dy, first.dy);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('upright they stay one under the other', (tester) async {
+    tester.view.physicalSize = const Size(412, 893);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(wrap([full, short]));
+    await tester.pumpAndSettle();
+
+    final first = tester.getTopLeft(find.text('ESC'));
+    final second = tester.getTopLeft(find.text('K-Pop'));
+    expect(second.dx, first.dx);
+    expect(second.dy, greaterThan(first.dy));
+  });
 }
