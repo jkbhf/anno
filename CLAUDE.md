@@ -487,22 +487,37 @@ new that awaits a launch needs the same check.
 
 `README.md` has the setup under "Playing in the tab".
 
-## The wide layout is for the projector
+## The wide layout is for the projector, and for a phone turned over
 
 The game screen has a second layout for wide screens (`isWideScreen`,
 `_WideRound` in `lib/ui/game_screen.dart`), added 2026-10-26 so the game can
 run from a laptop on a projector. It picks itself by size, not by a setting:
 the laptop is the device then, and a phone column in the middle of a wall is
-never what anybody wants. A phone turned sideways stays narrow - its stage would
-be a strip.
+never what anybody wants.
 
-**Width alone does not tell a phone from a laptop.** A big phone sideways is
-~930x430 CSS pixels and clears any width floor a laptop needs - which is how
-the layout first landed on a turned phone (2026-10-26). So `isWideScreen` asks
-for `height >= 600` beside the width and the 1.2 ratio: no phone has it, every
-laptop and every tablet on its side does. It costs a very short browser window
-on a desktop its stage, which is the right call - that stage would be a strip
-too.
+**Landscape is the whole question - there is no size floor under it.** It
+started with one (`width >= 900`), on the idea that a turned phone would only
+get a stage the width of a strip. The device it was tried on says otherwise: on
+an S24 Ultra sideways, ~893x412 CSS pixels, the one column kept its 560 and
+left a sixth of the screen empty on either side, while the height it wants is
+exactly what a turned phone has least of. So `isWideScreen` is `width >=
+height * 1.2` and nothing else (2026-10-26). The ratio rather than plain
+`width > height` keeps a nearly square browser window on the one column, where
+two things side by side would both be too narrow.
+
+**That makes the stage's floors wrong.** Its blocks are shares of the height -
+year card, words, score tiles - and each had a minimum sized for a projector.
+On a 319 high stage (375 minus the app bar) the minimums alone came to more
+than the screen, so the shares are now capped at the top end only. Nothing
+needs a floor: every block below sits in a `_FitBody` and scales what it holds
+down. The same for the two fixed-size things that stood in a `Row` beside
+flexible ones - the 140pt year and the reveal pill - they are `Flexible` and
+scale with the card now, instead of pushing the name off it.
+
+**A phone's stage is a phone's stage.** Small type for whoever holds it, not
+for a room; the point of the layout here is the space, not the distance. Tested
+at 893x412 and 667x375, playing and revealed, in `game_screen_test.dart` -
+a widget test fails on an overflow, which is what caught both of the above.
 
 **Two halves for two audiences.** The stage is for the room and holds only what
 the room reads: reveal or year, words, scores. The column is for whoever runs

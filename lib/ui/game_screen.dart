@@ -87,15 +87,13 @@ bool needsCountdown(MusicService service, {required bool sessionReady}) =>
 
 /// Whether the round gets the wide layout: a stage for the room and a column
 /// beside it for whoever runs the game - a laptop on a projector, a tablet on
-/// its side. A phone keeps its one column even turned, where the stage would
-/// be a strip.
+/// its side, a phone turned over.
 ///
-/// The height floor is what tells a turned phone from a small laptop: a big
-/// phone sideways is ~930x430 and clears the width on its own.
-bool isWideScreen(Size size) =>
-    size.width >= 900 &&
-    size.height >= 600 &&
-    size.width >= size.height * 1.2;
+/// Landscape is the whole question, there is no size floor under it. The one
+/// column is built for a screen that is taller than wide; laid out sideways it
+/// keeps its 560 and leaves a third of the screen empty on either side, while
+/// the height it wants is the thing a turned phone has least of.
+bool isWideScreen(Size size) => size.width >= size.height * 1.2;
 
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
@@ -1078,7 +1076,9 @@ class _RevealSlot extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 24),
-                    pill,
+                    // The pill scales down with the card. Fixed, it is wider
+                    // than the whole stage of a phone turned over.
+                    Flexible(child: pill),
                   ],
                 ),
               )
@@ -1202,7 +1202,12 @@ class _YearCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
           child: Row(
             children: [
-              yearText,
+              // Scales down rather than pushing the name off the card: on a
+              // phone turned over the stage is a third of a projector's width
+              // and 140pt of year does not fit beside anything.
+              Flexible(
+                child: FittedBox(fit: BoxFit.scaleDown, child: yearText),
+              ),
               const SizedBox(width: 40),
               Expanded(
                 child: Column(
@@ -1488,7 +1493,7 @@ class _WideRound extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final side = (constraints.maxWidth * 0.28).clamp(300.0, 420.0);
+        final side = (constraints.maxWidth * 0.28).clamp(240.0, 420.0);
         return Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -1679,13 +1684,17 @@ class _Stage extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Everything grows with the height of the picture, which is what a
-        // projector varies: 720p is still common, and a 1080p wall has twice
-        // the room for words.
+        // Everything is a share of the height, which is what the device
+        // varies: a 1080p wall has twice the room for words a 720p one has,
+        // and a phone turned over has a third of either. Only the upper end
+        // is capped, so a big picture does not turn the year into a poster -
+        // there is no floor, because a phone's shares are below any floor a
+        // projector would want, and every block scales what it holds down
+        // rather than overflowing.
         final height = constraints.maxHeight;
-        final top = (height * 0.24).clamp(120.0, 220.0);
-        final tile = (height * 0.14).clamp(96.0, 132.0);
-        final line = (height / 28).clamp(20.0, 36.0);
+        final top = (height * 0.24).clamp(0.0, 220.0);
+        final tile = (height * 0.14).clamp(0.0, 132.0);
+        final line = (height / 28).clamp(15.0, 36.0);
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(12, 24, 24, 24),

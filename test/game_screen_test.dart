@@ -860,21 +860,58 @@ void main() {
       addTearDown(tester.view.reset);
     }
 
-    test('only a landscape screen with room for the stage counts', () {
+    test('a landscape screen counts, whatever its size', () {
       expect(isWideScreen(const Size(1920, 1080)), isTrue);
       expect(isWideScreen(const Size(1280, 720)), isTrue);
       // A tablet on its side.
       expect(isWideScreen(const Size(1180, 820)), isTrue);
-      // A phone, upright or turned: the one column it was built for.
+      // A phone turned over: a big one, and a small one.
+      expect(isWideScreen(const Size(893, 412)), isTrue);
+      expect(isWideScreen(const Size(667, 375)), isTrue);
+      // Upright, where the one column belongs: a phone, a tablet, and a
+      // browser window too narrow to put two things side by side.
       expect(isWideScreen(const Size(390, 844)), isFalse);
-      expect(isWideScreen(const Size(844, 390)), isFalse);
-      // A big phone turned, which clears the width on its own.
-      expect(isWideScreen(const Size(932, 430)), isFalse);
-      expect(isWideScreen(const Size(956, 440)), isFalse);
-      // A tablet upright, and a narrow browser window.
       expect(isWideScreen(const Size(820, 1180)), isFalse);
       expect(isWideScreen(const Size(1000, 1100)), isFalse);
     });
+
+    // An S24 Ultra sideways and a small phone sideways: a third of a
+    // projector's width and 412 resp. 375 of height, where the blocks of the
+    // stage used to add up to more than the screen.
+    for (final size in [const Size(893, 412), const Size(667, 375)]) {
+      final label = '${size.width.toInt()}x${size.height.toInt()}';
+
+      testWidgets('a phone turned over plays whole at $label', (tester) async {
+        useWideScreen(tester, size: size);
+        final game = buildGame();
+        game.scan(card);
+        await game.startPlayback();
+
+        await tester.pumpWidget(wrap(game));
+        await tester.pumpAndSettle();
+
+        // The stage for the room, the column for whoever runs the game.
+        expect(find.text('Reveal the year'), findsOneWidget);
+        expect(find.text('Player 1'), findsOneWidget);
+        expect(find.text('Next card after the reveal'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('a phone turned over reveals whole at $label', (tester) async {
+        useWideScreen(tester, size: size);
+        final game = buildGame();
+        await reveal(game);
+
+        await tester.pumpWidget(wrap(game));
+        await tester.pumpAndSettle();
+
+        expect(find.text('2005'), findsOneWidget);
+        expect(find.text('My Number One'), findsOneWidget);
+        expect(find.text('Who got it right?'), findsOneWidget);
+        expect(find.text('Player 1'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
 
     testWidgets('the words are up while the room guesses', (tester) async {
       useWideScreen(tester);
