@@ -868,6 +868,9 @@ void main() {
       // A phone, upright or turned: the one column it was built for.
       expect(isWideScreen(const Size(390, 844)), isFalse);
       expect(isWideScreen(const Size(844, 390)), isFalse);
+      // A big phone turned, which clears the width on its own.
+      expect(isWideScreen(const Size(932, 430)), isFalse);
+      expect(isWideScreen(const Size(956, 440)), isFalse);
       // A tablet upright, and a narrow browser window.
       expect(isWideScreen(const Size(820, 1180)), isFalse);
       expect(isWideScreen(const Size(1000, 1100)), isFalse);

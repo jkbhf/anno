@@ -496,6 +496,14 @@ the laptop is the device then, and a phone column in the middle of a wall is
 never what anybody wants. A phone turned sideways stays narrow - its stage would
 be a strip.
 
+**Width alone does not tell a phone from a laptop.** A big phone sideways is
+~930x430 CSS pixels and clears any width floor a laptop needs - which is how
+the layout first landed on a turned phone (2026-10-26). So `isWideScreen` asks
+for `height >= 600` beside the width and the 1.2 ratio: no phone has it, every
+laptop and every tablet on its side does. It costs a very short browser window
+on a desktop its stage, which is the right call - that stage would be a strip
+too.
+
 **Two halves for two audiences.** The stage is for the room and holds only what
 the room reads: reveal or year, words, scores. The column is for whoever runs
 the game: camera and song controls. New things go on the side they are for.

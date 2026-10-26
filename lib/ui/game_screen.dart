@@ -89,8 +89,13 @@ bool needsCountdown(MusicService service, {required bool sessionReady}) =>
 /// beside it for whoever runs the game - a laptop on a projector, a tablet on
 /// its side. A phone keeps its one column even turned, where the stage would
 /// be a strip.
+///
+/// The height floor is what tells a turned phone from a small laptop: a big
+/// phone sideways is ~930x430 and clears the width on its own.
 bool isWideScreen(Size size) =>
-    size.width >= 900 && size.width >= size.height * 1.2;
+    size.width >= 900 &&
+    size.height >= 600 &&
+    size.width >= size.height * 1.2;
 
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
