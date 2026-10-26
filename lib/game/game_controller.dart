@@ -142,6 +142,18 @@ class GameController extends ChangeNotifier {
   /// year from then on, see [_weightOf]; it stays in the deck.
   final Set<String> _skipped = <String>{};
 
+  /// The swap [undoRedraw] takes back: the song swapped away, where it came
+  /// from, what the swap changed in the memories, and the song it brought.
+  ({
+    Song from,
+    SongCategory fromCategory,
+    bool skippedByIt,
+    Song to,
+    SongCategory toCategory,
+    bool toWasPlayed,
+  })?
+  _lastRedraw;
+
   /// The song that went out last, so a year that starts over does not open
   /// with the song it just ended on.
   String? _lastPlayedKey;
@@ -222,6 +234,7 @@ class GameController extends ChangeNotifier {
   /// Handles a scanned QR code and starts the countdown on success.
   ScanOutcome scan(String rawCode) {
     lastScannedCode = rawCode;
+    _lastRedraw = null;
     launchMessage = null;
     playingInApp = false;
 
@@ -369,10 +382,63 @@ class GameController extends ChangeNotifier {
     final draw = _draw(year, exclude: _playedKey(category, song));
     if (draw == null) return false;
 
-    if (_skipped.add(song.key)) _onSkippedChanged?.call({..._skipped});
+    final skippedByIt = _skipped.add(song.key);
+    if (skippedByIt) _onSkippedChanged?.call({..._skipped});
+    _lastRedraw = (
+      from: song,
+      fromCategory: category,
+      skippedByIt: skippedByIt,
+      to: draw.song,
+      toCategory: draw.category,
+      toWasPlayed: _played.contains(_playedKey(draw.category, draw.song)),
+    );
 
     currentSong = draw.song;
     currentCategory = draw.category;
+    launchMessage = null;
+    playingInApp = false;
+    _launchedAt = null;
+    phase = RoundPhase.countdown;
+    notifyListeners();
+    return true;
+  }
+
+  /// True while a launch is on its way and has not said yet whether the song
+  /// plays in the tab.
+  bool get launching => _launching;
+
+  /// True while the running round's song came in by [redraw] and the one it
+  /// replaced can still be brought back.
+  bool get canUndoRedraw {
+    final last = _lastRedraw;
+    return last != null &&
+        phase == RoundPhase.playing &&
+        identical(currentSong, last.to);
+  }
+
+  /// Takes the last [redraw] back: the song that was swapped away is the
+  /// round's song again, for a swap that was a slip or a room that knew it
+  /// after all.
+  ///
+  /// The swap leaves no trace - the song loses its mark in [skipped], and the
+  /// one it brought counts as unplayed again if it was before. Goes back to
+  /// [RoundPhase.countdown] like [redraw], so the song is handed over again
+  /// from the start. False when there is nothing to take back.
+  bool undoRedraw() {
+    final last = _lastRedraw;
+    if (!canUndoRedraw || _launching || last == null) return false;
+
+    if (last.skippedByIt && _skipped.remove(last.from.key)) {
+      _onSkippedChanged?.call({..._skipped});
+    }
+    if (!last.toWasPlayed &&
+        _played.remove(_playedKey(last.toCategory, last.to))) {
+      _onPlayedChanged?.call({..._played});
+    }
+    _lastRedraw = null;
+
+    currentSong = last.from;
+    currentCategory = last.fromCategory;
     launchMessage = null;
     playingInApp = false;
     _launchedAt = null;

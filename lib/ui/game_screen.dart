@@ -324,6 +324,17 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       );
       return;
     }
+    await _handOverAgain();
+  }
+
+  /// Brings the song back that the last swap took away.
+  Future<void> _undoRedraw() async {
+    if (_busy || !_game.undoRedraw()) return;
+    await _handOverAgain();
+  }
+
+  /// Hands the round's new song over after a swap or its undo.
+  Future<void> _handOverAgain() async {
     Haptics.tick();
     _prefetchLyrics();
     _busy = true;
@@ -571,6 +582,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onScan: _startRound,
       onNextRound: _nextRound,
       onRedraw: _redraw,
+      onUndoRedraw: _undoRedraw,
     );
   }
 
@@ -588,6 +600,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           game: _game,
           spotify: AppScope.of(context).spotify,
           onRedraw: _redraw,
+          onUndoRedraw: _undoRedraw,
           onLyrics: _showLyrics,
         );
       case RoundPhase.revealed:
@@ -758,12 +771,14 @@ class _PlayingBody extends StatelessWidget {
     required this.game,
     required this.spotify,
     required this.onRedraw,
+    required this.onUndoRedraw,
     required this.onLyrics,
   });
 
   final GameController game;
   final SpotifySession spotify;
   final VoidCallback onRedraw;
+  final VoidCallback onUndoRedraw;
   final VoidCallback onLyrics;
 
   @override
@@ -775,7 +790,7 @@ class _PlayingBody extends StatelessWidget {
         children: [
           _RevealSlot(
             onReveal: game.reveal,
-            inApp: game.playingInApp,
+            inApp: _looksInApp(game, spotify),
             service: game.service,
           ),
           const SizedBox(height: 20),
@@ -783,6 +798,7 @@ class _PlayingBody extends StatelessWidget {
             game: game,
             spotify: spotify,
             onRedraw: onRedraw,
+            onUndoRedraw: onUndoRedraw,
             onLyrics: onLyrics,
           ),
           const SizedBox(height: 32),
@@ -797,6 +813,18 @@ class _PlayingBody extends StatelessWidget {
   }
 }
 
+/// Whether the playing screen is laid out for a song in the tab.
+///
+/// The launch decides, but a swap hands the song over again, and until that
+/// launch answers the round is not in the tab: the bar would go, the reveal
+/// card would change its text, and the whole screen below them would jump and
+/// jump back. So while a launch is out on a session that plays here, the
+/// screen keeps the in-tab layout. Only the layout - what the round does still
+/// follows [GameController.playingInApp].
+bool _looksInApp(GameController game, SpotifySession spotify) =>
+    game.playingInApp ||
+    (game.launching && game.service == MusicService.spotify && spotify.isReady);
+
 /// What can be done with the song while the room guesses: move around in it,
 /// get back to the service, swap it for one somebody knows.
 class _SongControls extends StatelessWidget {
@@ -804,12 +832,14 @@ class _SongControls extends StatelessWidget {
     required this.game,
     required this.spotify,
     required this.onRedraw,
+    required this.onUndoRedraw,
     this.onLyrics,
   });
 
   final GameController game;
   final SpotifySession spotify;
   final VoidCallback onRedraw;
+  final VoidCallback onUndoRedraw;
 
   /// Null where the words are up anyway - the stage of the wide layout.
   final VoidCallback? onLyrics;
@@ -838,21 +868,44 @@ class _SongControls extends StatelessWidget {
     // that is the only way back to a popup the browser swallowed.
     final inApp = game.playingInApp;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (inApp)
-          SongProgressBar(session: spotify)
-        // On the web a blocked popup looks exactly like a successful one, so
-        // the way to the service stays reachable by hand.
-        else if (kIsWeb)
-          Center(
+    // On the web a blocked popup looks exactly like a successful one, so the
+    // way to the service stays reachable by hand.
+    final openButton = kIsWeb
+        ? Center(
             child: TextButton.icon(
               onPressed: game.reopen,
               icon: const Icon(Icons.open_in_new),
               label: Text('Open in ${game.service.label}'),
             ),
-          ),
+          )
+        : null;
+
+    // The bar's room while the launch is still out, see [_looksInApp]. Once
+    // it has answered the room follows it: a link round has no bar, hidden or
+    // not.
+    final keepBarRoom = !inApp && _looksInApp(game, spotify);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (inApp)
+          SongProgressBar(session: spotify)
+        else if (keepBarRoom)
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Visibility(
+                visible: false,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: SongProgressBar(session: spotify),
+              ),
+              ?openButton,
+            ],
+          )
+        else
+          ?openButton,
         if (lyrics != null)
           Center(
             child: TextButton.icon(
@@ -874,15 +927,34 @@ class _SongControls extends StatelessWidget {
         // For the song nobody in the room knows - that round is a coin flip.
         if (game.canRedraw) ...[
           const SizedBox(height: 4),
-          Center(
-            child: TextButton.icon(
-              onPressed: onRedraw,
-              icon: const Icon(Icons.shuffle),
-              label: const Text('Nobody knows it? Draw another'),
-              style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.onSurfaceVariant,
+          // The undo sits in the same row, so it comes and goes without
+          // moving anything.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: TextButton.icon(
+                  onPressed: onRedraw,
+                  icon: const Icon(Icons.shuffle),
+                  label: const Text('Nobody knows it? Draw another'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
-            ),
+              Visibility(
+                visible: game.canUndoRedraw,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: IconButton(
+                  tooltip: 'Back to the last song',
+                  onPressed: onUndoRedraw,
+                  icon: const Icon(Icons.undo),
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ],
       ],
@@ -1391,6 +1463,7 @@ class _WideRound extends StatelessWidget {
     required this.onScan,
     required this.onNextRound,
     required this.onRedraw,
+    required this.onUndoRedraw,
   });
 
   final GameController game;
@@ -1404,6 +1477,7 @@ class _WideRound extends StatelessWidget {
   final VoidCallback onScan;
   final VoidCallback onNextRound;
   final VoidCallback onRedraw;
+  final VoidCallback onUndoRedraw;
 
   @override
   Widget build(BuildContext context) {
@@ -1440,6 +1514,7 @@ class _WideRound extends StatelessWidget {
                             game: game,
                             spotify: spotify,
                             onRedraw: onRedraw,
+                            onUndoRedraw: onUndoRedraw,
                           ),
                         ),
                       ),
@@ -1621,7 +1696,7 @@ class _Stage extends StatelessWidget {
                       ? _YearCard(game: game, wide: true)
                       : _RevealSlot(
                           onReveal: game.reveal,
-                          inApp: game.playingInApp,
+                          inApp: _looksInApp(game, spotify),
                           service: game.service,
                           wide: true,
                         ),

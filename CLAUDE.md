@@ -412,7 +412,10 @@ year that is only scanned once or twice ever gets to show. The factor is
 not know the song, so its `Song.key` goes into `SkippedSongsStore` and from
 then on it weighs what a tier 2 song weighs, on this device, in every deck it
 stands in. It stays in the deck and still comes once per pass - the swap only
-moves it to the back. Nothing takes a song out of that memory again.
+moves it to the back. The undo beside the swap button
+(`GameController.undoRedraw`) takes the last swap of the round back and leaves
+no trace: the song leaves that memory, the one swapped in counts as unplayed
+again. Past the round nothing takes a song out of it.
 
 **Played is per deck, the order looks across decks.** Anthony and Anthony All
 share 1263 songs, Anthony All and Jakob 115, the hit deck and White Girl Music
@@ -465,6 +468,12 @@ that as `playbackError`, the game screen hands it to
 `GameController.playbackFailedInApp`, and the round turns into a link round
 with its "Open in Spotify" button. `reopen` goes through the link launcher
 only: trying the player again would fail the same way.
+
+**A swap must not move the screen.** It hands the song over again, and until
+that launch answers `playingInApp` is false - the bar would go and the reveal
+card change its text for a moment. `_looksInApp` in `lib/ui/game_screen.dart`
+keeps the in-tab layout while a launch is out on a ready session. Layout only:
+the round itself still reads `playingInApp`.
 
 **The seek bar is an in-app extra, nothing more.** `SongProgressBar` shows only
 where `playingInApp` is true, because a song handed over by link is out of

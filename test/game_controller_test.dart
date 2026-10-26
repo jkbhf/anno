@@ -849,6 +849,52 @@ void main() {
       ]);
     });
 
+    test('a swap taken back leaves no trace', () async {
+      final skipped = <Set<String>>[];
+      final remembered = <Set<String>>[];
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory(songs)],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        onSkippedChanged: skipped.add,
+        onPlayedChanged: remembered.add,
+      );
+      game.scan(card2005);
+      await game.startPlayback();
+      final unknown = game.currentSong!;
+      expect(game.canUndoRedraw, isFalse);
+
+      expect(game.redraw(), isTrue);
+      await game.startPlayback();
+      expect(game.canUndoRedraw, isTrue);
+
+      expect(game.undoRedraw(), isTrue);
+      expect(game.phase, RoundPhase.countdown);
+      expect(game.currentSong, same(unknown));
+      expect(game.skipped, isEmpty);
+      expect(skipped.last, isEmpty);
+      expect(game.played, {'esc|${unknown.key}'});
+      expect(game.canUndoRedraw, isFalse);
+      expect(game.undoRedraw(), isFalse, reason: 'one step back, not two');
+    });
+
+    test('there is nothing to take back in the next round', () async {
+      final game = buildGame(category: buildCategory(songs));
+      game.scan(card2005);
+      await game.startPlayback();
+      game.redraw();
+      await game.startPlayback();
+      game.reveal();
+
+      expect(game.canUndoRedraw, isFalse, reason: 'the year is out');
+      game.nextRound();
+      game.scan(card2005);
+      await game.startPlayback();
+      expect(game.canUndoRedraw, isFalse);
+      expect(game.undoRedraw(), isFalse);
+    });
+
     test('a year with one song has nothing to swap in', () async {
       final game = buildGame();
       game.scan(card2005);

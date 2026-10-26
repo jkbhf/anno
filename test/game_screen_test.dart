@@ -499,6 +499,66 @@ void main() {
     expect(find.text('2005'), findsNothing, reason: 'still a secret');
   });
 
+  testWidgets('a swap can be taken back', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame(
+      launcher: const InTabLauncher(),
+      categories: [twoSongs],
+    );
+    game.scan(card);
+    await game.startPlayback();
+    final unknown = game.currentSong!.title;
+
+    await tester.pumpWidget(
+      wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+    );
+    await tester.pumpAndSettle();
+    expect(undoShown(tester), isFalse);
+
+    await tester.tap(find.text('Nobody knows it? Draw another'));
+    await tester.pumpAndSettle();
+    expect(game.currentSong!.title, isNot(unknown));
+
+    expect(undoShown(tester), isTrue);
+    await tester.tap(find.byTooltip('Back to the last song'));
+    await tester.pumpAndSettle();
+
+    expect(game.phase, RoundPhase.playing);
+    expect(game.currentSong!.title, unknown);
+    expect(undoShown(tester), isFalse);
+  });
+
+  testWidgets('a swap in the tab does not move the screen', (tester) async {
+    usePhoneScreen(tester);
+    final launches = <Completer<LaunchResult>>[];
+    final game = buildGame(
+      launcher: _QueuedLauncher(launches),
+      categories: [twoSongs],
+    );
+    game.scan(card);
+    final first = game.startPlayback();
+    launches.single.complete(const LaunchResult.inTab());
+    await first;
+
+    await tester.pumpWidget(
+      wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+    );
+    await tester.pumpAndSettle();
+    final scores = tester.getTopLeft(find.text('Scores'));
+
+    await tester.tap(find.text('Nobody knows it? Draw another'));
+    await tester.pump();
+    // The launch of the new song is still out: the bar is gone for now, its
+    // room is not.
+    expect(game.playingInApp, isFalse);
+    expect(tester.getTopLeft(find.text('Scores')), scores);
+
+    launches.last.complete(const LaunchResult.inTab());
+    await tester.pumpAndSettle();
+    expect(game.playingInApp, isTrue);
+    expect(tester.getTopLeft(find.text('Scores')), scores);
+  });
+
   testWidgets('a year with one song offers no swap', (tester) async {
     usePhoneScreen(tester);
     final game = buildGame();
@@ -1004,4 +1064,28 @@ class _FlakyLyrics implements LyricsSource {
 class _NoLyrics implements LyricsSource {
   @override
   Future<Lyrics?> find(Song song, {Duration? duration}) async => null;
+}
+
+/// Whether the undo of a swap is up - it keeps its room while it is not.
+bool undoShown(WidgetTester tester) => tester
+    .widget<Visibility>(
+      find.ancestor(
+        of: find.byTooltip('Back to the last song', skipOffstage: false),
+        matching: find.byType(Visibility),
+      ),
+    )
+    .visible;
+
+/// Answers each launch only when the test completes its entry in [launches].
+class _QueuedLauncher implements SongLauncher {
+  _QueuedLauncher(this.launches);
+
+  final List<Completer<LaunchResult>> launches;
+
+  @override
+  Future<LaunchResult> open(Song song) {
+    final launch = Completer<LaunchResult>();
+    launches.add(launch);
+    return launch.future;
+  }
 }
