@@ -106,12 +106,13 @@ void main() {
     );
 
     final read = <String>[];
+    var stale = true;
     await tester.pumpWidget(
       MaterialApp(
         home: ScannerView(
           controller: FakeCameraController(),
           onCode: read.add,
-          ignore: (code) => code == 'the card still lying there',
+          ignore: (code) => stale && code == 'the card still lying there',
         ),
       ),
     );
@@ -131,6 +132,55 @@ void main() {
 
     await enter('the next card');
     expect(read, ['the next card']);
+  });
+
+  testWidgets('a code read past can be read again a moment later', (
+    tester,
+  ) async {
+    // The card is picked up and held to the camera on purpose, which is the
+    // normal way to try it: the same code has to get through once the game
+    // stops calling it stale.
+    const channel = MethodChannel(
+      'dev.steenbakker.mobile_scanner/scanner/method',
+    );
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      channel,
+      (_) async => null,
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+
+    final read = <String>[];
+    var stale = true;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ScannerView(
+          controller: FakeCameraController(),
+          onCode: read.add,
+          ignore: (code) => stale,
+        ),
+      ),
+    );
+    await tester.pump();
+
+    Future<void> enter(String code) async {
+      await tester.tap(find.text('Enter the code by hand').first);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), code);
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+    }
+
+    await enter('the same card');
+    expect(read, isEmpty);
+
+    stale = false;
+    await enter('the same card');
+    expect(read, ['the same card']);
   });
 
   testWidgets('a scanner that was closed does not come back on resume', (

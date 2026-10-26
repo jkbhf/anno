@@ -221,10 +221,21 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// MediaQuery of its own.
   bool _wide = false;
 
-  /// Whether the camera open right now opened itself, see [_onPhaseChanged].
-  /// A scan the operator asked for reads any card, this one skips the card it
-  /// is still looking at.
-  bool _autoScan = false;
+  /// When the camera that opened itself came up, see [_onPhaseChanged]. Null
+  /// while no such camera is open.
+  ///
+  /// The card of the round is only read past for [_staleCard] after that: it
+  /// is the card lying in front of the lens at the moment of the reveal, and
+  /// a second later it is a card somebody is holding up on purpose. The first
+  /// try at this had no window and ignored that card for as long as the camera
+  /// stayed open, which read as a camera that scanned nothing at all
+  /// (2026-10-27) - the same card held up again is the normal way to try it.
+  DateTime? _autoScanAt;
+
+  /// How long the card of the round stays ignored after the camera opens by
+  /// itself. Long enough for the one lying on the table, short enough that
+  /// picking it up and presenting it counts.
+  static const Duration _staleCard = Duration(seconds: 3);
 
   @override
   void initState() {
@@ -311,7 +322,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       // and the year goes to the stage. Still inside the tap that revealed,
       // which is what lets a mobile browser unlock sound for the next round.
       if (_wide && _inlineScan == null) {
-        _autoScan = true;
+        _autoScanAt = DateTime.now();
         unawaited(_nextRound());
       }
     }
@@ -402,8 +413,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Handed to [ScannerView.ignore], which reads past it and keeps looking -
   /// dropping it after the view reported it would lock the camera.
   bool _ignoreCode(String code) {
+    final opened = _autoScanAt;
     final inPlay = _game.lastScannedCode;
-    if (!_autoScan || inPlay == null) return false;
+    if (opened == null || inPlay == null) return false;
+    if (DateTime.now().difference(opened) > _staleCard) return false;
     return YearDatabase.normalizeKey(code) == YearDatabase.normalizeKey(inPlay);
   }
 
@@ -418,7 +431,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void _closeInlineScan([String? code]) {
     final scan = _inlineScan;
     if (scan == null) return;
-    _autoScan = false;
+    _autoScanAt = null;
     setState(() => _inlineScan = null);
     scan.complete(code);
   }
@@ -1808,39 +1821,51 @@ class _WideRound extends StatelessWidget {
                         onReveal: game.reveal,
                       ),
                     ),
+                    // The controls and, at the foot of them, the keys -
+                    // straight above the camera and inside the same bounded
+                    // box, so a third row of keys shrinks itself instead of
+                    // running under the preview.
                     Expanded(
-                      child: _FitBody(
-                        center: false,
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            if (playing)
-                              _SongControls(
-                                game: game,
-                                spotify: spotify,
-                                onRedraw: onRedraw,
-                                onUndoRedraw: onUndoRedraw,
-                                inColumn: true,
-                              ),
-                          ],
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: _FitBody(
+                              center: false,
+                              padding: const EdgeInsets.only(top: 16),
+                              child: playing
+                                  ? _SongControls(
+                                      game: game,
+                                      spotify: spotify,
+                                      onRedraw: onRedraw,
+                                      onUndoRedraw: onUndoRedraw,
+                                      inColumn: true,
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+                          ),
+                          if (shortcuts) _ShortcutHints(game: game),
+                        ],
                       ),
                     ),
-                    // Straight above the camera, at the foot of the column:
-                    // out of the way of the controls and where the eye goes
-                    // between two rounds anyway.
-                    if (shortcuts) _ShortcutHints(game: game),
-                    if (showCamera)
-                      SizedBox(
-                        height: cameraHeight,
-                        child: _CameraBox(
-                          camera: camera,
-                          onCode: onCode,
-                          onClose: onCloseCamera,
-                          onNextRound: onNextRound,
-                        ),
+                    // The camera grows into place rather than appearing, so
+                    // the keys above it slide up instead of jumping.
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 240),
+                      curve: Curves.easeOutCubic,
+                      alignment: Alignment.topCenter,
+                      child: SizedBox(
+                        height: showCamera ? cameraHeight : 0,
+                        child: showCamera
+                            ? _CameraBox(
+                                camera: camera,
+                                onCode: onCode,
+                                onClose: onCloseCamera,
+                                onNextRound: onNextRound,
+                              )
+                            : null,
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -1906,46 +1931,70 @@ class _ShortcutHints extends StatelessWidget {
     ];
     if (shown.isEmpty) return const SizedBox.shrink();
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 4,
-        alignment: WrapAlignment.center,
-        children: [
-          for (final shortcut in shown)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 1,
-                    ),
-                    child: Text(
-                      shortcut.label,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        fontFeatures: const [FontFeature.tabularFigures()],
+    // The whole block scales into whatever room is left above the camera
+    // rather than wrapping to the column's width: one chip is wider than a
+    // phone's column, so wrapping only moved the overflow from the side to
+    // the bottom, where it ran under the preview. Laid out at a width of its
+    // own and shrunk to fit, the way every other panel here does it.
+    return Flexible(
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // Scaled into nothing is worse than gone: on a short column the
+          // keys would end up a few pixels tall, which says less than the
+          // air they would be taking.
+          if (box.maxHeight < 30) return const SizedBox.shrink();
+          return Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                width: 260,
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 4,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    for (final shortcut in shown)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 5,
+                                vertical: 1,
+                              ),
+                              child: Text(
+                                shortcut.label,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            shortcut.does,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
+                  ],
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  shortcut.does,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+              ),
             ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -2069,11 +2118,14 @@ class _ColumnYear extends StatelessWidget {
     // this is the only card left.
     final origin = _originLine(game, song);
 
+    // The year a little smaller than it could be and the name a lot bigger
+    // than it was: the year is four digits anybody reads at a glance, the
+    // title is what the room actually talks about at the reveal.
     final yearText = Text(
       '$year',
       maxLines: 1,
       style: TextStyle(
-        fontSize: 104,
+        fontSize: 76,
         fontWeight: FontWeight.w800,
         height: 1,
         letterSpacing: -2,
@@ -2113,8 +2165,8 @@ class _ColumnYear extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: beside ? TextAlign.start : TextAlign.center,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
@@ -2122,7 +2174,7 @@ class _ColumnYear extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: beside ? TextAlign.start : TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
+                style: theme.textTheme.titleMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),

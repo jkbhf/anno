@@ -107,8 +107,17 @@ class ScannerView extends StatefulWidget {
   /// Null makes one of its own.
   final MobileScannerController? controller;
 
+  /// Reports every read rather than only a code that differs from the one
+  /// before it, because [ignore] has to be able to see the same card twice.
+  ///
+  /// `noDuplicates` was the other half of the camera that scanned nothing
+  /// after a reveal (2026-10-27): the card lying in front of the lens was
+  /// read once, read past, and from then on the plugin called it a duplicate -
+  /// so the same card held up on purpose a second later could not be read at
+  /// all, and only closing the camera and opening it again helped. One report
+  /// per view is [_ScannerViewState._handled]'s job and always was.
   static MobileScannerController newController() => MobileScannerController(
-    detectionSpeed: DetectionSpeed.noDuplicates,
+    detectionSpeed: DetectionSpeed.normal,
     formats: const [BarcodeFormat.qrCode],
   );
 

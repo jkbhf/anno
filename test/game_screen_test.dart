@@ -994,6 +994,48 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('the camera slides in and the keys slide up', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      useWideScreen(tester, size: const Size(1280, 720));
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(game, spotify: SeekableSession(), camera: fakeCamera),
+      );
+      await tester.pumpAndSettle();
+
+      double keys() => tester.getRect(find.text('Space')).bottom;
+      final before = keys();
+      expect(tester.getSize(find.byType(AnimatedSize)).height, 0);
+
+      game.reveal();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 80));
+
+      // Half way in, so the keys are on their way up rather than there.
+      final box = tester.getSize(find.byType(AnimatedSize)).height;
+      expect(box, greaterThan(0));
+      final midway = keys();
+      expect(midway, lessThan(before));
+
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSize(find.byType(AnimatedSize)).height,
+        greaterThan(box),
+      );
+      expect(keys(), lessThan(midway));
+      // And nothing of the keys ends up under the preview.
+      expect(
+        keys(),
+        lessThanOrEqualTo(tester.getRect(find.byType(TextButton).last).top + 1),
+      );
+      expect(tester.takeException(), isNull);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
+
     testWidgets('the card it is still looking at does not count', (
       tester,
     ) async {

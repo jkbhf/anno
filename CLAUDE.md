@@ -617,23 +617,33 @@ behind the button. Title and artist stay off the stage until the reveal,
 exactly as in the sheet - the words are a hint, the name is the answer. At the
 reveal they hand the stage to the answer, see below.
 
-**A camera that reports a code stops looking, so the filter goes in front of
-it.** `ScannerView` reports one code and latches (`_handled`), which is right -
-two quick hits must not start two rounds. But the game's "ignore the card still
-lying there" test used to run *after* that, at the other end of `onCode`: the
-first thing the camera saw after a reveal was that card, the view latched on it,
-the game threw it away, and the preview then ran for the rest of the evening
-reading nothing. Found on 2026-10-27, fixed by handing the test to the view as
-`ScannerView.ignore`, which reads past a code without latching.
+**The camera that opens itself reads past one card, for three seconds.** That
+took three goes to get right, and the two wrong ones are worth keeping here
+because each looked done.
+
+The card of the round is lying in front of the lens at the moment of the
+reveal, and reading it would start a round on top of the year nobody has read
+yet. So it is ignored - but only briefly: a second later the same card in front
+of the camera is somebody holding it up on purpose, which is the normal way to
+try the thing. `_staleCard` is that window.
+
+The first try ignored it for as long as the camera stayed open, which reads as
+a camera that scans nothing at all. The second try moved the test in front of
+`ScannerView`'s own latch (`ScannerView.ignore`), because the view reports one
+code and then stops looking - a code thrown away *after* it was reported locks
+the camera for good. That was necessary and still not enough: the controller
+ran on `DetectionSpeed.noDuplicates`, so a code read past was a duplicate from
+then on and that card could not be read again at all in that session. Only
+closing the camera and opening it again helped, which is exactly what the
+report said. The speed is `normal` now; one report per view is `_handled`'s job
+and always was.
 
 **The camera opens on demand - and the reveal is a demand** (2026-10-26). It
 used to open only on a tap, because a running camera reads the card still lying
 in front of it and starts the next round over the reveal. That danger is real
-and it is handled by name rather than by keeping the camera shut: the camera
-that opens itself ignores exactly one code, the card of the round on screen
-(`_onInlineCode` against `GameController.lastScannedCode`), so only a card
-somebody holds up starts the next round. A scan the operator asked for has no
-such guard - scanning the same card again is then a decision, not a leftover.
+and it is handled by name rather than by keeping the camera shut, see the three
+seconds above. A scan the operator asked for has no guard at all - a card
+presented to a camera that was opened by hand is a decision, not a leftover.
 
 **The column is two fixed homes** (`_ActionSlot`, `_CameraBox`), and that is
 the second half of the same decision. The slot on top is what to do or what
@@ -670,11 +680,22 @@ leaves a `Next round` button in its place.
 (2026-10-27). The year beside the name rather than over it leaves the year
 twice the height, so `_ColumnYear` lays itself out as a row once the box is
 wider than it is tall and stacks them when it is not - a phone turned over has
-a column too narrow for two of anything.
+a column too narrow for two of anything. The year is deliberately not the
+biggest thing in it: four digits are read at a glance, and the title is what
+the room talks about at the reveal, so the name got the size the year gave up.
 
 **The keyboard hints sit directly above the camera**, at the foot of the
 column: out of the way of the round's controls, and where the eye goes between
-two rounds anyway.
+two rounds anyway. They live inside the same bounded box as the controls and
+scale as one block from a width of their own - wrapped to the column's width
+instead, a single chip is wider than a phone's column, and the overflow moved
+from the side to the bottom, where it ran under the preview. Under 30 pixels of
+room they go entirely: scaled into nothing says less than the air it takes.
+
+**The camera grows into place** (`AnimatedSize`, 240ms), so the keys above it
+slide up rather than jump. It is the one animation in the layout and it is
+there because the camera arrives on its own - a thing that appears without
+being asked for should move like something that was always coming.
 
 Two things follow that are easy to get wrong. The auto-scan is started from
 inside the tap that revealed, which is what lets a mobile browser unlock sound
