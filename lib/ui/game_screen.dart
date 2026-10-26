@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../data/game_store.dart';
+import '../data/lyrics_scale_store.dart';
 import '../data/played_songs_store.dart';
 import '../data/skipped_songs_store.dart';
 import '../game/game_controller.dart';
@@ -95,6 +96,11 @@ bool needsCountdown(MusicService service, {required bool sessionReady}) =>
 /// the height it wants is the thing a turned phone has least of.
 bool isWideScreen(Size size) => size.width >= size.height * 1.2;
 
+/// The reveal in the side column. It carries the same words as the card on the
+/// stage, which reveals too, so a test needs something to tell them apart.
+@visibleForTesting
+const Key revealInColumnKey = Key('reveal-in-column');
+
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
   const GameScreen({
@@ -133,6 +139,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// card. Null while it is closed. See [_scanCode].
   Completer<String?>? _inlineScan;
 
+  /// How big the words are on the stage, see [LyricsScaleStore]. The saved one
+  /// arrives a frame or two in, which is soon enough: the first round is still
+  /// a card away.
+  double _lyricsScale = LyricsScaleStore.normal;
+
   @override
   void initState() {
     super.initState();
@@ -140,6 +151,21 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _lastPhase = _game.phase;
     _game.addListener(_onPhaseChanged);
     unawaited(WakeLock.hold());
+    unawaited(_loadLyricsScale());
+  }
+
+  Future<void> _loadLyricsScale() async {
+    final scale = await LyricsScaleStore.load();
+    if (mounted) setState(() => _lyricsScale = scale);
+  }
+
+  /// A press of smaller or bigger in the side column. It is the same room and
+  /// the same wall next time, so the size is kept.
+  void _stepLyricsScale({required bool bigger}) {
+    final scale = LyricsScaleStore.stepped(_lyricsScale, bigger: bigger);
+    if (scale == _lyricsScale) return;
+    setState(() => _lyricsScale = scale);
+    unawaited(LyricsScaleStore.save(scale));
   }
 
   @override
@@ -586,6 +612,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onNextRound: _nextRound,
       onRedraw: _redraw,
       onUndoRedraw: _undoRedraw,
+      lyricsScale: _lyricsScale,
+      onLyricsScale: _stepLyricsScale,
     );
   }
 
@@ -1474,6 +1502,8 @@ class _WideRound extends StatelessWidget {
     required this.onNextRound,
     required this.onRedraw,
     required this.onUndoRedraw,
+    required this.lyricsScale,
+    required this.onLyricsScale,
   });
 
   final GameController game;
@@ -1489,8 +1519,14 @@ class _WideRound extends StatelessWidget {
   final VoidCallback onRedraw;
   final VoidCallback onUndoRedraw;
 
+  /// How big the words on the stage are, and the two buttons that change it.
+  final double lyricsScale;
+  final void Function({required bool bigger}) onLyricsScale;
+
   @override
   Widget build(BuildContext context) {
+    final playing = game.phase == RoundPhase.playing;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final side = (constraints.maxWidth * 0.28).clamp(240.0, 420.0);
@@ -1515,16 +1551,44 @@ class _WideRound extends StatelessWidget {
                         onNextRound: onNextRound,
                       ),
                     ),
-                    if (game.phase == RoundPhase.playing)
+                    if (playing || game.currentSong != null)
                       Expanded(
                         child: _FitBody(
                           center: false,
                           padding: const EdgeInsets.only(top: 20),
-                          child: _SongControls(
-                            game: game,
-                            spotify: spotify,
-                            onRedraw: onRedraw,
-                            onUndoRedraw: onUndoRedraw,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              // The reveal is the one thing the room must not
+                              // do by itself, and on a wall it is out of
+                              // reach: the card on the stage is the button
+                              // there, but whoever runs the game sits at the
+                              // device. So it is here too, where every other
+                              // control of theirs is.
+                              if (playing) ...[
+                                FilledButton.icon(
+                                  key: revealInColumnKey,
+                                  onPressed: game.reveal,
+                                  icon: const Icon(Icons.visibility_outlined),
+                                  label: const Text('Reveal the year'),
+                                ),
+                                const SizedBox(height: 12),
+                              ],
+                              if (game.currentSong != null) ...[
+                                _LyricsSize(
+                                  scale: lyricsScale,
+                                  onChange: onLyricsScale,
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                              if (playing)
+                                _SongControls(
+                                  game: game,
+                                  spotify: spotify,
+                                  onRedraw: onRedraw,
+                                  onUndoRedraw: onUndoRedraw,
+                                ),
+                            ],
                           ),
                         ),
                       ),
@@ -1533,11 +1597,69 @@ class _WideRound extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: _Stage(game: game, spotify: spotify, lyrics: lyrics),
+              child: _Stage(
+                game: game,
+                spotify: spotify,
+                lyrics: lyrics,
+                lyricsScale: lyricsScale,
+              ),
             ),
           ],
         );
       },
+    );
+  }
+}
+
+/// How big the words on the stage are: smaller, bigger, and what it is now.
+///
+/// It sits in the side column rather than on the stage, because it is set once
+/// for the room - how far the sofa is from the wall - and then nobody touches
+/// it again for the rest of the evening. The percentage is there so a press
+/// that hits the end of the range is visibly the end rather than a dead
+/// button.
+class _LyricsSize extends StatelessWidget {
+  const _LyricsSize({required this.scale, required this.onChange});
+
+  final double scale;
+  final void Function({required bool bigger}) onChange;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          tooltip: 'Smaller words',
+          onPressed: scale <= LyricsScaleStore.min
+              ? null
+              : () => onChange(bigger: false),
+          icon: const Icon(Icons.text_decrease),
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+        Flexible(
+          child: Text(
+            'Words ${(scale * 100).round()}%',
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: style,
+          ),
+        ),
+        IconButton(
+          tooltip: 'Bigger words',
+          onPressed: scale >= LyricsScaleStore.max
+              ? null
+              : () => onChange(bigger: true),
+          icon: const Icon(Icons.text_increase),
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ],
     );
   }
 }
@@ -1670,11 +1792,16 @@ class _Stage extends StatelessWidget {
     required this.game,
     required this.spotify,
     required this.lyrics,
+    required this.lyricsScale,
   });
 
   final GameController game;
   final SpotifySession spotify;
   final LyricsSource lyrics;
+
+  /// What the room asked for on top of the size the height gives, see
+  /// [_LyricsSize].
+  final double lyricsScale;
 
   @override
   Widget build(BuildContext context) {
@@ -1694,7 +1821,10 @@ class _Stage extends StatelessWidget {
         final height = constraints.maxHeight;
         final top = (height * 0.24).clamp(0.0, 220.0);
         final tile = (height * 0.14).clamp(0.0, 132.0);
-        final line = (height / 28).clamp(15.0, 36.0);
+        // The size the height gives, times what the room asked for. The cap
+        // is the stage's, the factor is not: a wall far enough away can want
+        // more than a 1080p share of it.
+        final line = (height / 28).clamp(15.0, 36.0) * lyricsScale;
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(12, 24, 24, 24),

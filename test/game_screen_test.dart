@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:anno/data/lyrics_scale_store.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/game/game_controller.dart';
 import 'package:anno/models/player.dart';
@@ -890,14 +891,17 @@ void main() {
         await tester.pumpWidget(wrap(game));
         await tester.pumpAndSettle();
 
-        // The stage for the room, the column for whoever runs the game.
-        expect(find.text('Reveal the year'), findsOneWidget);
+        // The stage for the room, the column for whoever runs the game -
+        // the reveal is on both, the card and the button.
+        expect(find.text('Reveal the year'), findsNWidgets(2));
         expect(find.text('Player 1'), findsOneWidget);
         expect(find.text('Next card after the reveal'), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('a phone turned over reveals whole at $label', (tester) async {
+      testWidgets('a phone turned over reveals whole at $label', (
+        tester,
+      ) async {
         useWideScreen(tester, size: size);
         final game = buildGame();
         await reveal(game);
@@ -925,12 +929,88 @@ void main() {
       // No button to press first: the stage is where the words live.
       expect(find.text('Second'), findsOneWidget);
       expect(find.text('Lyrics'), findsNothing);
-      expect(find.text('Reveal the year'), findsOneWidget);
+      // The card on the stage and the button in the column.
+      expect(find.text('Reveal the year'), findsNWidgets(2));
       expect(find.text('Player 1'), findsOneWidget);
       // The words are the hint, the name and the year are the answer.
       expect(find.textContaining('My Number One'), findsNothing);
       expect(find.textContaining('Helena Paparizou'), findsNothing);
       expect(find.text('2005'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the column reveals too, for whoever runs the game', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      // Not the card on the stage - the button beside the camera.
+      await tester.tap(find.byKey(revealInColumnKey));
+      await tester.pumpAndSettle();
+
+      expect(game.isRevealed, isTrue);
+      expect(find.text('2005'), findsOneWidget);
+      expect(find.text('Reveal the year'), findsNothing);
+    });
+
+    testWidgets('the words on the stage are sized from the column', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      // A line carries its size in the style around it, not on the Text.
+      double lineSize() => tester
+          .widget<AnimatedDefaultTextStyle>(
+            find
+                .ancestor(
+                  of: find.text('Second'),
+                  matching: find.byType(AnimatedDefaultTextStyle),
+                )
+                .first,
+          )
+          .style
+          .fontSize!;
+      final normal = lineSize();
+      expect(find.text('Words 100%'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Bigger words'));
+      await tester.pumpAndSettle();
+
+      expect(lineSize(), closeTo(normal * LyricsScaleStore.step, 0.01));
+      expect(find.text('Words 120%'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Smaller words'));
+      await tester.pumpAndSettle();
+
+      expect(lineSize(), closeTo(normal, 0.01));
+      expect(find.text('Words 100%'), findsOneWidget);
+    });
+
+    testWidgets('the size stays set after the reveal', (tester) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      // The words stay up with the year, so their size is still adjustable.
+      await tester.tap(find.byTooltip('Bigger words'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Words 120%'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 

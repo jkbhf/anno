@@ -3,6 +3,7 @@
 // a page that never starts.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/data/game_store.dart';
+import 'package:anno/data/lyrics_scale_store.dart';
 import 'package:anno/data/played_songs_store.dart';
 import 'package:anno/data/skipped_songs_store.dart';
 import 'package:anno/models/player.dart';
@@ -92,6 +93,49 @@ void main() {
     test('a broken value is an empty memory', () async {
       SharedPreferences.setMockInitialValues({'songs.skipped': '{"a":1}'});
       expect(await SkippedSongsStore.load(), isEmpty);
+    });
+  });
+
+  group('lyrics scale', () {
+    test('it survives a round trip', () async {
+      await LyricsScaleStore.save(1.44);
+
+      expect(await LyricsScaleStore.load(), closeTo(1.44, 0.001));
+    });
+
+    test('a press does the same work at either end', () {
+      const normal = LyricsScaleStore.normal;
+
+      expect(
+        LyricsScaleStore.stepped(normal, bigger: true),
+        closeTo(1.2, 0.001),
+      );
+      expect(
+        LyricsScaleStore.stepped(normal, bigger: false),
+        closeTo(1 / 1.2, 0.001),
+      );
+    });
+
+    test('the range holds, pressed and saved', () async {
+      var scale = LyricsScaleStore.normal;
+      for (var i = 0; i < 20; i++) {
+        scale = LyricsScaleStore.stepped(scale, bigger: true);
+      }
+      expect(scale, LyricsScaleStore.max);
+
+      for (var i = 0; i < 20; i++) {
+        scale = LyricsScaleStore.stepped(scale, bigger: false);
+      }
+      expect(scale, LyricsScaleStore.min);
+
+      // A value from an older build, or one edited by hand.
+      SharedPreferences.setMockInitialValues({'lyrics.scale': 9.0});
+      expect(await LyricsScaleStore.load(), LyricsScaleStore.max);
+    });
+
+    test('a broken value is the stage\'s own size', () async {
+      SharedPreferences.setMockInitialValues({'lyrics.scale': 'big'});
+      expect(await LyricsScaleStore.load(), LyricsScaleStore.normal);
     });
   });
 }

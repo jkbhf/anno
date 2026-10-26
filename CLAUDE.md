@@ -519,6 +519,24 @@ for a room; the point of the layout here is the space, not the distance. Tested
 at 893x412 and 667x375, playing and revealed, in `game_screen_test.dart` -
 a widget test fails on an overflow, which is what caught both of the above.
 
+**The reveal is on the stage and in the column** (`revealInColumnKey`,
+2026-10-26). The card on the stage stays the button it was - that is what makes
+revealing a swap rather than a rearrangement - but on a wall it is out of
+reach, and whoever runs the game sits at the device with every other control of
+theirs. Two buttons for one action, deliberately; both call
+`GameController.reveal`, and the key is only there so a test can say which one
+it pressed.
+
+**The size of the words is set in the column and kept per device**
+(`LyricsScaleStore`, a factor on the size the stage reads off its height).
+It belongs to the room - how far the sofa is from the wall, what the projector
+does to a 24pt line - not to a game, so it outlives every game like the music
+service does. A press is a factor (1.2) rather than a step, so it does the same
+amount of work at either end of the 0.6-2.4 range, and the percentage stands
+beside the buttons so the end of the range reads as the end rather than as a
+dead button. The sheet on the phone has its own size and is not affected: there
+the distance to the reader is arm's length, whatever the room looks like.
+
 **Two halves for two audiences.** The stage is for the room and holds only what
 the room reads: reveal or year, words, scores. The column is for whoever runs
 the game: camera and song controls. New things go on the side they are for.
