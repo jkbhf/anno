@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/lyrics_scale_store.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/game/game_controller.dart';
@@ -176,6 +177,10 @@ Future<void> reveal(GameController game) async {
 }
 
 void main() {
+  // The per-device settings - the lyrics scale, whether the scores show -
+  // live in the preferences, and a mocked value outlives the test that set it.
+  setUp(() => SharedPreferences.setMockInitialValues({}));
+
   /// A phone, not the 800x600 the test binding defaults to.
   void usePhoneScreen(WidgetTester tester) {
     tester.view.physicalSize = const Size(1080, 2340);
@@ -893,9 +898,10 @@ void main() {
         await tester.pumpWidget(wrap(game));
         await tester.pumpAndSettle();
 
-        // The stage for the room, the column for whoever runs the game -
-        // the reveal is on both, the card and the button.
-        expect(find.text('Reveal the year'), findsNWidgets(2));
+        // The stage for the room, the column for whoever runs the game.
+        // The reveal is only in the column: a banner telling the room about
+        // a button it cannot reach was taking the words' room.
+        expect(find.text('Reveal the year'), findsOneWidget);
         expect(find.text('Player 1'), findsOneWidget);
         expect(find.text('Next card after the reveal'), findsOneWidget);
         expect(tester.takeException(), isNull);
@@ -931,8 +937,9 @@ void main() {
       // No button to press first: the stage is where the words live.
       expect(find.text('Second'), findsOneWidget);
       expect(find.text('Lyrics'), findsNothing);
-      // The card on the stage and the button in the column.
-      expect(find.text('Reveal the year'), findsNWidgets(2));
+      // In the column, and nowhere on the stage.
+      expect(find.text('Reveal the year'), findsOneWidget);
+      expect(find.textContaining('The song is playing'), findsNothing);
       expect(find.text('Player 1'), findsOneWidget);
       // The words are the hint, the name and the year are the answer.
       expect(find.textContaining('My Number One'), findsNothing);
@@ -984,6 +991,55 @@ void main() {
       expect(find.text('Leave the game'), findsOneWidget);
     });
 
+    testWidgets('the menu takes the scores off the stage', (tester) async {
+      useWideScreen(tester, size: const Size(893, 412));
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      double lyricsHeight() => tester.getSize(find.byType(LyricsView)).height;
+      final withScores = lyricsHeight();
+      expect(find.text('Player 1'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Hide the scores'));
+      await tester.pumpAndSettle();
+
+      // The words take what the strip and its heading had.
+      expect(find.text('Player 1'), findsNothing);
+      expect(find.text('Scores'), findsNothing);
+      expect(lyricsHeight(), greaterThan(withScores));
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Show the scores'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Player 1'), findsOneWidget);
+      expect(lyricsHeight(), withScores);
+    });
+
+    testWidgets('hidden, the reveal hands out no points', (tester) async {
+      SharedPreferences.setMockInitialValues({'scores.shown': false});
+      useWideScreen(tester);
+      final game = buildGame();
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      // The year is the whole stage. Nothing to tap, so nothing is counted -
+      // that is what the option is for.
+      expect(find.text('2005'), findsOneWidget);
+      expect(find.text('Who got it right?'), findsNothing);
+      expect(find.text('Player 1'), findsNothing);
+      expect(game.players.first.score, 0);
+    });
+
     testWidgets('the words get the room on a short stage', (tester) async {
       final padding = <double>[];
       for (final size in [const Size(893, 412), const Size(1920, 1080)]) {
@@ -1000,10 +1056,10 @@ void main() {
         expect(tester.takeException(), isNull);
       }
 
-      // A share of the box rather than the projector's fixed 28 and 72: on a
-      // phone those were most of a 109 pixel box.
-      expect(padding.first, lessThan(30));
-      expect(padding.last, greaterThan(90));
+      // A share of the box rather than the projector's fixed 28 and 72,
+      // which were most of a phone's box.
+      expect(padding.last, 100);
+      expect(padding.first, lessThan(padding.last * 0.6));
     });
 
     testWidgets('the words on the stage are sized from the column', (

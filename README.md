@@ -133,11 +133,11 @@ tablet on its side, a phone turned over. It switches on by itself as soon as
 the window is clearly wider than tall (`isWideScreen` in `lib/ui/layout.dart`),
 with no size floor under it.
 
-- **The stage**, on the right, is for the room: the reveal banner, which turns
-  into the year card, then the lyrics, large, for the whole round, and the
-  scores as one row along the bottom. Everything there is a share of the height
-  of the picture, so it fits a 1080p wall, a 720p one and a phone's 412 pixels
-  alike; up to eight players fit a 720p projector.
+- **The stage**, on the right, is for the room: the lyrics, large, from the top
+  of the screen while the room guesses, the year card above them once it is
+  out, and the scores as one row along the bottom. Everything there is a share
+  of the height of the picture, so it fits a 1080p wall, a 720p one and a
+  phone's 412 pixels alike; up to eight players fit a 720p projector.
 - **The column**, on the left, is for whoever runs the game. The camera opens
   there in a small box - "Scan a card", or "Next round" once the year is out -
   while the stage keeps the reveal and the scores. Under it: "Reveal the year",
@@ -146,6 +146,10 @@ with no size floor under it.
   carries the way out of the game - this layout has no app bar.
 - **The size of the words** is set with the two buttons in the column and kept
   on the device, so the same room gets the same size next time.
+- **"Hide the scores"** in the menu gives the words the whole stage, on the
+  phone too. There is then nothing to tap, so no points are counted and the
+  game runs until you stop it - which is the point of it. The scores are kept
+  and come back when they are shown again.
 
 **Play through the tab.** The link path does work on a projector, but it gives
 the answer away: Spotify opens in a new tab with title and cover on the wall,

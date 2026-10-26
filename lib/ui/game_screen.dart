@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../data/game_store.dart';
 import '../data/lyrics_scale_store.dart';
 import '../data/played_songs_store.dart';
+import '../data/show_scores_store.dart';
 import '../data/skipped_songs_store.dart';
 import '../game/game_controller.dart';
 import '../models/player.dart';
@@ -136,6 +137,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// a card away.
   double _lyricsScale = LyricsScaleStore.normal;
 
+  /// Whether the scoreboard is on the screen, see [ShowScoresStore].
+  bool _showScores = true;
+
   @override
   void initState() {
     super.initState();
@@ -143,12 +147,22 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _lastPhase = _game.phase;
     _game.addListener(_onPhaseChanged);
     unawaited(WakeLock.hold());
-    unawaited(_loadLyricsScale());
+    unawaited(_loadSettings());
   }
 
-  Future<void> _loadLyricsScale() async {
+  Future<void> _loadSettings() async {
     final scale = await LyricsScaleStore.load();
-    if (mounted) setState(() => _lyricsScale = scale);
+    final scores = await ShowScoresStore.load();
+    if (!mounted) return;
+    setState(() {
+      _lyricsScale = scale;
+      _showScores = scores;
+    });
+  }
+
+  void _toggleScores() {
+    setState(() => _showScores = !_showScores);
+    unawaited(ShowScoresStore.save(shown: _showScores));
   }
 
   /// A press of smaller or bigger in the side column. It is the same room and
@@ -479,6 +493,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             ),
           ),
         );
+      case 'scores':
+        _toggleScores();
       case 'fullscreen':
         // A gesture is what the browser grants it to, and this is one.
         await Fullscreen.toggle();
@@ -588,6 +604,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       tooltip: 'Menu',
       onSelected: _onMenu,
       itemBuilder: (context) => [
+        // Read as the menu opens, like the fullscreen entry below.
+        PopupMenuItem(
+          value: 'scores',
+          child: Text(_showScores ? 'Hide the scores' : 'Show the scores'),
+        ),
         const PopupMenuItem(value: 'reset', child: Text('Reset scores')),
         const PopupMenuItem(value: 'category', child: Text('Change category')),
         const PopupMenuItem(value: 'years', child: Text('Year database')),
@@ -624,6 +645,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onUndoRedraw: _undoRedraw,
       lyricsScale: _lyricsScale,
       onLyricsScale: _stepLyricsScale,
+      showScores: _showScores,
       menu: _menu(wide: true),
     );
   }
@@ -631,7 +653,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   Widget _body(BuildContext context) {
     switch (_game.phase) {
       case RoundPhase.idle:
-        return _IdleBody(game: _game, onScan: _startRound);
+        return _IdleBody(
+          game: _game,
+          onScan: _startRound,
+          showScores: _showScores,
+        );
       case RoundPhase.countdown:
         // Either the countdown route is up over this screen, or the song is
         // already starting - a single frame in the in-app case. Drawing
@@ -644,12 +670,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           onRedraw: _redraw,
           onUndoRedraw: _undoRedraw,
           onLyrics: _showLyrics,
+          showScores: _showScores,
         );
       case RoundPhase.revealed:
         return _RevealBody(
           game: _game,
           onNextRound: _nextRound,
           onLyrics: _showLyrics,
+          showScores: _showScores,
         );
       case RoundPhase.finished:
         return _FinishedBody(
@@ -752,10 +780,15 @@ class _SectionHeading extends StatelessWidget {
 }
 
 class _IdleBody extends StatelessWidget {
-  const _IdleBody({required this.game, required this.onScan});
+  const _IdleBody({
+    required this.game,
+    required this.onScan,
+    required this.showScores,
+  });
 
   final GameController game;
   final VoidCallback onScan;
+  final bool showScores;
 
   @override
   Widget build(BuildContext context) {
@@ -798,10 +831,12 @@ class _IdleBody extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 56),
-          _SectionHeading(title: 'Scores', targetScore: game.targetScore),
-          const SizedBox(height: 16),
-          _PlayerGrid(game: game),
+          if (showScores) ...[
+            const SizedBox(height: 56),
+            _SectionHeading(title: 'Scores', targetScore: game.targetScore),
+            const SizedBox(height: 16),
+            _PlayerGrid(game: game),
+          ],
         ],
       ),
     );
@@ -815,6 +850,7 @@ class _PlayingBody extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     required this.onLyrics,
+    required this.showScores,
   });
 
   final GameController game;
@@ -822,6 +858,7 @@ class _PlayingBody extends StatelessWidget {
   final VoidCallback onRedraw;
   final VoidCallback onUndoRedraw;
   final VoidCallback onLyrics;
+  final bool showScores;
 
   @override
   Widget build(BuildContext context) {
@@ -843,12 +880,14 @@ class _PlayingBody extends StatelessWidget {
             onUndoRedraw: onUndoRedraw,
             onLyrics: onLyrics,
           ),
-          const SizedBox(height: 32),
-          _SectionHeading(title: 'Scores', targetScore: game.targetScore),
-          const SizedBox(height: 16),
-          // The same tiles as the reveal, but inert: points are handed out
-          // once the year is up, not while the group is still guessing.
-          _PlayerGrid(game: game),
+          if (showScores) ...[
+            const SizedBox(height: 32),
+            _SectionHeading(title: 'Scores', targetScore: game.targetScore),
+            const SizedBox(height: 16),
+            // The same tiles as the reveal, but inert: points are handed out
+            // once the year is up, not while the group is still guessing.
+            _PlayerGrid(game: game),
+          ],
         ],
       ),
     );
@@ -1027,16 +1066,11 @@ class _RevealSlot extends StatelessWidget {
     required this.onReveal,
     required this.inApp,
     required this.service,
-    this.wide = false,
   });
 
   final VoidCallback onReveal;
   final bool inApp;
   final MusicService service;
-
-  /// A banner across the top of the stage instead of a card: the words below
-  /// it need the height more than the slot does.
-  final bool wide;
 
   @override
   Widget build(BuildContext context) {
@@ -1053,23 +1087,20 @@ class _RevealSlot extends StatelessWidget {
     );
     final title = Text(
       inApp ? 'The song is playing' : 'The song is playing in ${service.label}',
-      textAlign: wide ? TextAlign.start : TextAlign.center,
-      style: wide
-          ? theme.textTheme.headlineMedium
-          : theme.textTheme.titleMedium,
+      textAlign: TextAlign.center,
+      style: theme.textTheme.titleMedium,
     );
     final hint = Text(
       inApp
           ? 'Everyone guesses the year.'
           : 'Everyone guesses the year. Coming back to the app reveals it too.',
-      textAlign: wide ? TextAlign.start : TextAlign.center,
-      style: (wide ? theme.textTheme.titleMedium : theme.textTheme.bodySmall)
-          ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+      textAlign: TextAlign.center,
+      style: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
     );
     final pill = Container(
-      padding: wide
-          ? const EdgeInsets.symmetric(horizontal: 28, vertical: 16)
-          : const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
         borderRadius: BorderRadius.circular(100),
@@ -1084,17 +1115,15 @@ class _RevealSlot extends StatelessWidget {
           children: [
             Icon(
               Icons.visibility_outlined,
-              size: wide ? 26 : 20,
+              size: 20,
               color: theme.colorScheme.onPrimary,
             ),
             const SizedBox(width: 8),
             Text(
               'Reveal the year',
-              style:
-                  (wide
-                          ? theme.textTheme.titleLarge
-                          : theme.textTheme.labelLarge)
-                      ?.copyWith(color: theme.colorScheme.onPrimary),
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.onPrimary,
+              ),
             ),
           ],
         ),
@@ -1107,44 +1136,21 @@ class _RevealSlot extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onReveal,
-        child: wide
-            ? _FitBody(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 20,
-                ),
-                child: Row(
-                  children: [
-                    icon,
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [title, const SizedBox(height: 6), hint],
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    // The pill scales down with the card. Fixed, it is wider
-                    // than the whole stage of a phone turned over.
-                    Flexible(child: pill),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    icon,
-                    const SizedBox(height: 16),
-                    title,
-                    const SizedBox(height: 6),
-                    hint,
-                    const SizedBox(height: 28),
-                    pill,
-                  ],
-                ),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 34),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              icon,
+              const SizedBox(height: 16),
+              title,
+              const SizedBox(height: 6),
+              hint,
+              const SizedBox(height: 28),
+              pill,
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1295,11 +1301,13 @@ class _RevealBody extends StatelessWidget {
     required this.game,
     required this.onNextRound,
     required this.onLyrics,
+    required this.showScores,
   });
 
   final GameController game;
   final VoidCallback onNextRound;
   final VoidCallback onLyrics;
+  final bool showScores;
 
   @override
   Widget build(BuildContext context) {
@@ -1319,24 +1327,26 @@ class _RevealBody extends StatelessWidget {
               label: const Text('Lyrics'),
             ),
           ),
-          const SizedBox(height: 24),
-          _SectionHeading(
-            title: 'Who got it right?',
-            targetScore: game.targetScore,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Tap to give a point, long press to take one away.',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          if (showScores) ...[
+            const SizedBox(height: 24),
+            _SectionHeading(
+              title: 'Who got it right?',
+              targetScore: game.targetScore,
             ),
-          ),
-          const SizedBox(height: 16),
-          _PlayerGrid(
-            game: game,
-            onTap: (player) => _givePoint(game, player),
-            onLongPress: (player) => _takePoint(game, player),
-          ),
+            const SizedBox(height: 4),
+            Text(
+              'Tap to give a point, long press to take one away.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _PlayerGrid(
+              game: game,
+              onTap: (player) => _givePoint(game, player),
+              onLongPress: (player) => _takePoint(game, player),
+            ),
+          ],
           const SizedBox(height: 40),
           // Tall for the same reason the reveal panel is: the phone is being
           // handed on, and this is the tap that keeps the game moving.
@@ -1524,6 +1534,7 @@ class _WideRound extends StatelessWidget {
     required this.onUndoRedraw,
     required this.lyricsScale,
     required this.onLyricsScale,
+    required this.showScores,
     required this.menu,
   });
 
@@ -1543,6 +1554,9 @@ class _WideRound extends StatelessWidget {
   /// How big the words on the stage are, and the two buttons that change it.
   final double lyricsScale;
   final void Function({required bool bigger}) onLyricsScale;
+
+  /// Whether the scoreboard is on the stage at all, see [ShowScoresStore].
+  final bool showScores;
 
   /// What the app bar holds on a phone. There is no bar here, so it sits in
   /// the corner of the camera panel - a row of its own would cost the height
@@ -1659,6 +1673,7 @@ class _WideRound extends StatelessWidget {
                 spotify: spotify,
                 lyrics: lyrics,
                 lyricsScale: lyricsScale,
+                showScores: showScores,
               ),
             ),
           ],
@@ -1839,17 +1854,20 @@ class _CameraSlot extends StatelessWidget {
 ///
 /// The words are up for the whole round, from the first note on - the reason
 /// to put the game on a wall. While the room guesses they carry no name, the
-/// same as the sheet on the phone; the year card above names the song once it
-/// is out. In a round played in this tab they follow the song.
+/// same as the sheet on the phone; the year card names the song once it is
+/// out. In a round played in this tab they follow the song.
 ///
-/// The top slot keeps one height across the reveal, so the words do not jump
-/// when the banner turns into the year.
+/// While the room guesses the words have the whole stage: nothing above them
+/// and, with the scores off, nothing below. The year card is what takes the
+/// top of it back at the reveal - the words give way to the answer, which is
+/// the one moment the stage is allowed to rearrange itself.
 class _Stage extends StatelessWidget {
   const _Stage({
     required this.game,
     required this.spotify,
     required this.lyrics,
     required this.lyricsScale,
+    required this.showScores,
   });
 
   final GameController game;
@@ -1859,6 +1877,10 @@ class _Stage extends StatelessWidget {
   /// What the room asked for on top of the size the height gives, see
   /// [_LyricsSize].
   final double lyricsScale;
+
+  /// Whether the scores are along the bottom, see [ShowScoresStore]. Hidden,
+  /// the words have the stage to themselves.
+  final bool showScores;
 
   @override
   Widget build(BuildContext context) {
@@ -1897,18 +1919,18 @@ class _Stage extends StatelessWidget {
               if (song == null)
                 const Expanded(child: _StageIdle())
               else ...[
-                SizedBox(
-                  height: top,
-                  child: revealed
-                      ? _YearCard(game: game, wide: true)
-                      : _RevealSlot(
-                          onReveal: game.reveal,
-                          inApp: _looksInApp(game, spotify),
-                          service: game.service,
-                          wide: true,
-                        ),
-                ),
-                const SizedBox(height: 8),
+                // Only the year gets the top of the stage. While the room
+                // guesses there is nothing to put there: the reveal is a
+                // button in the column now, and a banner telling the room
+                // about a button it cannot reach was taking a fifth of the
+                // stage from the words.
+                if (revealed) ...[
+                  SizedBox(
+                    height: top,
+                    child: _YearCard(game: game, wide: true),
+                  ),
+                  const SizedBox(height: 8),
+                ],
                 Expanded(
                   // The words scroll themselves, so a scrollbar on the wall is
                   // only noise. The edges fade rather than cut a line in half.
@@ -1954,29 +1976,31 @@ class _Stage extends StatelessWidget {
                   ),
                 ),
               ],
-              const SizedBox(height: 16),
-              _SectionHeading(
-                title: revealed ? 'Who got it right?' : 'Scores',
-                targetScore: game.targetScore,
-              ),
-              if (revealed && !short) ...[
-                const SizedBox(height: 4),
-                Text(
-                  'Tap to give a point, long press to take one away.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              if (showScores) ...[
+                const SizedBox(height: 16),
+                _SectionHeading(
+                  title: revealed ? 'Who got it right?' : 'Scores',
+                  targetScore: game.targetScore,
+                ),
+                if (revealed && !short) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Tap to give a point, long press to take one away.',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
+                ],
+                const SizedBox(height: 12),
+                _ScoreStrip(
+                  game: game,
+                  height: tile,
+                  onTap: revealed ? (player) => _givePoint(game, player) : null,
+                  onLongPress: revealed
+                      ? (player) => _takePoint(game, player)
+                      : null,
                 ),
               ],
-              const SizedBox(height: 12),
-              _ScoreStrip(
-                game: game,
-                height: tile,
-                onTap: revealed ? (player) => _givePoint(game, player) : null,
-                onLongPress: revealed
-                    ? (player) => _takePoint(game, player)
-                    : null,
-              ),
             ],
           ),
         );

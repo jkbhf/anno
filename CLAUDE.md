@@ -545,6 +545,24 @@ them. **The scores get less, not more, on a short stage**, and that is the
 owner's call: the tiles are never used in practice, the words are the whole
 reason to lay the game out sideways.
 
+**Nothing stands above the words until the year does** (2026-10-26). The stage
+used to carry the reveal banner - "The song is playing", the hint, the pill -
+across its top while the room guessed, and the year card then took the same
+slot so nothing moved. Once the reveal became a button in the column that
+banner was a fifth of the stage spent telling the room about a button it cannot
+reach, so it is gone: the words run from the top of the stage, and the year
+card takes that strip back at the reveal. The jump is accepted, and only there
+- the reveal is the one moment the stage is meant to change. `_RevealSlot` is
+the phone's card alone now; its `wide` branch went with the banner.
+
+**The scores can be switched off, and then nothing counts** (`ShowScoresStore`,
+per device). `Hide the scores` in the menu takes the strip, its heading and the
+tapping hint off the stage and the grid off every phone screen - the words then
+have the whole stage, 364 of 412 pixels on a landscape phone against 109 before
+any of this. With nothing to tap there are no points and the game never reaches
+its target: that is the option working, not a bug to fix. A game's scores are
+kept while they are hidden and come back with them.
+
 **The size of the words is set in the column and kept per device**
 (`LyricsScaleStore`, a factor on the size the stage reads off its height).
 It belongs to the room - how far the sofa is from the wall, what the projector
