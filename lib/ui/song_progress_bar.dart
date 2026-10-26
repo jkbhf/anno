@@ -14,9 +14,22 @@ import '../music/spotify_playback.dart';
 /// Drawn quiet on purpose. It sits under the reveal panel, which is the one
 /// thing on the screen the room is meant to go for.
 class SongProgressBar extends StatefulWidget {
-  const SongProgressBar({required this.session, super.key});
+  const SongProgressBar({
+    required this.session,
+    this.inOneRow = false,
+    super.key,
+  });
 
   final SpotifySession session;
+
+  /// The band across the bottom of the wide layout: the buttons stand beside
+  /// the track instead of under it, so the whole thing is one row high.
+  ///
+  /// Height is what the stage is short of, and the buttons gain nothing from
+  /// width - they are taps. The track does: in the side column it was 190
+  /// pixels for a 3:20 song, a second of music per pixel, which is not a bar
+  /// anybody can find a chorus with.
+  final bool inOneRow;
 
   /// How far the skip buttons jump.
   static const Duration skip = Duration(seconds: 10);
@@ -76,96 +89,102 @@ class _SongProgressBarState extends State<SongProgressBar> {
     final positionMs = (_dragMs ?? session.position.inMilliseconds.toDouble())
         .clamp(0.0, known ? durationMs : 0.0);
     final muted = theme.colorScheme.onSurfaceVariant;
+    final oneRow = widget.inOneRow;
+
+    final slider = SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        trackHeight: 4,
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+        activeTrackColor: theme.colorScheme.primary,
+        inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
+        thumbColor: theme.colorScheme.primary,
+      ),
+      child: Slider(
+        value: positionMs,
+        max: known ? durationMs : 1,
+        onChanged: known ? (value) => setState(() => _dragMs = value) : null,
+        onChangeEnd: known
+            ? (value) {
+                setState(() => _dragMs = null);
+                unawaited(session.seek(Duration(milliseconds: value.round())));
+              }
+            : null,
+      ),
+    );
+
+    final elapsed = Text(
+      _format(Duration(milliseconds: positionMs.round())),
+      style: theme.textTheme.labelSmall?.copyWith(color: muted),
+    );
+    final total = Text(
+      known ? _format(session.duration) : '--:--',
+      style: theme.textTheme.labelSmall?.copyWith(color: muted),
+    );
+
+    final buttons = [
+      IconButton(
+        tooltip: 'From the start',
+        onPressed: known ? () => session.seek(Duration.zero) : null,
+        icon: const Icon(Icons.skip_previous_rounded),
+        color: muted,
+      ),
+      IconButton(
+        tooltip: '10 seconds back',
+        onPressed: known ? () => _seekBy(-SongProgressBar.skip) : null,
+        icon: const Icon(Icons.replay_10_rounded),
+        color: muted,
+      ),
+      const SizedBox(width: 8),
+      IconButton.filledTonal(
+        tooltip: session.isPlaying ? 'Pause' : 'Play on',
+        onPressed: session.togglePause,
+        iconSize: oneRow ? 28 : 32,
+        icon: Icon(
+          session.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+        ),
+      ),
+      const SizedBox(width: 8),
+      IconButton(
+        tooltip: '10 seconds ahead',
+        onPressed: known ? () => _seekBy(SongProgressBar.skip) : null,
+        icon: const Icon(Icons.forward_10_rounded),
+        color: muted,
+      ),
+      IconButton(
+        tooltip: 'To the middle',
+        onPressed: known ? () => session.seek(session.duration ~/ 2) : null,
+        icon: const Icon(Icons.align_horizontal_center_rounded),
+        color: muted,
+      ),
+    ];
+
+    // The band: buttons on the left, under the column they belong to, then
+    // the track with a time at either end. One row, and the track takes
+    // whatever is left of the screen.
+    if (oneRow) {
+      return Row(
+        children: [
+          ...buttons,
+          const SizedBox(width: 12),
+          elapsed,
+          Expanded(child: slider),
+          total,
+        ],
+      );
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SliderTheme(
-          data: SliderTheme.of(context).copyWith(
-            trackHeight: 4,
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
-            overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
-            activeTrackColor: theme.colorScheme.primary,
-            inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
-            thumbColor: theme.colorScheme.primary,
-          ),
-          child: Slider(
-            value: positionMs,
-            max: known ? durationMs : 1,
-            onChanged: known
-                ? (value) => setState(() => _dragMs = value)
-                : null,
-            onChangeEnd: known
-                ? (value) {
-                    setState(() => _dragMs = null);
-                    unawaited(
-                      session.seek(Duration(milliseconds: value.round())),
-                    );
-                  }
-                : null,
-          ),
-        ),
+        slider,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Row(
-            children: [
-              Text(
-                _format(Duration(milliseconds: positionMs.round())),
-                style: theme.textTheme.labelSmall?.copyWith(color: muted),
-              ),
-              const Spacer(),
-              Text(
-                known ? _format(session.duration) : '--:--',
-                style: theme.textTheme.labelSmall?.copyWith(color: muted),
-              ),
-            ],
-          ),
+          child: Row(children: [elapsed, const Spacer(), total]),
         ),
         const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              tooltip: 'From the start',
-              onPressed: known ? () => session.seek(Duration.zero) : null,
-              icon: const Icon(Icons.skip_previous_rounded),
-              color: muted,
-            ),
-            IconButton(
-              tooltip: '10 seconds back',
-              onPressed: known ? () => _seekBy(-SongProgressBar.skip) : null,
-              icon: const Icon(Icons.replay_10_rounded),
-              color: muted,
-            ),
-            const SizedBox(width: 8),
-            IconButton.filledTonal(
-              tooltip: session.isPlaying ? 'Pause' : 'Play on',
-              onPressed: session.togglePause,
-              iconSize: 32,
-              icon: Icon(
-                session.isPlaying
-                    ? Icons.pause_rounded
-                    : Icons.play_arrow_rounded,
-              ),
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              tooltip: '10 seconds ahead',
-              onPressed: known ? () => _seekBy(SongProgressBar.skip) : null,
-              icon: const Icon(Icons.forward_10_rounded),
-              color: muted,
-            ),
-            IconButton(
-              tooltip: 'To the middle',
-              onPressed: known
-                  ? () => session.seek(session.duration ~/ 2)
-                  : null,
-              icon: const Icon(Icons.align_horizontal_center_rounded),
-              color: muted,
-            ),
-          ],
-        ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: buttons),
       ],
     );
   }

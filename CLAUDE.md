@@ -545,6 +545,24 @@ them. **The scores get less, not more, on a short stage**, and that is the
 owner's call: the tiles are never used in practice, the words are the whole
 reason to lay the game out sideways.
 
+**The player is a band across the bottom, under both halves** (2026-10-26).
+In the side column the track was ~190 pixels for a 3:20 song - a second of
+music per pixel, which is not a bar anybody finds a chorus with. Across the
+screen it is 501, so 0.4 seconds per pixel. The buttons came along and stand
+to the left of the track, under the column they belong to, rather than beneath
+it: height is what the stage is short of, and a tap gains nothing from width.
+They keep their 48 pixel targets, which is what costs the track the last ~100
+pixels of the screen - that trade can be reopened, the buttons are tapped a
+few times a round and the track is dragged.
+
+The band is kept 8 pixels off the bottom edge, because a drag down there fights
+the phone's own home gesture. It shows while `playingInApp` and its room is
+held while a launch is still out (`_looksInApp`), the same rule the column used
+- so a swap does not pull the floor out from under the stage. A link or YouTube
+round has neither band nor reserved room: nothing to scrub, so the words get
+those 50 pixels instead. The swap stays in the column, where the rest of the
+round's controls are.
+
 **Nothing stands above the words until the year does** (2026-10-26). The stage
 used to carry the reveal banner - "The song is playing", the hint, the pill -
 across its top while the room guessed, and the year card then took the same

@@ -915,7 +915,7 @@ class _SongControls extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     this.onLyrics,
-    this.compact = false,
+    this.inColumn = false,
   });
 
   final GameController game;
@@ -926,9 +926,11 @@ class _SongControls extends StatelessWidget {
   /// Null where the words are up anyway - the stage of the wide layout.
   final VoidCallback? onLyrics;
 
-  /// In the side column, which is 214 wide on a phone turned over: the full
-  /// label wraps to four lines there. A whole screen's width gets the sentence.
-  final bool compact;
+  /// In the side column of the wide layout. Two things follow from it: the
+  /// swap gets its short label, because the column is 214 wide on a phone
+  /// turned over and the sentence wraps to four lines there, and the player
+  /// is not here at all - it is the band across the bottom of the screen.
+  final bool inColumn;
 
   @override
   Widget build(BuildContext context) {
@@ -974,7 +976,13 @@ class _SongControls extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (inApp)
+        // In the column the player is somewhere else entirely, so there is no
+        // room to keep for it either - the band at the bottom of the screen
+        // does that for itself. The way back to a swallowed popup stays,
+        // which is what the button is for: an in-app round never lost one.
+        if (inColumn) ...[
+          if (!inApp) ?openButton,
+        ] else if (inApp)
           SongProgressBar(session: spotify)
         else if (keepBarRoom)
           Stack(
@@ -1023,7 +1031,7 @@ class _SongControls extends StatelessWidget {
                   onPressed: onRedraw,
                   icon: const Icon(Icons.shuffle),
                   label: Text(
-                    compact
+                    inColumn
                         ? 'Nobody knows it?'
                         : 'Nobody knows it? Draw another',
                   ),
@@ -1567,10 +1575,19 @@ class _WideRound extends StatelessWidget {
   Widget build(BuildContext context) {
     final playing = game.phase == RoundPhase.playing;
 
+    // The player sits across the bottom, under both halves. The band is one
+    // row high, buttons on the left where the column's controls are, and the
+    // track takes the rest of the screen - four times the width it had in the
+    // column, which is the difference between finding a chorus and guessing
+    // at it. The room above it is kept while a launch is still out, so a swap
+    // does not pull the floor out from under the stage.
+    final bar = game.playingInApp;
+    final barRoom = bar || (playing && _looksInApp(game, spotify));
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final side = (constraints.maxWidth * 0.28).clamp(240.0, 420.0);
-        return Row(
+        final round = Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
@@ -1657,7 +1674,7 @@ class _WideRound extends StatelessWidget {
                                   spotify: spotify,
                                   onRedraw: onRedraw,
                                   onUndoRedraw: onUndoRedraw,
-                                  compact: true,
+                                  inColumn: true,
                                 ),
                             ],
                           ),
@@ -1674,6 +1691,26 @@ class _WideRound extends StatelessWidget {
                 lyrics: lyrics,
                 lyricsScale: lyricsScale,
                 showScores: showScores,
+              ),
+            ),
+          ],
+        );
+
+        if (!barRoom) return round;
+
+        return Column(
+          children: [
+            Expanded(child: round),
+            Padding(
+              // Off the very bottom edge: a drag down there fights the
+              // phone's own home gesture.
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Visibility(
+                visible: bar,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: SongProgressBar(session: spotify, inOneRow: true),
               ),
             ),
           ],

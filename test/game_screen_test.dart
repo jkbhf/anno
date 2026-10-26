@@ -991,6 +991,63 @@ void main() {
       expect(find.text('Leave the game'), findsOneWidget);
     });
 
+    testWidgets('the player is a band across the bottom', (tester) async {
+      useWideScreen(tester, size: const Size(893, 412));
+      final session = SeekableSession();
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: session));
+      await tester.pumpAndSettle();
+
+      final track = tester.getRect(find.byType(Slider));
+      // Wider than the whole side column, where it used to be ~190 of 214.
+      expect(track.width, greaterThan(400));
+      // Along the bottom, under both halves.
+      expect(track.center.dy, greaterThan(412 * 0.8));
+
+      // The buttons came along, left of the track where the column is.
+      // The fake session is paused, so the big one offers to play on.
+      expect(find.byTooltip('Play on'), findsOneWidget);
+      expect(
+        tester.getCenter(find.byTooltip('Play on')).dx,
+        lessThan(track.left),
+      );
+
+      await tester.tap(find.byTooltip('To the middle'));
+      await tester.pump();
+      expect(session.seeks.last, const Duration(seconds: 100));
+
+      // The swap stayed in the column.
+      expect(find.textContaining('Nobody knows it'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a link round gets no band, and the stage the height', (
+      tester,
+    ) async {
+      final words = <double>[];
+      for (final launcher in [const InTabLauncher(), const SilentLauncher()]) {
+        useWideScreen(tester, size: const Size(893, 412));
+        final game = buildGame(launcher: launcher);
+        game.scan(card);
+        await game.startPlayback();
+
+        await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
+        await tester.pumpAndSettle();
+
+        words.add(tester.getSize(find.byType(LyricsView)).height);
+      }
+
+      // A song handed over by link is out of reach, so there is no band and
+      // nothing kept in reserve for one: the words get what the in-app round
+      // spends on it.
+      expect(find.byType(Slider), findsNothing);
+      expect(find.byTooltip('Play on'), findsNothing);
+      expect(words.last, greaterThan(words.first));
+    });
+
     testWidgets('the menu takes the scores off the stage', (tester) async {
       useWideScreen(tester, size: const Size(893, 412));
       final game = buildGame();

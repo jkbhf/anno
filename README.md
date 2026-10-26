@@ -141,9 +141,13 @@ with no size floor under it.
 - **The column**, on the left, is for whoever runs the game. The camera opens
   there in a small box - "Scan a card", or "Next round" once the year is out -
   while the stage keeps the reveal and the scores. Under it: "Reveal the year",
-  the size of the words on the stage, and during a round the seek bar, "Open in
-  Spotify" and the swap. The menu sits in the corner of the camera box, and
-  carries the way out of the game - this layout has no app bar.
+  the size of the words on the stage, and during a round "Open in Spotify" and
+  the swap. The menu sits in the corner of the camera box, and carries the way
+  out of the game - this layout has no app bar.
+- **The player** is a band along the bottom, under both halves: pause, ±10
+  seconds, back to the start, jump to the middle, and the track across the rest
+  of the screen. Only an in-app Spotify round has one - a song handed over by
+  link is out of reach, and then the words get the band's height instead.
 - **The size of the words** is set with the two buttons in the column and kept
   on the device, so the same room gets the same size next time.
 - **"Hide the scores"** in the menu gives the words the whole stage, on the
