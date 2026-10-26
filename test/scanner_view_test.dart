@@ -87,6 +87,52 @@ void main() {
     expect(camera.starts, 1);
   });
 
+  testWidgets('a code to read past does not lock the view', (tester) async {
+    // The regression this guards: the view reports one code and then stops
+    // looking, so a code thrown away by the game afterwards left a running
+    // preview that read nothing for the rest of the evening.
+    const channel = MethodChannel(
+      'dev.steenbakker.mobile_scanner/scanner/method',
+    );
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      channel,
+      (_) async => null,
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+
+    final read = <String>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ScannerView(
+          controller: FakeCameraController(),
+          onCode: read.add,
+          ignore: (code) => code == 'the card still lying there',
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // By hand rather than by camera, which is the same way in.
+    Future<void> enter(String code) async {
+      await tester.tap(find.text('Enter the code by hand').first);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), code);
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+    }
+
+    await enter('the card still lying there');
+    expect(read, isEmpty);
+
+    await enter('the next card');
+    expect(read, ['the next card']);
+  });
+
   testWidgets('a scanner that was closed does not come back on resume', (
     tester,
   ) async {

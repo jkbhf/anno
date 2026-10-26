@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:anno/data/column_width_store.dart';
 import 'package:anno/data/lyrics_scale_store.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/game/game_controller.dart';
@@ -1192,7 +1193,40 @@ void main() {
       expect(find.text('Reveal the year'), findsNothing);
     });
 
-    testWidgets('no app bar, and the menu moved into the column', (
+    testWidgets('the divider drags the two halves and is remembered', (
+      tester,
+    ) async {
+      useWideScreen(tester, size: const Size(1280, 720));
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      final column = tester.getRect(find.byKey(revealInColumnKey));
+      final words = tester.getRect(find.byType(LyricsView));
+
+      await tester.drag(find.byKey(splitHandleKey), const Offset(120, 0));
+      await tester.pumpAndSettle();
+
+      // The column got what the stage lost - 120 less the drag slop the
+      // tester swallows before it starts reporting.
+      expect(
+        tester.getRect(find.byKey(revealInColumnKey)).width,
+        greaterThan(column.width + 80),
+      );
+      expect(
+        tester.getRect(find.byType(LyricsView)).width,
+        lessThan(words.width - 80),
+      );
+
+      // It is a property of the room, so it outlives the screen.
+      expect(await ColumnWidthStore.load(), greaterThan(0.28));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('no app bar, and the menu in the screen\'s corner', (
       tester,
     ) async {
       useWideScreen(tester, size: const Size(893, 412));
@@ -1207,12 +1241,19 @@ void main() {
       expect(find.byType(AppBar), findsNothing);
       expect(find.text('ESC'), findsNothing);
 
+      // Top right of the whole screen, which belongs to neither half.
+      final menu = tester.getCenter(find.byTooltip('Menu'));
+      expect(menu.dx, greaterThan(893 * 0.9));
+      expect(menu.dy, lessThan(60));
+
       await tester.tap(find.byTooltip('Menu'));
       await tester.pumpAndSettle();
 
       expect(find.text('Reset scores'), findsOneWidget);
       // The bar's back arrow went with it, so the way out is in here.
       expect(find.text('Leave the game'), findsOneWidget);
+      // And the size of the words, which was a row in the column.
+      expect(find.text('Bigger words'), findsOneWidget);
     });
 
     testWidgets('the player is a band across the bottom', (tester) async {

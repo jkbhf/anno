@@ -157,7 +157,11 @@ with no size floor under it.
   link is out of reach, and then the words get the band's height instead.
 - **The size of the words** is set in the menu - "Bigger words" and "Smaller
   words", with the current size above them - and kept on the device, so the
-  same room gets the same size next time.
+  same room gets the same size next time. The menu itself is the icon in the
+  top right corner of the screen.
+- **The split** between the two halves is dragged: the grip in the gap between
+  them widens the column or the stage, and the device remembers where it was
+  left.
 - **Keys**, on a laptop or a desktop: space plays and pauses, enter reveals the
   year, left/A and right/D step ten seconds, up/W jumps to the middle of the
   song and down/S back to its start. They are listed at the foot of the column,

@@ -617,6 +617,15 @@ behind the button. Title and artist stay off the stage until the reveal,
 exactly as in the sheet - the words are a hint, the name is the answer. At the
 reveal they hand the stage to the answer, see below.
 
+**A camera that reports a code stops looking, so the filter goes in front of
+it.** `ScannerView` reports one code and latches (`_handled`), which is right -
+two quick hits must not start two rounds. But the game's "ignore the card still
+lying there" test used to run *after* that, at the other end of `onCode`: the
+first thing the camera saw after a reveal was that card, the view latched on it,
+the game threw it away, and the preview then ran for the rest of the evening
+reading nothing. Found on 2026-10-27, fixed by handing the test to the view as
+`ScannerView.ignore`, which reads past a code without latching.
+
 **The camera opens on demand - and the reveal is a demand** (2026-10-26). It
 used to open only on a tap, because a running camera reads the card still lying
 in front of it and starts the next round over the reveal. That danger is real
@@ -634,6 +643,19 @@ foot of the column. Neither displaces the other, so nothing in the column moves
 from one round to the next; the reveal panel in particular is always in the
 same place, which it was not while one slot morphed between button and preview.
 
+**The split is dragged, not derived** (`ColumnWidthStore`, per device,
+2026-10-27). The column was a share of the width with a floor and a cap; now
+there is a grip between the two halves (`splitHandleKey`) and the share is
+whatever it was last pulled to, 0.16 to 0.5. A projector wants a wide stage and
+a laptop run by hand wants a wide column, and which one an evening is depends
+on the room rather than on anything measurable here - so it is a decision made
+with the screen in front of you, and it is remembered.
+
+**The menu is in the top right corner of the screen**, over neither half. It
+belongs to whoever runs the game but it is reached once or twice an evening,
+and the corner is the one place no round needs - in the column it was taking
+room from the boxes, which is what the missing app bar had just given back.
+
 **The two boxes of the column are one width.** The camera is as wide as the
 slot above it and takes its height from that width, capped at a third of the
 column; where the cap bites it crops rather than narrowing itself, because what
@@ -644,11 +666,15 @@ at then, and a grey placeholder earns its space less than the air around the
 controls. It comes back with the reveal, open, and a camera closed by hand
 leaves a `Next round` button in its place.
 
-**The year is in two places on purpose.** Big on the stage for the room, small
-in the column for whoever runs the game - on a projector both are the same
-screen, so this is a duplication, and it is wanted: the slot would otherwise
-be a hole after the reveal, and the small one is the answer at a glance next
-to the camera that is about to replace the round.
+**The answer is centred in its box, and two columns where that box is wide**
+(2026-10-27). The year beside the name rather than over it leaves the year
+twice the height, so `_ColumnYear` lays itself out as a row once the box is
+wider than it is tall and stacks them when it is not - a phone turned over has
+a column too narrow for two of anything.
+
+**The keyboard hints sit directly above the camera**, at the foot of the
+column: out of the way of the round's controls, and where the eye goes between
+two rounds anyway.
 
 Two things follow that are easy to get wrong. The auto-scan is started from
 inside the tap that revealed, which is what lets a mobile browser unlock sound

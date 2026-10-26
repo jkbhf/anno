@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../data/column_width_store.dart';
 import '../data/game_store.dart';
 import '../data/lyrics_scale_store.dart';
 import '../data/played_songs_store.dart';
@@ -143,6 +144,11 @@ enum GameShortcut {
   bool get needsPlayer => this != GameShortcut.reveal;
 }
 
+/// The grip between the two halves of the wide layout, so a test can drag the
+/// one thing on the screen that has no words on it.
+@visibleForTesting
+const Key splitHandleKey = Key('split-handle');
+
 /// The reveal in the side column - the camera's slot while a round plays, see
 /// [_CameraSlot]. Named so a test can press the panel rather than the words
 /// on it.
@@ -195,6 +201,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Whether the scoreboard is on the screen, see [ShowScoresStore].
   bool _showScores = true;
 
+  /// How much of the screen the side column takes, see [ColumnWidthStore].
+  double _columnShare = ColumnWidthStore.normal;
+
   /// Whether the layout the last frame drew was the wide one. Read by the
   /// phase listener, which runs outside a build and must not go looking for a
   /// MediaQuery of its own.
@@ -218,11 +227,22 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   Future<void> _loadSettings() async {
     final scale = await LyricsScaleStore.load();
     final scores = await ShowScoresStore.load();
+    final share = await ColumnWidthStore.load();
     if (!mounted) return;
     setState(() {
       _lyricsScale = scale;
       _showScores = scores;
+      _columnShare = share;
     });
+  }
+
+  /// The divider was dragged. Saved on the way, not at the end of the drag:
+  /// a write per frame is cheap next to one more thing to remember.
+  void _setColumnShare(double share) {
+    final next = ColumnWidthStore.clamp(share);
+    if (next == _columnShare) return;
+    setState(() => _columnShare = next);
+    unawaited(ColumnWidthStore.save(next));
   }
 
   void _toggleScores() {
@@ -363,16 +383,23 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   /// Closes the camera in the side column, with the code it read or without.
-  /// A code the inline camera read. The camera that opened itself is looking
-  /// at the card of the round that was just revealed, so that one code is
-  /// ignored and the camera stays open for the next card.
-  void _onInlineCode(String code) {
+  /// Whether a code the camera read is the card of the round on screen. The
+  /// camera that opened itself is pointing straight at it, and a round nobody
+  /// asked for would land on top of the reveal.
+  ///
+  /// Handed to [ScannerView.ignore], which reads past it and keeps looking -
+  /// dropping it after the view reported it would lock the camera.
+  bool _ignoreCode(String code) {
     final inPlay = _game.lastScannedCode;
-    if (_autoScan &&
-        inPlay != null &&
-        YearDatabase.normalizeKey(code) == YearDatabase.normalizeKey(inPlay)) {
-      return;
-    }
+    if (!_autoScan || inPlay == null) return false;
+    return YearDatabase.normalizeKey(code) == YearDatabase.normalizeKey(inPlay);
+  }
+
+  /// A code the inline camera read. The real camera has filtered it already;
+  /// this is the same test again for a stand-in that does not know about
+  /// [ScannerView.ignore], and it is cheap.
+  void _onInlineCode(String code) {
+    if (_ignoreCode(code)) return;
     _closeInlineScan(code);
   }
 
@@ -786,13 +813,27 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // As on the phone: the countdown is up over the screen, or the song is
     // starting within the frame.
     if (_game.phase == RoundPhase.countdown) return const SizedBox.shrink();
+    // The menu in the corner of the screen rather than in one of the two
+    // halves: it belongs to neither, it is reached once or twice an evening,
+    // and the corner is the one place no round ever needs.
+    return Stack(
+      children: [
+        Positioned.fill(child: _wideRound(context)),
+        Positioned(top: 0, right: 4, child: _menu(wide: true)),
+      ],
+    );
+  }
+
+  Widget _wideRound(BuildContext context) {
     return _WideRound(
       game: _game,
       spotify: AppScope.of(context).spotify,
       lyrics: widget.lyrics ?? sharedLyrics,
       camera: _inlineScan == null
           ? null
-          : widget.camera ?? (context, onCode) => ScannerView(onCode: onCode),
+          : widget.camera ??
+                (context, onCode) =>
+                    ScannerView(onCode: onCode, ignore: _ignoreCode),
       onCode: _onInlineCode,
       onCloseCamera: _closeInlineScan,
       onScan: _startRound,
@@ -801,8 +842,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onUndoRedraw: _undoRedraw,
       lyricsScale: _lyricsScale,
       showScores: _showScores,
-      menu: _menu(wide: true),
       shortcuts: hasKeyboard,
+      columnShare: _columnShare,
+      onColumnShare: _setColumnShare,
     );
   }
 
@@ -1665,8 +1707,9 @@ class _WideRound extends StatelessWidget {
     required this.onUndoRedraw,
     required this.lyricsScale,
     required this.showScores,
-    required this.menu,
     required this.shortcuts,
+    required this.columnShare,
+    required this.onColumnShare,
   });
 
   final GameController game;
@@ -1693,10 +1736,9 @@ class _WideRound extends StatelessWidget {
   /// nobody in the room can press has no business on the stage.
   final bool shortcuts;
 
-  /// What the app bar holds on a phone. There is no bar here, so it sits in
-  /// the corner of the camera panel - a row of its own would cost the height
-  /// the missing bar just gave back.
-  final Widget menu;
+  /// The share of the screen the column takes, and the handle that changes it.
+  final double columnShare;
+  final ValueChanged<double> onColumnShare;
 
   @override
   Widget build(BuildContext context) {
@@ -1713,7 +1755,10 @@ class _WideRound extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final side = (constraints.maxWidth * 0.28).clamp(240.0, 420.0);
+        // Whatever the handle was last dragged to. No floor and no cap but
+        // the store's own: it is a decision somebody made with the screen in
+        // front of them, which beats anything guessed from the width here.
+        final side = constraints.maxWidth * columnShare;
         // Two fixed homes in the column, so nothing moves from round to
         // round: the slot on top is what to do or what came of it, the camera
         // sits at the bottom. The camera's height is 4:3 as far as the width
@@ -1746,19 +1791,10 @@ class _WideRound extends StatelessWidget {
                   children: [
                     SizedBox(
                       height: slot,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: _ActionSlot(
-                              game: game,
-                              onScan: onScan,
-                              onReveal: game.reveal,
-                            ),
-                          ),
-                          // The menu has no app bar to sit in, and a row of
-                          // its own would cost the height that bar gave back.
-                          Positioned(top: 0, right: 0, child: menu),
-                        ],
+                      child: _ActionSlot(
+                        game: game,
+                        onScan: onScan,
+                        onReveal: game.reveal,
                       ),
                     ),
                     Expanded(
@@ -1776,15 +1812,18 @@ class _WideRound extends StatelessWidget {
                                 onUndoRedraw: onUndoRedraw,
                                 inColumn: true,
                               ),
-                            if (shortcuts)
-                              _ShortcutHints(
-                                reveal: playing,
-                                player: game.playingInApp,
-                              ),
                           ],
                         ),
                       ),
                     ),
+                    // Straight above the camera, at the foot of the column:
+                    // out of the way of the controls and where the eye goes
+                    // between two rounds anyway.
+                    if (shortcuts)
+                      _ShortcutHints(
+                        reveal: playing,
+                        player: game.playingInApp,
+                      ),
                     if (showCamera)
                       SizedBox(
                         height: cameraHeight,
@@ -1798,6 +1837,10 @@ class _WideRound extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            _SplitHandle(
+              onMove: (delta) =>
+                  onColumnShare(columnShare + delta / constraints.maxWidth),
             ),
             Expanded(
               child: _Stage(
@@ -1958,7 +2001,7 @@ class _ActionSlot extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: _FitBody(
-          padding: const EdgeInsets.fromLTRB(16, 16, 56, 16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               Icon(
@@ -2023,44 +2066,51 @@ class _ColumnYear extends StatelessWidget {
     // this is the only card left.
     final origin = _originLine(game, song);
 
+    final yearText = Text(
+      '$year',
+      maxLines: 1,
+      style: TextStyle(
+        fontSize: 104,
+        fontWeight: FontWeight.w800,
+        height: 1,
+        letterSpacing: -2,
+        color: accent,
+      ),
+    );
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: accent.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: accent, width: 2),
       ),
-      child: _FitBody(
-        padding: const EdgeInsets.fromLTRB(16, 12, 56, 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // Two columns where the card is wider than it is tall: the year
+          // beside the name rather than over it, which leaves the year twice
+          // the height and the room twice the type. A narrow column - a phone
+          // turned over - stacks them as before.
+          final beside = box.maxWidth > box.maxHeight * 1.3;
+
+          final name = [
             if (origin != null)
               Text(
                 origin,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(
+                textAlign: beside ? TextAlign.start : TextAlign.center,
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: accent,
                   letterSpacing: 0.4,
                 ),
               ),
-            Text(
-              '$year',
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 88,
-                fontWeight: FontWeight.w800,
-                height: 1.1,
-                letterSpacing: -2,
-                color: accent,
-              ),
-            ),
             if (song != null) ...[
               Text(
                 song.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium?.copyWith(
+                textAlign: beside ? TextAlign.start : TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -2068,12 +2118,86 @@ class _ColumnYear extends StatelessWidget {
                 song.artist,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
+                textAlign: beside ? TextAlign.start : TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
-          ],
+          ];
+
+          return _FitBody(
+            padding: const EdgeInsets.all(16),
+            child: beside
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: yearText,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: name,
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FittedBox(fit: BoxFit.scaleDown, child: yearText),
+                      ...name,
+                    ],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// The line between the two halves, and the grip that moves it.
+///
+/// A projector wants a wide stage and a laptop run by hand wants a wide
+/// column, and which one the evening is depends on the room rather than on
+/// anything the code can measure - so it is dragged, and remembered
+/// ([ColumnWidthStore]).
+class _SplitHandle extends StatelessWidget {
+  const _SplitHandle({required this.onMove});
+
+  /// The pixels the grip was dragged, positive to the right.
+  final ValueChanged<double> onMove;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return MouseRegion(
+      key: splitHandleKey,
+      cursor: SystemMouseCursors.resizeColumn,
+      child: GestureDetector(
+        // The grip is twelve pixels wide and the drag is horizontal only, so
+        // it cannot be mistaken for a tap on either half.
+        onHorizontalDragUpdate: (details) => onMove(details.delta.dx),
+        child: SizedBox(
+          width: 12,
+          child: Center(
+            child: Container(
+              width: 4,
+              height: 48,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
         ),
       ),
     );

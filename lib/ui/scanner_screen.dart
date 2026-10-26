@@ -85,9 +85,24 @@ class _ScannerScreenState extends State<ScannerScreen> {
 /// - a hidden tab, the phone switched over to Spotify - with the scanner still
 /// open.
 class ScannerView extends StatefulWidget {
-  const ScannerView({required this.onCode, this.controller, super.key});
+  const ScannerView({
+    required this.onCode,
+    this.ignore,
+    this.controller,
+    super.key,
+  });
 
   final ValueChanged<String> onCode;
+
+  /// Codes to read past rather than report - the card of the round that is
+  /// still lying in front of the camera, see `GameScreen`.
+  ///
+  /// The test has to be here and not at the other end of [onCode]: this view
+  /// reports one code and then stops looking, so a code thrown away after it
+  /// was reported locks the camera for good. That was the bug this exists for
+  /// (2026-10-27): after a reveal the preview ran and read nothing, because
+  /// the one code it had reported was the card nobody had taken away yet.
+  final bool Function(String code)? ignore;
 
   /// Null makes one of its own.
   final MobileScannerController? controller;
@@ -162,6 +177,7 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
 
   void _submit(String code) {
     if (_handled || !mounted) return;
+    if (widget.ignore?.call(code) ?? false) return;
     _handled = true;
     widget.onCode(code);
   }
