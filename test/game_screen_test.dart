@@ -17,6 +17,7 @@ import 'package:anno/music/music_service.dart';
 import 'package:anno/music/song_launcher.dart';
 import 'package:anno/music/spotify_session.dart';
 import 'package:anno/ui/app_scope.dart';
+import 'package:anno/ui/centered_body.dart';
 import 'package:anno/ui/game_screen.dart';
 import 'package:anno/ui/layout.dart';
 import 'package:anno/ui/lyrics_sheet.dart';
@@ -218,6 +219,32 @@ void main() {
     expect(find.text('Who got it right?'), findsOneWidget);
     // The target is stated once, next to the heading - not on every tile.
     expect(find.text('/ 10'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a phone turned over keeps one column, and widens it', (
+    tester,
+  ) async {
+    // What the wide layout is not for: its column would be 214 pixels. The
+    // one column takes the width instead of sitting in a 560 strip.
+    tester.view.physicalSize = const Size(893, 412);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    final game = buildGame();
+    await reveal(game);
+
+    await tester.pumpWidget(wrap(game));
+    await tester.pumpAndSettle();
+
+    // The phone's own reveal card, not the stage and its column.
+    expect(find.byType(AppBar), findsOneWidget);
+    expect(find.byKey(revealInColumnKey), findsNothing);
+    expect(find.text('2005'), findsOneWidget);
+
+    final card = tester.getRect(find.text('My Number One'));
+    expect(card.center.dx, closeTo(893 / 2, 1));
+    expect(tester.getRect(find.byType(CenteredBody)).width, greaterThan(600));
     expect(tester.takeException(), isNull);
   });
 
@@ -908,28 +935,33 @@ void main() {
       addTearDown(tester.view.reset);
     }
 
-    test('a landscape screen counts, whatever its size', () {
+    test('landscape, and the size of a device it was meant for', () {
       expect(isWideScreen(const Size(1920, 1080)), isTrue);
       expect(isWideScreen(const Size(1280, 720)), isTrue);
-      // A tablet on its side.
+      // Tablets on their side.
       expect(isWideScreen(const Size(1180, 820)), isTrue);
-      // A phone turned over: a big one, and a small one.
-      expect(isWideScreen(const Size(893, 412)), isTrue);
-      expect(isWideScreen(const Size(667, 375)), isTrue);
+      expect(isWideScreen(const Size(1024, 768)), isTrue);
+      // A phone turned over is landscape and nothing like the device: its
+      // column would be 214 pixels. It keeps the one column, widened.
+      expect(isWideScreen(const Size(956, 440)), isFalse);
+      expect(isWideScreen(const Size(893, 412)), isFalse);
+      expect(isWideScreen(const Size(667, 375)), isFalse);
+      expect(isShortLandscape(const Size(893, 412)), isTrue);
       // Upright, where the one column belongs: a phone, a tablet, and a
       // browser window too narrow to put two things side by side.
       expect(isWideScreen(const Size(390, 844)), isFalse);
+      expect(isShortLandscape(const Size(390, 844)), isFalse);
       expect(isWideScreen(const Size(820, 1180)), isFalse);
       expect(isWideScreen(const Size(1000, 1100)), isFalse);
     });
 
-    // An S24 Ultra sideways and a small phone sideways: a third of a
-    // projector's width and 412 resp. 375 of height, where the blocks of the
-    // stage used to add up to more than the screen.
-    for (final size in [const Size(893, 412), const Size(667, 375)]) {
+    // The floor of the layout and a 10 inch tablet on its side: the two
+    // smallest screens that get it at all, where the blocks of the stage are
+    // closest to adding up to more than the screen.
+    for (final size in [const Size(900, 500), const Size(1024, 768)]) {
       final label = '${size.width.toInt()}x${size.height.toInt()}';
 
-      testWidgets('a phone turned over plays whole at $label', (tester) async {
+      testWidgets('the smallest screens play whole at $label', (tester) async {
         useWideScreen(tester, size: size);
         final game = buildGame();
         game.scan(card);
@@ -946,7 +978,7 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('a phone turned over reveals whole at $label', (
+      testWidgets('the smallest screens reveal whole at $label', (
         tester,
       ) async {
         useWideScreen(tester, size: size);
@@ -989,7 +1021,7 @@ void main() {
     });
 
     testWidgets('the reveal is the camera\'s own slot', (tester) async {
-      useWideScreen(tester, size: const Size(893, 412));
+      useWideScreen(tester, size: const Size(1024, 768));
       final game = buildGame();
       game.scan(card);
       await game.startPlayback();
@@ -1015,7 +1047,7 @@ void main() {
       // slot that just became the year. Neither displaces the other.
       final preview = tester.getRect(find.text('Scan the card'));
       expect(preview.top, greaterThan(slot.bottom));
-      expect(preview.center.dx, lessThan(893 * 0.33));
+      expect(preview.center.dx, lessThan(1024 * 0.33));
       expect(find.text('Next round'), findsNothing);
       expect(tester.takeException(), isNull);
     });
@@ -1108,7 +1140,7 @@ void main() {
     testWidgets('the card it is still looking at does not count', (
       tester,
     ) async {
-      useWideScreen(tester, size: const Size(893, 412));
+      useWideScreen(tester, size: const Size(1024, 768));
       final game = buildGame(
         years: const {'182ca01194a98f0b': 2005, '91bd5e0e2c7a4f31': 2005},
       );
@@ -1156,7 +1188,7 @@ void main() {
     });
 
     testWidgets('a game won while the camera waits ends', (tester) async {
-      useWideScreen(tester, size: const Size(893, 412));
+      useWideScreen(tester, size: const Size(1024, 768));
       final game = GameController(
         players: [GamePlayer(name: 'Player 1')],
         categories: [escCategory],
@@ -1394,7 +1426,7 @@ void main() {
     testWidgets('no app bar, and the menu in the screen\'s corner', (
       tester,
     ) async {
-      useWideScreen(tester, size: const Size(893, 412));
+      useWideScreen(tester, size: const Size(1024, 768));
       final game = buildGame();
       game.scan(card);
       await game.startPlayback();
@@ -1408,7 +1440,7 @@ void main() {
 
       // Top right of the whole screen, which belongs to neither half.
       final menu = tester.getCenter(find.byTooltip('Menu'));
-      expect(menu.dx, greaterThan(893 * 0.9));
+      expect(menu.dx, greaterThan(1024 * 0.9));
       expect(menu.dy, lessThan(60));
 
       await tester.tap(find.byTooltip('Menu'));
@@ -1422,7 +1454,7 @@ void main() {
     });
 
     testWidgets('the player is a band across the bottom', (tester) async {
-      useWideScreen(tester, size: const Size(893, 412));
+      useWideScreen(tester, size: const Size(1024, 768));
       final session = SeekableSession();
       final game = buildGame(launcher: const InTabLauncher());
       game.scan(card);
@@ -1459,7 +1491,7 @@ void main() {
     ) async {
       final words = <double>[];
       for (final launcher in [const InTabLauncher(), const SilentLauncher()]) {
-        useWideScreen(tester, size: const Size(893, 412));
+        useWideScreen(tester, size: const Size(1024, 768));
         final game = buildGame(launcher: launcher);
         game.scan(card);
         await game.startPlayback();
@@ -1479,7 +1511,7 @@ void main() {
     });
 
     testWidgets('the menu takes the scores off the stage', (tester) async {
-      useWideScreen(tester, size: const Size(893, 412));
+      useWideScreen(tester, size: const Size(1024, 768));
       final game = buildGame();
       game.scan(card);
       await game.startPlayback();
@@ -1530,7 +1562,9 @@ void main() {
 
     testWidgets('the words get the room on a short stage', (tester) async {
       final padding = <double>[];
-      for (final size in [const Size(893, 412), const Size(1920, 1080)]) {
+      // The floor of the layout against a 1080p wall: the box of the one is a
+      // fraction of the other's.
+      for (final size in [const Size(900, 500), const Size(1920, 1080)]) {
         useWideScreen(tester, size: size);
         final game = buildGame();
         game.scan(card);
@@ -1544,10 +1578,12 @@ void main() {
         expect(tester.takeException(), isNull);
       }
 
-      // A share of the box rather than the projector's fixed 28 and 72,
-      // which were most of a phone's box.
+      // A share of the box, capped at the projector's 28 and 72: the wall
+      // sits on the cap, the small screen below it. Fixed, those 100 pixels
+      // were most of a small box.
       expect(padding.last, 100);
-      expect(padding.first, lessThan(padding.last * 0.6));
+      expect(padding.first, lessThan(padding.last));
+      expect(padding.first, greaterThan(20));
     });
 
     testWidgets('the words on the stage are sized from the column', (

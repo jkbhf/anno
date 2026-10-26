@@ -253,17 +253,32 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
                             ),
                           ),
                           Align(
-                            alignment: Alignment.bottomCenter,
+                            // In the small box of the side column the whole
+                            // sentence lies across the frame; there the way
+                            // to type a code is the keyboard alone, in a
+                            // corner, with the words in its tooltip.
+                            alignment: compact
+                                ? Alignment.bottomRight
+                                : Alignment.bottomCenter,
                             child: Padding(
                               padding: EdgeInsets.all(compact ? 4 : 24),
-                              child: TextButton.icon(
-                                onPressed: _enterManually,
-                                icon: const Icon(Icons.keyboard),
-                                label: const Text('Enter the code by hand'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                ),
-                              ),
+                              child: compact
+                                  ? IconButton(
+                                      tooltip: 'Enter the code by hand',
+                                      onPressed: _enterManually,
+                                      icon: const Icon(Icons.keyboard),
+                                      color: Colors.white,
+                                    )
+                                  : TextButton.icon(
+                                      onPressed: _enterManually,
+                                      icon: const Icon(Icons.keyboard),
+                                      label: const Text(
+                                        'Enter the code by hand',
+                                      ),
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                      ),
+                                    ),
                             ),
                           ),
                         ],

@@ -1788,7 +1788,7 @@ class _WideRound extends StatelessWidget {
         // sits at the bottom. The camera's height is 4:3 as far as the width
         // allows, capped at a third of the column - a projector is nowhere
         // near that cap.
-        final slot = (constraints.maxHeight * 0.3).clamp(0.0, 200.0);
+        final slot = (constraints.maxHeight * 0.36).clamp(0.0, 280.0);
         // As wide as the slot above it - the two boxes of the column are one
         // column, not two sizes. 4:3 as far as the height allows and cropped
         // rather than narrowed where it does not: what the scanner reads is
@@ -2231,11 +2231,13 @@ class _SplitHandle extends StatelessWidget {
       key: splitHandleKey,
       cursor: SystemMouseCursors.resizeColumn,
       child: GestureDetector(
-        // The grip is twelve pixels wide and the drag is horizontal only, so
-        // it cannot be mistaken for a tap on either half.
+        // The drag is horizontal only, so a wide grip cannot be mistaken for
+        // a tap on either half - and a finger on a tablet needs more than the
+        // line it can see.
         onHorizontalDragUpdate: (details) => onMove(details.delta.dx),
+        behavior: HitTestBehavior.opaque,
         child: SizedBox(
-          width: 12,
+          width: 24,
           child: Center(
             child: Container(
               width: 4,

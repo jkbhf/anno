@@ -108,8 +108,8 @@ void main() {
   });
 
   testWidgets('sideways the deck cards stand in two columns', (tester) async {
-    // A phone turned over: the list is the same, the shape is not.
-    tester.view.physicalSize = const Size(893, 412);
+    // A tablet on its side: the list is the same, the shape is not.
+    tester.view.physicalSize = const Size(1024, 768);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
 

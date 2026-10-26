@@ -495,15 +495,28 @@ run from a laptop on a projector. It picks itself by size, not by a setting:
 the laptop is the device then, and a phone column in the middle of a wall is
 never what anybody wants.
 
-**Landscape is the whole question - there is no size floor under it.** It
-started with one (`width >= 900`), on the idea that a turned phone would only
-get a stage the width of a strip. The device it was tried on says otherwise: on
-an S24 Ultra sideways, ~893x412 CSS pixels, the one column kept its 560 and
-left a sixth of the screen empty on either side, while the height it wants is
-exactly what a turned phone has least of. So `isWideScreen` is `width >=
-height * 1.2` and nothing else (2026-10-26). The ratio rather than plain
-`width > height` keeps a nearly square browser window on the one column, where
-two things side by side would both be too narrow.
+**Landscape, and the size of a device the layout was meant for.** This went
+back and forth twice and landed where it started, with the reasons now written
+down. The first rule was `width >= 900`; it kept a phone out but also any
+small laptop window, and a turned S24 Ultra is 893 wide, so the phone that
+asked for this got the one column with its 560 cap and a sixth of the screen
+empty on either side. The rule was then dropped to landscape alone, and the
+phone got the two halves - which is when the column turned out to be 214
+pixels wide: a year card with an ellipsis in the middle of the title, and a
+camera box with its own buttons lying across its frame (seen on 2026-10-27).
+
+So: `height >= 500 && width >= height * 1.2`. The height is what tells the
+devices apart, not the width - a 10 inch tablet sideways is 768 high, every
+laptop is 600 or more, and no phone sideways reaches 450. The ratio rather
+than plain `width > height` keeps a nearly square browser window on the one
+column, where two things side by side would both be too narrow.
+
+**A phone turned over gets the one column, widened** (`isShortLandscape`,
+read by `CenteredBody`). That is what the gutters complaint was really about:
+not that the layout was wrong, but that a 560 strip in the middle of a 893
+wide screen wastes both sides while the blocks are squeezed into the little
+height that is left. The cap goes to 80% of the width, up to 860, so the
+upright layout has the width to not need the height.
 
 **That makes the stage's floors wrong.** Its blocks are shares of the height -
 year card, words, score tiles - and each had a minimum sized for a projector.

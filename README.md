@@ -128,10 +128,11 @@ stage for the whole round, see below.
 
 ## On a projector, or a phone turned over
 
-Every landscape screen gets a layout of its own - a laptop on a projector, a
-tablet on its side, a phone turned over. It switches on by itself as soon as
-the window is clearly wider than tall (`isWideScreen` in `lib/ui/layout.dart`),
-with no size floor under it.
+A screen that is wider than tall and big enough to hold two halves gets a
+layout of its own - a laptop on a projector, a tablet on its side, a television.
+It switches on by itself (`isWideScreen` in `lib/ui/layout.dart`): landscape,
+and at least 500 pixels tall, which every laptop and tablet is and no phone
+turned over is. A phone sideways keeps the one column and widens it instead.
 
 - **The stage**, on the right, is for the room: the lyrics, large, from the
   first note to the next card, and the scores as one row along the bottom.
