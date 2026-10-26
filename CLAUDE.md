@@ -382,10 +382,19 @@ is drawn more often than its long tail:
 - **`tier: 2`** - the remaining 4 of the eight. Only ESC 2005-2026 has them;
   the smaller years are core all the way through.
 
-So a 2005+ ESC year is 6 tier 1 + 4 tier 2, and a tier 1 song should be drawn
-about 3x as often as a tier 2 one - roughly 80% of that year's rounds land on
-the core. Keep the JSON at "core or tail" rather than a per-song weight, so a
-year can still be filled in by hand.
+So a 2005+ ESC year is 6 tier 1 + 4 tier 2, and a tier 1 song is drawn 3x as
+often as a tier 2 one *among the songs not played yet*. Keep the JSON at "core
+or tail" rather than a per-song weight, so a year can still be filled in by
+hand.
+
+**Since the played memory is kept for good, the tier sets the order, not the
+share.** Every song of a year plays once before any repeats, so over the long
+run a 6 + 4 year lands 60% of its rounds on the core, not the ~80% the weight
+alone would give. Within one pass the core comes first: about 82% core on the
+first scan of a year, 12% on the tenth - the tail gathers at the end of every
+pass. Looked at on 2026-10-26 and kept that way on purpose: getting the 80%
+back would mean letting a core song repeat before the tail of its year has
+been heard, against the rule in the ESC section.
 
 The hit, German, K-Pop and White Girl Music decks split the same way, read off the size of the
 year: a 10 song year is 6 + 4, an 8 song year 5 + 3, a 5 or 3 song year is core
@@ -398,6 +407,20 @@ at startup) and `GameController._pickWeighted`. The weighting sits inside the
 before one repeats - the tier decides the *order*, and with it which songs a
 year that is only scanned once or twice ever gets to show. The factor is
 `_tierOneWeight` in `lib/game/game_controller.dart`, one number to tune.
+
+**A swapped song is drawn like the tail.** `redraw` is the room saying it does
+not know the song, so its `Song.key` goes into `SkippedSongsStore` and from
+then on it weighs what a tier 2 song weighs, on this device, in every deck it
+stands in. It stays in the deck and still comes once per pass - the swap only
+moves it to the back. Nothing takes a song out of that memory again.
+
+**Played is per deck, the order looks across decks.** Anthony and Anthony All
+share 1263 songs, Anthony All and Jakob 115, the hit deck and White Girl Music
+45 in the same year. Picked together, `_draw` prefers a song whose `Song.key`
+no deck has played yet, but only within what its own deck still has unplayed:
+it never starts a year over early and never keeps a song out that its deck
+needs. Same key means same track id, so the ESC and hit deck pressings of
+Waterloo and the like are not caught - accepted, see the hit deck section.
 
 ## Two ways to play a song, one of them optional
 

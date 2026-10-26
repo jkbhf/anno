@@ -58,6 +58,8 @@ class GameController extends ChangeNotifier {
     Future<void> Function()? stopMusic,
     void Function(Set<String> played)? onPlayedChanged,
     Iterable<String> played = const [],
+    void Function(Set<String> skipped)? onSkippedChanged,
+    Iterable<String> skipped = const [],
     Random? random,
   }) : assert(categories.isNotEmpty, 'A game needs at least one category.'),
        _launcher = launcher,
@@ -66,8 +68,10 @@ class GameController extends ChangeNotifier {
        _discard = discard,
        _stopMusic = stopMusic,
        _onPlayedChanged = onPlayedChanged,
+       _onSkippedChanged = onSkippedChanged,
        _random = random ?? Random() {
     _played.addAll(played);
+    _skipped.addAll(skipped);
   }
 
   /// How long a `resumed` is still ignored after opening Spotify.
@@ -119,6 +123,10 @@ class GameController extends ChangeNotifier {
   /// `PlayedSongsStore`.
   final void Function(Set<String> played)? _onPlayedChanged;
 
+  /// Told the whole of [skipped] whenever a song is swapped away, for the
+  /// memory across games in `SkippedSongsStore`.
+  final void Function(Set<String> skipped)? _onSkippedChanged;
+
   final Random _random;
 
   /// Songs already played - by this game and, through `PlayedSongsStore`, by
@@ -127,6 +135,12 @@ class GameController extends ChangeNotifier {
   /// part of the saved game, so a resume after Android killed the app does not
   /// start every year over.
   final Set<String> _played = <String>{};
+
+  /// The [Song.key]s of songs a round swapped away with [redraw] - the room
+  /// did not know them. Without the deck: a song nobody knows is unknown in
+  /// every deck it sits in. Such a song is drawn like the long tail of its
+  /// year from then on, see [_weightOf]; it stays in the deck.
+  final Set<String> _skipped = <String>{};
 
   /// The song that went out last, so a year that starts over does not open
   /// with the song it just ended on.
@@ -201,6 +215,9 @@ class GameController extends ChangeNotifier {
 
   /// The keys of the songs this game has played, see [playedKey].
   Set<String> get played => {..._played};
+
+  /// The keys of the songs swapped away on this device, see [_skipped].
+  Set<String> get skipped => {..._skipped};
 
   /// Handles a scanned QR code and starts the countdown on success.
   ScanOutcome scan(String rawCode) {
@@ -351,6 +368,8 @@ class GameController extends ChangeNotifier {
 
     final draw = _draw(year, exclude: _playedKey(category, song));
     if (draw == null) return false;
+
+    if (_skipped.add(song.key)) _onSkippedChanged?.call({..._skipped});
 
     currentSong = draw.song;
     currentCategory = draw.category;
@@ -507,6 +526,12 @@ class GameController extends ChangeNotifier {
   /// Played means played across games: nothing comes back while its year in
   /// its deck still holds a song this device has not played.
   ///
+  /// Played is counted per deck, but a song played in another deck waits too
+  /// while its deck has something played nowhere: Anthony and Anthony All
+  /// share nearly every song, and picked together they would otherwise play
+  /// it twice in an evening. That only changes the order - it never starts a
+  /// year over or keeps a song out that its deck still needs.
+  ///
   /// Once everything is used up the year starts over: a repeat beats a dead
   /// card. Over means over - the year's songs leave [_played], so it runs
   /// through all of them again before the next repeat instead of drawing with
@@ -547,7 +572,19 @@ class GameController extends ChangeNotifier {
       if (songs.isEmpty) songs = pool;
     }
 
-    return (category: category, song: _pickWeighted(songs));
+    // After a start over, so the year's own songs no longer count.
+    final playedAnywhere = {
+      for (final key in _played) key.substring(key.indexOf('|') + 1),
+    };
+    final fresh = [
+      for (final song in songs)
+        if (!playedAnywhere.contains(song.key)) song,
+    ];
+
+    return (
+      category: category,
+      song: _pickWeighted(fresh.isEmpty ? songs : fresh),
+    );
   }
 
   /// How many songs of a year count towards its deck's share: the size of a
@@ -572,7 +609,9 @@ class GameController extends ChangeNotifier {
   /// How much more often a `tier: 1` song is drawn than a `tier: 2` one.
   static const int _tierOneWeight = 3;
 
-  int _weightOf(Song song) => song.tier == 1 ? _tierOneWeight : 1;
+  /// A swapped away song counts as tail whatever its tier, see [_skipped].
+  int _weightOf(Song song) =>
+      song.tier == 1 && !_skipped.contains(song.key) ? _tierOneWeight : 1;
 
   /// Picks from a non-empty list, each song weighted by [_weightOf].
   Song _pickWeighted(List<Song> songs) {

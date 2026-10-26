@@ -4,6 +4,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/data/game_store.dart';
 import 'package:anno/data/played_songs_store.dart';
+import 'package:anno/data/skipped_songs_store.dart';
 import 'package:anno/models/player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,6 +79,19 @@ void main() {
     test('a broken value is an empty memory', () async {
       SharedPreferences.setMockInitialValues({'songs.recent': '{"a":1}'});
       expect(await PlayedSongsStore.load(), isEmpty);
+    });
+  });
+
+  group('skipped songs', () {
+    test('they survive a round trip', () async {
+      await SkippedSongsStore.save({'a', 'b'});
+
+      expect(await SkippedSongsStore.load(), {'a', 'b'});
+    });
+
+    test('a broken value is an empty memory', () async {
+      SharedPreferences.setMockInitialValues({'songs.skipped': '{"a":1}'});
+      expect(await SkippedSongsStore.load(), isEmpty);
     });
   });
 }

@@ -735,6 +735,30 @@ void main() {
       expect(remembered.last, {GameController.playedKey(category, again)});
     });
 
+    test('a song played in another deck waits for the fresh ones', () async {
+      final other = SongCategory(
+        id: 'hits',
+        name: 'Hits',
+        description: '',
+        songs: songs,
+      );
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory(songs)],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        played: {
+          GameController.playedKey(other, songs[0]),
+          GameController.playedKey(other, songs[1]),
+        },
+      );
+
+      expect((await playRound(game)).title, 'C');
+      // Only played elsewhere is still unplayed here: no start over yet.
+      expect(['A', 'B'], contains((await playRound(game)).title));
+      expect(game.played, hasLength(4));
+    });
+
     test('a rematch does not start the years over', () async {
       final game = buildGame(category: buildCategory(songs));
       final first = await playRound(game);
@@ -787,6 +811,42 @@ void main() {
         expect(game.currentSong!.title, isNot(unknown));
         game.cancelRound();
       }
+    });
+
+    test('a swapped song is remembered and drawn like the tail', () async {
+      final skipped = <Set<String>>[];
+      final core = [
+        for (final title in ['known', 'unknown'])
+          Song(title: title, artist: 'X', year: 2005, spotifyTrackId: title),
+      ];
+      final game = GameController(
+        players: [GamePlayer(name: 'Anna')],
+        categories: [buildCategory(core)],
+        years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
+        launcher: FakeLauncher(),
+        skipped: {'unknown'},
+        onSkippedChanged: skipped.add,
+        random: Random(3),
+      );
+
+      const rounds = 600;
+      var known = 0;
+      for (var round = 0; round < rounds; round++) {
+        game.scan(card2005);
+        if (game.currentSong!.title == 'known') known++;
+        game.cancelRound();
+      }
+      expect(known / rounds, closeTo(0.75, 0.06));
+
+      game.scan(card2005);
+      await game.startPlayback();
+      final swapped = game.currentSong!.key;
+      expect(game.redraw(), isTrue);
+      expect(game.skipped, {'unknown', swapped});
+      // Only a song not yet remembered is news for the store.
+      expect(skipped, [
+        if (swapped != 'unknown') {'unknown', swapped},
+      ]);
     });
 
     test('a year with one song has nothing to swap in', () async {
