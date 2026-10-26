@@ -707,11 +707,12 @@ Long press works with a mouse too.
 
 `GameShortcut` in `lib/ui/game_screen.dart` is the one list - the bindings and
 the hint line are both built from it, so they cannot drift apart. Space plays
-and pauses, Enter reveals, and the four moves of the song have an arrow and its
-WASD letter each: left/A and right/D step ten seconds, up/W jumps to the middle
-and down/S back to the start. The pairs are laid out the way the moves are, the
-horizontal keys stepping and the vertical ones jumping. It is not a convention
-anybody arrives knowing - it is one evening's learning and then it is muscle.
+and pauses, Enter reveals, N is "nobody knows it" and Z takes that swap back,
+and the four moves of the song have an arrow and its WASD letter each: left/A
+and right/D step ten seconds, up/W jumps to the middle and down/S back to the
+start. The pairs are laid out the way the moves are, the horizontal keys
+stepping and the vertical ones jumping. It is not a convention anybody arrives
+knowing - it is one evening's learning and then it is muscle.
 
 **Taking these keys means taking them from Flutter.** `CallbackShortcuts` sits
 below the app's own shortcuts and above every button on the screen, so inside
@@ -722,10 +723,14 @@ laptop it is the right one. A dialog, the countdown and the scanner page are
 routes of their own and keep their keys - the shortcuts resolve along the focus
 chain, which does not run through this screen from there.
 
-**A key does only what a finger could.** The song can only be moved in a round
+**A key does only what a finger could**, and `GameShortcut.isLive` is where
+that is decided - once, for the bindings and the hint line together, so a key
+is written down exactly when it works. The song can only be moved in a round
 that plays in this tab (`playingInApp`), so on a link or YouTube round the
-player keys do nothing at all and only Enter works; `seekSongBy` is shared with
-the bar's own buttons rather than written twice.
+player keys do nothing at all; the swap and its undo ask the controller's own
+`canRedraw` and `canUndoRedraw`, so N is dead in a year with one song and Z
+only after a swap. `seekSongBy` is shared with the bar's own buttons rather
+than written twice.
 
 **Where they are written down: the column, and only with a keyboard.**
 `hasKeyboard` in `lib/ui/layout.dart` reads `defaultTargetPlatform`, which on

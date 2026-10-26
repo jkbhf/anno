@@ -163,10 +163,12 @@ with no size floor under it.
   them widens the column or the stage, and the device remembers where it was
   left.
 - **Keys**, on a laptop or a desktop: space plays and pauses, enter reveals the
-  year, left/A and right/D step ten seconds, up/W jumps to the middle of the
-  song and down/S back to its start. They are listed at the foot of the column,
-  and only there - the stage is for the room, which has no keyboard. Moving the
-  song needs the in-app player; in a link round only enter does anything.
+  year, N is "nobody knows it" and Z takes that swap back, left/A and right/D
+  step ten seconds, up/W jumps to the middle of the song and down/S back to its
+  start. They are listed at the foot of the column, and only there - the stage
+  is for the room, which has no keyboard. Each is listed only while it does
+  something: moving the song needs the in-app player, N needs another song in
+  that year, Z needs a swap to take back.
 - **"Hide the scores"** in the menu gives the words the whole stage, on the
   phone too. There is then nothing to tap, so no points are counted and the
   game runs until you stop it - which is the point of it. The scores are kept

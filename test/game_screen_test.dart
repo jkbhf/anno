@@ -1117,6 +1117,58 @@ void main() {
       expect(game.phase, RoundPhase.revealed);
     });
 
+    testWidgets('N swaps the song and Z takes it back', (tester) async {
+      useWideScreen(tester);
+      // In the tab, where there is no countdown between the swap and the
+      // next song - and where a laptop with these keys plays anyway.
+      final game = buildGame(
+        launcher: const InTabLauncher(),
+        categories: [twoSongs],
+      );
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+      );
+      await tester.pumpAndSettle();
+
+      final first = game.currentSong!.title;
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
+      await tester.pumpAndSettle();
+      expect(game.currentSong!.title, isNot(first));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyZ);
+      await tester.pumpAndSettle();
+      expect(game.currentSong!.title, first);
+
+      // Nothing to take back twice, and the key says so by doing nothing.
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyZ);
+      await tester.pumpAndSettle();
+      expect(game.currentSong!.title, first);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a year with one song ignores the swap key', (tester) async {
+      useWideScreen(tester);
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(
+        wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+      );
+      await tester.pumpAndSettle();
+
+      // A key does only what a finger could, and there is no swap button here.
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
+      await tester.pumpAndSettle();
+
+      expect(game.currentSong!.title, 'My Number One');
+      expect(find.text('No other song for this year.'), findsNothing);
+    });
+
     testWidgets('a link round only takes the reveal key', (tester) async {
       useWideScreen(tester);
       final session = SeekableSession();
@@ -1157,6 +1209,8 @@ void main() {
       expect(find.text('Space'), findsOneWidget);
       expect(find.text('Enter'), findsOneWidget);
       expect(find.text('↑ W'), findsOneWidget);
+      // Only what works: this year holds one song, so there is no swap.
+      expect(find.text('N'), findsNothing);
       expect(
         tester.getCenter(find.text('Space')).dx,
         lessThan(tester.getCenter(find.byType(LyricsView)).dx),

@@ -97,9 +97,9 @@ bool needsCountdown(MusicService service, {required bool sessionReady}) =>
 ///
 /// Two keys for every move of the song - an arrow and its WASD letter - which
 /// cost nothing beside each other and let a hand stay where it is. The pair is
-/// laid out the way the moves are: the horizontal keys step ten seconds, the
-/// vertical ones jump, and the two single keys are the two things a round is
-/// made of, playing and revealing.
+/// laid out the way the moves are: the horizontal keys step ten seconds and
+/// the vertical ones jump. The single keys are what a round is made of:
+/// playing, revealing, and the swap with its undo.
 ///
 /// Taking these keys means the game screen keeps them from Flutter: inside it,
 /// space and enter no longer press the button that happens to have the focus
@@ -128,7 +128,9 @@ enum GameShortcut {
     '↓ S',
     'From the start',
   ),
-  reveal([LogicalKeyboardKey.enter], 'Enter', 'Reveal the year');
+  reveal([LogicalKeyboardKey.enter], 'Enter', 'Reveal the year'),
+  redraw([LogicalKeyboardKey.keyN], 'N', 'Nobody knows it'),
+  undoRedraw([LogicalKeyboardKey.keyZ], 'Z', 'Take the swap back');
 
   const GameShortcut(this.keys, this.label, this.does);
 
@@ -140,8 +142,18 @@ enum GameShortcut {
   /// What it does, in the hint line.
   final String does;
 
-  /// Whether this one moves the song, which only an in-app round can.
-  bool get needsPlayer => this != GameShortcut.reveal;
+  /// Whether it would do anything right now - the one rule both the bindings
+  /// and the hint line read, so a key is written down exactly when it works.
+  ///
+  /// A key does only what a finger could: the song can only be moved in a
+  /// round that plays in this tab, a year can only be revealed while one is
+  /// running, and the swap and its undo are the controller's own two questions.
+  bool isLive(GameController game) => switch (this) {
+    playPause || back10 || forward10 || middle || start => game.playingInApp,
+    reveal => game.phase == RoundPhase.playing,
+    redraw => game.canRedraw,
+    undoRedraw => game.canUndoRedraw,
+  };
 }
 
 /// The grip between the two halves of the wide layout, so a test can drag the
@@ -673,29 +685,28 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     Navigator.of(context).pop();
   }
 
-  /// Runs a shortcut, or nothing where it has no meaning right now: the song
-  /// can only be moved in a round that plays in this tab, and there is only
-  /// something to reveal while one is running.
+  /// Runs a shortcut, or nothing where it would do nothing anyway - see
+  /// [GameShortcut.isLive], the same rule the hint line reads.
   void _runShortcut(GameShortcut shortcut) {
+    if (!shortcut.isLive(_game)) return;
     final spotify = _spotify;
-    if (shortcut == GameShortcut.reveal) {
-      if (_game.phase == RoundPhase.playing) _game.reveal();
-      return;
-    }
-    if (spotify == null || !_game.playingInApp) return;
     switch (shortcut) {
-      case GameShortcut.playPause:
-        unawaited(spotify.togglePause());
-      case GameShortcut.back10:
-        seekSongBy(spotify, -SongProgressBar.skip);
-      case GameShortcut.forward10:
-        seekSongBy(spotify, SongProgressBar.skip);
-      case GameShortcut.middle:
-        unawaited(spotify.seek(spotify.duration ~/ 2));
-      case GameShortcut.start:
-        unawaited(spotify.seek(Duration.zero));
       case GameShortcut.reveal:
-        break;
+        _game.reveal();
+      case GameShortcut.redraw:
+        unawaited(_redraw());
+      case GameShortcut.undoRedraw:
+        unawaited(_undoRedraw());
+      case GameShortcut.playPause:
+        unawaited(spotify?.togglePause());
+      case GameShortcut.back10:
+        if (spotify != null) seekSongBy(spotify, -SongProgressBar.skip);
+      case GameShortcut.forward10:
+        if (spotify != null) seekSongBy(spotify, SongProgressBar.skip);
+      case GameShortcut.middle:
+        if (spotify != null) unawaited(spotify.seek(spotify.duration ~/ 2));
+      case GameShortcut.start:
+        if (spotify != null) unawaited(spotify.seek(Duration.zero));
     }
   }
 
@@ -1819,11 +1830,7 @@ class _WideRound extends StatelessWidget {
                     // Straight above the camera, at the foot of the column:
                     // out of the way of the controls and where the eye goes
                     // between two rounds anyway.
-                    if (shortcuts)
-                      _ShortcutHints(
-                        reveal: playing,
-                        player: game.playingInApp,
-                      ),
+                    if (shortcuts) _ShortcutHints(game: game),
                     if (showCamera)
                       SizedBox(
                         height: cameraHeight,
@@ -1886,20 +1893,16 @@ class _WideRound extends StatelessWidget {
 /// right now are listed - the song can only be moved in a round that plays in
 /// this tab.
 class _ShortcutHints extends StatelessWidget {
-  const _ShortcutHints({required this.reveal, required this.player});
+  const _ShortcutHints({required this.game});
 
-  /// Whether there is a year to reveal.
-  final bool reveal;
-
-  /// Whether the song is in reach of a key at all.
-  final bool player;
+  final GameController game;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final shown = [
       for (final shortcut in GameShortcut.values)
-        if (shortcut.needsPlayer ? player : reveal) shortcut,
+        if (shortcut.isLive(game)) shortcut,
     ];
     if (shown.isEmpty) return const SizedBox.shrink();
 
