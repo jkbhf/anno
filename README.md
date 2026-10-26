@@ -155,6 +155,11 @@ with no size floor under it.
   link is out of reach, and then the words get the band's height instead.
 - **The size of the words** is set with the two buttons in the column and kept
   on the device, so the same room gets the same size next time.
+- **Keys**, on a laptop or a desktop: space plays and pauses, enter reveals the
+  year, left/A and right/D step ten seconds, up/W jumps to the middle of the
+  song and down/S back to its start. They are listed at the foot of the column,
+  and only there - the stage is for the room, which has no keyboard. Moving the
+  song needs the in-app player; in a link round only enter does anything.
 - **"Hide the scores"** in the menu gives the words the whole stage, on the
   phone too. There is then nothing to tap, so no points are counted and the
   game runs until you stop it - which is the point of it. The scores are kept

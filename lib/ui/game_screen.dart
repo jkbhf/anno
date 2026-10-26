@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../data/game_store.dart';
 import '../data/lyrics_scale_store.dart';
@@ -89,6 +90,58 @@ Future<void> openGame(
 @visibleForTesting
 bool needsCountdown(MusicService service, {required bool sessionReady}) =>
     !(service == MusicService.spotify && sessionReady);
+
+/// What the keys do, in one place: the hint line in the column reads the same
+/// list the shortcuts are built from, so the two cannot drift apart.
+///
+/// Two keys for every move of the song - an arrow and its WASD letter - which
+/// cost nothing beside each other and let a hand stay where it is. The pair is
+/// laid out the way the moves are: the horizontal keys step ten seconds, the
+/// vertical ones jump, and the two single keys are the two things a round is
+/// made of, playing and revealing.
+///
+/// Taking these keys means the game screen keeps them from Flutter: inside it,
+/// space and enter no longer press the button that happens to have the focus
+/// and the arrows no longer walk from one to the next. For a game run with a
+/// mouse on a laptop that is the right trade, and it is the whole reason the
+/// list is short.
+enum GameShortcut {
+  playPause([LogicalKeyboardKey.space], 'Space', 'Play / pause'),
+  back10(
+    [LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.keyA],
+    '← A',
+    '−10s',
+  ),
+  forward10(
+    [LogicalKeyboardKey.arrowRight, LogicalKeyboardKey.keyD],
+    '→ D',
+    '+10s',
+  ),
+  middle(
+    [LogicalKeyboardKey.arrowUp, LogicalKeyboardKey.keyW],
+    '↑ W',
+    'Middle',
+  ),
+  start(
+    [LogicalKeyboardKey.arrowDown, LogicalKeyboardKey.keyS],
+    '↓ S',
+    'From the start',
+  ),
+  reveal([LogicalKeyboardKey.enter], 'Enter', 'Reveal the year');
+
+  const GameShortcut(this.keys, this.label, this.does);
+
+  final List<LogicalKeyboardKey> keys;
+
+  /// How the keys are written in the hint line.
+  final String label;
+
+  /// What it does, in the hint line.
+  final String does;
+
+  /// Whether this one moves the song, which only an in-app round can.
+  bool get needsPlayer => this != GameShortcut.reveal;
+}
 
 /// The reveal in the side column - the camera's slot while a round plays, see
 /// [_CameraSlot]. Named so a test can press the panel rather than the words
@@ -589,12 +642,51 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     Navigator.of(context).pop();
   }
 
+  /// Runs a shortcut, or nothing where it has no meaning right now: the song
+  /// can only be moved in a round that plays in this tab, and there is only
+  /// something to reveal while one is running.
+  void _runShortcut(GameShortcut shortcut) {
+    final spotify = _spotify;
+    if (shortcut == GameShortcut.reveal) {
+      if (_game.phase == RoundPhase.playing) _game.reveal();
+      return;
+    }
+    if (spotify == null || !_game.playingInApp) return;
+    switch (shortcut) {
+      case GameShortcut.playPause:
+        unawaited(spotify.togglePause());
+      case GameShortcut.back10:
+        seekSongBy(spotify, -SongProgressBar.skip);
+      case GameShortcut.forward10:
+        seekSongBy(spotify, SongProgressBar.skip);
+      case GameShortcut.middle:
+        unawaited(spotify.seek(spotify.duration ~/ 2));
+      case GameShortcut.start:
+        unawaited(spotify.seek(Duration.zero));
+      case GameShortcut.reveal:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PopScope<void>(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) => _onBack(didPop),
-      child: _scaffold(context),
+    // Below the app's own shortcuts and above every button on the screen, so
+    // these keys are taken before anything else can have them. A dialog or the
+    // countdown is a route of its own and keeps its keys.
+    return CallbackShortcuts(
+      bindings: {
+        for (final shortcut in GameShortcut.values)
+          for (final key in shortcut.keys)
+            SingleActivator(key): () => _runShortcut(shortcut),
+      },
+      child: Focus(
+        autofocus: true,
+        child: PopScope<void>(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) => _onBack(didPop),
+          child: _scaffold(context),
+        ),
+      ),
     );
   }
 
@@ -689,6 +781,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onLyricsScale: _stepLyricsScale,
       showScores: _showScores,
       menu: _menu(wide: true),
+      shortcuts: hasKeyboard,
     );
   }
 
@@ -1586,6 +1679,7 @@ class _WideRound extends StatelessWidget {
     required this.onLyricsScale,
     required this.showScores,
     required this.menu,
+    required this.shortcuts,
   });
 
   final GameController game;
@@ -1607,6 +1701,11 @@ class _WideRound extends StatelessWidget {
 
   /// Whether the scoreboard is on the stage at all, see [ShowScoresStore].
   final bool showScores;
+
+  /// Whether the keyboard hints are worth the space, see [hasKeyboard]. They
+  /// go in the column, which is the half for whoever runs the game - a key
+  /// nobody in the room can press has no business on the stage.
+  final bool shortcuts;
 
   /// What the app bar holds on a phone. There is no bar here, so it sits in
   /// the corner of the camera panel - a row of its own would cost the height
@@ -1694,6 +1793,11 @@ class _WideRound extends StatelessWidget {
                                 onUndoRedraw: onUndoRedraw,
                                 inColumn: true,
                               ),
+                            if (shortcuts)
+                              _ShortcutHints(
+                                reveal: playing,
+                                player: game.playingInApp,
+                              ),
                           ],
                         ),
                       ),
@@ -1749,6 +1853,76 @@ class _WideRound extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+/// What the keys do, for the one device that has them.
+///
+/// It sits at the foot of the column's controls rather than on the stage: a
+/// key nobody in the room can press is of no use to the room, and the hint is
+/// read once an evening and then never again. Only the keys that do something
+/// right now are listed - the song can only be moved in a round that plays in
+/// this tab.
+class _ShortcutHints extends StatelessWidget {
+  const _ShortcutHints({required this.reveal, required this.player});
+
+  /// Whether there is a year to reveal.
+  final bool reveal;
+
+  /// Whether the song is in reach of a key at all.
+  final bool player;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final shown = [
+      for (final shortcut in GameShortcut.values)
+        if (shortcut.needsPlayer ? player : reveal) shortcut,
+    ];
+    if (shown.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 4,
+        alignment: WrapAlignment.center,
+        children: [
+          for (final shortcut in shown)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1,
+                    ),
+                    child: Text(
+                      shortcut.label,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  shortcut.does,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

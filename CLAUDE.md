@@ -665,6 +665,40 @@ as on the web anywhere else.
 back, but Flutter web shows the browser's context menu on every right click.
 Long press works with a mouse too.
 
+## Keyboard shortcuts: six moves, and the keys are taken
+
+`GameShortcut` in `lib/ui/game_screen.dart` is the one list - the bindings and
+the hint line are both built from it, so they cannot drift apart. Space plays
+and pauses, Enter reveals, and the four moves of the song have an arrow and its
+WASD letter each: left/A and right/D step ten seconds, up/W jumps to the middle
+and down/S back to the start. The pairs are laid out the way the moves are, the
+horizontal keys stepping and the vertical ones jumping. It is not a convention
+anybody arrives knowing - it is one evening's learning and then it is muscle.
+
+**Taking these keys means taking them from Flutter.** `CallbackShortcuts` sits
+below the app's own shortcuts and above every button on the screen, so inside
+the game screen space and enter no longer press whatever button holds the focus
+and the arrows no longer walk from one to the next. That is the price of using
+the obvious keys rather than letters, and for a game run with a mouse on a
+laptop it is the right one. A dialog, the countdown and the scanner page are
+routes of their own and keep their keys - the shortcuts resolve along the focus
+chain, which does not run through this screen from there.
+
+**A key does only what a finger could.** The song can only be moved in a round
+that plays in this tab (`playingInApp`), so on a link or YouTube round the
+player keys do nothing at all and only Enter works; `seekSongBy` is shared with
+the bar's own buttons rather than written twice.
+
+**Where they are written down: the column, and only with a keyboard.**
+`hasKeyboard` in `lib/ui/layout.dart` reads `defaultTargetPlatform`, which on
+the web is the operating system - a laptop says macOS, Windows or Linux and a
+phone says Android or iOS. The hint line goes at the foot of the column's
+controls, never on the stage: a key nobody in the room can press is of no use
+to the room, and on a projector the stage is the wall. It lists only the keys
+that do something at that moment, so a link round shows one line and an in-app
+round all six. A tablet with a keyboard is called wrong by `hasKeyboard` and
+loses the hint - the keys themselves still work wherever one is pressed.
+
 ## Fullscreen is an offer, never a state the game keeps
 
 `lib/ui/fullscreen/`, in the shape `wake_lock/` already has: a native file that

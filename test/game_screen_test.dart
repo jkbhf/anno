@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/lyrics_scale_store.dart';
@@ -116,7 +118,14 @@ class SeekableSession extends FakeSession {
   SeekableSession() : super(SpotifyConnection.ready, playing: false);
 
   final List<Duration> seeks = [];
+
+  /// How often play/pause was pressed, by finger or by key.
+  int pauses = 0;
+
   String? _playbackError;
+
+  @override
+  Future<void> togglePause() async => pauses++;
 
   @override
   Duration get duration => const Duration(seconds: 200);
@@ -1075,6 +1084,94 @@ void main() {
       expect(game.phase, RoundPhase.finished);
       expect(find.text('Player 1 wins'), findsOneWidget);
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the keys move the song and reveal the year', (tester) async {
+      useWideScreen(tester);
+      final session = SeekableSession();
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: session));
+      await tester.pumpAndSettle();
+
+      // The session sits at 0:42 of a 3:20 song.
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      expect(session.pauses, 1);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      expect(session.seeks.last, const Duration(seconds: 52));
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+      expect(session.seeks.last, const Duration(seconds: 32));
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyW);
+      expect(session.seeks.last, const Duration(seconds: 100));
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      expect(session.seeks.last, Duration.zero);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(game.isRevealed, isTrue);
+
+      // Nothing left to reveal, and the keys do not reveal it twice.
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(game.phase, RoundPhase.revealed);
+    });
+
+    testWidgets('a link round only takes the reveal key', (tester) async {
+      useWideScreen(tester);
+      final session = SeekableSession();
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: session));
+      await tester.pumpAndSettle();
+
+      // The song is out of reach of a finger, so it is out of reach of a key.
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      expect(session.pauses, 0);
+      expect(session.seeks, isEmpty);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(game.isRevealed, isTrue);
+    });
+
+    testWidgets('the keys are only written down where there are keys', (
+      tester,
+    ) async {
+      // The check for a leftover override runs before any tearDown, so this
+      // one is put back inside the test.
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+
+      useWideScreen(tester);
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
+      await tester.pumpAndSettle();
+
+      // In the column, not on the stage: the room cannot press them.
+      expect(find.text('Space'), findsOneWidget);
+      expect(find.text('Enter'), findsOneWidget);
+      expect(find.text('↑ W'), findsOneWidget);
+      expect(
+        tester.getCenter(find.text('Space')).dx,
+        lessThan(tester.getCenter(find.byType(LyricsView)).dx),
+      );
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Space'), findsNothing);
+      expect(find.text('Enter'), findsNothing);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('the column reveals too, for whoever runs the game', (

@@ -13,6 +13,15 @@ import '../music/spotify_playback.dart';
 ///
 /// Drawn quiet on purpose. It sits under the reveal panel, which is the one
 /// thing on the screen the room is meant to go for.
+/// Moves [session] by [offset], never past the start of the song.
+///
+/// Shared by the bar's own buttons and the keyboard shortcuts, which are two
+/// ways to press the same thing.
+void seekSongBy(SpotifySession session, Duration offset) {
+  final target = session.position + offset;
+  unawaited(session.seek(target < Duration.zero ? Duration.zero : target));
+}
+
 class SongProgressBar extends StatefulWidget {
   const SongProgressBar({
     required this.session,
@@ -67,11 +76,7 @@ class _SongProgressBarState extends State<SongProgressBar> {
     super.dispose();
   }
 
-  void _seekBy(Duration offset) {
-    final session = widget.session;
-    final target = session.position + offset;
-    unawaited(session.seek(target < Duration.zero ? Duration.zero : target));
-  }
+  void _seekBy(Duration offset) => seekSongBy(widget.session, offset);
 
   @override
   Widget build(BuildContext context) {
