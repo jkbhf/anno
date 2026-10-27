@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:web/web.dart' as web;
 
+import '../data/spotify_sdk_store.dart';
 import '../models/song.dart';
 import 'spotify_api.dart';
 import 'spotify_auth.dart';
@@ -18,19 +19,21 @@ import 'spotify_playback.dart';
 /// The session for this device, and the one place the two players are chosen
 /// between.
 ///
-/// The Web Playback SDK is a desktop thing: Spotify does not support it in a
-/// mobile browser, and where it loads at all it answers the first track with a
-/// `playback_error`. A phone therefore goes straight to Spotify Connect, which
-/// commands the Spotify app the phone already has - that is also the player a
-/// phone needs when it is the remote control for a TV. The laptop keeps the
-/// SDK, where the song comes out of the tab itself.
+/// Spotify does not officially support the Web Playback SDK in a mobile
+/// browser, and says a phone that cannot run it answers the first track with
+/// a `playback_error` - but plenty of phones run it fine, and the SDK is worth
+/// trying there too: it plays silently inside the tab, no app opens and no
+/// title is ever shown, which a phone forced straight to Connect gives up for
+/// nothing. So a phone tries the SDK first, exactly like a laptop, and only
+/// [_SdkThenConnectSession] falls back to Connect - which commands the
+/// Spotify app the phone already has - once the SDK has actually failed
+/// there. The laptop has no such fallback: the desktop SDK is reliable enough
+/// that Connect buys it nothing extra.
 ///
 /// Both end at the link where they cannot play - see `InAppSpotifyLauncher`.
 SpotifySession createSpotifySession() {
   if (spotifyClientId.isEmpty) return NoSpotifySession();
-  return _isPhone
-      ? ConnectSpotifySession(auth: WebSpotifyAuth())
-      : WebSpotifySession();
+  return _isPhone ? _SdkThenConnectSession() : WebSpotifySession();
 }
 
 /// On the web `defaultTargetPlatform` is the operating system, so a phone and
@@ -417,6 +420,123 @@ class WebSpotifySession extends SpotifySession {
   @override
   void dispose() {
     _player?.disconnect();
+    super.dispose();
+  }
+}
+
+/// A phone's session: the SDK first, Spotify Connect once the SDK has
+/// actually failed here.
+///
+/// Spotify says a `playback_error` on the very first track is what a phone
+/// gets where the SDK genuinely does not run - a later one, after at least
+/// one song has already played, is an ordinary single-track failure (a market
+/// restriction, Premium hiccup) that the round's own fallback to the link
+/// already handles, and switching the whole session over for that would cost
+/// every later round its silent in-tab playback for no reason. Only the first
+/// kind is remembered in [SpotifySdkStore], so later games do not pay for the
+/// same failed attempt again.
+class _SdkThenConnectSession extends SpotifySession {
+  _SdkThenConnectSession()
+    : _active = SpotifySdkStore.sdkFailed
+          ? ConnectSpotifySession(auth: WebSpotifyAuth())
+          : WebSpotifySession() {
+    _active.addListener(_onActiveChanged);
+  }
+
+  SpotifySession _active;
+
+  /// Whether the SDK (while it is the active player) has ever gotten a song
+  /// to actually play - the line between "this phone cannot run it" and "this
+  /// one track would not play".
+  bool _sdkHasPlayed = false;
+
+  void _onActiveChanged() {
+    final sdk = _active;
+    if (sdk is WebSpotifySession) {
+      if (sdk.isPlaying) _sdkHasPlayed = true;
+      if (!_sdkHasPlayed && sdk.playbackError != null) {
+        unawaited(SpotifySdkStore.markFailed());
+        sdk.removeListener(_onActiveChanged);
+        _active = ConnectSpotifySession(auth: WebSpotifyAuth())
+          ..addListener(_onActiveChanged);
+        unawaited(_active.restore());
+      }
+    }
+    notifyListeners();
+  }
+
+  @override
+  SpotifyConnection get connection => _active.connection;
+
+  @override
+  String? get error => _active.error;
+
+  @override
+  bool get isPlaying => _active.isPlaying;
+
+  @override
+  Duration get position => _active.position;
+
+  @override
+  Duration get duration => _active.duration;
+
+  @override
+  String? get playbackError => _active.playbackError;
+
+  @override
+  String get offer => _active.offer;
+
+  @override
+  String? get hint => _active.hint;
+
+  @override
+  bool get canPickDevice => _active.canPickDevice;
+
+  @override
+  List<PlaybackDevice> get devices => _active.devices;
+
+  @override
+  String? get pickedDeviceId => _active.pickedDeviceId;
+
+  @override
+  Future<void> restore() => _active.restore();
+
+  @override
+  Future<void> connect() => _active.connect();
+
+  @override
+  Future<void> disconnect() => _active.disconnect();
+
+  @override
+  Future<void> prepare() => _active.prepare();
+
+  @override
+  Future<bool> play(Song song) => _active.play(song);
+
+  @override
+  Future<void> togglePause() => _active.togglePause();
+
+  @override
+  Future<void> seek(Duration position) => _active.seek(position);
+
+  @override
+  Future<void> stop() => _active.stop();
+
+  @override
+  Future<void> refreshDevices() => _active.refreshDevices();
+
+  @override
+  Future<void> pickDevice(String? id) => _active.pickDevice(id);
+
+  @override
+  Future<void> releasePlayback() => _active.releasePlayback();
+
+  @override
+  Future<void> releaseDevice() => _active.releaseDevice();
+
+  @override
+  void dispose() {
+    _active.dispose();
     super.dispose();
   }
 }

@@ -8,6 +8,7 @@ import 'data/music_service_store.dart';
 import 'data/playback_device_store.dart';
 import 'data/roster_store.dart';
 import 'data/song_repository.dart';
+import 'data/spotify_sdk_store.dart';
 import 'data/year_database.dart';
 import 'models/song_category.dart';
 import 'music/music_service.dart';
@@ -31,6 +32,8 @@ Future<void> main() async {
   await CameraFacingStore.preload();
   // Same reason: the session reads it while it is handing a song over.
   await PlaybackDeviceStore.preload();
+  // createSpotifySession below decides which player a phone starts with.
+  await SpotifySdkStore.preload();
 
   // Picks a login back up - either the redirect the browser just came back
   // with, or a token from an earlier visit. Not awaited: the game starts

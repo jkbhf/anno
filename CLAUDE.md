@@ -489,11 +489,34 @@ requirement, and never let a failure in it end a round without music.
 
 **There are two sessions behind that one launcher, and the device picks**
 (`createSpotifySession`, 2026-10-27). Spotify's Web Playback SDK is a desktop
-thing - it is not supported in a mobile browser, and where it loads at all the
-first track comes back a `playback_error`, which is the phone's half of the
-fallback above. So a phone gets `ConnectSpotifySession` instead: the song comes
-out of the Spotify app the phone already has, and this page only commands it
-over the Web API. A laptop keeps the SDK and nothing about it changes.
+thing - it is not officially supported in a mobile browser, and where it
+genuinely does not run, the first track a phone ever tries comes back a
+`playback_error`. So a phone gets `ConnectSpotifySession` instead: the song
+comes out of the Spotify app the phone already has, and this page only
+commands it over the Web API. A laptop keeps the SDK and nothing about it
+changes.
+
+**A phone tries the SDK first, and only falls back once it has actually
+failed there** (`_SdkThenConnectSession` in `spotify_session_web.dart`,
+2026-10-28, after a first version sent every phone straight to Connect on
+nothing but the operating system). Plenty of phones run the SDK fine despite
+Spotify's own "not supported", and it is worth keeping for them: it plays
+silently inside the tab, no app has to be open, no title or cover is ever
+shown anywhere - which a phone sent straight to Connect gives up for nothing,
+and which Connect cannot offer at all (see "The song comes out of the Spotify
+app" below - Connect needs that app to have been opened at least once, and
+even then shows its name on the Spotify app itself). `SpotifySdkStore`
+remembers a real failure per device, so only the first evening on a phone
+that genuinely cannot run the SDK pays for finding that out.
+
+The line between "this phone cannot run it" and "this one track would not
+play" is whether the SDK has ever gotten a song to actually play before the
+`playback_error` arrives. A `playback_error` on the very first attempt is read
+as the phone, and `ConnectSpotifySession` takes over for good; one after a
+song has already played is read as an ordinary single-track failure - a market
+restriction, a Premium hiccup - and left to the round's own fallback to the
+link, because switching every later round to Connect over one bad track would
+cost the phone its silent in-tab playback for nothing.
 
 What the two buy is the same thing, and that is the point of having the second
 one: the game knows the position, can seek and pause, so the seek bar means
