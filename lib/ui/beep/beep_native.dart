@@ -2,4 +2,4 @@
 /// would make is for calibrating a cast laptop screen. Nothing to do here.
 bool beepSupported() => false;
 
-void playBeep() {}
+void playBeep(int delayMs) {}

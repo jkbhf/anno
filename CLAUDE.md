@@ -806,10 +806,19 @@ mirrored, so nothing can measure this - it is a number for the room and its
 equipment, kept per device like the lyrics scale, with a cable's zero as one
 press beside it.
 
-**The dialog makes it measurable rather than guessable.** Once a second it
-plays a click and lights a panel in the same instant; on the wall the panel
-arrives late and the click does not, so you press more until the two meet over
-there. That click is the only sound the game makes itself (`lib/ui/beep/`, Web
+**The dialog makes it measurable rather than guessable, and the first version
+did not.** It played the click and lit the panel in the same instant, which
+measures nothing: pressing more changed neither of them, so the number still
+had to be estimated and typed. "The buttons do nothing" was the report, and it
+was right.
+
+Now the panel lights and **the click comes the set number of milliseconds
+after it**. The panel then takes the long way to the cast screen; the click
+does not travel at all. Where the number matches what the cast costs, the two
+land together over there - and that is the number the words need, because the
+same trip delays them. A press restarts the pattern rather than waiting out the
+beat, and the beat itself grows with the number (`_beat`): at a second flat a
+click set 900ms late would land on the next flash. That click is the only sound the game makes itself (`lib/ui/beep/`, Web
 Audio, the usual native no-op), and it is why the song is paused while the
 dialog is up: a reference under music is not one. The arrows and enter work in
 there because a dialog is its own route and the game's keys do not reach it.

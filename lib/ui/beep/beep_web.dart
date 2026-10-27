@@ -10,7 +10,7 @@ bool beepSupported() => true;
 /// The envelope is there so it starts and stops without the crack a square
 /// switch-off makes - a crack is itself a transient and would blur the very
 /// edge this is meant to be.
-void playBeep() {
+void playBeep(int delayMs) {
   try {
     final context = _context ??= web.AudioContext();
     if (context.state == 'suspended') context.resume();
@@ -21,7 +21,9 @@ void playBeep() {
     oscillator.connect(gain);
     gain.connect(context.destination);
 
-    final now = context.currentTime;
+    // The audio clock, not a timer: a tenth of a second late here would be a
+    // tenth of a second of error in what the dialog is measuring.
+    final now = context.currentTime + delayMs / 1000;
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(0.3, now + 0.004);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);

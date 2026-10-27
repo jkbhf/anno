@@ -158,8 +158,9 @@ turned over is. A phone sideways keeps the one column and widens it instead.
   link is out of reach, and then the words get the band's height instead.
 - **"Sync the words…"** in the menu is for casting a screen: the picture
   arrives at the wall later than the sound does out of the laptop, so the words
-  run ahead by that much. The dialog clicks and flashes in the same instant -
-  press more until the two meet over there. Kept on the device, with one press
+  run ahead by that much. In the dialog the panel flashes and the click follows
+  it by the set amount - watch the cast screen, where the flash arrives late,
+  and press until the two land together there. Kept on the device, with one press
   back to zero for a cable.
 - **The size of the words** is set in the menu - "Bigger words" and "Smaller
   words", with the current size above them - and kept on the device, so the
