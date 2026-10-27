@@ -49,7 +49,11 @@ void main() {
 
   tearDown(() async => relay.stop());
 
-  Future<_Device> connect([String? code, int? onPort, bool host = false]) async {
+  Future<_Device> connect([
+    String? code,
+    int? onPort,
+    bool host = false,
+  ]) async {
     final query = code == null ? '' : '?room=$code${host ? '&host=1' : ''}';
     return _Device(
       await WebSocket.connect('ws://127.0.0.1:${onPort ?? port}/$query'),

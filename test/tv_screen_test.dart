@@ -54,7 +54,10 @@ class _Words implements LyricsSource {
 }
 
 GameController buildGame() => GameController(
-  players: [GamePlayer(name: 'Anthony'), GamePlayer(name: 'Jakob')],
+  players: [
+    GamePlayer(name: 'Anthony'),
+    GamePlayer(name: 'Jakob'),
+  ],
   categories: [esc],
   years: YearDatabase.inMemory(defaults: const {'182ca01194a98f0b': 2005}),
   launcher: const _InTab(),
@@ -75,14 +78,26 @@ class _Playing extends NoSpotifySession {
   Duration get duration => const Duration(seconds: 200);
 }
 
-Widget wrapTv(TvLink link, YearDatabase years) => AppScope(
-  years: years,
-  categories: [esc],
-  spotify: NoSpotifySession(),
-  link: link,
-  service: ValueNotifier(MusicService.spotify),
-  child: MaterialApp(theme: buildTheme(), home: TvScreen(link: link)),
-);
+/// A session that notes whether it was taken off the account as a speaker.
+class _Device extends NoSpotifySession {
+  bool released = false;
+
+  @override
+  Future<void> releaseDevice() async => released = true;
+}
+
+Widget wrapTv(TvLink link, YearDatabase years, {SpotifySession? spotify}) =>
+    AppScope(
+      years: years,
+      categories: [esc],
+      spotify: spotify ?? NoSpotifySession(),
+      link: link,
+      service: ValueNotifier(MusicService.spotify),
+      child: MaterialApp(
+        theme: buildTheme(),
+        home: TvScreen(link: link),
+      ),
+    );
 
 Widget wrapRemote(GameController game, TvLink link, SpotifySession spotify) =>
     AppScope(
@@ -309,6 +324,23 @@ void main() {
       await tester.tap(find.byKey(revealInColumnKey));
       await tester.pumpAndSettle();
       expect(find.text('Reveal the year'), findsOne);
+    });
+
+    testWidgets('is not a speaker on the account', (tester) async {
+      final link = TvLink.paired(role: LinkRole.screen, code: 'QRS789');
+      addTearDown(link.dispose);
+      final spotify = _Device();
+      addTearDown(spotify.dispose);
+
+      await tester.pumpWidget(
+        wrapTv(link, YearDatabase.inMemory(), spotify: spotify),
+      );
+      await tester.pumpAndSettle();
+
+      // The music belongs on the phone. This page runs the same app, so
+      // without this it offers itself to the phone's Connect session as the
+      // device to play the round on.
+      expect(spotify.released, isTrue);
     });
 
     testWidgets('a game without cards says which range it is in', (

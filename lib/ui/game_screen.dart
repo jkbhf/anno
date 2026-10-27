@@ -310,8 +310,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Read in a dozen places and deliberately one question: paired, and this
   /// end is the phone. A screen that paired as the television never gets here
   /// - it has no game of its own to run.
-  bool get _remote =>
-      _link?.isPaired == true && _link?.role == LinkRole.remote;
+  bool get _remote => _link?.isPaired == true && _link?.role == LinkRole.remote;
 
   /// Whether the layout the last frame drew was the wide one. Read by the
   /// phase listener, which runs outside a build and must not go looking for a
@@ -2654,17 +2653,11 @@ class _RemoteRound extends StatelessWidget {
             hasLyrics: null,
           ),
         ],
-        if (sync case final panel?) ...[
-          const SizedBox(height: 16),
-          panel,
-        ],
+        if (sync case final panel?) ...[const SizedBox(height: 16), panel],
         if (game.isRevealed) ...[
           const SizedBox(height: 24),
           if (showScores) ...[
-            Text(
-              'Who had it?',
-              style: theme.textTheme.titleMedium,
-            ),
+            Text('Who had it?', style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
               'Tap to give a point, long press to take one away.',
@@ -2689,9 +2682,7 @@ class _RemoteRound extends StatelessWidget {
               minimumSize: const Size.fromHeight(64),
             ),
             icon: const Icon(Icons.skip_next),
-            label: Text(
-              game.withoutCards ? 'The next year' : 'The next card',
-            ),
+            label: Text(game.withoutCards ? 'The next year' : 'The next card'),
           ),
         ],
       ],
@@ -2816,8 +2807,12 @@ class _ActionSlot extends StatelessWidget {
             Icons.visibility_outlined,
             'Reveal the year',
             game.withoutCards
-                ? (opensBelow ? 'The next year waits below' : 'Then the next year')
-                : (opensBelow ? 'The camera then opens below' : 'The camera then opens'),
+                ? (opensBelow
+                      ? 'The next year waits below'
+                      : 'Then the next year')
+                : (opensBelow
+                      ? 'The camera then opens below'
+                      : 'The camera then opens'),
             onReveal,
           )
         : game.withoutCards

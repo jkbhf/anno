@@ -77,6 +77,11 @@ class WebSpotifySession extends SpotifySession {
   _SdkPlayer? _player;
   String? _deviceId;
 
+  /// True once this page has given its device up, see [releaseDevice]. A
+  /// `restore` that is still in flight must not build the player behind it,
+  /// and neither must the SDK's own ready callback.
+  bool _released = false;
+
   @override
   SpotifyConnection get connection => _connection;
 
@@ -255,9 +260,21 @@ class WebSpotifySession extends SpotifySession {
     }
   }
 
+  @override
+  Future<void> releaseDevice() async {
+    _released = true;
+    await stop();
+    _player?.disconnect();
+    _player = null;
+    _deviceId = null;
+    _isPlaying = false;
+    _moveTo(SpotifyConnection.disconnected);
+  }
+
   // --- the SDK --------------------------------------------------------------
 
   Future<void> _startPlayer() async {
+    if (_released) return;
     _moveTo(SpotifyConnection.connecting);
     if (_player != null) {
       // Already built - a reconnect only needed a fresh token.
@@ -293,6 +310,7 @@ class WebSpotifySession extends SpotifySession {
   }
 
   void _buildPlayer() {
+    if (_released) return;
     final options = JSObject();
     options.setProperty('name'.toJS, 'Anno'.toJS);
     options.setProperty('volume'.toJS, 0.8.toJS);

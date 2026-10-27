@@ -216,7 +216,8 @@ class GameSnapshot extends SyncMessage {
         );
 
   List<GamePlayer> get roster => [
-    for (final player in players) GamePlayer(name: player.name, score: player.score),
+    for (final player in players)
+      GamePlayer(name: player.name, score: player.score),
   ];
 
   @override
@@ -224,7 +225,8 @@ class GameSnapshot extends SyncMessage {
     't': 'state',
     'phase': phase.name,
     'players': [
-      for (final player in players) {'name': player.name, 'score': player.score},
+      for (final player in players)
+        {'name': player.name, 'score': player.score},
     ],
     'targetScore': targetScore,
     'showScores': showScores,

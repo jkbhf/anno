@@ -43,11 +43,20 @@ class ConnectDevice {
 
 /// Which of the account's devices the round should come out of.
 ///
-/// The one that is already playing wins, because that is where the room is
-/// listening - somebody has set the evening up that way. After that a phone,
-/// which is the device this session exists for: the remote control's own
-/// Spotify app. A computer is last rather than excluded, because a laptop
-/// without Premium in the tab can still command its own desktop app.
+/// **A phone wins, even over a device that is already playing**, because this
+/// session exists for exactly one device: the Spotify app on the phone that is
+/// running the game. The room is at the phone, and the alternative is worse
+/// than it looks - a television with Spotify on it, or a second screen running
+/// this very page, is a device the account has lying around, and the round
+/// then comes out of the wall while the phone holds the controls. After the
+/// phone comes whatever is active, then a tablet and a speaker; a computer is
+/// last rather than excluded, because a laptop without Premium in the tab can
+/// still command its own desktop app.
+///
+/// So a Connect speaker is not picked while a phone is listed. That is the
+/// deliberate half of it: the way to play through a speaker is the speaker
+/// being the phone's own output, which sits below Spotify and is none of this
+/// function's business.
 ConnectDevice? pickConnectDevice(Iterable<ConnectDevice> devices) {
   final usable = devices.where((device) => device.isUsable).toList();
   if (usable.isEmpty) return null;
@@ -62,8 +71,8 @@ ConnectDevice? pickConnectDevice(Iterable<ConnectDevice> devices) {
   bool ofType(ConnectDevice device, String type) =>
       device.type.toLowerCase() == type;
 
-  return firstWhere((device) => device.isActive) ??
-      firstWhere((device) => ofType(device, 'smartphone')) ??
+  return firstWhere((device) => ofType(device, 'smartphone')) ??
+      firstWhere((device) => device.isActive) ??
       firstWhere((device) => ofType(device, 'tablet')) ??
       firstWhere((device) => ofType(device, 'speaker')) ??
       usable.first;
@@ -162,12 +171,21 @@ class ConnectSpotifySession extends SpotifySession {
   /// The one thing a player has to know and cannot guess: Spotify only lists
   /// an app that is running. Said while the login is fine and no device
   /// answered, which is exactly when the next round would go out by link.
+  ///
+  /// And once there is one, it says which one. The account can have a
+  /// television and a speaker on it, and the round coming out of the wrong one
+  /// is the kind of evening nobody can debug from the game screen - so the
+  /// name of the device is on the card before the first card is scanned.
   @override
-  String? get hint => _connection == SpotifyConnection.ready &&
-          _deviceId == null
-      ? 'Open Spotify on this phone once, then the game can play the song '
-            'there itself.'
-      : null;
+  String? get hint {
+    if (_connection != SpotifyConnection.ready) return null;
+    if (_deviceId == null) {
+      return 'Open Spotify on this phone once, then the game can play the '
+          'song there itself.';
+    }
+    final name = _deviceName;
+    return name == null ? null : 'The song plays on $name.';
+  }
 
   /// The device the round plays on, for whoever wants to know which speaker
   /// just lit up. Null until one was found.

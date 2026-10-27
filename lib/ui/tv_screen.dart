@@ -69,6 +69,12 @@ class _TvScreenState extends State<TvScreen> {
     final link = widget.link ?? AppScope.of(context).link;
     if (_link == link) return;
     _link = link;
+    // Not a speaker, a screen. This page runs the same app, so on a laptop or
+    // a television browser it would register an `Anno` device on the account -
+    // and the phone's Connect session, looking for something to play the round
+    // on, would find it and the music would come out of here. See
+    // `SpotifySession.releaseDevice`.
+    unawaited(AppScope.of(context).spotify.releaseDevice());
     _game ??= MirrorGame.empty(AppScope.of(context).years);
     link.onMessage = _incoming;
     unawaited(_open(link));

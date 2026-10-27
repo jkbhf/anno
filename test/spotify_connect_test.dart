@@ -76,9 +76,20 @@ Map<String, Object?> _deviceJson(
 
 void main() {
   group('pickConnectDevice', () {
-    test('the device that is already playing wins', () {
+    // The phone is what this session exists for, and the account's other
+    // devices are a television and a speaker standing around: the round has to
+    // come out of the thing the room is holding.
+    test('the phone wins, even over a device that is playing', () {
       final picked = pickConnectDevice([
+        _device('speaker', type: 'Speaker', active: true),
         _device('phone', type: 'Smartphone'),
+      ]);
+      expect(picked?.id, 'phone');
+    });
+
+    test('what is playing wins where no phone is listed', () {
+      final picked = pickConnectDevice([
+        _device('laptop'),
         _device('speaker', type: 'Speaker', active: true),
       ]);
       expect(picked?.id, 'speaker');
@@ -100,13 +111,16 @@ void main() {
       expect(picked?.id, 'laptop');
     });
 
-    test('nothing usable is null, which is what sends the round to the link', () {
-      expect(pickConnectDevice(const []), isNull);
-      expect(
-        pickConnectDevice([_device('car', restricted: true), _device('')]),
-        isNull,
-      );
-    });
+    test(
+      'nothing usable is null, which is what sends the round to the link',
+      () {
+        expect(pickConnectDevice(const []), isNull);
+        expect(
+          pickConnectDevice([_device('car', restricted: true), _device('')]),
+          isNull,
+        );
+      },
+    );
   });
 
   group('play', () {
@@ -131,10 +145,9 @@ void main() {
       expect(play.method, 'PUT');
       expect(play.url.path, '/v1/me/player/play');
       expect(play.url.queryParameters['device_id'], 'dev1');
-      expect(
-        jsonDecode((play as http.Request).body),
-        {'uris': ['spotify:track:abc123']},
-      );
+      expect(jsonDecode((play as http.Request).body), {
+        'uris': ['spotify:track:abc123'],
+      });
     });
 
     test('no device at all does not play, and asks for no track', () async {
@@ -238,37 +251,40 @@ void main() {
       expect(session.position, const Duration(seconds: 6));
     });
 
-    test('the poll brings the length, and with it something to seek in', () async {
-      final session = ConnectSpotifySession(
-        auth: _FakeAuth(),
-        poll: const Duration(milliseconds: 5),
-        client: MockClient((request) async {
-          if (request.url.path.endsWith('/devices')) {
-            return http.Response(_devicesBody([_deviceJson('dev1')]), 200);
-          }
-          if (request.method == 'GET') {
-            return http.Response(
-              jsonEncode({
-                'is_playing': true,
-                'progress_ms': 30000,
-                'item': {'duration_ms': 150000},
-                'device': {'id': 'dev1', 'name': 'Phone'},
-              }),
-              200,
-            );
-          }
-          return http.Response('', 204);
-        }),
-      );
-      addTearDown(session.dispose);
+    test(
+      'the poll brings the length, and with it something to seek in',
+      () async {
+        final session = ConnectSpotifySession(
+          auth: _FakeAuth(),
+          poll: const Duration(milliseconds: 5),
+          client: MockClient((request) async {
+            if (request.url.path.endsWith('/devices')) {
+              return http.Response(_devicesBody([_deviceJson('dev1')]), 200);
+            }
+            if (request.method == 'GET') {
+              return http.Response(
+                jsonEncode({
+                  'is_playing': true,
+                  'progress_ms': 30000,
+                  'item': {'duration_ms': 150000},
+                  'device': {'id': 'dev1', 'name': 'Phone'},
+                }),
+                200,
+              );
+            }
+            return http.Response('', 204);
+          }),
+        );
+        addTearDown(session.dispose);
 
-      await session.play(_song);
-      expect(session.duration, Duration.zero);
+        await session.play(_song);
+        expect(session.duration, Duration.zero);
 
-      await Future<void>.delayed(const Duration(milliseconds: 800));
-      expect(session.duration, const Duration(milliseconds: 150000));
-      expect(session.position.inSeconds, greaterThanOrEqualTo(30));
-    });
+        await Future<void>.delayed(const Duration(milliseconds: 800));
+        expect(session.duration, const Duration(milliseconds: 150000));
+        expect(session.position.inSeconds, greaterThanOrEqualTo(30));
+      },
+    );
 
     test('seek needs a length, and never leaves the song', () async {
       final seeks = <String?>[];
@@ -322,7 +338,7 @@ void main() {
       expect(session.hint, contains('Open Spotify'));
     });
 
-    test('with a device there is nothing to say', () async {
+    test('with a device it says which one', () async {
       final session = ConnectSpotifySession(
         auth: _FakeAuth(),
         client: MockClient(
@@ -333,7 +349,9 @@ void main() {
       addTearDown(session.dispose);
 
       await session.restore();
-      expect(session.hint, isNull);
+      // Which device the round comes out of is the one thing nobody can work
+      // out from the game screen when it turns out to be the wrong one.
+      expect(session.hint, 'The song plays on Phone.');
     });
 
     test('stop pauses and ends the poll', () async {

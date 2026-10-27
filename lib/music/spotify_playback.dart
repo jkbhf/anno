@@ -100,6 +100,16 @@ abstract class SpotifySession extends ChangeNotifier {
 
   /// Ends the round's music.
   Future<void> stop();
+
+  /// Takes this page off the account as a speaker, and keeps the login.
+  ///
+  /// The television is a mirror: it runs the same app, so where the app would
+  /// build the Web Playback SDK it registers a device called `Anno` on the
+  /// account - and the phone's Connect session then sees a device it may
+  /// command and plays the round out of the television's tab. The music has to
+  /// stay on the phone, so the screen gives the device up as it becomes a
+  /// screen. A session that is no device anyway does nothing here.
+  Future<void> releaseDevice() async {}
 }
 
 /// The session for platforms without a player: permanently unavailable.

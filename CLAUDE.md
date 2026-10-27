@@ -521,10 +521,35 @@ Three things are different about Connect and each one is load-bearing:
   the fact: 404 means the device went away (looked up once more, then the
   link), 403 means Premium. `playbackError` is therefore always null here.
 
-Which device of the account plays is `pickConnectDevice`: the one already
-playing first, because somebody set the evening up that way, then a phone,
-which is what this session exists for. A `is_restricted` device is never
-picked - it answers 204 and then does nothing, which is worse than the link.
+Which device of the account plays is `pickConnectDevice`, and **the phone wins,
+even over a device that is already playing** (2026-10-27). It was the other way
+round at first - whatever plays is where the room is listening, somebody set
+the evening up that way - and the second screen is what settled it: an account
+with a television on it, or with this very page open on a laptop, has a device
+lying around that the Web API may command, and the round then came out of the
+wall while the phone held the controls. The order is phone, then active, then
+tablet, speaker, and a computer last rather than excluded, because a laptop
+without Premium in the tab can still command its own desktop app. A
+`is_restricted` device is never picked - it answers 204 and then does nothing,
+which is worse than the link.
+
+So **a Connect speaker is not picked while a phone is listed**, and that half
+is deliberate: the way to play through a speaker is the speaker being the
+phone's own output, which sits below Spotify and is none of this function's
+business. The device that was picked is said on the setup card
+(`ConnectSpotifySession.hint`) - the round coming out of the wrong speaker is
+not something anybody can work out from the game screen, so the name is on the
+card before the first card is scanned.
+
+**A second screen is not a speaker.** The television runs the same app, so on
+a laptop or a television browser it would build the Web Playback SDK and
+register an `Anno` device on the account - which is exactly a device the
+phone's Connect session would find and play the round on. `TvScreen` therefore
+calls `SpotifySession.releaseDevice` as it becomes a screen: the SDK player is
+disconnected and the login kept, and a `restore` still in flight cannot build
+one behind it (`_released`). Coming back from the television screen leaves the
+session disconnected with its login intact, which `connect` resumes without a
+trip through Spotify's login page.
 
 The login is shared (`SpotifyAuth`, `WebSpotifyAuth`): one PKCE flow, one
 rotating refresh token, the same scopes for both sessions, so a device that
