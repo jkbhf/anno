@@ -1,0 +1,13 @@
+name: anno_relay
+description: "Forwards the game's state from the phone to the screen it is shown on."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.1
+
+# Nothing. The relay is a dart:io HttpServer and a map of rooms - a dependency
+# here would be one more thing to keep current on a machine that is supposed
+# to run untouched for a year.
+dev_dependencies:
+  lints: ^6.0.0

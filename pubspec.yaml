@@ -17,11 +17,20 @@ dependencies:
   shared_preferences: ^2.3.0
   url_launcher: ^6.3.1
   web: ^1.1.0
+  # One WebSocket for the browser and the VM both. The link to the screen is
+  # the one thing in the app that needs a socket, and two platform files for
+  # it would be more code than the package is.
+  web_socket_channel: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  # The relay that forwards between phone and screen. A path dependency only
+  # so `flutter test` covers it too - the app never imports it, and the
+  # release build does not carry it.
+  anno_relay:
+    path: packages/anno_relay
 
 flutter:
   uses-material-design: true
