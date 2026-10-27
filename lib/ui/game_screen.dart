@@ -12,6 +12,7 @@ import '../data/lyrics_sync_store.dart';
 import '../data/played_songs_store.dart';
 import '../data/show_scores_store.dart';
 import '../data/skipped_songs_store.dart';
+import '../data/slot_height_store.dart';
 import '../data/year_database.dart';
 import '../game/game_controller.dart';
 import '../models/player.dart';
@@ -30,7 +31,7 @@ import 'fullscreen/fullscreen.dart';
 import 'haptics/haptics.dart';
 import 'layout.dart';
 import 'lyrics_sheet.dart';
-import 'lyrics_sync_dialog.dart';
+import 'pinch_scale.dart';
 import 'scanner_screen.dart';
 import 'song_progress_bar.dart';
 import 'theme.dart';
@@ -132,11 +133,40 @@ enum GameShortcut {
   ),
   reveal([LogicalKeyboardKey.enter], 'Enter', 'Reveal the year'),
   redraw([LogicalKeyboardKey.keyN], 'N', 'Nobody knows it'),
-  undoRedraw([LogicalKeyboardKey.keyZ], 'Z', 'Take the swap back');
+  undoRedraw([LogicalKeyboardKey.keyZ], 'Z', 'Take the swap back'),
+  // The words against the song, from the keyboard - the same number the sync
+  // mode sets with its arrows, for whoever is running the game from a laptop
+  // while it plays. Control, because the bare keys are the song's.
+  wordsEarlier(
+    [
+      LogicalKeyboardKey.add,
+      LogicalKeyboardKey.numpadAdd,
+      LogicalKeyboardKey.equal,
+      LogicalKeyboardKey.keyD,
+    ],
+    'Ctrl +/D',
+    'Words earlier',
+    control: true,
+  ),
+  wordsLater(
+    [
+      LogicalKeyboardKey.minus,
+      LogicalKeyboardKey.numpadSubtract,
+      LogicalKeyboardKey.keyA,
+    ],
+    'Ctrl −/A',
+    'Words later',
+    control: true,
+  );
 
-  const GameShortcut(this.keys, this.label, this.does);
+  const GameShortcut(this.keys, this.label, this.does, {this.control = false});
 
   final List<LogicalKeyboardKey> keys;
+
+  /// Whether control has to be held. The bare keys are taken by the song, and
+  /// these are a setting rather than a move - so they ask for the modifier
+  /// every editor asks for to resize something.
+  final bool control;
 
   /// How the keys are written in the hint line.
   final String label;
@@ -155,6 +185,10 @@ enum GameShortcut {
     reveal => game.phase == RoundPhase.playing,
     redraw => game.canRedraw,
     undoRedraw => game.canUndoRedraw,
+    // Whenever words are on a screen. The number is a setting of the room's
+    // and not a move in the round, so it can be set in a link round too -
+    // there it is simply not seen until a song plays in this tab.
+    wordsEarlier || wordsLater => game.currentSong != null,
   };
 }
 
@@ -168,6 +202,11 @@ const Key splitHandleKey = Key('split-handle');
 /// on it.
 @visibleForTesting
 const Key revealInColumnKey = Key('reveal-in-column');
+
+/// The grip under the reveal card, which sets how tall that box is. Named for
+/// the same reason the split handle is: it has no words on it.
+@visibleForTesting
+const Key slotHandleKey = Key('slot-handle');
 
 /// The main screen: scan, listen, reveal, hand out points.
 class GameScreen extends StatefulWidget {
@@ -218,8 +257,35 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// How much of the screen the side column takes, see [ColumnWidthStore].
   double _columnShare = ColumnWidthStore.normal;
 
+  /// How much of the column the reveal card takes, see [SlotHeightStore].
+  double _slotShare = SlotHeightStore.normal;
+
   /// How far the words run ahead of the song, see [LyricsSyncStore].
   int _lyricsSync = LyricsSyncStore.none;
+
+  /// Whether the panel for setting that number is in the column, see
+  /// [_SyncPanel]. Switched on from the menu and off again the same way - it
+  /// is a mode for the few minutes it takes to find the number, so it is not
+  /// kept the way the number itself is.
+  bool _syncMode = false;
+
+  /// Says the number on the screen for a moment after it changed, so a press
+  /// of the keys is answered where the eyes are - on the words, not in the
+  /// corner the panel sits in. Null while nothing is being said.
+  int? _syncFlash;
+  Timer? _syncFlashOff;
+
+  /// How long that stays up.
+  static const Duration _flashFor = Duration(milliseconds: 1100);
+
+  /// Whether the song of the round has words at all, and which song the
+  /// answer belongs to. Null while nobody has answered yet.
+  ///
+  /// The stage says it where the words would be, and the column says it
+  /// beside the controls - whoever runs the game is looking there, and on a
+  /// projector the stage is across the room.
+  bool? _hasLyrics;
+  String? _lyricsFor;
 
   /// Whether the layout the last frame drew was the wide one. Read by the
   /// phase listener, which runs outside a build and must not go looking for a
@@ -250,18 +316,34 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _game.addListener(_onPhaseChanged);
     unawaited(WakeLock.hold());
     unawaited(_loadSettings());
+    _trackLyrics();
+    // The first card of a new game: the camera is what the game wants from
+    // whoever opened it, so it comes up by itself rather than behind a tap on
+    // a button whose only job is to open it - the box in the column on a wide
+    // screen, the scanner page on a phone. Only at the very start: from the
+    // second round on the reveal is what opens it, and a game resumed
+    // mid-round has a song running.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _busy) return;
+      if (_game.phase != RoundPhase.idle || _game.lastScannedCode != null) {
+        return;
+      }
+      unawaited(_startRound());
+    });
   }
 
   Future<void> _loadSettings() async {
     final scale = await LyricsScaleStore.load();
     final scores = await ShowScoresStore.load();
     final share = await ColumnWidthStore.load();
+    final slot = await SlotHeightStore.load();
     final sync = await LyricsSyncStore.load();
     if (!mounted) return;
     setState(() {
       _lyricsScale = scale;
       _showScores = scores;
       _columnShare = share;
+      _slotShare = slot;
       _lyricsSync = sync;
     });
   }
@@ -275,27 +357,78 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     unawaited(ColumnWidthStore.save(next));
   }
 
-  /// Sets how far the words run ahead, see [showLyricsSyncDialog].
+  /// The reveal card was dragged taller or shorter.
+  void _setSlotShare(double share) {
+    final next = SlotHeightStore.clamp(share);
+    if (next == _slotShare) return;
+    setState(() => _slotShare = next);
+    unawaited(SlotHeightStore.save(next));
+  }
+
+  /// Sets how far the words run ahead of the song, see [LyricsSyncStore].
   ///
-  /// The song is paused while the dialog is up and goes on where it was
-  /// afterwards: the click it makes is the reference, and a reference under
-  /// music is not one. A round played by link has nothing to pause.
-  Future<void> _syncLyrics() async {
-    final spotify = _spotify;
-    final wasPlaying = _game.playingInApp && (spotify?.isPlaying ?? false);
-    final dialog = showLyricsSyncDialog(context, offsetMs: _lyricsSync);
-    // After the dialog is on its way, so the context is not used across the
-    // pause's await.
-    if (wasPlaying) unawaited(spotify?.togglePause() ?? Future<void>.value());
+  /// There is no dialog for this any more and no click to compare against: it
+  /// is set while the song plays and the words run, which is the only thing
+  /// that ever told anybody whether the number is right. A step says itself on
+  /// the screen for a moment, so the keys can be pressed without looking away
+  /// from the words.
+  void _nudgeSync({required bool earlier}) {
+    _setLyricsSync(
+      _lyricsSync + (earlier ? LyricsSyncStore.step : -LyricsSyncStore.step),
+    );
+  }
 
-    final chosen = await dialog;
-
-    if (wasPlaying && (spotify?.isPlaying ?? false) == false) {
-      await spotify?.togglePause();
+  void _setLyricsSync(int ms) {
+    final next = LyricsSyncStore.clamp(ms);
+    if (next == _lyricsSync) {
+      // Still say the number: at the end of the range a press that does
+      // nothing otherwise looks like a key that is not bound.
+      _flashSync(next);
+      return;
     }
-    if (chosen == null || !mounted) return;
-    setState(() => _lyricsSync = chosen);
-    unawaited(LyricsSyncStore.save(chosen));
+    setState(() => _lyricsSync = next);
+    unawaited(LyricsSyncStore.save(next));
+    _flashSync(next);
+  }
+
+  void _flashSync(int ms) {
+    setState(() => _syncFlash = ms);
+    _syncFlashOff?.cancel();
+    _syncFlashOff = Timer(_flashFor, () {
+      if (mounted) setState(() => _syncFlash = null);
+    });
+  }
+
+  void _toggleSyncMode() => setState(() => _syncMode = !_syncMode);
+
+  /// Asks whether the song of the round has words, for the line that says so
+  /// where the controls are. The stage asks for itself, and both land on the
+  /// same cached answer.
+  void _trackLyrics() {
+    final song = _game.currentSong;
+    if (song == null) {
+      if (_lyricsFor != null) {
+        _lyricsFor = null;
+        _hasLyrics = null;
+      }
+      return;
+    }
+    if (_lyricsFor == song.key) return;
+    _lyricsFor = song.key;
+    _hasLyrics = null;
+    unawaited(
+      (widget.lyrics ?? sharedLyrics).find(song).then(
+        (lyrics) {
+          if (!mounted || _lyricsFor != song.key) return;
+          setState(
+            () => _hasLyrics = lyrics != null && lyrics.lines.isNotEmpty,
+          );
+        },
+        // A source that did not answer is not a song without words, and the
+        // view beside this says so for itself.
+        onError: (Object _) {},
+      ),
+    );
   }
 
   void _toggleScores() {
@@ -303,13 +436,19 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     unawaited(ShowScoresStore.save(shown: _showScores));
   }
 
-  /// A press of smaller or bigger in the side column. It is the same room and
-  /// the same wall next time, so the size is kept.
-  void _stepLyricsScale({required bool bigger}) {
-    final scale = LyricsScaleStore.stepped(_lyricsScale, bigger: bigger);
-    if (scale == _lyricsScale) return;
-    setState(() => _lyricsScale = scale);
-    unawaited(LyricsScaleStore.save(scale));
+  /// A press of smaller or bigger in the menu. It is the same room and the
+  /// same wall next time, so the size is kept.
+  void _stepLyricsScale({required bool bigger}) =>
+      _setLyricsScale(LyricsScaleStore.stepped(_lyricsScale, bigger: bigger));
+
+  /// What two fingers on the words asked for, see [PinchScale]. Saved on the
+  /// way like the column's width: a write per frame is cheap next to one more
+  /// thing to remember.
+  void _setLyricsScale(double scale) {
+    final next = scale.clamp(LyricsScaleStore.min, LyricsScaleStore.max);
+    if (next == _lyricsScale) return;
+    setState(() => _lyricsScale = next);
+    unawaited(LyricsScaleStore.save(next));
   }
 
   @override
@@ -327,6 +466,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // Lets the round that waits on it run out, instead of hanging on.
     _inlineScan?.complete();
     _inlineScan = null;
+    _syncFlashOff?.cancel();
     unawaited(WakeLock.release());
     _spotify?.removeListener(_onSessionChanged);
     unawaited(_spotify?.stop());
@@ -345,6 +485,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// coming back from Spotify. A buzz says the year is up.
   void _onPhaseChanged() {
     final phase = _game.phase;
+    // A swap and the next round both bring another song, and with it another
+    // answer to whether it has words.
+    _trackLyrics();
     if (phase == RoundPhase.revealed && _lastPhase != RoundPhase.revealed) {
       Haptics.reveal();
       // The round is over, so the next card is the only thing left to do: the
@@ -395,16 +538,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   /// Asks for the words while the countdown runs, so the sheet has them when
-  /// somebody taps. A failure here is no matter: the sheet asks again.
-  void _prefetchLyrics() {
-    final song = _game.currentSong;
-    if (song == null) return;
-    unawaited(
-      (widget.lyrics ?? sharedLyrics)
-          .find(song)
-          .then<void>((_) {}, onError: (Object _) {}),
-    );
-  }
+  /// somebody taps - and so the line about a song without any is right by the
+  /// time the round is on screen. A failure here is no matter: the sheet asks
+  /// again.
+  void _prefetchLyrics() => _trackLyrics();
 
   /// Opens the camera and returns the scanned code, or null when it was
   /// closed without one.
@@ -677,7 +814,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       case 'words.smaller':
         _stepLyricsScale(bigger: false);
       case 'words.sync':
-        await _syncLyrics();
+        _toggleSyncMode();
       case 'fullscreen':
         // A gesture is what the browser grants it to, and this is one.
         await Fullscreen.toggle();
@@ -753,6 +890,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         if (spotify != null) unawaited(spotify.seek(spotify.duration ~/ 2));
       case GameShortcut.start:
         if (spotify != null) unawaited(spotify.seek(Duration.zero));
+      case GameShortcut.wordsEarlier:
+        _nudgeSync(earlier: true);
+      case GameShortcut.wordsLater:
+        _nudgeSync(earlier: false);
     }
   }
 
@@ -765,7 +906,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       bindings: {
         for (final shortcut in GameShortcut.values)
           for (final key in shortcut.keys)
-            SingleActivator(key): () => _runShortcut(shortcut),
+            SingleActivator(key, control: shortcut.control): () =>
+                _runShortcut(shortcut),
       },
       child: Focus(
         autofocus: true,
@@ -793,9 +935,23 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       listenable: _game,
       builder: (context, _) {
         // The finish has one thing to say, and says it the same everywhere.
-        final body = wide && _game.phase != RoundPhase.finished
+        final round = wide && _game.phase != RoundPhase.finished
             ? _wideBody(context)
             : CenteredBody(child: _body(context));
+        // The number says itself over whatever is on the screen, so a press
+        // of the keys is answered where the words are.
+        final body = Stack(
+          children: [
+            Positioned.fill(child: round),
+            if (_syncFlash case final ms?)
+              Positioned(
+                top: 12,
+                left: 0,
+                right: 0,
+                child: Center(child: _SyncFlash(offsetMs: ms)),
+              ),
+          ],
+        );
         return Scaffold(
           // The wide layout has no bar: 56 pixels of a landscape phone's 412
           // for a deck name the room does not need and a menu that belongs to
@@ -835,10 +991,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         // is the cost of having it in here rather than as a row in the column
         // - it is set once for the room and then left alone, so a second trip
         // through the menu for a second step is a fair price for the space.
-        PopupMenuItem(
-          enabled: false,
-          child: Text('Words ${(_lyricsScale * 100).round()}%'),
-        ),
+        // Two fingers on the words do the same thing without the trip, which
+        // is why the percentage is not written down here any more.
         PopupMenuItem(
           value: 'words.bigger',
           enabled: _lyricsScale < LyricsScaleStore.max,
@@ -849,9 +1003,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           enabled: _lyricsScale > LyricsScaleStore.min,
           child: const Text('Smaller words'),
         ),
-        const PopupMenuItem(
+        // The mode, not a dialog: the number is found against the running
+        // song, so what it needs is a pair of arrows beside the words rather
+        // than a window over them.
+        PopupMenuItem(
           value: 'words.sync',
-          child: Text('Sync the words…'),
+          child: Text(_syncMode ? 'Done syncing the words' : 'Sync the words'),
         ),
         const PopupMenuItem(value: 'reset', child: Text('Reset scores')),
         const PopupMenuItem(value: 'category', child: Text('Change category')),
@@ -880,7 +1037,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     return Stack(
       children: [
         Positioned.fill(child: _wideRound(context)),
-        Positioned(top: 0, right: 4, child: _menu(wide: true)),
+        Positioned(top: 8, right: 12, child: _menu(wide: true)),
       ],
     );
   }
@@ -902,13 +1059,26 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onRedraw: _redraw,
       onUndoRedraw: _undoRedraw,
       lyricsScale: _lyricsScale,
+      onLyricsScale: _setLyricsScale,
       lyricsSync: _lyricsSync,
+      syncMode: _syncMode,
+      onSync: _setLyricsSync,
+      hasLyrics: _hasLyrics,
       showScores: _showScores,
       shortcuts: hasKeyboard,
       columnShare: _columnShare,
       onColumnShare: _setColumnShare,
+      slotShare: _slotShare,
+      onSlotShare: _setSlotShare,
     );
   }
+
+  /// The arrows for the sync, where the mode is on. Null otherwise - on the
+  /// phone there is no column to put them in, so they go into the round's own
+  /// stack of blocks and come out of it again when the mode ends.
+  Widget? _syncPanel() => _syncMode
+      ? _SyncPanel(offsetMs: _lyricsSync, onSync: _setLyricsSync)
+      : null;
 
   Widget _body(BuildContext context) {
     switch (_game.phase) {
@@ -930,14 +1100,18 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           onRedraw: _redraw,
           onUndoRedraw: _undoRedraw,
           onLyrics: _showLyrics,
+          hasLyrics: _hasLyrics,
           showScores: _showScores,
+          sync: _syncPanel(),
         );
       case RoundPhase.revealed:
         return _RevealBody(
           game: _game,
           onNextRound: _nextRound,
           onLyrics: _showLyrics,
+          hasLyrics: _hasLyrics,
           showScores: _showScores,
+          sync: _syncPanel(),
         );
       case RoundPhase.finished:
         return _FinishedBody(
@@ -1110,7 +1284,9 @@ class _PlayingBody extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     required this.onLyrics,
+    required this.hasLyrics,
     required this.showScores,
+    this.sync,
   });
 
   final GameController game;
@@ -1118,7 +1294,13 @@ class _PlayingBody extends StatelessWidget {
   final VoidCallback onRedraw;
   final VoidCallback onUndoRedraw;
   final VoidCallback onLyrics;
+
+  /// Whether the song has words at all, null while nobody knows yet.
+  final bool? hasLyrics;
   final bool showScores;
+
+  /// The sync arrows while that mode is on.
+  final Widget? sync;
 
   @override
   Widget build(BuildContext context) {
@@ -1133,12 +1315,14 @@ class _PlayingBody extends StatelessWidget {
             service: game.service,
           ),
           const SizedBox(height: 20),
+          if (sync case final panel?) ...[panel, const SizedBox(height: 12)],
           _SongControls(
             game: game,
             spotify: spotify,
             onRedraw: onRedraw,
             onUndoRedraw: onUndoRedraw,
             onLyrics: onLyrics,
+            hasLyrics: hasLyrics,
           ),
           if (showScores) ...[
             const SizedBox(height: 32),
@@ -1175,6 +1359,7 @@ class _SongControls extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     this.onLyrics,
+    this.hasLyrics,
     this.inColumn = false,
   });
 
@@ -1185,6 +1370,12 @@ class _SongControls extends StatelessWidget {
 
   /// Null where the words are up anyway - the stage of the wide layout.
   final VoidCallback? onLyrics;
+
+  /// Whether the song has words at all, null while nobody knows yet. Where
+  /// there are none it is said here, beside the controls: whoever runs the
+  /// game is looking at this half, and on a projector the stage is across the
+  /// room.
+  final bool? hasLyrics;
 
   /// In the side column of the wide layout. Two things follow from it: the
   /// swap gets its short label, because the column is 214 wide on a phone
@@ -1218,7 +1409,13 @@ class _SongControls extends StatelessWidget {
 
     // On the web a blocked popup looks exactly like a successful one, so the
     // way to the service stays reachable by hand.
-    final openButton = kIsWeb
+    //
+    // Only once the launch has answered, though: a swap hands the song over
+    // again, and for those few frames `playingInApp` is false while the round
+    // is on its way back into the tab. Shown on that, the button flashed up
+    // after every press of "nobody knows it" and went again - see
+    // [_looksInApp], which is the same rule the rest of the screen reads.
+    final openButton = kIsWeb && !_looksInApp(game, spotify)
         ? Center(
             child: TextButton.icon(
               onPressed: game.reopen,
@@ -1262,11 +1459,15 @@ class _SongControls extends StatelessWidget {
           ?openButton,
         if (lyrics != null)
           Center(
-            child: TextButton.icon(
-              onPressed: lyrics,
-              icon: const Icon(Icons.lyrics_outlined),
-              label: const Text('Lyrics'),
-            ),
+            child: _LyricsButton(onLyrics: lyrics, has: hasLyrics),
+          )
+        // In the column the words are on the stage, so there is no button to
+        // turn into the message - it is said as a line of its own, and only
+        // when there is something to say.
+        else if (hasLyrics == false)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: _NoLyrics(),
           ),
         if (message != null) ...[
           const SizedBox(height: 8),
@@ -1279,24 +1480,34 @@ class _SongControls extends StatelessWidget {
           ),
         ],
         // For the song nobody in the room knows - that round is a coin flip.
+        //
+        // A button with a border and a height of its own, not a line of text
+        // with a ripple: it is pressed in the middle of a round, often in the
+        // dark, and as a text button it was both hard to hit and the one
+        // thing on the panel that looked like it had been left there.
         if (game.canRedraw) ...[
-          const SizedBox(height: 4),
+          const SizedBox(height: 12),
           // The undo sits in the same row, so it comes and goes without
           // moving anything.
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Flexible(
-                child: TextButton.icon(
+              Expanded(
+                child: OutlinedButton.icon(
                   onPressed: onRedraw,
-                  icon: const Icon(Icons.shuffle),
+                  icon: const Icon(Icons.shuffle, size: 20),
                   label: Text(
                     inColumn
-                        ? 'Nobody knows it?'
-                        : 'Nobody knows it? Draw another',
+                        ? 'Nobody knows it'
+                        : 'Nobody knows it — draw another',
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
                   ),
-                  style: TextButton.styleFrom(
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shape: const StadiumBorder(),
                     foregroundColor: theme.colorScheme.onSurfaceVariant,
+                    side: BorderSide(color: theme.colorScheme.outlineVariant),
                   ),
                 ),
               ),
@@ -1305,17 +1516,185 @@ class _SongControls extends StatelessWidget {
                 maintainSize: true,
                 maintainAnimation: true,
                 maintainState: true,
-                child: IconButton(
-                  tooltip: 'Back to the last song',
-                  onPressed: onUndoRedraw,
-                  icon: const Icon(Icons.undo),
-                  color: theme.colorScheme.onSurfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: IconButton.outlined(
+                    tooltip: 'Back to the last song',
+                    onPressed: onUndoRedraw,
+                    icon: const Icon(Icons.undo),
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size.square(52),
+                      foregroundColor: theme.colorScheme.onSurfaceVariant,
+                      side: BorderSide(color: theme.colorScheme.outlineVariant),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
         ],
       ],
+    );
+  }
+}
+
+/// The way to the words on the phone - or, where the song has none, the line
+/// that says so in the button's place.
+///
+/// Dead rather than gone: the button stands where it stands in every round,
+/// and a round whose song has no text says that much instead of leaving a gap
+/// whoever is holding the phone has to interpret.
+class _LyricsButton extends StatelessWidget {
+  const _LyricsButton({required this.onLyrics, required this.has});
+
+  final VoidCallback onLyrics;
+
+  /// Null while the source has not answered yet - then the button opens the
+  /// sheet, which says for itself what came of the question.
+  final bool? has;
+
+  @override
+  Widget build(BuildContext context) {
+    if (has == false) return const _NoLyrics();
+
+    return TextButton.icon(
+      onPressed: onLyrics,
+      icon: const Icon(Icons.lyrics_outlined),
+      label: const Text('Lyrics'),
+    );
+  }
+}
+
+/// What a song without a text gets instead of the words.
+class _NoLyrics extends StatelessWidget {
+  const _NoLyrics();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.lyrics_outlined, size: 18, color: muted),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            'No lyrics for this song',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(color: muted),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The sync, set against the running song: two arrows and the number between
+/// them.
+///
+/// This is what the dialog with its click and its flash used to be, and it is
+/// in the column rather than over the screen for the reason the dialog could
+/// never work around - the only honest test of the number is the words
+/// against the music, so the song has to go on playing while it is being set.
+/// A finger on the arrows is the same step the keys make.
+class _SyncPanel extends StatelessWidget {
+  const _SyncPanel({required this.offsetMs, required this.onSync});
+
+  final int offsetMs;
+  final ValueChanged<int> onSync;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Sync the words',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton.filledTonal(
+                tooltip: 'The words later',
+                onPressed: offsetMs <= LyricsSyncStore.min
+                    ? null
+                    : () => onSync(offsetMs - LyricsSyncStore.step),
+                icon: const Icon(Icons.arrow_back),
+              ),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${offsetMs > 0 ? '+' : ''}$offsetMs ms',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: scheme.primary,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                ),
+              ),
+              IconButton.filledTonal(
+                tooltip: 'The words earlier',
+                onPressed: offsetMs >= LyricsSyncStore.max
+                    ? null
+                    : () => onSync(offsetMs + LyricsSyncStore.step),
+                icon: const Icon(Icons.arrow_forward),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The number, said over the screen for a moment after it changed.
+///
+/// A press of the keys happens while somebody is watching the words, which is
+/// the whole point of setting it there - so the answer comes to the words
+/// rather than making them look for a panel.
+class _SyncFlash extends StatelessWidget {
+  const _SyncFlash({required this.offsetMs});
+
+  final int offsetMs;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return IgnorePointer(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: scheme.inverseSurface.withValues(alpha: 0.92),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          'Words ${offsetMs > 0 ? '+' : ''}$offsetMs ms',
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: scheme.onInverseSurface,
+            fontWeight: FontWeight.w700,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1536,13 +1915,21 @@ class _RevealBody extends StatelessWidget {
     required this.game,
     required this.onNextRound,
     required this.onLyrics,
+    required this.hasLyrics,
     required this.showScores,
+    this.sync,
   });
 
   final GameController game;
   final VoidCallback onNextRound;
   final VoidCallback onLyrics;
+
+  /// Whether the song has words at all, null while nobody knows yet.
+  final bool? hasLyrics;
   final bool showScores;
+
+  /// The sync arrows while that mode is on.
+  final Widget? sync;
 
   @override
   Widget build(BuildContext context) {
@@ -1556,12 +1943,9 @@ class _RevealBody extends StatelessWidget {
           _YearCard(game: game),
           const SizedBox(height: 8),
           Center(
-            child: TextButton.icon(
-              onPressed: onLyrics,
-              icon: const Icon(Icons.lyrics_outlined),
-              label: const Text('Lyrics'),
-            ),
+            child: _LyricsButton(onLyrics: onLyrics, has: hasLyrics),
           ),
+          if (sync case final panel?) ...[const SizedBox(height: 12), panel],
           if (showScores) ...[
             const SizedBox(height: 24),
             _SectionHeading(
@@ -1768,11 +2152,17 @@ class _WideRound extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     required this.lyricsScale,
+    required this.onLyricsScale,
     required this.lyricsSync,
+    required this.syncMode,
+    required this.onSync,
+    required this.hasLyrics,
     required this.showScores,
     required this.shortcuts,
     required this.columnShare,
     required this.onColumnShare,
+    required this.slotShare,
+    required this.onSlotShare,
   });
 
   final GameController game;
@@ -1788,11 +2178,19 @@ class _WideRound extends StatelessWidget {
   final VoidCallback onRedraw;
   final VoidCallback onUndoRedraw;
 
-  /// How big the words on the stage are, set from the menu.
+  /// How big the words on the stage are, set from the menu or by two fingers
+  /// on the words themselves.
   final double lyricsScale;
+  final ValueChanged<double> onLyricsScale;
 
-  /// How far ahead of the song they run, see [LyricsSyncStore].
+  /// How far ahead of the song they run, see [LyricsSyncStore], and whether
+  /// the panel for setting it is in the column.
   final int lyricsSync;
+  final bool syncMode;
+  final ValueChanged<int> onSync;
+
+  /// Whether the song has words at all, null while nobody knows yet.
+  final bool? hasLyrics;
 
   /// Whether the scoreboard is on the stage at all, see [ShowScoresStore].
   final bool showScores;
@@ -1805,6 +2203,10 @@ class _WideRound extends StatelessWidget {
   /// The share of the screen the column takes, and the handle that changes it.
   final double columnShare;
   final ValueChanged<double> onColumnShare;
+
+  /// The share of the column the reveal card takes, and its own handle.
+  final double slotShare;
+  final ValueChanged<double> onSlotShare;
 
   @override
   Widget build(BuildContext context) {
@@ -1830,7 +2232,12 @@ class _WideRound extends StatelessWidget {
         // sits at the bottom. The camera's height is 4:3 as far as the width
         // allows, capped at a third of the column - a projector is nowhere
         // near that cap.
-        final slot = (constraints.maxHeight * 0.36).clamp(0.0, 280.0);
+        //
+        // The slot is whatever its own handle was last dragged to. It used to
+        // be a share with a cap in pixels; the cap was there so the answer
+        // does not become a poster on a big screen, and that is now a
+        // decision made with the screen in front of you ([SlotHeightStore]).
+        final slot = constraints.maxHeight * slotShare;
         // As wide as the slot above it - the two boxes of the column are one
         // column, not two sizes. 4:3 as far as the height allows and cropped
         // rather than narrowed where it does not: what the scanner reads is
@@ -1851,7 +2258,7 @@ class _WideRound extends StatelessWidget {
             SizedBox(
               width: side,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 12, 24),
+                padding: const EdgeInsets.fromLTRB(24, 28, 12, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -1863,49 +2270,77 @@ class _WideRound extends StatelessWidget {
                         onReveal: game.reveal,
                       ),
                     ),
-                    // The controls and, at the foot of them, the keys -
-                    // straight above the camera and inside the same bounded
-                    // box, so a third row of keys shrinks itself instead of
-                    // running under the preview.
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: _FitBody(
-                              center: false,
-                              padding: const EdgeInsets.only(top: 16),
-                              child: playing
-                                  ? _SongControls(
-                                      game: game,
-                                      spotify: spotify,
-                                      onRedraw: onRedraw,
-                                      onUndoRedraw: onUndoRedraw,
-                                      inColumn: true,
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                          ),
-                          if (shortcuts) _ShortcutHints(game: game),
-                        ],
+                    // The reveal card's own grip, for the same reason the
+                    // split between the halves has one: how much of the
+                    // column the answer deserves is a question about the room.
+                    _SlotHandle(
+                      onMove: (delta) => onSlotShare(
+                        slotShare + delta / constraints.maxHeight,
                       ),
                     ),
-                    // The camera grows into place rather than appearing, so
-                    // the keys above it slide up instead of jumping.
-                    AnimatedSize(
-                      duration: const Duration(milliseconds: 240),
-                      curve: Curves.easeOutCubic,
-                      alignment: Alignment.topCenter,
-                      child: SizedBox(
-                        height: showCamera ? cameraHeight : 0,
-                        child: showCamera
-                            ? _CameraBox(
-                                camera: camera,
-                                onCode: onCode,
-                                onClose: onCloseCamera,
-                                onNextRound: onNextRound,
-                              )
-                            : null,
+                    // Under it the controls with the keys at their foot - and
+                    // the camera over both when it is open. It is an overlay
+                    // and not a block of its own on purpose: the keys stay
+                    // exactly where they were and are covered, instead of
+                    // sliding up every time a card is scanned.
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, box) => Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    child: _FitBody(
+                                      center: false,
+                                      padding: const EdgeInsets.only(top: 16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          if (syncMode) ...[
+                                            _SyncPanel(
+                                              offsetMs: lyricsSync,
+                                              onSync: onSync,
+                                            ),
+                                            const SizedBox(height: 12),
+                                          ],
+                                          if (playing)
+                                            _SongControls(
+                                              game: game,
+                                              spotify: spotify,
+                                              onRedraw: onRedraw,
+                                              onUndoRedraw: onUndoRedraw,
+                                              hasLyrics: hasLyrics,
+                                              inColumn: true,
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  if (shortcuts) _ShortcutHints(game: game),
+                                ],
+                              ),
+                            ),
+                            if (showCamera)
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                // Never taller than the room under the slot:
+                                // the box is an overlay, and an overlay bigger
+                                // than its stack is an overflow.
+                                height: min(cameraHeight, box.maxHeight),
+                                child: _CameraBox(
+                                  camera: camera,
+                                  onCode: onCode,
+                                  onClose: onCloseCamera,
+                                  onNextRound: onNextRound,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -1922,6 +2357,7 @@ class _WideRound extends StatelessWidget {
                 spotify: spotify,
                 lyrics: lyrics,
                 lyricsScale: lyricsScale,
+                onLyricsScale: onLyricsScale,
                 lyricsSync: lyricsSync,
                 showScores: showScores,
               ),
@@ -1936,8 +2372,10 @@ class _WideRound extends StatelessWidget {
             Expanded(child: round),
             Padding(
               // Off the very bottom edge: a drag down there fights the
-              // phone's own home gesture.
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              // phone's own home gesture. And off the half above it, so the
+              // band reads as the floor of the screen rather than as the
+              // next row of the column.
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: Visibility(
                 visible: bar,
                 maintainSize: true,
@@ -1985,7 +2423,7 @@ class _ShortcutHints extends StatelessWidget {
         fit: BoxFit.scaleDown,
         alignment: Alignment.bottomCenter,
         child: SizedBox(
-          width: 260,
+          width: 320,
           child: Wrap(
             spacing: 10,
             runSpacing: 4,
@@ -2297,6 +2735,50 @@ class _SplitHandle extends StatelessWidget {
   }
 }
 
+/// The line under the reveal card, and the grip that moves it.
+///
+/// The same decision as [_SplitHandle] turned ninety degrees: the card is the
+/// reveal while the song runs and the answer afterwards, and how much of the
+/// column that deserves depends on whether it is read from a sofa or from the
+/// chair the laptop is on. So it is dragged, and remembered
+/// ([SlotHeightStore]).
+class _SlotHandle extends StatelessWidget {
+  const _SlotHandle({required this.onMove});
+
+  /// The pixels the grip was dragged, positive downwards.
+  final ValueChanged<double> onMove;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return MouseRegion(
+      key: slotHandleKey,
+      cursor: SystemMouseCursors.resizeRow,
+      child: GestureDetector(
+        // Vertical only, so the grip cannot be mistaken for a tap on the card
+        // above it - which is the reveal, and the one press on this screen
+        // that must not happen by accident.
+        onVerticalDragUpdate: (details) => onMove(details.delta.dy),
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          height: 22,
+          child: Center(
+            child: Container(
+              width: 48,
+              height: 4,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// The bottom of the side column, where the camera runs.
 ///
 /// It is not on screen at all while a round plays - there is nothing to look
@@ -2392,6 +2874,7 @@ class _Stage extends StatelessWidget {
     required this.spotify,
     required this.lyrics,
     required this.lyricsScale,
+    required this.onLyricsScale,
     required this.lyricsSync,
     required this.showScores,
   });
@@ -2404,8 +2887,10 @@ class _Stage extends StatelessWidget {
   final int lyricsSync;
 
   /// What the room asked for on top of the size the height gives, set from
-  /// the menu and kept per device ([LyricsScaleStore]).
+  /// the menu or by two fingers on the words, and kept per device
+  /// ([LyricsScaleStore]).
   final double lyricsScale;
+  final ValueChanged<double> onLyricsScale;
 
   /// Whether the scores are along the bottom, see [ShowScoresStore]. Hidden,
   /// the words have the stage to themselves.
@@ -2448,44 +2933,56 @@ class _Stage extends StatelessWidget {
                 const Expanded(child: _StageIdle())
               else ...[
                 Expanded(
-                  // The words scroll themselves, so a scrollbar on the wall is
-                  // only noise. The edges fade rather than cut a line in half.
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(
-                      context,
-                    ).copyWith(scrollbars: false),
-                    child: ShaderMask(
-                      blendMode: BlendMode.dstIn,
-                      shaderCallback: (bounds) => const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.white,
-                          Colors.white,
-                          Colors.transparent,
-                        ],
-                        stops: [0, 0.06, 0.88, 1],
-                      ).createShader(bounds),
-                      // The room inside the box is a share of it, not a set
-                      // number of pixels: 28 above and 72 below are a tenth
-                      // of a projector's box and most of a phone's 109.
-                      child: LayoutBuilder(
-                        builder: (context, box) => LyricsView(
-                          key: ValueKey(song.key),
-                          song: song,
-                          source: lyrics,
-                          session: game.playingInApp ? spotify : null,
-                          syncMs: lyricsSync,
-                          lineStyle: theme.textTheme.headlineSmall?.copyWith(
-                            fontSize: line,
-                            height: 1.25,
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            24,
-                            (box.maxHeight * 0.05).clamp(2.0, 28.0),
-                            24,
-                            (box.maxHeight * 0.13).clamp(8.0, 72.0),
+                  // Two fingers on the words set their size, which is the
+                  // gesture anybody tries first on a text that is too small -
+                  // the menu's two entries are the same setting for a laptop
+                  // with no touch screen.
+                  child: PinchScale(
+                    scaleOf: () => lyricsScale,
+                    onScale: onLyricsScale,
+                    // The words scroll themselves, so a scrollbar on the wall
+                    // is only noise. The edges fade rather than cut a line in
+                    // half.
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(
+                        context,
+                      ).copyWith(scrollbars: false),
+                      child: ShaderMask(
+                        blendMode: BlendMode.dstIn,
+                        shaderCallback: (bounds) => const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.white,
+                            Colors.white,
+                            Colors.transparent,
+                          ],
+                          stops: [0, 0.06, 0.88, 1],
+                        ).createShader(bounds),
+                        // The room inside the box is a share of it, not a set
+                        // number of pixels: 28 above and 72 below are a tenth
+                        // of a projector's box and most of a phone's 109.
+                        child: LayoutBuilder(
+                          builder: (context, box) => LyricsView(
+                            key: ValueKey(song.key),
+                            song: song,
+                            source: lyrics,
+                            session: game.playingInApp ? spotify : null,
+                            syncMs: lyricsSync,
+                            lineStyle: theme.textTheme.headlineSmall?.copyWith(
+                              fontSize: line,
+                              // Air between the lines: the whole text is up at
+                              // once on a wall, and set tight it reads as a
+                              // block rather than as lines to follow.
+                              height: 1.5,
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              24,
+                              (box.maxHeight * 0.05).clamp(2.0, 28.0),
+                              24,
+                              (box.maxHeight * 0.13).clamp(8.0, 72.0),
+                            ),
                           ),
                         ),
                       ),

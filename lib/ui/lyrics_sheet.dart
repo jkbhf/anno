@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/song.dart';
 import '../music/lyrics.dart';
 import '../music/spotify_playback.dart';
+import 'pinch_scale.dart';
 
 /// Opens the text of [song] over the round.
 ///
@@ -43,7 +44,7 @@ Future<void> showLyricsSheet(
 
 /// The sheet: the words under a line that names the song once it is no
 /// secret any more.
-class LyricsSheet extends StatelessWidget {
+class LyricsSheet extends StatefulWidget {
   const LyricsSheet({
     required this.song,
     required this.source,
@@ -62,25 +63,54 @@ class LyricsSheet extends StatelessWidget {
   final bool hideSong;
 
   @override
+  State<LyricsSheet> createState() => _LyricsSheetState();
+}
+
+class _LyricsSheetState extends State<LyricsSheet> {
+  /// What two fingers asked for, for as long as the sheet is up.
+  ///
+  /// Not kept like the stage's size ([LyricsScaleStore]): that one is a
+  /// property of the room - how far the sofa is from the wall - while this is
+  /// arm's length whatever the room looks like, so what is set here is set
+  /// for a song and not for an evening.
+  double _scale = 1;
+
+  /// Far enough either way to be worth the gesture.
+  static const double _min = 0.7;
+  static const double _max = 2.2;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final song = widget.song;
+    final base = theme.textTheme.titleLarge!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
           child: Text(
-            hideSong ? 'Lyrics' : '${song.title} · ${song.artist}',
+            widget.hideSong ? 'Lyrics' : '${song.title} · ${song.artist}',
             textAlign: TextAlign.center,
             style: theme.textTheme.titleMedium,
           ),
         ),
         Expanded(
-          child: LyricsView(
-            song: song,
-            source: source,
-            session: session,
-            syncMs: syncMs,
+          child: PinchScale(
+            scaleOf: () => _scale,
+            onScale: (scale) =>
+                setState(() => _scale = scale.clamp(_min, _max)),
+            child: LyricsView(
+              song: song,
+              source: widget.source,
+              session: widget.session,
+              syncMs: widget.syncMs,
+              lineStyle: base.copyWith(
+                fontSize: (base.fontSize ?? 22) * _scale,
+                height: 1.45,
+              ),
+            ),
           ),
         ),
       ],
@@ -377,14 +407,17 @@ class _LyricsViewState extends State<LyricsView> {
     };
 
     // An empty line in a text is a break between verses.
-    if (line.text.isEmpty) return SizedBox(key: key, height: 20);
+    if (line.text.isEmpty) return SizedBox(key: key, height: 24);
 
     return InkWell(
       key: key,
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
+        // Air between the lines, on top of the leading inside them: the whole
+        // text at once is what the room has to read, and packed tight it is a
+        // wall rather than lines somebody can follow.
+        padding: const EdgeInsets.symmetric(vertical: 11),
         child: AnimatedDefaultTextStyle(
           duration: const Duration(milliseconds: 200),
           style: style,

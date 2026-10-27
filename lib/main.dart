@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'data/camera_facing_store.dart';
 import 'data/game_store.dart';
 import 'data/music_service_store.dart';
 import 'data/roster_store.dart';
@@ -22,6 +23,10 @@ Future<void> main() async {
   final savedGame = await GameStore.load();
   final roster = await RosterStore.load();
   final service = await MusicServiceStore.load();
+  // Into memory rather than into a widget: a scanner controller is built
+  // where there is nothing to await, so the side it opens on has to be
+  // readable there.
+  await CameraFacingStore.preload();
 
   // Picks a login back up - either the redirect the browser just came back
   // with, or a token from an earlier visit. Not awaited: the game starts

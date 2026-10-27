@@ -579,6 +579,23 @@ round has neither band nor reserved room: nothing to scrub, so the words get
 those 50 pixels instead. The swap stays in the column, where the rest of the
 round's controls are.
 
+**The swap is a button, and the open-in-Spotify beside it does not flicker**
+(2026-10-27). `Nobody knows it` was a text button in the middle of the
+controls: hard to hit in a dark room and the one thing on the panel that looked
+left there. It is an outlined stadium button 52 pixels tall across the width of
+the panel now, with the undo as a 52 square beside it. And the way back to a
+swallowed popup is drawn on `_looksInApp` rather than on `playingInApp`: a swap
+hands the song over again, and for those frames the round is not in the tab -
+shown on that, `Open in Spotify` flashed up after every press of the swap and
+went again. Same rule as the layout's, for the same reason.
+
+**A song without words says so where the words would be.** On the stage that
+is `LyricsView`'s own message; in the column it is a line beside the controls,
+and on the phone it replaces the `Lyrics` button rather than leaving one that
+opens an empty sheet. The game asks the source itself when a round starts
+(`_trackLyrics`, the same cached answer the view gets) - it is `null` until the
+answer comes, and `null` is treated as "there might be words".
+
 **The stage is the words, from the first note to the next card** (2026-10-27).
 It used to carry the reveal banner across its top while the room guessed, and
 then the year card - first beside the words, then instead of them. All of that
@@ -607,21 +624,28 @@ any of this. With nothing to tap there are no points and the game never reaches
 its target: that is the option working, not a bug to fix. A game's scores are
 kept while they are hidden and come back with them.
 
-**The size of the words is set from the menu and kept per device**
+**The size of the words is two fingers on them, and kept per device**
 (`LyricsScaleStore`, a factor on the size the stage reads off its height).
 It belongs to the room - how far the sofa is from the wall, what the projector
 does to a 24pt line - not to a game, so it outlives every game like the music
-service does. A press is a factor (1.2) rather than a step, so it does the same
-amount of work at either end of the 0.6-2.4 range; the menu carries the current
-percentage as a disabled row above the two entries, and an entry greys out at
-the end of the range rather than going dead without saying so.
+service does. The menu keeps `Bigger words` and `Smaller words` for a screen
+with no touch; a press there is a factor (1.2) rather than a step, so it does
+the same amount of work at either end of the 0.6-2.4 range, and an entry greys
+out at the end of the range rather than going dead without saying so.
 
-It started as a row of two buttons in the column and moved into the menu on
-2026-10-27. A press closes the menu, so a second step is a second trip through
-it - the fair price for a setting that is made once for a room and then left
-alone, and it buys the column the room back. The sheet on the phone has its own
-size and is not affected: there the distance to the reader is arm's length,
-whatever the room looks like.
+It started as a row of two buttons in the column, moved into the menu on
+2026-10-27 and got the pinch the same day. **The percentage is no longer
+written in the menu**: a number nobody can act on was taking a row, and the
+gesture is the answer to "is this big enough" anyway. The sheet on the phone
+pinches too, but with a factor of its own that lives as long as the sheet -
+there the distance to the reader is arm's length whatever the room looks like,
+so what is set is set for a song, not for an evening.
+
+**The pinch is a `Listener`, not a gesture** (`lib/ui/pinch_scale.dart`). A
+scale gesture joins the arena and beats the scrollable under it, which would
+cost the words their scrolling - the thing a finger does with them far more
+often than resizing. A raw pointer never competes: one finger scrolls, two
+resize, and only the distance between the two is read.
 
 **Two halves for two audiences.** The stage is for the room and holds only what
 the room reads: reveal or year, words, scores. The column is for whoever runs
@@ -682,6 +706,14 @@ belongs to whoever runs the game but it is reached once or twice an evening,
 and the corner is the one place no round needs - in the column it was taking
 room from the boxes, which is what the missing app bar had just given back.
 
+**The reveal card has a handle of its own** (`SlotHeightStore`, per device,
+2026-10-27). The top box used to be 0.36 of the column capped at 280 pixels;
+the cap was there so the answer does not become a poster on a big screen, and
+that is a judgement about the room rather than about the pixels - so it is
+dragged like the split between the halves and remembered, 0.18 to 0.6. The grip
+is under the card and takes vertical drags only: the card above it is the
+reveal, the one press on this screen that must not happen by accident.
+
 **The two boxes of the column are one width.** The camera is as wide as the
 slot above it and takes its height from that width, capped at a third of the
 column; where the cap bites it crops rather than narrowing itself, because what
@@ -691,6 +723,23 @@ the scanner reads is the camera's frame and not the painted preview.
 at then, and a grey placeholder earns its space less than the air around the
 controls. It comes back with the reveal, open, and a camera closed by hand
 leaves a `Next round` button in its place.
+
+**And it is open from the first frame of a new game** (2026-10-27). The game
+screen is only ever opened to play, so the first thing it wants is a card:
+a post-frame callback in `initState` starts the scan where the phase is `idle`
+and nothing has been scanned yet - the box in the column on a wide screen, the
+scanner page on a phone. Only there. A game resumed mid-round has a song
+running, and from the second card on the reveal is what opens the camera.
+
+**The camera is laid over the column, not stacked into it** (2026-10-27). It
+used to be a block of its own that grew into place (`AnimatedSize`, 240ms) and
+pushed the keyboard hints up with it; the animation was there because the
+camera arrives unasked. It is a `Positioned` at the foot of the column's
+`Stack` now, and the hints stay exactly where they are and are covered - a
+block that is read by sitting still should not move every time a card is
+scanned, and a camera that overlaps something nobody is reading costs nothing.
+It is capped at the height of the box it sits in, because an overlay bigger
+than its stack is an overflow.
 
 **The answer is centred in its box, and two columns where that box is wide**
 (2026-10-27). The year beside the name rather than over it leaves the year
@@ -703,8 +752,8 @@ as a card whose content was not centred. The year is deliberately not the
 biggest thing in it: four digits are read at a glance, and the title is what
 the room talks about at the reveal, so the name got the size the year gave up.
 
-**The keyboard hints sit on the floor of the column**, straight above the
-camera once that is there and against the bottom edge while it is not. Two
+**The keyboard hints sit on the floor of the column**, against its bottom edge
+and covered by the camera when that is open rather than pushed up by it. Two
 things were wrong with that before (2026-10-27): as a `Flexible` beside the
 controls' `Expanded` they were given half the middle and settled at the bottom
 of *that*, leaving the lower half of the column empty under them - they take a
@@ -714,11 +763,6 @@ because wrapped to the column's width a single chip is wider than a phone's
 column and the overflow only moved from the side to the bottom, where it ran
 under the preview. Under 30 pixels of room they go entirely: scaled into
 nothing says less than the air it takes.
-
-**The camera grows into place** (`AnimatedSize`, 240ms), so the keys above it
-slide up rather than jump. It is the one animation in the layout and it is
-there because the camera arrives on its own - a thing that appears without
-being asked for should move like something that was always coming.
 
 Two things follow that are easy to get wrong. The auto-scan is started from
 inside the tap that revealed, which is what lets a mobile browser unlock sound
@@ -747,7 +791,7 @@ as on the web anywhere else.
 back, but Flutter web shows the browser's context menu on every right click.
 Long press works with a mouse too.
 
-## Keyboard shortcuts: six moves, and the keys are taken
+## Keyboard shortcuts: eight moves, and the keys are taken
 
 `GameShortcut` in `lib/ui/game_screen.dart` is the one list - the bindings and
 the hint line are both built from it, so they cannot drift apart. Space plays
@@ -757,6 +801,12 @@ and right/D step ten seconds, up/W jumps to the middle and down/S back to the
 start. The pairs are laid out the way the moves are, the horizontal keys
 stepping and the vertical ones jumping. It is not a convention anybody arrives
 knowing - it is one evening's learning and then it is muscle.
+
+**With Control held, the same two horizontal keys move the words instead of
+the song**: `Ctrl` with `+`/`D` is the words earlier, with `-`/`A` later. The
+modifier is what keeps them out of the song's way, and `SingleActivator`
+matches modifiers exactly, so the bare A and D are untouched. See "The words
+run slightly ahead of the singing".
 
 **Taking these keys means taking them from Flutter.** `CallbackShortcuts` sits
 below the app's own shortcuts and above every button on the screen, so inside
@@ -773,7 +823,9 @@ is written down exactly when it works. The song can only be moved in a round
 that plays in this tab (`playingInApp`), so on a link or YouTube round the
 player keys do nothing at all; the swap and its undo ask the controller's own
 `canRedraw` and `canUndoRedraw`, so N is dead in a year with one song and Z
-only after a swap. `seekSongBy` is shared with the bar's own buttons rather
+only after a swap. The two word keys are the exception that proves the rule:
+they are live in a link round too, because what they change is a setting of
+the room's and not a move in this round. `seekSongBy` is shared with the bar's own buttons rather
 than written twice.
 
 **Where they are written down: the column, and only with a keyboard.**
@@ -786,6 +838,14 @@ that do something at that moment, so a link round shows one line and an in-app
 round all six. A tablet with a keyboard is called wrong by `hasKeyboard` and
 loses the hint - the keys themselves still work wherever one is pressed.
 
+**The words are set loose on the page** (2026-10-27). Three numbers, all from
+the same report - that the text comes at you as a block: the leading is 1.5 on
+the stage and 1.45 in the sheet, every line carries 11 pixels of its own above
+and below, and a blank line between verses is 24. And the furniture around the
+blocks got room: the band at the bottom of the wide layout sits 20 pixels in
+from the sides with 8 above and 16 below, the column starts 28 from the top,
+and the menu is 8 and 12 out of the corner instead of in it.
+
 ## The words run slightly ahead of the singing
 
 Two numbers in `lyrics_sheet.dart`, both from the words feeling a step behind
@@ -797,36 +857,48 @@ exactly on the timestamp, which is the moment the word is sung and too late to
 read along to. Every karaoke player leads a little.
 
 **On top of that comes the cast, and that one is set by hand**
-(`LyricsSyncStore`, `Sync the words…` in the menu, 2026-10-27). Screen
+(`LyricsSyncStore`, `Sync the words` in the menu, 2026-10-27). Screen
 mirroring encodes, sends and decodes the picture: 150 to 400 milliseconds over
 Miracast or Smart View, up to a second over a Chromecast, while the sound
 comes straight out of the laptop. The words have to leave that much earlier to
 arrive with the song. The browser never tells a page that it is being
 mirrored, so nothing can measure this - it is a number for the room and its
-equipment, kept per device like the lyrics scale, with a cable's zero as one
-press beside it.
+equipment, kept per device like the lyrics scale.
 
-**The dialog makes it measurable rather than guessable, and the first version
-did not.** It played the click and lit the panel in the same instant, which
-measures nothing: pressing more changed neither of them, so the number still
-had to be estimated and typed. "The buttons do nothing" was the report, and it
-was right.
+**It is set against the running song, and every attempt to make it measurable
+away from the song failed.** There was a dialog for this, twice. The first
+version flashed a panel and played a click in the same instant, which measures
+nothing - "the buttons do nothing" was the report, and it was right. The second
+delayed the click by the set number so the two would land together on the cast
+screen, which does measure the equipment - and still was not it: it meant
+pausing the song (a reference under music is not one), looking away from the
+words, and trusting a hand's own quarter second. Both are gone, and the beep
+(`lib/ui/beep/`) with them - **the game makes no sound of its own any more.**
 
-Now the panel lights and **the click comes the set number of milliseconds
-after it**. The panel then takes the long way to the cast screen; the click
-does not travel at all. Where the number matches what the cast costs, the two
-land together over there - and that is the number the words need, because the
-same trip delays them. A press restarts the pattern rather than waiting out the
-beat, and the beat itself grows with the number (`_beat`): at a second flat a
-click set 900ms late would land on the next flash. That click is the only sound the game makes itself (`lib/ui/beep/`, Web
-Audio, the usual native no-op), and it is why the song is paused while the
-dialog is up: a reference under music is not one. The arrows and enter work in
-there because a dialog is its own route and the game's keys do not reach it.
+What is left is the honest test and nothing else: **the words beside the music,
+with the number moving while both run.**
 
-**What is left after both is the data.** The timings come from LRCLIB, typed
-by whoever typed them, against a pressing that need not be the one Spotify
-plays, so a single song can still sit a few hundred milliseconds off. The
-dialog catches the equipment, not the song; that last error has no owner here.
+- `Sync the words` in the menu switches a **mode** rather than opening
+  anything. The arrows appear in the column - on a phone in the round's own
+  stack of blocks, where there is no column - and step 100ms. The song plays
+  on, the words keep following it, and the next step is judged on what that
+  looked like.
+- **From the keyboard it is `Ctrl` with `+`/`D` and `-`/`A`**
+  (`GameShortcut.wordsEarlier`, `wordsLater`). Control because the bare keys
+  belong to the song, and these two are a setting rather than a move. They are
+  live whenever a song is on screen, link round included: the number is the
+  room's and can be set before it is visible.
+- **A step says itself over the screen for 1.1 seconds** (`_SyncFlash`).
+  Whoever pressed the key is watching the words, which is the whole point of
+  setting it there, so the answer comes to the words instead of making them
+  look for a panel. It says the number even at the end of the range, where a
+  press changes nothing - silence there reads as a key that is not bound.
+
+**What is left after all of it is the data.** The timings come from LRCLIB,
+typed by whoever typed them, against a pressing that need not be the one
+Spotify plays, so a single song can still sit a few hundred milliseconds off.
+The number catches the equipment, not the song; that last error has no owner
+here.
 
 ## Fullscreen is an offer, never a state the game keeps
 
@@ -882,6 +954,15 @@ it stops the camera when the page goes `hidden` or `paused` - a hidden tab,
 the phone switched over to Spotify - and starts it again on `resumed`. Not on
 `inactive`: the browser's camera permission prompt takes the focus, and
 stopping there stops the camera that is just being asked for.
+
+**Which camera it opens is a per-device setting** (`CameraFacingStore`,
+2026-10-27), read synchronously because a controller is built where there is
+nothing to await - `main` preloads it. The button for it is in the corner of
+every scanner, the small one in the column included, and it is only there where
+the device reports more than one camera (or reports nothing, which is the web).
+Saved from what the plugin says it ended up on rather than from what was asked
+for. It has to be kept: every scan builds a controller of its own, so a flip
+that lived in the view would last exactly one card.
 
 Checking this needs a browser, not a widget test: headless Chrome with
 `--use-fake-device-for-media-stream --use-fake-ui-for-media-stream`, and a hook

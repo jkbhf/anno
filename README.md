@@ -48,6 +48,12 @@ pins in `lib/src/web/web_library_versions.dart`: 3.1.1 for `mobile_scanner`
 7.4.0. `mobile_scanner` is pinned exactly for that reason; upgrading it means
 replacing both files with the matching version.
 
+The button in the bottom left corner of the scanner turns the camera around,
+where the device has two of them - the back one for a card held up to it, the
+front one for a phone lying on the table between people. The side is kept per
+device (`CameraFacingStore`), because every scan builds a controller of its
+own and a flip that was not kept would last one card.
+
 The camera runs only while a scanner is on screen. `mobile_scanner` 7.4.0
 never stops a camera stream in the browser - closed, the scanner left the
 camera on and opened one more with every scan - so `CameraStreams`
@@ -123,8 +129,10 @@ line being sung is lit, and a tap on a line seeks there. A synced text whose
 length is more than five seconds off the recording is shown as plain words
 rather than laid over the wrong cut. In a link round, or on YouTube Music, the
 sheet is the words alone. While the room is still guessing the sheet leaves
-title and artist off. On a wide screen there is no button: the words are on the
-stage for the whole round, see below.
+title and artist off, and two fingers on the sheet make the words bigger or
+smaller. A song LRCLIB has no text for says so where the button was, rather
+than offering a sheet with nothing in it. On a wide screen there is no button:
+the words are on the stage for the whole round, see below.
 
 ## On a projector, or a phone turned over
 
@@ -144,35 +152,39 @@ turned over is. A phone sideways keeps the one column and widens it instead.
   fixed places, both the same width. The box on top is the next thing to do -
   "Scan a card", then "Reveal the year" while the song runs, then the year it
   produced, with title and artist: that box is where the answer lives, so the
-  words on the stage are never covered. The camera sits at the foot: it is off
-  screen
-  while a round plays, and comes up by itself at the reveal so the next card can
-  go up while the room is still reading the year. The card just played is
-  ignored while it does - only a new card starts the next round. In between: the
-  size of the words on the stage, and during a round "Open in Spotify" and the
-  swap. The menu sits in the corner of the top box and carries the way out of
-  the game - this layout has no app bar.
+  words on the stage are never covered. Its height is dragged by the grip
+  under it. The camera sits at the foot: it is off screen while a round plays,
+  and comes up by itself at the start of a new game and at every reveal, so the
+  next card can go up while the room is still reading the year. It is laid over
+  what is under it rather than pushing it up. The card just played is ignored
+  while it does - only a new card starts the next round. In between: during a
+  round "Open in Spotify" and the swap, and at the foot the keys. The menu sits
+  in the corner of the screen and carries the way out of the game - this layout
+  has no app bar.
 - **The player** is a band along the bottom, under both halves: pause, ±10
   seconds, back to the start, jump to the middle, and the track across the rest
   of the screen. Only an in-app Spotify round has one - a song handed over by
   link is out of reach, and then the words get the band's height instead.
-- **"Sync the words…"** in the menu is for casting a screen: the picture
-  arrives at the wall later than the sound does out of the laptop, so the words
-  run ahead by that much. In the dialog the panel flashes and the click follows
-  it by the set amount - watch the cast screen, where the flash arrives late,
-  and press until the two land together there. Kept on the device, with one press
-  back to zero for a cable.
-- **The size of the words** is set in the menu - "Bigger words" and "Smaller
-  words", with the current size above them - and kept on the device, so the
-  same room gets the same size next time. The menu itself is the icon in the
-  top right corner of the screen.
+- **"Sync the words"** in the menu is for casting a screen: the picture arrives
+  at the wall later than the sound does out of the laptop, so the words run
+  ahead by that much. It is a mode, not a dialog - the song and the words keep
+  running while it is on, which is the only way to tell whether the number is
+  right. The arrows appear in the column (on a phone, in the round itself) and
+  step 100 ms at a time; `Ctrl` with `+`/`D` and `-`/`A` does the same from the
+  keyboard, and the number says itself over the screen for a moment after every
+  step. Kept on the device.
+- **The size of the words**: two fingers on the words, or "Bigger words" and
+  "Smaller words" in the menu for a screen with no touch. Kept on the device,
+  so the same room gets the same size next time. The menu itself is the icon in
+  the top right corner of the screen.
 - **The split** between the two halves is dragged: the grip in the gap between
   them widens the column or the stage, and the device remembers where it was
   left.
 - **Keys**, on a laptop or a desktop: space plays and pauses, enter reveals the
   year, N is "nobody knows it" and Z takes that swap back, left/A and right/D
   step ten seconds, up/W jumps to the middle of the song and down/S back to its
-  start. They are listed at the foot of the column, and only there - the stage
+  start, and `Ctrl` with `+`/`D` or `-`/`A` moves the words against the song.
+  They are listed at the foot of the column, and only there - the stage
   is for the room, which has no keyboard. Each is listed only while it does
   something: moving the song needs the in-app player, N needs another song in
   that year, Z needs a swap to take back.

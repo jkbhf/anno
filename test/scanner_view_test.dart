@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:anno/data/camera_facing_store.dart';
 import 'package:anno/ui/scanner_screen.dart';
 
 /// Counts what the scanner asks of the camera, without one behind it.
@@ -199,4 +201,40 @@ void main() {
 
     expect(camera.starts, starts);
   });
+
+  testWidgets('the camera can be turned around, and stays turned', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final camera = FlipCameraController();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ScannerView(controller: camera, onCode: (_) {}),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.byTooltip('Turn the camera around'));
+    await tester.pumpAndSettle();
+
+    expect(camera.switches, 1);
+    // The next scanner opens on the same side: every round builds a
+    // controller of its own, so a flip that was not kept would last one card.
+    expect(CameraFacingStore.isFront, isTrue);
+    await CameraFacingStore.preload();
+    expect(CameraFacingStore.facing, CameraFacing.front);
+  });
+}
+
+/// A camera with two sides, which is what a phone has.
+class FlipCameraController extends FakeCameraController {
+  int switches = 0;
+
+  @override
+  Future<void> switchCamera([
+    SwitchCameraOption option = const ToggleDirection(),
+  ]) async {
+    switches++;
+    value = value.copyWith(cameraDirection: CameraFacing.front);
+  }
 }

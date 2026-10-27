@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/column_width_store.dart';
 import 'package:anno/data/lyrics_scale_store.dart';
+import 'package:anno/data/slot_height_store.dart';
 import 'package:anno/data/lyrics_sync_store.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/game/game_controller.dart';
@@ -198,6 +199,16 @@ Widget wrap(
     ),
   ),
 );
+
+/// Closes the camera a new game opens by itself. On a phone that is the
+/// scanner page over the idle screen, and these tests are about the screen
+/// under it.
+Future<void> closeAutoScanner(WidgetTester tester) async {
+  final scanner = find.byType(ScannerScreen);
+  if (scanner.evaluate().isEmpty) return;
+  Navigator.of(tester.element(scanner)).pop();
+  await tester.pumpAndSettle();
+}
 
 Future<void> reveal(GameController game) async {
   game.scan(card);
@@ -488,6 +499,9 @@ void main() {
     await tester.pumpWidget(wrap(game));
     await tester.pumpAndSettle();
 
+    // A new game puts the camera up by itself; this is the screen under it.
+    expect(find.byType(ScannerScreen), findsOneWidget);
+    await closeAutoScanner(tester);
     expect(find.text('Scan a card'), findsOneWidget);
     expect(find.text('Scores'), findsOneWidget);
 
@@ -553,13 +567,65 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Nobody knows it? Draw another'));
+    await tester.tap(find.text('Nobody knows it — draw another'));
     await tester.pumpAndSettle();
 
     // In the tab there is no countdown, the new song is simply there.
     expect(game.phase, RoundPhase.playing);
     expect(game.currentSong!.title, isNot(unknown));
     expect(find.text('2005'), findsNothing, reason: 'still a secret');
+  });
+
+  testWidgets('the swap is a button a finger finds', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame(
+      launcher: const InTabLauncher(),
+      categories: [twoSongs],
+    );
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(
+      wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+    );
+    await tester.pumpAndSettle();
+
+    // It is pressed in the middle of a round, often in the dark: a line of
+    // text with a ripple was both hard to hit and the one thing on the panel
+    // that looked left there.
+    final swap = tester.getSize(
+      find.ancestor(
+        of: find.text('Nobody knows it — draw another'),
+        matching: find.byType(OutlinedButton),
+      ),
+    );
+    expect(swap.height, greaterThanOrEqualTo(48));
+    expect(swap.width, greaterThan(200));
+  });
+
+  testWidgets('the sync arrows reach the phone too', (tester) async {
+    usePhoneScreen(tester);
+    final game = buildGame(launcher: const InTabLauncher());
+    game.scan(card);
+    await game.startPlayback();
+
+    await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sync the words'));
+    await tester.pumpAndSettle();
+
+    // There is no column here, so the arrows go into the round's own stack of
+    // blocks - the song plays on either way, which is the point of them.
+    await tester.tap(find.byTooltip('The words earlier'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('+100 ms'), findsOneWidget);
+    expect(await LyricsSyncStore.load(), 100);
+    expect(game.phase, RoundPhase.playing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('a swap can be taken back', (tester) async {
@@ -578,7 +644,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(undoShown(tester), isFalse);
 
-    await tester.tap(find.text('Nobody knows it? Draw another'));
+    await tester.tap(find.text('Nobody knows it — draw another'));
     await tester.pumpAndSettle();
     expect(game.currentSong!.title, isNot(unknown));
 
@@ -609,7 +675,7 @@ void main() {
     await tester.pumpAndSettle();
     final scores = tester.getTopLeft(find.text('Scores'));
 
-    await tester.tap(find.text('Nobody knows it? Draw another'));
+    await tester.tap(find.text('Nobody knows it — draw another'));
     await tester.pump();
     // The launch of the new song is still out: the bar is gone for now, its
     // room is not.
@@ -631,7 +697,7 @@ void main() {
     await tester.pumpWidget(wrap(game));
     await tester.pumpAndSettle();
 
-    expect(find.text('Nobody knows it? Draw another'), findsNothing);
+    expect(find.text('Nobody knows it — draw another'), findsNothing);
   });
 
   testWidgets('the in-app round has a bar to move around in the song', (
@@ -748,6 +814,7 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
+    await closeAutoScanner(tester);
 
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
@@ -801,6 +868,7 @@ void main() {
     await tester.pumpWidget(wrap(game));
     await tester.pumpAndSettle();
 
+    await closeAutoScanner(tester);
     expect(find.text('2 categories'), findsOneWidget);
   });
 
@@ -905,10 +973,11 @@ void main() {
 
     await tester.pumpWidget(wrap(game, lyrics: _NoLyrics()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Lyrics'));
-    await tester.pumpAndSettle();
 
-    expect(find.text('No lyrics found for this song.'), findsOneWidget);
+    // Where the button to the words would be: there is nothing to open, and
+    // a dead button says less than the line that says why.
+    expect(find.text('No lyrics for this song'), findsOneWidget);
+    expect(find.text('Lyrics'), findsNothing);
   });
 
   testWidgets('lyrics that could not be loaded are asked for again on a tap', (
@@ -1087,26 +1156,19 @@ void main() {
         return low;
       }
 
-      // No camera yet, so the keys are at the foot of the column: the band
-      // below them is the whole screen's, not the column's. As a Flexible
-      // beside the controls they used to stop in the middle of it.
-      final floor = tester.getRect(find.byType(AnimatedSize)).top;
-      expect(lowestKey(), closeTo(floor, 2));
-
-      game.reveal();
-      await tester.pumpAndSettle();
-
-      // And straight above the preview once that is there.
-      expect(
-        lowestKey(),
-        closeTo(tester.getRect(find.byType(AnimatedSize)).top, 2),
-      );
+      // At the foot of the column: the band below them is the whole screen's,
+      // not the column's. As a Flexible beside the controls they used to stop
+      // in the middle of it.
+      final column = tester.getRect(find.byKey(splitHandleKey));
+      expect(lowestKey(), greaterThan(column.center.dy));
       expect(tester.takeException(), isNull);
 
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('the camera slides in and the keys slide up', (tester) async {
+    testWidgets('the camera covers the keys instead of moving them', (
+      tester,
+    ) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       useWideScreen(tester, size: const Size(1280, 720));
       final game = buildGame(launcher: const InTabLauncher());
@@ -1118,34 +1180,46 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      double keys() => tester.getRect(find.text('Space')).bottom;
-      final before = keys();
-      expect(tester.getSize(find.byType(AnimatedSize)).height, 0);
+      final keys = tester.getRect(find.text('Space'));
+      expect(find.text('Scan the card'), findsNothing);
 
       game.reveal();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 80));
-
-      // Half way in, so the keys are on their way up rather than there.
-      final box = tester.getSize(find.byType(AnimatedSize)).height;
-      expect(box, greaterThan(0));
-      final midway = keys();
-      expect(midway, lessThan(before));
-
       await tester.pumpAndSettle();
+
+      // The preview is an overlay at the foot of the column, so the keys stay
+      // down where they were and are covered. They used to be pushed up by
+      // it, which moved the one block on the screen that is read by sitting
+      // still. (The row itself is one chip shorter after a reveal - the key
+      // that revealed is dead - so it settles a little lower, never higher.)
       expect(
-        tester.getSize(find.byType(AnimatedSize)).height,
-        greaterThan(box),
+        tester.getRect(find.text('Space')).top,
+        greaterThanOrEqualTo(keys.top),
       );
-      expect(keys(), lessThan(midway));
-      // And nothing of the keys ends up under the preview.
-      expect(
-        keys(),
-        lessThanOrEqualTo(tester.getRect(find.byType(TextButton).last).top + 1),
-      );
+      final preview = tester.getRect(find.text('Scan the card'));
+      expect(preview.bottom, greaterThan(keys.top));
       expect(tester.takeException(), isNull);
 
       debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets('the reveal card is dragged taller', (tester) async {
+      useWideScreen(tester, size: const Size(1280, 720));
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
+      await tester.pumpAndSettle();
+
+      final before = tester.getSize(find.byKey(revealInColumnKey)).height;
+      await tester.drag(find.byKey(slotHandleKey), const Offset(0, 120));
+      await tester.pumpAndSettle();
+
+      final after = tester.getSize(find.byKey(revealInColumnKey)).height;
+      expect(after, greaterThan(before + 80));
+      // And it is kept, the way the width between the halves is.
+      expect(await SlotHeightStore.load(), greaterThan(SlotHeightStore.normal));
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('the card it is still looking at does not count', (
@@ -1521,9 +1595,10 @@ void main() {
       expect(words.last, greaterThan(words.first));
     });
 
-    testWidgets('the sync dialog sets how far the words run ahead', (
+    testWidgets('the sync mode sets the words against the running song', (
       tester,
     ) async {
+      SharedPreferences.setMockInitialValues({'lyrics.sync': 200});
       useWideScreen(tester);
       final session = SeekableSession()..nowPlaying = true;
       final game = buildGame(launcher: const InTabLauncher());
@@ -1533,44 +1608,42 @@ void main() {
       await tester.pumpWidget(wrap(game, spotify: session));
       await tester.pumpAndSettle();
 
+      // Nothing of it on the screen until it is asked for.
+      expect(find.text('Sync the words'), findsNothing);
+
       await tester.tap(find.byTooltip('Menu'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Sync the words…'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-
-      // The song steps aside: the click it makes is the reference.
-      expect(session.pauses, 1);
-      expect(find.text('0 ms'), findsOneWidget);
-
-      // By hand, by preset, and by the arrows the dialog has to itself.
-      await tester.tap(find.byIcon(Icons.add));
-      await tester.pumpAndSettle();
-      // Three times: the amount, and the two buttons that are labelled it.
-      expect(find.text('100 ms'), findsNWidgets(3));
-      expect(find.text('The words run ahead of the song'), findsOneWidget);
-
-      await tester.tap(find.text('Casting (300)'));
-      await tester.pumpAndSettle();
-      expect(find.text('300 ms'), findsOneWidget);
-
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-      await tester.pumpAndSettle();
-      expect(find.text('400 ms'), findsOneWidget);
-
-      await tester.tap(find.text('Done'));
+      await tester.tap(find.text('Sync the words'));
       await tester.pumpAndSettle();
 
-      // Back to the song, and the words carry the number from here on.
-      expect(session.pauses, 2);
+      // The arrows are in the column, on what the device had - and the song
+      // plays on, which is the whole reason this is not a dialog any more.
+      expect(find.text('Sync the words'), findsOneWidget);
+      expect(find.text('+200 ms'), findsOneWidget);
+      expect(session.pauses, 0);
       expect(session.isPlaying, isTrue);
-      expect(await LyricsSyncStore.load(), 400);
-      expect(tester.widget<LyricsView>(find.byType(LyricsView)).syncMs, 400);
+
+      await tester.tap(find.byTooltip('The words earlier'));
+      await tester.pumpAndSettle();
+      expect(find.text('+300 ms'), findsOneWidget);
+      expect(await LyricsSyncStore.load(), 300);
+      expect(tester.widget<LyricsView>(find.byType(LyricsView)).syncMs, 300);
+
+      await tester.tap(find.byTooltip('The words later'));
+      await tester.pumpAndSettle();
+      expect(find.text('+200 ms'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done syncing the words'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sync the words'), findsNothing);
+      expect(await LyricsSyncStore.load(), 200);
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('a cancelled sync changes nothing', (tester) async {
-      SharedPreferences.setMockInitialValues({'lyrics.sync': 200});
+    testWidgets('the keys move the words and say the number', (tester) async {
       useWideScreen(tester);
       final game = buildGame(launcher: const InTabLauncher());
       game.scan(card);
@@ -1579,21 +1652,27 @@ void main() {
       await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byTooltip('Menu'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Sync the words…'));
+      // Control, because the bare letters move the song.
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyD);
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
 
-      // It opens on what the device had.
-      expect(find.text('200 ms'), findsOneWidget);
-      await tester.tap(find.text('Cable (0)'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Cancel'));
-      await tester.pumpAndSettle();
+      // Said over the screen, where whoever pressed it is looking.
+      expect(find.text('Words +100 ms'), findsOneWidget);
+      expect(await LyricsSyncStore.load(), 100);
 
-      expect(await LyricsSyncStore.load(), 200);
-      expect(tester.widget<LyricsView>(find.byType(LyricsView)).syncMs, 200);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pump();
+
+      expect(find.text('Words -100 ms'), findsOneWidget);
+      expect(tester.widget<LyricsView>(find.byType(LyricsView)).syncMs, -100);
+
+      // And it goes again by itself.
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.textContaining('Words '), findsNothing);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('the menu takes the scores off the stage', (tester) async {
@@ -1702,7 +1781,6 @@ void main() {
       Future<void> step(String entry) async {
         await tester.tap(find.byTooltip('Menu'));
         await tester.pumpAndSettle();
-        expect(find.text('Words 100%'), findsOneWidget);
         await tester.tap(find.text(entry));
         await tester.pumpAndSettle();
       }
@@ -1710,15 +1788,55 @@ void main() {
       await step('Bigger words');
       expect(lineSize(), closeTo(normal * LyricsScaleStore.step, 0.01));
 
+      await step('Smaller words');
+      expect(lineSize(), closeTo(normal, 0.01));
+      // Nothing of the number on the screen, and none in the menu either:
+      // two fingers on the words are the way this is set, and a percentage
+      // nobody can act on was taking a row of the menu.
+      expect(find.textContaining('Words '), findsNothing);
       await tester.tap(find.byTooltip('Menu'));
       await tester.pumpAndSettle();
-      expect(find.text('Words 120%'), findsOneWidget);
-      await tester.tap(find.text('Smaller words'));
+      expect(find.textContaining('%'), findsNothing);
+    });
+
+    testWidgets('two fingers on the words set their size', (tester) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game));
       await tester.pumpAndSettle();
 
-      expect(lineSize(), closeTo(normal, 0.01));
-      // Nothing of it on the screen itself: the column has the room back.
-      expect(find.textContaining('Words '), findsNothing);
+      double lineSize() => tester
+          .widget<AnimatedDefaultTextStyle>(
+            find
+                .ancestor(
+                  of: find.text('Second'),
+                  matching: find.byType(AnimatedDefaultTextStyle),
+                )
+                .first,
+          )
+          .style
+          .fontSize!;
+      final normal = lineSize();
+
+      // Two fingers, pulled apart to twice their distance.
+      final centre = tester.getCenter(find.byType(LyricsView));
+      final one = await tester.startGesture(centre - const Offset(60, 0));
+      final two = await tester.startGesture(centre + const Offset(60, 0));
+      await one.moveBy(const Offset(-60, 0));
+      await two.moveBy(const Offset(60, 0));
+      await tester.pumpAndSettle();
+
+      expect(lineSize(), greaterThan(normal * 1.6));
+      await one.up();
+      await two.up();
+      await tester.pumpAndSettle();
+
+      // Kept, like every other size of the words.
+      expect(await LyricsScaleStore.load(), greaterThan(1.6));
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('the size stays set after the reveal', (tester) async {
@@ -1735,9 +1853,10 @@ void main() {
       await tester.tap(find.text('Bigger words'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byTooltip('Menu'));
-      await tester.pumpAndSettle();
-      expect(find.text('Words 120%'), findsOneWidget);
+      expect(
+        await LyricsScaleStore.load(),
+        closeTo(LyricsScaleStore.step, 0.01),
+      );
       expect(tester.takeException(), isNull);
     });
 
@@ -1821,22 +1940,39 @@ void main() {
       expect(find.text('Scan the card'), findsOneWidget);
     });
 
-    testWidgets('the first card is scanned from the column too', (
-      tester,
-    ) async {
+    testWidgets('a new game opens the camera by itself', (tester) async {
       useWideScreen(tester);
       final game = buildGame();
 
       await tester.pumpWidget(wrap(game, camera: fakeCamera));
       await tester.pumpAndSettle();
 
+      // No tap on a button whose only job is to open the camera: the first
+      // card is what the game wants, so the box is already live.
       expect(find.text('Scores'), findsOneWidget);
-      await tester.tap(find.text('Scan a card'));
-      await tester.pumpAndSettle();
+      expect(find.text('Scan the card'), findsOneWidget);
+
       await tester.tap(find.text('Scan the card'));
       await tester.pump();
 
       expect(game.phase, RoundPhase.countdown);
+    });
+
+    testWidgets('a game resumed mid-round keeps the camera shut', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final game = buildGame();
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, camera: fakeCamera));
+      await tester.pumpAndSettle();
+
+      // There is a song running: the camera belongs to the reveal, which is
+      // what opens it from the second card on.
+      expect(find.text('Scan the card'), findsNothing);
+      expect(find.text('Reveal the year'), findsOneWidget);
     });
 
     testWidgets('the words follow the player once the launch says so', (

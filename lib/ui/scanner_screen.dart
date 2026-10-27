@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../data/camera_facing_store.dart';
 import 'camera_streams/camera_streams.dart';
 import 'text_input_dialog.dart';
 
@@ -116,9 +117,15 @@ class ScannerView extends StatefulWidget {
   /// so the same card held up on purpose a second later could not be read at
   /// all, and only closing the camera and opening it again helped. One report
   /// per view is [_ScannerViewState._handled]'s job and always was.
+  ///
+  /// It opens on the side the device was last flipped to
+  /// ([CameraFacingStore]), because every scan builds one of these: the
+  /// inline camera in the side column opens and closes with the round, and a
+  /// flip that only lasted that round would be no option at all.
   static MobileScannerController newController() => MobileScannerController(
     detectionSpeed: DetectionSpeed.normal,
     formats: const [BarcodeFormat.qrCode],
+    facing: CameraFacingStore.facing,
   );
 
   @override
@@ -201,6 +208,27 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
     }
   }
 
+  /// Turns the camera around: the front one on a phone held out over the
+  /// table, the back one for a card held up to it.
+  ///
+  /// The side is remembered for the next scanner rather than only for this
+  /// one, see [CameraFacingStore] - otherwise the flip would be undone by the
+  /// next round. The plugin reports which side it ended up on, so what is
+  /// saved is what happened and not what was asked for.
+  Future<void> _flip() async {
+    try {
+      await _controller.switchCamera();
+    } on MobileScannerException {
+      // One camera, or it refused - nothing to say about it, the picture is
+      // still the one it was.
+      return;
+    }
+    if (!mounted) return;
+    await CameraFacingStore.save(
+      front: _controller.value.cameraDirection == CameraFacing.front,
+    );
+  }
+
   Future<void> _enterManually() async {
     final code = await showDialog<String>(
       context: context,
@@ -281,6 +309,25 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
                                     ),
                             ),
                           ),
+                          // The other camera, where the device has one: a
+                          // phone pointed at a card wants the back one, a
+                          // phone lying on the table between people the
+                          // front. Opposite corner from the keyboard, so
+                          // neither is hit by accident in the small box.
+                          if (state.availableCameras == null ||
+                              state.availableCameras! > 1)
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: EdgeInsets.all(compact ? 4 : 24),
+                                child: IconButton(
+                                  tooltip: 'Turn the camera around',
+                                  onPressed: _flip,
+                                  icon: const Icon(Icons.cameraswitch),
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
               ),
