@@ -395,10 +395,31 @@ class ConnectSpotifySession extends SpotifySession {
     _positionAt = _now();
     _isPlaying = !wasPlaying;
     notifyListeners();
-    await _put(
-      wasPlaying ? '/me/player/pause' : '/me/player/play',
+
+    final path = wasPlaying ? '/me/player/pause' : '/me/player/play';
+    var device = _deviceId;
+    var status = await _put(
+      device == null ? path : '$path?device_id=$device',
       token: token,
     );
+    if (status == 404) {
+      // The device this session knew about is gone - the account moved
+      // elsewhere, or nothing is active any more. Worth a fresh look before
+      // giving up, the same retry play() does.
+      device = await _findDevice(token: token, again: true);
+      if (device != null) {
+        status = await _put('$path?device_id=$device', token: token);
+      }
+    }
+    if (status != 204 && status != 202) {
+      // Neither command landed anywhere - the optimistic flip was wrong, and
+      // the next poll would only say so two seconds from now.
+      _isPlaying = wasPlaying;
+      _positionMs = position.inMilliseconds;
+      _positionAt = _now();
+      notifyListeners();
+      return;
+    }
     if (_isPlaying) _schedule(const Duration(milliseconds: 600));
   }
 
