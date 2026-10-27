@@ -1367,3 +1367,21 @@ A new category is filled the same way: pick the songs by the curation rule
 first, then let the resolver decide which of them can stay.
 
 `README.md` has the commands under "Filling in track ids".
+
+## The version in the app bar carries a build number nobody edits
+
+`v0.2.0` alone answers "which release is this", not "is the fix I just pushed
+actually live" - the one question worth asking right after a push, since
+pushing to `main` is what deploys. So the app bar
+(`lib/ui/setup_screen.dart`) reads `PackageInfo.buildNumber` beside the
+version, and that number is `.github/workflows/pages.yml`'s own
+`github.run_number` passed in as `--build-number` on `flutter build web` -
+the count of times the deploy workflow has run, which is once per push to
+`main` (`workflow_dispatch` counts too, and a rerun of a failed run does not,
+since `run_number` does not move for that). Nothing in `pubspec.yaml` holds
+it and nothing commits it back: nowhere to edit by hand and nothing to drift
+out of sync with the build that actually produced it. A local `flutter run`
+has no such number, so the app bar leaves the `+build` off rather than
+showing `+`.
+
+`README.md` has the commands under "Filling in track ids".

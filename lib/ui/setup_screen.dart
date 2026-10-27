@@ -48,7 +48,12 @@ class _SetupScreenState extends State<SetupScreen> with RouteAware {
     super.initState();
     _savedGame = widget.savedGame;
     PackageInfo.fromPlatform().then((info) {
-      if (mounted) setState(() => _version = info.version);
+      // The build number is the deploy workflow's own run count (the
+      // CLAUDE.md section on it explains why) - a local run without that
+      // flag leaves it empty, so it is left off rather than shown as "+".
+      final build = info.buildNumber;
+      final version = build.isEmpty ? info.version : '${info.version}+$build';
+      if (mounted) setState(() => _version = version);
     });
     // Two empty rows are the starting point for a group that has never played
     // here; everyone else finds their names where they left them.

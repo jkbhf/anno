@@ -50,9 +50,14 @@ jobs:
       # Set it as a repository variable (Settings -> Secrets and variables ->
       # Actions -> Variables). Missing it only drops the in-app player.
       # web/CNAME rides along into build/web and keeps the custom domain.
+      # The build number is this workflow's own run count, not anything kept
+      # in pubspec.yaml - it ticks up once per push to main with nothing to
+      # edit or commit back, and answers "is the fix I just pushed actually
+      # live" without reading the deploy log.
       - run: >
           flutter build web --release
           --base-href /
+          --build-number=${{ github.run_number }}
           --dart-define=SPOTIFY_CLIENT_ID=${{ vars.SPOTIFY_CLIENT_ID }}
           --dart-define=ANNO_RELAY_URL=${{ vars.ANNO_RELAY_URL }}
       - uses: actions/configure-pages@v5
