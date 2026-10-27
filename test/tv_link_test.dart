@@ -148,6 +148,14 @@ void main() {
     expect(screen.state, LinkState.waiting);
   });
 
+  test('an address without a trailing slash works too', () async {
+    final screen = TvLink(url: 'ws://127.0.0.1:${relay.port}');
+    addTearDown(screen.dispose);
+    await screen.host();
+    await until(() => screen.code != null);
+    expect(screen.state, LinkState.waiting);
+  });
+
   test('a build without a relay says so instead of trying', () async {
     final none = TvLink(url: '');
     addTearDown(none.dispose);

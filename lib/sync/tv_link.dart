@@ -148,7 +148,13 @@ class TvLink extends ChangeNotifier {
 
   Future<void> _open() async {
     _move(LinkState.connecting);
-    final target = Uri.parse(url).replace(
+    final base = Uri.parse(url);
+    final target = base.replace(
+      // A host with no path at all would put the query straight against it -
+      // `wss://relay.example.com?room=ABC123` - and that is one request line
+      // too odd to hand a proxy. The address is typed into a build command
+      // once, so it must not matter whether it ended in a slash.
+      path: base.path.isEmpty ? '/' : base.path,
       queryParameters: {
         'room': ?_code,
         if (_role == LinkRole.screen && _code != null) 'host': '1',
