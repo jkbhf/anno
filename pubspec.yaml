@@ -21,6 +21,7 @@ dependencies:
   # the one thing in the app that needs a socket, and two platform files for
   # it would be more code than the package is.
   web_socket_channel: ^3.0.0
+  package_info_plus: ^10.2.2
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../data/game_store.dart';
 import '../data/music_service_store.dart';
@@ -40,11 +41,15 @@ class _SetupScreenState extends State<SetupScreen> with RouteAware {
 
   int _target = 10;
   SavedGame? _savedGame;
+  String? _version;
 
   @override
   void initState() {
     super.initState();
     _savedGame = widget.savedGame;
+    PackageInfo.fromPlatform().then((info) {
+      if (mounted) setState(() => _version = info.version);
+    });
     // Two empty rows are the starting point for a group that has never played
     // here; everyone else finds their names where they left them.
     _names = [
@@ -218,7 +223,23 @@ class _SetupScreenState extends State<SetupScreen> with RouteAware {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Anno'),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Anno'),
+            if (_version != null) ...[
+              const SizedBox(width: 8),
+              Text(
+                'v$_version',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
         actions: [
           // Where the round is shown, if not on this phone. In the bar because
           // it is a decision about the room rather than about the game, and
