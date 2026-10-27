@@ -796,14 +796,28 @@ too slow for a line - an average of 125ms late for nothing. It is 80ms now.
 exactly on the timestamp, which is the moment the word is sung and too late to
 read along to. Every karaoke player leads a little.
 
-**What is left is the data, and a setting is the wrong first answer.** The
-timings come from LRCLIB, typed by whoever typed them, against a pressing that
-need not be the one Spotify plays - so a song can still sit a few hundred
-milliseconds off, and no constant fixes that. A pair of menu entries to nudge
-it is the honest tool for that and is deliberately not built yet: a setting
-that has to be found and nudged per song is worse than one that is right by
-default, and the two numbers above were free. If it still reads late, that is
-the next step rather than a bigger lead.
+**On top of that comes the cast, and that one is set by hand**
+(`LyricsSyncStore`, `Sync the words…` in the menu, 2026-10-27). Screen
+mirroring encodes, sends and decodes the picture: 150 to 400 milliseconds over
+Miracast or Smart View, up to a second over a Chromecast, while the sound
+comes straight out of the laptop. The words have to leave that much earlier to
+arrive with the song. The browser never tells a page that it is being
+mirrored, so nothing can measure this - it is a number for the room and its
+equipment, kept per device like the lyrics scale, with a cable's zero as one
+press beside it.
+
+**The dialog makes it measurable rather than guessable.** Once a second it
+plays a click and lights a panel in the same instant; on the wall the panel
+arrives late and the click does not, so you press more until the two meet over
+there. That click is the only sound the game makes itself (`lib/ui/beep/`, Web
+Audio, the usual native no-op), and it is why the song is paused while the
+dialog is up: a reference under music is not one. The arrows and enter work in
+there because a dialog is its own route and the game's keys do not reach it.
+
+**What is left after both is the data.** The timings come from LRCLIB, typed
+by whoever typed them, against a pressing that need not be the one Spotify
+plays, so a single song can still sit a few hundred milliseconds off. The
+dialog catches the equipment, not the song; that last error has no owner here.
 
 ## Fullscreen is an offer, never a state the game keeps
 

@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/column_width_store.dart';
 import 'package:anno/data/lyrics_scale_store.dart';
+import 'package:anno/data/lyrics_sync_store.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/game/game_controller.dart';
 import 'package:anno/models/player.dart';
@@ -124,10 +125,20 @@ class SeekableSession extends FakeSession {
   /// How often play/pause was pressed, by finger or by key.
   int pauses = 0;
 
+  /// Whether it says it is playing. Starts paused, like the session in most
+  /// of these tests, and follows [togglePause] from there.
+  bool nowPlaying = false;
+
   String? _playbackError;
 
   @override
-  Future<void> togglePause() async => pauses++;
+  bool get isPlaying => nowPlaying;
+
+  @override
+  Future<void> togglePause() async {
+    pauses++;
+    nowPlaying = !nowPlaying;
+  }
 
   @override
   Duration get duration => const Duration(seconds: 200);
@@ -1508,6 +1519,81 @@ void main() {
       expect(find.byType(Slider), findsNothing);
       expect(find.byTooltip('Play on'), findsNothing);
       expect(words.last, greaterThan(words.first));
+    });
+
+    testWidgets('the sync dialog sets how far the words run ahead', (
+      tester,
+    ) async {
+      useWideScreen(tester);
+      final session = SeekableSession()..nowPlaying = true;
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: session));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Sync the words…'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      // The song steps aside: the click it makes is the reference.
+      expect(session.pauses, 1);
+      expect(find.text('0 ms'), findsOneWidget);
+
+      // By hand, by preset, and by the arrows the dialog has to itself.
+      await tester.tap(find.byIcon(Icons.add));
+      await tester.pumpAndSettle();
+      // Three times: the amount, and the two buttons that are labelled it.
+      expect(find.text('100 ms'), findsNWidgets(3));
+      expect(find.text('The words run ahead of the song'), findsOneWidget);
+
+      await tester.tap(find.text('Casting (300)'));
+      await tester.pumpAndSettle();
+      expect(find.text('300 ms'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
+      expect(find.text('400 ms'), findsOneWidget);
+
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      // Back to the song, and the words carry the number from here on.
+      expect(session.pauses, 2);
+      expect(session.isPlaying, isTrue);
+      expect(await LyricsSyncStore.load(), 400);
+      expect(tester.widget<LyricsView>(find.byType(LyricsView)).syncMs, 400);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a cancelled sync changes nothing', (tester) async {
+      SharedPreferences.setMockInitialValues({'lyrics.sync': 200});
+      useWideScreen(tester);
+      final game = buildGame(launcher: const InTabLauncher());
+      game.scan(card);
+      await game.startPlayback();
+
+      await tester.pumpWidget(wrap(game, spotify: SeekableSession()));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Sync the words…'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      // It opens on what the device had.
+      expect(find.text('200 ms'), findsOneWidget);
+      await tester.tap(find.text('Cable (0)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+
+      expect(await LyricsSyncStore.load(), 200);
+      expect(tester.widget<LyricsView>(find.byType(LyricsView)).syncMs, 200);
     });
 
     testWidgets('the menu takes the scores off the stage', (tester) async {

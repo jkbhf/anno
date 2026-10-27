@@ -20,6 +20,7 @@ Future<void> showLyricsSheet(
   required Song song,
   required LyricsSource source,
   SpotifySession? session,
+  int syncMs = 0,
   bool hideSong = false,
 }) {
   return showModalBottomSheet<void>(
@@ -33,6 +34,7 @@ Future<void> showLyricsSheet(
         song: song,
         source: source,
         session: session,
+        syncMs: syncMs,
         hideSong: hideSong,
       ),
     ),
@@ -46,6 +48,7 @@ class LyricsSheet extends StatelessWidget {
     required this.song,
     required this.source,
     this.session,
+    this.syncMs = 0,
     this.hideSong = false,
     super.key,
   });
@@ -53,6 +56,9 @@ class LyricsSheet extends StatelessWidget {
   final Song song;
   final LyricsSource source;
   final SpotifySession? session;
+
+  /// Handed to [LyricsView.syncMs].
+  final int syncMs;
   final bool hideSong;
 
   @override
@@ -70,7 +76,12 @@ class LyricsSheet extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: LyricsView(song: song, source: source, session: session),
+          child: LyricsView(
+            song: song,
+            source: source,
+            session: session,
+            syncMs: syncMs,
+          ),
         ),
       ],
     );
@@ -90,6 +101,7 @@ class LyricsView extends StatefulWidget {
     required this.song,
     required this.source,
     this.session,
+    this.syncMs = 0,
     this.lineStyle,
     this.padding = const EdgeInsets.fromLTRB(24, 8, 24, 48),
     super.key,
@@ -98,6 +110,11 @@ class LyricsView extends StatefulWidget {
   final Song song;
   final LyricsSource source;
   final SpotifySession? session;
+
+  /// How far ahead of the song the lines run, on top of [_lead] - what a cast
+  /// screen costs on its way to the wall, set in the menu and kept per device
+  /// (`LyricsSyncStore`).
+  final int syncMs;
 
   /// The size of a line. Null is the sheet's; the stage is read across a room.
   final TextStyle? lineStyle;
@@ -205,7 +222,9 @@ class _LyricsViewState extends State<LyricsView> {
     if (!mounted || lyrics == null || session == null || !lyrics.isSynced) {
       return;
     }
-    final line = lyrics.lineAt(session.position + _lead);
+    final line = lyrics.lineAt(
+      session.position + _lead + Duration(milliseconds: widget.syncMs),
+    );
     if (line == _current) return;
     setState(() => _current = line);
     if (line < 0 || line >= _lineKeys.length) return;

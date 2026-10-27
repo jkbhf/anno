@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../data/column_width_store.dart';
 import '../data/game_store.dart';
 import '../data/lyrics_scale_store.dart';
+import '../data/lyrics_sync_store.dart';
 import '../data/played_songs_store.dart';
 import '../data/show_scores_store.dart';
 import '../data/skipped_songs_store.dart';
@@ -29,6 +30,7 @@ import 'fullscreen/fullscreen.dart';
 import 'haptics/haptics.dart';
 import 'layout.dart';
 import 'lyrics_sheet.dart';
+import 'lyrics_sync_dialog.dart';
 import 'scanner_screen.dart';
 import 'song_progress_bar.dart';
 import 'theme.dart';
@@ -216,6 +218,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// How much of the screen the side column takes, see [ColumnWidthStore].
   double _columnShare = ColumnWidthStore.normal;
 
+  /// How far the words run ahead of the song, see [LyricsSyncStore].
+  int _lyricsSync = LyricsSyncStore.none;
+
   /// Whether the layout the last frame drew was the wide one. Read by the
   /// phase listener, which runs outside a build and must not go looking for a
   /// MediaQuery of its own.
@@ -251,11 +256,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final scale = await LyricsScaleStore.load();
     final scores = await ShowScoresStore.load();
     final share = await ColumnWidthStore.load();
+    final sync = await LyricsSyncStore.load();
     if (!mounted) return;
     setState(() {
       _lyricsScale = scale;
       _showScores = scores;
       _columnShare = share;
+      _lyricsSync = sync;
     });
   }
 
@@ -266,6 +273,29 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (next == _columnShare) return;
     setState(() => _columnShare = next);
     unawaited(ColumnWidthStore.save(next));
+  }
+
+  /// Sets how far the words run ahead, see [showLyricsSyncDialog].
+  ///
+  /// The song is paused while the dialog is up and goes on where it was
+  /// afterwards: the click it makes is the reference, and a reference under
+  /// music is not one. A round played by link has nothing to pause.
+  Future<void> _syncLyrics() async {
+    final spotify = _spotify;
+    final wasPlaying = _game.playingInApp && (spotify?.isPlaying ?? false);
+    final dialog = showLyricsSyncDialog(context, offsetMs: _lyricsSync);
+    // After the dialog is on its way, so the context is not used across the
+    // pause's await.
+    if (wasPlaying) unawaited(spotify?.togglePause() ?? Future<void>.value());
+
+    final chosen = await dialog;
+
+    if (wasPlaying && (spotify?.isPlaying ?? false) == false) {
+      await spotify?.togglePause();
+    }
+    if (chosen == null || !mounted) return;
+    setState(() => _lyricsSync = chosen);
+    unawaited(LyricsSyncStore.save(chosen));
   }
 
   void _toggleScores() {
@@ -358,6 +388,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         song: song,
         source: widget.lyrics ?? sharedLyrics,
         session: _game.playingInApp ? _spotify : null,
+        syncMs: _lyricsSync,
         hideSong: !_game.isRevealed,
       ),
     );
@@ -645,6 +676,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         _stepLyricsScale(bigger: true);
       case 'words.smaller':
         _stepLyricsScale(bigger: false);
+      case 'words.sync':
+        await _syncLyrics();
       case 'fullscreen':
         // A gesture is what the browser grants it to, and this is one.
         await Fullscreen.toggle();
@@ -816,6 +849,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           enabled: _lyricsScale > LyricsScaleStore.min,
           child: const Text('Smaller words'),
         ),
+        const PopupMenuItem(
+          value: 'words.sync',
+          child: Text('Sync the words…'),
+        ),
         const PopupMenuItem(value: 'reset', child: Text('Reset scores')),
         const PopupMenuItem(value: 'category', child: Text('Change category')),
         const PopupMenuItem(value: 'years', child: Text('Year database')),
@@ -865,6 +902,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onRedraw: _redraw,
       onUndoRedraw: _undoRedraw,
       lyricsScale: _lyricsScale,
+      lyricsSync: _lyricsSync,
       showScores: _showScores,
       shortcuts: hasKeyboard,
       columnShare: _columnShare,
@@ -1730,6 +1768,7 @@ class _WideRound extends StatelessWidget {
     required this.onRedraw,
     required this.onUndoRedraw,
     required this.lyricsScale,
+    required this.lyricsSync,
     required this.showScores,
     required this.shortcuts,
     required this.columnShare,
@@ -1751,6 +1790,9 @@ class _WideRound extends StatelessWidget {
 
   /// How big the words on the stage are, set from the menu.
   final double lyricsScale;
+
+  /// How far ahead of the song they run, see [LyricsSyncStore].
+  final int lyricsSync;
 
   /// Whether the scoreboard is on the stage at all, see [ShowScoresStore].
   final bool showScores;
@@ -1880,6 +1922,7 @@ class _WideRound extends StatelessWidget {
                 spotify: spotify,
                 lyrics: lyrics,
                 lyricsScale: lyricsScale,
+                lyricsSync: lyricsSync,
                 showScores: showScores,
               ),
             ),
@@ -2349,12 +2392,16 @@ class _Stage extends StatelessWidget {
     required this.spotify,
     required this.lyrics,
     required this.lyricsScale,
+    required this.lyricsSync,
     required this.showScores,
   });
 
   final GameController game;
   final SpotifySession spotify;
   final LyricsSource lyrics;
+
+  /// How far ahead of the song the words run, see [LyricsSyncStore].
+  final int lyricsSync;
 
   /// What the room asked for on top of the size the height gives, set from
   /// the menu and kept per device ([LyricsScaleStore]).
@@ -2429,6 +2476,7 @@ class _Stage extends StatelessWidget {
                           song: song,
                           source: lyrics,
                           session: game.playingInApp ? spotify : null,
+                          syncMs: lyricsSync,
                           lineStyle: theme.textTheme.headlineSmall?.copyWith(
                             fontSize: line,
                             height: 1.25,

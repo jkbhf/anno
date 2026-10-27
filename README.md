@@ -156,6 +156,11 @@ turned over is. A phone sideways keeps the one column and widens it instead.
   seconds, back to the start, jump to the middle, and the track across the rest
   of the screen. Only an in-app Spotify round has one - a song handed over by
   link is out of reach, and then the words get the band's height instead.
+- **"Sync the words…"** in the menu is for casting a screen: the picture
+  arrives at the wall later than the sound does out of the laptop, so the words
+  run ahead by that much. The dialog clicks and flashes in the same instant -
+  press more until the two meet over there. Kept on the device, with one press
+  back to zero for a cable.
 - **The size of the words** is set in the menu - "Bigger words" and "Smaller
   words", with the current size above them - and kept on the device, so the
   same room gets the same size next time. The menu itself is the icon in the
