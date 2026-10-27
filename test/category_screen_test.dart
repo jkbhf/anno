@@ -21,6 +21,17 @@ SongCategory deck(String id, String name) => SongCategory(
 );
 
 final full = deck('esc', 'ESC');
+
+/// A deck over several years, for the range of a game without cards.
+final span = SongCategory(
+  id: 'hits',
+  name: 'Hits',
+  description: '',
+  songs: [
+    for (final year in [1990, 1991, 1992, 1993])
+      Song(year: year, title: 'Song $year', artist: 'B'),
+  ],
+);
 final short = deck('kpop', 'K-Pop');
 final empty = SongCategory(
   id: 'rock_pop',
@@ -78,6 +89,43 @@ void main() {
 
     expect(find.text('1 songs · 2016'), findsNWidgets(2));
     expect(find.textContaining('another deck'), findsNothing);
+  });
+
+  testWidgets('without cards the range opens on the deck\'s span', (
+    tester,
+  ) async {
+    await tester.pumpWidget(wrap([span, short]));
+
+    // Not asked for until a deck is picked, because the range it offers is
+    // that deck's.
+    expect(find.text('Play without cards'), findsNothing);
+
+    await tester.tap(find.text('Hits'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Play without cards'));
+    await tester.pumpAndSettle();
+
+    // The span of the chosen deck, and what that means for the evening.
+    expect(find.text('1990'), findsOneWidget);
+    expect(find.text('1993'), findsOneWidget);
+    expect(
+      find.text('4 years, each one once before any comes again'),
+      findsOneWidget,
+    );
+    expect(
+      find.widgetWithText(FilledButton, 'Start without cards'),
+      findsOneWidget,
+    );
+
+    // A deck of one year ticked on top widens the span to hold both.
+    await tester.tap(find.text('K-Pop'));
+    await tester.pumpAndSettle();
+    expect(find.text('2016'), findsWidgets);
+    // 1990 to 2016 with songs in five of those years.
+    expect(
+      find.text('5 years, each one once before any comes again'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('with nothing picked Start is off', (tester) async {

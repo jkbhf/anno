@@ -173,8 +173,10 @@ turned over is. A phone sideways keeps the one column and widens it instead.
   step 100 ms at a time; `Ctrl` with `+`/`D` and `-`/`A` does the same from the
   keyboard, and the number says itself over the screen for a moment after every
   step. Kept on the device.
-- **The size of the words**: two fingers on the words, or "Bigger words" and
-  "Smaller words" in the menu for a screen with no touch. Kept on the device,
+- **The size of the words**: two fingers on the words - the list holds still
+  while they are on it, and the step is damped, so the size is walked up to
+  rather than jumped past - or "Bigger words" and "Smaller words" in the menu
+  for a screen with no touch. Kept on the device,
   so the same room gets the same size next time. The menu itself is the icon in
   the top right corner of the screen.
 - **The split** between the two halves is dragged: the grip in the gap between
@@ -247,6 +249,16 @@ lives in the environment; a PKCE login in a browser must never carry one.
    selected. K-Pop (2016 on), White Girl Music (2007 on), Anthony
    (1999-2024) and Anthony All (1999-2026) cover only part of the years and can still be played alone -
    the card shows the span, and a card outside it only asks for another card.
+   **Play without cards** is the switch at the bottom of that screen, for an
+   evening where the box of cards is somewhere else. The device then draws the
+   year itself out of a range set with the two slider handles - it opens on the
+   span of the chosen decks - and the game is the same from there on: a tap
+   draws the year, the song plays, the button reveals it, points are given, and
+   the next tap draws the next year. Every year of the range comes up once
+   before any comes again; when the range is through it says so and starts
+   over. Years no chosen deck has a song for are skipped, and the count under
+   the slider says how many that leaves.
+
 3. **Game** - scan a card and the song starts. The screen that follows is the
    scoreboard with a "Reveal the year" button where the song card will be: the
    scores are up while the group guesses, but the year, the title and the
@@ -256,8 +268,9 @@ lives in the environment; a PKCE login in a browser must never carry one.
    after the current round - and "Back to the last round" on the finish screen
    returns to that reveal, for the point that went to the wrong tile.
 
-   A song nobody in the room knows can be swapped while it plays: "Nobody knows
-   it? Draw another" picks another song of the same year. Played in the tab, a
+   A song nobody in the room knows can be swapped while it plays: "Nobody
+   knows it — draw another" picks another song of the same year, and the undo
+   beside that button brings the last one back. Played in the tab, a
    bar under the reveal panel moves around in the song - drag it, start over,
    ten seconds either way, or straight to the middle.
 
@@ -276,6 +289,10 @@ wrong costs a countdown, not a round.
 
 On Android, coming back from Spotify still reveals the year by itself; the
 button is what does it everywhere else.
+
+A game without cards keeps the years it has drawn with the game rather than on
+the device: a resume carries on where the range was, and a new game runs the
+whole range again.
 
 The running game is saved after every score change, together with the songs it
 has played. If Android kills the app while Spotify is in the foreground, or the

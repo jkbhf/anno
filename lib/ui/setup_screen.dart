@@ -186,6 +186,9 @@ class _SetupScreenState extends State<SetupScreen> with RouteAware {
       targetScore: game.targetScore,
       weights: game.categoryWeights,
       played: game.played,
+      fromYear: game.fromYear,
+      toYear: game.toYear,
+      playedYears: game.playedYears,
     );
   }
 

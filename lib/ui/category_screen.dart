@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../models/player.dart';
@@ -19,6 +21,9 @@ class CategoryScreen extends StatefulWidget {
     this.played = const [],
     this.initialSelection = const {},
     this.initialWeights = const {},
+    this.initialFromYear,
+    this.initialToYear,
+    this.playedYears = const [],
     super.key,
   });
 
@@ -35,6 +40,15 @@ class CategoryScreen extends StatefulWidget {
   /// The draw weights to open with, by category id. Missing ones start at 1.
   final Map<String, int> initialWeights;
 
+  /// The year range of a game without cards, when the decks are changed in
+  /// the middle of one: both null is a game played with the cards.
+  final int? initialFromYear;
+  final int? initialToYear;
+
+  /// The years that game has drawn already, kept across the change the same
+  /// way the played songs are.
+  final List<int> playedYears;
+
   /// The range of the weight a card can be set to.
   static const int minWeight = 1;
   static const int maxWeight = 10;
@@ -46,6 +60,49 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   late final Set<String> _selected = {...widget.initialSelection};
   late final Map<String, int> _weights = {...widget.initialWeights};
+
+  /// Whether the game draws its own years instead of reading them off a card.
+  late bool _withoutCards =
+      widget.initialFromYear != null && widget.initialToYear != null;
+
+  /// The range it draws from. Null follows the span of the chosen decks, which
+  /// is what the switch starts on - a deck that only covers part of the
+  /// century would otherwise be asked for years it has nothing for.
+  late int? _from = widget.initialFromYear;
+  late int? _to = widget.initialToYear;
+
+  /// The ends of what the chosen decks hold together, null while nothing
+  /// playable is chosen.
+  (int, int)? _span(List<SongCategory> chosen) {
+    final firsts = [for (final category in chosen) ?category.firstYear];
+    final lasts = [for (final category in chosen) ?category.lastYear];
+    if (firsts.isEmpty || lasts.isEmpty) return null;
+    return (firsts.reduce(min), lasts.reduce(max));
+  }
+
+  /// The range as it stands, inside the span of the chosen decks: a deck
+  /// unticked after the range was set must not leave it asking for years
+  /// nobody has a song for.
+  (int, int)? _range(List<SongCategory> chosen) {
+    final span = _span(chosen);
+    if (span == null) return null;
+    final (first, last) = span;
+    final from = (_from ?? first).clamp(first, last);
+    final to = (_to ?? last).clamp(first, last);
+    return from <= to ? (from, to) : (to, from);
+  }
+
+  /// How many years of the range some chosen deck can play. A year without a
+  /// song is never drawn, so this is the length of the pass the room is in
+  /// for, see `GameController.playableYears`.
+  int _playableYears(List<SongCategory> chosen, (int, int) range) {
+    final (from, to) = range;
+    var count = 0;
+    for (var year = from; year <= to; year++) {
+      if (chosen.any((c) => c.songsForYear(year).isNotEmpty)) count++;
+    }
+    return count;
+  }
 
   int _weightOf(SongCategory category) => (_weights[category.id] ?? 1).clamp(
     CategoryScreen.minWeight,
@@ -80,6 +137,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Future<void> _start(List<SongCategory> categories) async {
     final chosen = _chosen(categories);
     if (!canCarryGame(chosen)) return;
+    final range = _withoutCards ? _range(chosen) : null;
 
     await openGame(
       context,
@@ -90,6 +148,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
         for (final category in chosen) category.id: _weightOf(category),
       },
       played: widget.played,
+      fromYear: range?.$1,
+      toYear: range?.$2,
+      playedYears: widget.playedYears,
     );
   }
 
@@ -157,6 +218,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         padding: const EdgeInsets.only(bottom: 12),
                         child: card,
                       ),
+                  // Last, because it is a question about the decks above it:
+                  // the range it opens on is their span.
+                  if (_range(chosen) case final range?)
+                    _WithoutCardsCard(
+                      on: _withoutCards,
+                      span: _span(chosen)!,
+                      range: range,
+                      playableYears: _playableYears(chosen, range),
+                      onToggle: (on) => setState(() => _withoutCards = on),
+                      onRange: (from, to) => setState(() {
+                        _from = from;
+                        _to = to;
+                      }),
+                    ),
                 ],
               ),
             ),
@@ -168,7 +243,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   FilledButton(
                     onPressed: ready ? () => _start(categories) : null,
                     child: Text(
-                      _selected.length <= 1
+                      _withoutCards
+                          ? 'Start without cards'
+                          : _selected.length <= 1
                           ? 'Start'
                           : 'Start with ${_selected.length} categories',
                     ),
@@ -176,6 +253,110 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The game without the printed cards: the device draws the year itself.
+///
+/// For a car, a sofa, a flat the box is not in. The room still guesses a year
+/// and still gets points for it; what goes is the camera, and with it the one
+/// thing that cannot be improvised.
+///
+/// The range opens on the span of the chosen decks, because that is the widest
+/// one that is never a dead round - K-Pop alone asked for 1950 would have
+/// nothing to play. Inside it, years no deck has a song for are skipped rather
+/// than drawn, so the count under the slider is what the room is in for.
+class _WithoutCardsCard extends StatelessWidget {
+  const _WithoutCardsCard({
+    required this.on,
+    required this.span,
+    required this.range,
+    required this.playableYears,
+    required this.onToggle,
+    required this.onRange,
+  });
+
+  final bool on;
+
+  /// The ends of what the chosen decks hold, and the part of it in play.
+  final (int, int) span;
+  final (int, int) range;
+
+  /// How many years of [range] can actually be drawn.
+  final int playableYears;
+
+  final ValueChanged<bool> onToggle;
+  final void Function(int from, int to) onRange;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final (spanFrom, spanTo) = span;
+    final (from, to) = range;
+    // A span of one year has nothing to drag.
+    final draggable = spanTo > spanFrom;
+
+    return Card(
+      color: on ? theme.colorScheme.primaryContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: on,
+              onChanged: onToggle,
+              title: const Text('Play without cards'),
+              subtitle: Text(
+                'The device draws the year, and a tap after the reveal '
+                'draws the next one.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: on
+                      ? theme.colorScheme.onPrimaryContainer
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            if (on) ...[
+              Row(
+                children: [
+                  Text('$from', style: theme.textTheme.titleMedium),
+                  Expanded(
+                    child: draggable
+                        ? RangeSlider(
+                            min: spanFrom.toDouble(),
+                            max: spanTo.toDouble(),
+                            divisions: spanTo - spanFrom,
+                            labels: RangeLabels('$from', '$to'),
+                            values: RangeValues(from.toDouble(), to.toDouble()),
+                            onChanged: (values) => onRange(
+                              values.start.round(),
+                              values.end.round(),
+                            ),
+                          )
+                        : const SizedBox(height: 48),
+                  ),
+                  Text('$to', style: theme.textTheme.titleMedium),
+                ],
+              ),
+              Text(
+                playableYears == 1
+                    ? 'One year to play'
+                    : '$playableYears years, each one once before any '
+                          'comes again',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: on
+                      ? theme.colorScheme.onPrimaryContainer
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),

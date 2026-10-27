@@ -97,19 +97,17 @@ class _LyricsSheetState extends State<LyricsSheet> {
           ),
         ),
         Expanded(
-          child: PinchScale(
+          child: LyricsView(
+            song: song,
+            source: widget.source,
+            session: widget.session,
+            syncMs: widget.syncMs,
             scaleOf: () => _scale,
             onScale: (scale) =>
                 setState(() => _scale = scale.clamp(_min, _max)),
-            child: LyricsView(
-              song: song,
-              source: widget.source,
-              session: widget.session,
-              syncMs: widget.syncMs,
-              lineStyle: base.copyWith(
-                fontSize: (base.fontSize ?? 22) * _scale,
-                height: 1.45,
-              ),
+            lineStyle: base.copyWith(
+              fontSize: (base.fontSize ?? 22) * _scale,
+              height: 1.45,
             ),
           ),
         ),
@@ -134,6 +132,8 @@ class LyricsView extends StatefulWidget {
     this.syncMs = 0,
     this.lineStyle,
     this.padding = const EdgeInsets.fromLTRB(24, 8, 24, 48),
+    this.scaleOf,
+    this.onScale,
     super.key,
   });
 
@@ -151,6 +151,15 @@ class LyricsView extends StatefulWidget {
 
   /// Around the lines, inside the scrolling.
   final EdgeInsets padding;
+
+  /// Two fingers on the words, where somebody can do something with it: the
+  /// factor in force now, and where the new one goes. Both null leaves the
+  /// text at the size it was given.
+  ///
+  /// The gesture is handled in here rather than around it, because the list
+  /// that must hold still while two fingers are on it is this one's.
+  final double Function()? scaleOf;
+  final ValueChanged<double>? onScale;
 
   @override
   State<LyricsView> createState() => _LyricsViewState();
@@ -339,7 +348,29 @@ class _LyricsViewState extends State<LyricsView> {
     );
   }
 
+  /// True while two fingers are resizing the words. The list then stops
+  /// scrolling: two fingers moving are a drag to it, and the words slipping
+  /// away under the pinch means letting go somewhere other than where it
+  /// started (2026-10-27).
+  bool _pinching = false;
+
   Widget _lines(BuildContext context, Lyrics lyrics) {
+    final scaleOf = widget.scaleOf;
+    final onScale = widget.onScale;
+    final list = _list(context, lyrics);
+    if (scaleOf == null || onScale == null) return list;
+
+    return PinchScale(
+      scaleOf: scaleOf,
+      onScale: onScale,
+      onActive: (active) {
+        if (active != _pinching) setState(() => _pinching = active);
+      },
+      child: list,
+    );
+  }
+
+  Widget _list(BuildContext context, Lyrics lyrics) {
     final theme = Theme.of(context);
     final session = widget.session;
     final follows = session != null && lyrics.isSynced;
@@ -349,6 +380,7 @@ class _LyricsViewState extends State<LyricsView> {
 
     return SingleChildScrollView(
       controller: _scroll,
+      physics: _pinching ? const NeverScrollableScrollPhysics() : null,
       padding: widget.padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

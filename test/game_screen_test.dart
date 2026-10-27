@@ -59,6 +59,8 @@ GameController buildGame({
   SongLauncher launcher = const SilentLauncher(),
   MusicService service = MusicService.spotify,
   Map<String, int> years = const {'182ca01194a98f0b': 2005},
+  int? fromYear,
+  int? toYear,
 }) => GameController(
   players: [
     for (var i = 0; i < players; i++) GamePlayer(name: 'Player ${i + 1}'),
@@ -67,6 +69,22 @@ GameController buildGame({
   years: YearDatabase.inMemory(defaults: years),
   launcher: launcher,
   service: service,
+  fromYear: fromYear,
+  toYear: toYear,
+);
+
+/// A deck with one song in each year from 2001 to 2004, for a game that draws
+/// its own years.
+final fourYears = SongCategory(
+  id: 'hits',
+  name: 'Hits',
+  description: '',
+  songs: const [
+    Song(title: 'A', artist: 'X', year: 2001, spotifyTrackId: 'a'),
+    Song(title: 'B', artist: 'X', year: 2002, spotifyTrackId: 'b'),
+    Song(title: 'C', artist: 'X', year: 2003, spotifyTrackId: 'c'),
+    Song(title: 'D', artist: 'X', year: 2004, spotifyTrackId: 'd'),
+  ],
 );
 
 /// A second card, for the round after the one on [card].
@@ -574,6 +592,143 @@ void main() {
     expect(game.phase, RoundPhase.playing);
     expect(game.currentSong!.title, isNot(unknown));
     expect(find.text('2005'), findsNothing, reason: 'still a secret');
+  });
+
+  group('without cards', () {
+    testWidgets('a tap draws the year, and no camera opens', (tester) async {
+      usePhoneScreen(tester);
+      final game = buildGame(
+        categories: [fourYears],
+        launcher: const InTabLauncher(),
+        fromYear: 2001,
+        toYear: 2004,
+      );
+
+      await tester.pumpWidget(
+        wrap(
+          game,
+          camera: fakeCamera,
+          // A ready session, so the song starts in the tab and no countdown
+          // comes between the tap and the round.
+          spotify: FakeSession(SpotifyConnection.ready),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Nothing has been drawn yet: the room taps when it is ready, and
+      // there is no scanner page over the screen.
+      expect(find.byType(ScannerScreen), findsNothing);
+      expect(find.text('Draw a year'), findsOneWidget);
+      expect(find.text('2001 to 2004, 0 of 4 played'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.casino_outlined));
+      await tester.pumpAndSettle();
+
+      // A round like any other - the year is a secret until the reveal.
+      expect(game.phase, RoundPhase.playing);
+      expect(game.playedYears.length, 1);
+      final first = game.currentYear!;
+      expect(first, inInclusiveRange(2001, 2004));
+      expect(find.text('$first'), findsNothing);
+
+      game.reveal();
+      await tester.pumpAndSettle();
+      expect(find.text('$first'), findsOneWidget);
+
+      // And the next round is the next tap, with another year.
+      await tester.tap(find.text('Next round'));
+      await tester.pumpAndSettle();
+
+      expect(game.phase, RoundPhase.playing);
+      expect(game.currentYear, isNot(first));
+      expect(game.playedYears, {first, game.currentYear});
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('the column draws it too, in the camera\'s place', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(1280, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final game = buildGame(
+        categories: [fourYears],
+        launcher: const InTabLauncher(),
+        fromYear: 2001,
+        toYear: 2004,
+      );
+
+      await tester.pumpWidget(
+        wrap(
+          game,
+          camera: fakeCamera,
+          spotify: FakeSession(SpotifyConnection.ready),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Scan the card'), findsNothing);
+      await tester.tap(find.text('Draw a year'));
+      await tester.pumpAndSettle();
+      expect(game.phase, RoundPhase.playing);
+
+      await tester.tap(find.byKey(revealInColumnKey));
+      await tester.pumpAndSettle();
+
+      // Where the camera would be: the box that draws the next year.
+      expect(find.text('Next year'), findsOneWidget);
+      expect(find.text('Scan the card'), findsNothing);
+
+      await tester.tap(find.text('Next year'));
+      await tester.pumpAndSettle();
+      expect(game.phase, RoundPhase.playing);
+      expect(game.playedYears.length, 2);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a range that is through starts over and says so', (
+      tester,
+    ) async {
+      usePhoneScreen(tester);
+      final game = buildGame(
+        categories: [fourYears],
+        launcher: const InTabLauncher(),
+        fromYear: 2001,
+        toYear: 2004,
+      );
+
+      await tester.pumpWidget(
+        wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+      );
+      await tester.pumpAndSettle();
+
+      for (var round = 0; round < 4; round++) {
+        // The circle on the idle screen, then the button under the reveal.
+        await tester.tap(
+          round == 0
+              ? find.byIcon(Icons.casino_outlined)
+              : find.text('Next round'),
+        );
+        await tester.pumpAndSettle();
+        game.reveal();
+        await tester.pumpAndSettle();
+      }
+      expect(game.playedYears.length, 4);
+      expect(find.textContaining('starting over'), findsNothing);
+
+      await tester.tap(find.text('Next round'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          'Every year from 2001 to 2004 has been played - '
+          'starting over.',
+        ),
+        findsOneWidget,
+      );
+      expect(game.playedYears.length, 1);
+      expect(tester.takeException(), isNull);
+    });
   });
 
   testWidgets('the swap is a button a finger finds', (tester) async {
@@ -1829,13 +1984,17 @@ void main() {
       await two.moveBy(const Offset(60, 0));
       await tester.pumpAndSettle();
 
-      expect(lineSize(), greaterThan(normal * 1.6));
+      // Damped on purpose: twice the distance is about a third bigger, not
+      // twice as big - the words are set once for a room, and a raw pinch
+      // overshot every time (2026-10-27).
+      expect(lineSize(), greaterThan(normal * 1.2));
+      expect(lineSize(), lessThan(normal * 1.55));
       await one.up();
       await two.up();
       await tester.pumpAndSettle();
 
       // Kept, like every other size of the words.
-      expect(await LyricsScaleStore.load(), greaterThan(1.6));
+      expect(await LyricsScaleStore.load(), greaterThan(1.2));
       expect(tester.takeException(), isNull);
     });
 
@@ -2060,15 +2219,18 @@ class _NoLyrics implements LyricsSource {
   Future<Lyrics?> find(Song song, {Duration? duration}) async => null;
 }
 
-/// Whether the undo of a swap is up - it keeps its room while it is not.
-bool undoShown(WidgetTester tester) => tester
-    .widget<Visibility>(
-      find.ancestor(
-        of: find.byTooltip('Back to the last song', skipOffstage: false),
-        matching: find.byType(Visibility),
-      ),
-    )
-    .visible;
+/// Whether the undo of a swap can be pressed. The button itself is always
+/// there - greyed out is what says there is nothing to take back.
+bool undoShown(WidgetTester tester) =>
+    tester
+        .widget<IconButton>(
+          find.ancestor(
+            of: find.byTooltip('Back to the last song'),
+            matching: find.byType(IconButton),
+          ),
+        )
+        .onPressed !=
+    null;
 
 /// Answers each launch only when the test completes its entry in [launches].
 class _QueuedLauncher implements SongLauncher {

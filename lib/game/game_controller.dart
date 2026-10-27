@@ -60,6 +60,9 @@ class GameController extends ChangeNotifier {
     Iterable<String> played = const [],
     void Function(Set<String> skipped)? onSkippedChanged,
     Iterable<String> skipped = const [],
+    this.fromYear,
+    this.toYear,
+    Iterable<int> playedYears = const [],
     Random? random,
   }) : assert(categories.isNotEmpty, 'A game needs at least one category.'),
        _launcher = launcher,
@@ -72,6 +75,7 @@ class GameController extends ChangeNotifier {
        _random = random ?? Random() {
     _played.addAll(played);
     _skipped.addAll(skipped);
+    _playedYears.addAll(playedYears);
   }
 
   /// How long a `resumed` is still ignored after opening Spotify.
@@ -97,6 +101,27 @@ class GameController extends ChangeNotifier {
 
   final YearDatabase years;
   final int targetScore;
+
+  /// The years a game without cards draws from, both null for a game played
+  /// with the printed cards. See [nextYear].
+  final int? fromYear;
+  final int? toYear;
+
+  /// Whether this game draws its years itself instead of reading them off a
+  /// card. The cards are the game; this is the game without them - in a car,
+  /// on a sofa, or when the box is in the other flat.
+  bool get withoutCards => fromYear != null && toYear != null;
+
+  /// The years of the range this game has already drawn.
+  ///
+  /// Kept with the game and not per device: a year does not come twice while
+  /// the range still has one nobody has heard, and a new game runs through the
+  /// whole range again - which is the opposite of how the songs are
+  /// remembered ([_played]), and deliberately so. A range of thirty years
+  /// would otherwise be used up for good after two evenings.
+  final Set<int> _playedYears = <int>{};
+
+  Set<int> get playedYears => {..._playedYears};
 
   /// Where the songs are handed over to. The launcher is what actually goes
   /// there; this decides which songs can be drawn at all, see [songsFor].
@@ -223,6 +248,9 @@ class GameController extends ChangeNotifier {
     },
     targetScore: targetScore,
     played: [..._played],
+    fromYear: fromYear,
+    toYear: toYear,
+    playedYears: [..._playedYears],
   );
 
   /// The keys of the songs this game has played, see [playedKey].
@@ -230,6 +258,47 @@ class GameController extends ChangeNotifier {
 
   /// The keys of the songs swapped away on this device, see [_skipped].
   Set<String> get skipped => {..._skipped};
+
+  /// The years of the range that some chosen deck can actually play.
+  ///
+  /// A year without a song would be a round that opens with "draw another
+  /// card" - and without cards there is nothing to draw, so such a year is
+  /// never picked in the first place. [songsFor] is what decides, so a year
+  /// whose only songs this service cannot play counts as empty too.
+  List<int> get playableYears {
+    final from = fromYear;
+    final to = toYear;
+    if (from == null || to == null) return const [];
+    return [
+      for (var year = min(from, to); year <= max(from, to); year++)
+        if (categories.any((c) => songsFor(c, year).isNotEmpty)) year,
+    ];
+  }
+
+  /// The next year of a game without cards, picked at random among those the
+  /// range has not played yet - and null where the range holds no playable
+  /// year at all.
+  ///
+  /// `startedOver` is true for the draw that empties the memory again: every
+  /// year of the range has been heard, so the next pass begins. The screen
+  /// says so, because a room that is keeping track deserves to know the round
+  /// it is on is a repeat rather than a slip.
+  ({int year, bool startedOver})? nextYear() {
+    final playable = playableYears;
+    if (playable.isEmpty) return null;
+
+    var pool = [
+      for (final year in playable)
+        if (!_playedYears.contains(year)) year,
+    ];
+    var startedOver = false;
+    if (pool.isEmpty) {
+      _playedYears.clear();
+      pool = playable;
+      startedOver = true;
+    }
+    return (year: pool[_random.nextInt(pool.length)], startedOver: startedOver);
+  }
 
   /// Handles a scanned QR code and starts the countdown on success.
   ScanOutcome scan(String rawCode) {
@@ -275,6 +344,11 @@ class GameController extends ChangeNotifier {
     phase = RoundPhase.playing;
     _launchedAt = DateTime.now();
     _markPlayed(category, song);
+    // Here and not in [scan], so a countdown that was closed again does not
+    // cost the range one of its years. Saved with the game, or a resume would
+    // start the range over.
+    final year = currentYear;
+    if (withoutCards && year != null && _playedYears.add(year)) _save();
     notifyListeners();
 
     final result = await _launch(_launcher, song);

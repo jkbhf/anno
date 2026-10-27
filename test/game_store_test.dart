@@ -33,6 +33,39 @@ void main() {
     expect(game.categoryWeights, {'esc': 3, 'hits': 1});
   });
 
+  test('a game without cards keeps its range and its years', () async {
+    await GameStore.save(
+      SavedGame(
+        players: [GamePlayer(name: 'Anna')],
+        categoryIds: const ['esc'],
+        targetScore: 10,
+        fromYear: 1990,
+        toYear: 2026,
+        playedYears: const [1994, 2007],
+      ),
+    );
+
+    final game = await GameStore.load();
+
+    expect(game!.fromYear, 1990);
+    expect(game.toYear, 2026);
+    expect(game.playedYears, [1994, 2007]);
+  });
+
+  test('a game saved before the mode existed is one with cards', () async {
+    SharedPreferences.setMockInitialValues({
+      'game.current':
+          '{"players":[{"name":"Anna","score":1}],"categoryIds":["esc"],'
+          '"targetScore":5}',
+    });
+
+    final game = await GameStore.load();
+
+    expect(game!.fromYear, isNull);
+    expect(game.toYear, isNull);
+    expect(game.playedYears, isEmpty);
+  });
+
   test('a game saved before played songs were kept still loads', () async {
     SharedPreferences.setMockInitialValues({
       'game.current':

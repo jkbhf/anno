@@ -425,6 +425,51 @@ it never starts a year over early and never keeps a song out that its deck
 needs. Same key means same track id, so the ESC and hit deck pressings of
 Waterloo and the like are not caught - accepted, see the hit deck section.
 
+## The game without the cards
+
+`withoutCards` in `GameController`: a game whose years are drawn by the device
+instead of read off a card. Switched on on the category screen, with a range of
+years beside the switch; the box of printed cards stays at home.
+
+It is the card deck's one real weakness - the cards are what makes the game,
+and they are also the thing that is in the other flat, in the boot, or on the
+kitchen table while everybody is in the car. So the mode changes exactly two
+things and nothing else: where the year comes from, and what the button that
+starts a round says. Everything after the year is the same code - the draw, the
+countdown, the launch, the swap, the points - because the year is handed to
+`_handleCode` as the string a card would have carried, and `YearDatabase`
+already reads a bare year as itself.
+
+**Every year comes once before any comes again.** `nextYear` draws at random
+among the years of the range that this game has not played, and only when
+there are none left does it clear the memory and say so (`startedOver`, a snack
+bar on the screen). Without that a range of thirty years would play the same
+four all evening - the room is guessing years, so the spread *is* the game.
+
+**The memory is the game's, not the device's**, and that is the opposite of how
+the songs are remembered (`PlayedSongsStore`). A song is one of hundreds and
+can wait a month; a range is a handful of years, and remembered per device it
+would be used up for good after two evenings. It sits in `SavedGame`
+(`playedYears`, with `fromYear` and `toYear`), so a resume mid-range carries on
+where it was, and a change of decks keeps it too - but a new game runs the
+whole range again.
+
+**A year is marked in `startPlayback`, not in `scan`**: a countdown that gets
+closed again plays nothing, and the range should not lose a year to it. That is
+also where the game is saved, or a resume would start the range over.
+
+**A year no deck can play is never drawn.** `playableYears` asks `songsFor`,
+so a hole in a deck and a song this service cannot play both drop out before
+the draw rather than turning into "draw another card" - which would be a
+sentence with nothing behind it when there is no card to draw. The range opens
+on the span of the chosen decks for the same reason, and the count under the
+slider is the length of the pass the room is in for.
+
+**The reveal does not draw the next year by itself**, although the camera does
+open by itself in a game with cards. A camera that comes up over a reveal costs
+nothing; a song that starts over the points still being handed out costs the
+round. So the next year is the tap it says it is - and that was the ask.
+
 ## Two ways to play a song, one of them optional
 
 `SongLauncher` has two Spotify implementations and the choice is not a
@@ -583,7 +628,10 @@ round's controls are.
 (2026-10-27). `Nobody knows it` was a text button in the middle of the
 controls: hard to hit in a dark room and the one thing on the panel that looked
 left there. It is an outlined stadium button 52 pixels tall across the width of
-the panel now, with the undo as a 52 square beside it. And the way back to a
+the panel now, with the undo as a 52 square beside it. The undo beside it is
+always on the screen and greyed out until there is a swap to take back
+(2026-10-27): a button that comes and goes is one nobody learns the place of,
+and the place is the point of it. And the way back to a
 swallowed popup is drawn on `_looksInApp` rather than on `playingInApp`: a swap
 hands the song over again, and for those frames the round is not in the tab -
 shown on that, `Open in Spotify` flashed up after every press of the swap and
@@ -646,6 +694,18 @@ scale gesture joins the arena and beats the scrollable under it, which would
 cost the words their scrolling - the thing a finger does with them far more
 often than resizing. A raw pointer never competes: one finger scrolls, two
 resize, and only the distance between the two is read.
+
+That has a price, and the first version paid it: a raw pointer does not take
+the gesture away from the list either, so two fingers moving were a drag to it
+and the words slid out from under the pinch. `onActive` says when a pinch is
+on and `LyricsView` sets `NeverScrollableScrollPhysics` for that moment, which
+is why the gesture lives inside the view rather than around it - the list that
+has to hold still is the view's own. The scroll position survives the swap.
+
+**And it is damped** (`_damping`, 0.45): pulled apart to twice the distance the
+type comes out about a third bigger, not twice as big. Raw, the gesture
+overshot every time - this is a setting made once for a room, so what it needs
+is a nudge rather than a jump (2026-10-27).
 
 **Two halves for two audiences.** The stage is for the room and holds only what
 the room reads: reveal or year, words, scores. The column is for whoever runs
@@ -960,9 +1020,17 @@ stopping there stops the camera that is just being asked for.
 nothing to await - `main` preloads it. The button for it is in the corner of
 every scanner, the small one in the column included, and it is only there where
 the device reports more than one camera (or reports nothing, which is the web).
-Saved from what the plugin says it ended up on rather than from what was asked
-for. It has to be kept: every scan builds a controller of its own, so a flip
-that lived in the view would last exactly one card.
+It has to be kept: every scan builds a controller of its own, so a flip that
+lived in the view would last exactly one card.
+
+**Never `switchCamera`.** That is the call for this and it did nothing at all
+on an Android tablet: the plugin's `_toggleCameraDirection` returns without a
+word when the platform reports fewer than two cameras or a `cameraDirection`
+of `unknown`, and swallowing its exception on top of that left a button that
+answered nothing. `_flip` works the side out itself - from what the camera says
+it is on, or from the saved side where it says nothing - and then does the
+`stop()` and `start(cameraDirection:)` by hand. A failure is a snack bar and a
+restart of the old side, because a flip that fails must not leave a black box.
 
 Checking this needs a browser, not a widget test: headless Chrome with
 `--use-fake-device-for-media-stream --use-fake-ui-for-media-stream`, and a hook

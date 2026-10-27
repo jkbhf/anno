@@ -208,24 +208,55 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
     }
   }
 
-  /// Turns the camera around: the front one on a phone held out over the
-  /// table, the back one for a card held up to it.
+  /// Turns the camera around: the front one on a phone or tablet held out
+  /// over the table, the back one for a card held up to it.
   ///
-  /// The side is remembered for the next scanner rather than only for this
-  /// one, see [CameraFacingStore] - otherwise the flip would be undone by the
-  /// next round. The plugin reports which side it ended up on, so what is
-  /// saved is what happened and not what was asked for.
+  /// **Not `switchCamera`**, which is the obvious call and did nothing on an
+  /// Android tablet (2026-10-27): the plugin's own toggle gives up without a
+  /// word when the platform reports fewer than two cameras or a direction of
+  /// `unknown`, and both happen. So the target side is worked out here - from
+  /// what the camera says it is on, or from the saved side where it says
+  /// nothing - and the restart is asked for directly.
+  ///
+  /// A failure is said out loud rather than swallowed, and the old side is
+  /// started again so a refusal does not leave a black box. The side that was
+  /// reached is saved for the next scanner, see [CameraFacingStore]:
+  /// otherwise a flip would be undone by the next round.
   Future<void> _flip() async {
+    final was = _controller.value.cameraDirection;
+    final target = switch (was) {
+      CameraFacing.front => CameraFacing.back,
+      CameraFacing.back => CameraFacing.front,
+      // The platform is not saying, so the saved side is the best guess of
+      // what is running.
+      _ => CameraFacingStore.isFront ? CameraFacing.back : CameraFacing.front,
+    };
+
     try {
-      await _controller.switchCamera();
-    } on MobileScannerException {
-      // One camera, or it refused - nothing to say about it, the picture is
-      // still the one it was.
+      await _controller.stop();
+      await _controller.start(cameraDirection: target);
+    } on MobileScannerException catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+          SnackBar(content: Text('No other camera: ${_explain(error)}')),
+        );
+      }
+      // Back to the picture there was, or the box stays black.
+      if (was == CameraFacing.front || was == CameraFacing.back) {
+        try {
+          await _controller.start(cameraDirection: was);
+        } on MobileScannerException {
+          // Nothing left to try - the error view says what it says.
+        }
+      }
       return;
     }
     if (!mounted) return;
     await CameraFacingStore.save(
-      front: _controller.value.cameraDirection == CameraFacing.front,
+      front:
+          _controller.value.cameraDirection == CameraFacing.front ||
+          (_controller.value.cameraDirection == CameraFacing.unknown &&
+              target == CameraFacing.front),
     );
   }
 

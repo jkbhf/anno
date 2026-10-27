@@ -13,6 +13,9 @@ class SavedGame {
     required this.targetScore,
     this.categoryWeights = const {},
     this.played = const [],
+    this.fromYear,
+    this.toYear,
+    this.playedYears = const [],
   });
 
   final List<GamePlayer> players;
@@ -24,6 +27,15 @@ class SavedGame {
 
   /// The songs the game has played so far, as `GameController.playedKey`s.
   final List<String> played;
+
+  /// The years a game without cards draws from, both null for a game played
+  /// with the printed cards. See `GameController.nextYear`.
+  final int? fromYear;
+  final int? toYear;
+
+  /// The years that game has already drawn. Kept with the game rather than
+  /// per device: a new game is meant to run through the whole range again.
+  final List<int> playedYears;
 }
 
 /// Keeps the running game on the device.
@@ -76,10 +88,19 @@ class GameStore {
     // Missing in a game saved before decks had a weight: all of them count 1.
     final weights = json['categoryWeights'];
 
+    // Both missing in a game saved before the mode existed, which is a game
+    // played with the cards.
+    final years = json['playedYears'];
+
     return SavedGame(
       players: players,
       categoryIds: categoryIds,
       targetScore: json['targetScore'] as int,
+      fromYear: json['fromYear'] as int?,
+      toYear: json['toYear'] as int?,
+      playedYears: years is List
+          ? [for (final year in years) year as int]
+          : const [],
       categoryWeights: weights is Map
           ? {
               for (final entry in weights.entries)
@@ -97,6 +118,9 @@ class GameStore {
     'targetScore': game.targetScore,
     'categoryWeights': game.categoryWeights,
     'played': game.played,
+    'fromYear': game.fromYear,
+    'toYear': game.toYear,
+    'playedYears': game.playedYears,
   });
 
   static Future<void> save(SavedGame game) async {

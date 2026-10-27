@@ -217,7 +217,8 @@ void main() {
     await tester.tap(find.byTooltip('Turn the camera around'));
     await tester.pumpAndSettle();
 
-    expect(camera.switches, 1);
+    expect(camera.started.last, CameraFacing.front);
+    expect(camera.stops, 1, reason: 'stopped before it starts on the other');
     // The next scanner opens on the same side: every round builds a
     // controller of its own, so a flip that was not kept would last one card.
     expect(CameraFacingStore.isFront, isTrue);
@@ -226,15 +227,22 @@ void main() {
   });
 }
 
-/// A camera with two sides, which is what a phone has.
+/// A camera with two sides, which is what a phone or a tablet has.
+///
+/// It answers `start` the way a platform does - with the side it ended up on -
+/// because that is what the flip is driven by now: the plugin's own
+/// `switchCamera` gave up silently on an Android tablet.
 class FlipCameraController extends FakeCameraController {
-  int switches = 0;
+  final List<CameraFacing> started = [];
 
   @override
-  Future<void> switchCamera([
-    SwitchCameraOption option = const ToggleDirection(),
-  ]) async {
-    switches++;
-    value = value.copyWith(cameraDirection: CameraFacing.front);
+  Future<void> start({
+    CameraFacing? cameraDirection,
+    CameraLensType? cameraLensType,
+  }) async {
+    starts++;
+    final side = cameraDirection ?? CameraFacing.back;
+    started.add(side);
+    value = value.copyWith(cameraDirection: side, isInitialized: true);
   }
 }

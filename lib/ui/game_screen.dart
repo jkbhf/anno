@@ -46,6 +46,9 @@ Future<void> openGame(
   required int targetScore,
   Map<String, int> weights = const {},
   List<String> played = const [],
+  int? fromYear,
+  int? toYear,
+  List<int> playedYears = const [],
 }) async {
   final scope = AppScope.of(context);
   final service = scope.service.value;
@@ -68,6 +71,11 @@ Future<void> openGame(
     played: {...playedBefore, ...played},
     onSkippedChanged: (keys) => unawaited(SkippedSongsStore.save(keys)),
     skipped: skippedBefore,
+    // Set only for a game without cards, where the years are drawn instead
+    // of scanned.
+    fromYear: fromYear,
+    toYear: toYear,
+    playedYears: playedYears,
     service: service,
     launcher: switch (service) {
       MusicService.spotify => inApp,
@@ -325,6 +333,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // mid-round has a song running.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || _busy) return;
+      // Without cards there is no camera to open, and a game that starts
+      // playing the moment it is opened would startle a room that has not
+      // sat down yet: there the first round waits for the tap that every
+      // later one waits for too.
+      if (_game.withoutCards) return;
       if (_game.phase != RoundPhase.idle || _game.lastScannedCode != null) {
         return;
       }
@@ -494,7 +507,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       // camera comes up by itself in the slot the reveal was just pressed in,
       // and the year goes to the stage. Still inside the tap that revealed,
       // which is what lets a mobile browser unlock sound for the next round.
-      if (_wide && _inlineScan == null) {
+      // Without cards there is nothing to hold up to a lens, and drawing the
+      // next year here would start its song over the points still being
+      // handed out. There the next round is the tap it says it is.
+      if (_wide && _inlineScan == null && !_game.withoutCards) {
         _autoScanAt = DateTime.now();
         unawaited(_nextRound());
       }
@@ -605,9 +621,49 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _startRound() async {
+    if (_game.withoutCards) return _drawYear();
     final code = await _scanCode();
     if (!mounted || code == null) return;
     await _handleCode(code);
+  }
+
+  /// The round of a game without cards: the device draws the year.
+  ///
+  /// It goes through [_handleCode] like a scan does - the year is handed over
+  /// as the code it would have been on a card - so the countdown, the launch
+  /// and everything after it have one path and not two.
+  Future<void> _drawYear() async {
+    if (_busy) return;
+    // Still inside the tap, the same as a scan: a mobile browser grants sound
+    // from here and not from the countdown three seconds later.
+    if (_game.service == MusicService.spotify) {
+      unawaited(_spotify?.prepare() ?? Future<void>.value());
+    }
+    final next = _game.nextYear();
+    if (next == null) {
+      await _showNote(
+        'No year to play',
+        'None of the chosen decks has a song in that range. Change the '
+            'range or the decks.',
+      );
+      return;
+    }
+    if (next.startedOver && mounted) {
+      final (from, to) = (_game.fromYear, _game.toYear);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Every year from $from to $to has been played - starting over.',
+          ),
+        ),
+      );
+    }
+    _busy = true;
+    try {
+      await _handleCode('${next.year}');
+    } finally {
+      _busy = false;
+    }
   }
 
   Future<void> _handleCode(String code) async {
@@ -736,6 +792,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       return;
     }
 
+    // Without cards there is nothing to wait for: the tap that asks for the
+    // next round is also the one that draws its year.
+    if (_game.withoutCards) {
+      _game.nextRound();
+      await _drawYear();
+      return;
+    }
+
     final code = await _scanCode();
     if (!mounted || code == null) return;
     // The camera opens at the reveal and waits there while the points are
@@ -789,6 +853,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         final players = _game.players;
         final target = _game.targetScore;
         final played = _game.played.toList();
+        final playedYears = _game.playedYears.toList();
+        final (from, to) = (_game.fromYear, _game.toYear);
         final selected = {for (final c in _game.categories) c.id};
         final weights = {
           for (final c in _game.categories) c.id: _game.weightOf(c),
@@ -803,6 +869,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                 played: played,
                 initialSelection: selected,
                 initialWeights: weights,
+                initialFromYear: from,
+                initialToYear: to,
+                playedYears: playedYears,
               ),
             ),
           ),
@@ -1227,6 +1296,9 @@ class _IdleBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Without cards the same circle draws the year instead of opening the
+    // camera: one thing to tap, whichever way the game is being played.
+    final cardless = game.withoutCards;
 
     return _FitBody(
       child: Column(
@@ -1244,7 +1316,7 @@ class _IdleBody extends StatelessWidget {
                   color: theme.colorScheme.primaryContainer,
                 ),
                 child: Icon(
-                  Icons.qr_code_scanner,
+                  cardless ? Icons.casino_outlined : Icons.qr_code_scanner,
                   size: 96,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),
@@ -1253,13 +1325,17 @@ class _IdleBody extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            'Scan a card',
+            cardless ? 'Draw a year' : 'Scan a card',
             textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall,
           ),
           const SizedBox(height: 12),
           Text(
-            'QR code on the front of the card',
+            cardless
+                ? '${game.fromYear} to ${game.toYear}, '
+                      '${game.playedYears.length} of '
+                      '${game.playableYears.length} played'
+                : 'QR code on the front of the card',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
@@ -1511,22 +1587,19 @@ class _SongControls extends StatelessWidget {
                   ),
                 ),
               ),
-              Visibility(
-                visible: game.canUndoRedraw,
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: IconButton.outlined(
-                    tooltip: 'Back to the last song',
-                    onPressed: onUndoRedraw,
-                    icon: const Icon(Icons.undo),
-                    style: IconButton.styleFrom(
-                      minimumSize: const Size.square(52),
-                      foregroundColor: theme.colorScheme.onSurfaceVariant,
-                      side: BorderSide(color: theme.colorScheme.outlineVariant),
-                    ),
+              // Always there, greyed out until there is a swap to take back:
+              // a button that comes and goes is one nobody learns the place
+              // of, and the place is the point of it.
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: IconButton.outlined(
+                  tooltip: 'Back to the last song',
+                  onPressed: game.canUndoRedraw ? onUndoRedraw : null,
+                  icon: const Icon(Icons.undo),
+                  style: IconButton.styleFrom(
+                    minimumSize: const Size.square(52),
+                    foregroundColor: theme.colorScheme.onSurfaceVariant,
+                    side: BorderSide(color: theme.colorScheme.outlineVariant),
                   ),
                 ),
               ),
@@ -2337,6 +2410,7 @@ class _WideRound extends StatelessWidget {
                                   onCode: onCode,
                                   onClose: onCloseCamera,
                                   onNextRound: onNextRound,
+                                  withoutCards: game.withoutCards,
                                 ),
                               ),
                           ],
@@ -2502,8 +2576,19 @@ class _ActionSlot extends StatelessWidget {
         ? (
             Icons.visibility_outlined,
             'Reveal the year',
-            'The camera then opens below',
+            game.withoutCards
+                ? 'The next year waits below'
+                : 'The camera then opens below',
             onReveal,
+          )
+        : game.withoutCards
+        ? (
+            Icons.casino_outlined,
+            'Draw a year',
+            '${game.fromYear} to ${game.toYear}, '
+                '${game.playedYears.length} of '
+                '${game.playableYears.length} played',
+            onScan,
           )
         : (
             Icons.qr_code_scanner,
@@ -2791,12 +2876,18 @@ class _CameraBox extends StatelessWidget {
     required this.onCode,
     required this.onClose,
     required this.onNextRound,
+    this.withoutCards = false,
   });
 
   final CameraBuilder? camera;
   final ValueChanged<String> onCode;
   final VoidCallback onClose;
   final VoidCallback onNextRound;
+
+  /// In a game without cards there is never a camera here: the box is the
+  /// button that draws the next year, and it says so rather than offering a
+  /// scanner nobody has a card for.
+  final bool withoutCards;
 
   @override
   Widget build(BuildContext context) {
@@ -2836,13 +2927,13 @@ class _CameraBox extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.qr_code_scanner,
+                withoutCards ? Icons.casino_outlined : Icons.qr_code_scanner,
                 size: 40,
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(height: 8),
               Text(
-                'Next round',
+                withoutCards ? 'Next year' : 'Next round',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: theme.colorScheme.primary,
@@ -2933,56 +3024,54 @@ class _Stage extends StatelessWidget {
                 const Expanded(child: _StageIdle())
               else ...[
                 Expanded(
-                  // Two fingers on the words set their size, which is the
-                  // gesture anybody tries first on a text that is too small -
-                  // the menu's two entries are the same setting for a laptop
-                  // with no touch screen.
-                  child: PinchScale(
-                    scaleOf: () => lyricsScale,
-                    onScale: onLyricsScale,
-                    // The words scroll themselves, so a scrollbar on the wall
-                    // is only noise. The edges fade rather than cut a line in
-                    // half.
-                    child: ScrollConfiguration(
-                      behavior: ScrollConfiguration.of(
-                        context,
-                      ).copyWith(scrollbars: false),
-                      child: ShaderMask(
-                        blendMode: BlendMode.dstIn,
-                        shaderCallback: (bounds) => const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.white,
-                            Colors.white,
-                            Colors.transparent,
-                          ],
-                          stops: [0, 0.06, 0.88, 1],
-                        ).createShader(bounds),
-                        // The room inside the box is a share of it, not a set
-                        // number of pixels: 28 above and 72 below are a tenth
-                        // of a projector's box and most of a phone's 109.
-                        child: LayoutBuilder(
-                          builder: (context, box) => LyricsView(
-                            key: ValueKey(song.key),
-                            song: song,
-                            source: lyrics,
-                            session: game.playingInApp ? spotify : null,
-                            syncMs: lyricsSync,
-                            lineStyle: theme.textTheme.headlineSmall?.copyWith(
-                              fontSize: line,
-                              // Air between the lines: the whole text is up at
-                              // once on a wall, and set tight it reads as a
-                              // block rather than as lines to follow.
-                              height: 1.5,
-                            ),
-                            padding: EdgeInsets.fromLTRB(
-                              24,
-                              (box.maxHeight * 0.05).clamp(2.0, 28.0),
-                              24,
-                              (box.maxHeight * 0.13).clamp(8.0, 72.0),
-                            ),
+                  // The words scroll themselves, so a scrollbar on the wall
+                  // is only noise. The edges fade rather than cut a line in
+                  // half.
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(
+                      context,
+                    ).copyWith(scrollbars: false),
+                    child: ShaderMask(
+                      blendMode: BlendMode.dstIn,
+                      shaderCallback: (bounds) => const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.white,
+                          Colors.white,
+                          Colors.transparent,
+                        ],
+                        stops: [0, 0.06, 0.88, 1],
+                      ).createShader(bounds),
+                      // The room inside the box is a share of it, not a set
+                      // number of pixels: 28 above and 72 below are a tenth
+                      // of a projector's box and most of a phone's 109.
+                      child: LayoutBuilder(
+                        builder: (context, box) => LyricsView(
+                          key: ValueKey(song.key),
+                          song: song,
+                          source: lyrics,
+                          session: game.playingInApp ? spotify : null,
+                          syncMs: lyricsSync,
+                          // Two fingers on the words set their size, the
+                          // gesture anybody tries first on a text that is
+                          // too small - the menu's two entries are the same
+                          // setting for a screen with no touch.
+                          scaleOf: () => lyricsScale,
+                          onScale: onLyricsScale,
+                          lineStyle: theme.textTheme.headlineSmall?.copyWith(
+                            fontSize: line,
+                            // Air between the lines: the whole text is up at
+                            // once on a wall, and set tight it reads as a
+                            // block rather than as lines to follow.
+                            height: 1.5,
+                          ),
+                          padding: EdgeInsets.fromLTRB(
+                            24,
+                            (box.maxHeight * 0.05).clamp(2.0, 28.0),
+                            24,
+                            (box.maxHeight * 0.13).clamp(8.0, 72.0),
                           ),
                         ),
                       ),

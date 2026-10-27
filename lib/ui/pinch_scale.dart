@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 
 /// Two fingers on the words make them bigger or smaller.
@@ -9,13 +11,16 @@ import 'package:flutter/widgets.dart';
 /// competes, so both work: one finger scrolls, two resize.
 ///
 /// Only the distance between the two fingers is read, never the focal point.
-/// The list keeps scrolling under a pinch, which is the lesser evil and barely
-/// noticeable next to a text that cannot be scrolled at all.
+/// The scrollable still gets the pointers, though, and two fingers moving are
+/// a drag to it - so [onActive] says when a pinch is on and whoever owns the
+/// list holds it still for that moment. Without it the words slid away under
+/// the fingers and ended up somewhere else than they started (2026-10-27).
 class PinchScale extends StatefulWidget {
   const PinchScale({
     required this.scaleOf,
     required this.onScale,
     required this.child,
+    this.onActive,
     super.key,
   });
 
@@ -25,7 +30,19 @@ class PinchScale extends StatefulWidget {
   /// The factor the fingers are asking for. Clamping is the receiver's.
   final ValueChanged<double> onScale;
 
+  /// True while two fingers are down, so whatever scrolls under this can hold
+  /// still - see [_damping] for why that matters.
+  final ValueChanged<bool>? onActive;
+
   final Widget child;
+
+  /// How much of the fingers' movement reaches the size.
+  ///
+  /// Pulled apart to twice the distance, a raw pinch doubles the type in one
+  /// go, which overshoots every time: the words are set once for a room and
+  /// what is wanted is a nudge. At 0.45 the same gesture is about a third
+  /// bigger, so the size can be walked up to rather than jumped past.
+  static const double _damping = 0.45;
 
   @override
   State<PinchScale> createState() => _PinchScaleState();
@@ -49,6 +66,7 @@ class _PinchScaleState extends State<PinchScale> {
 
   void _down(PointerDownEvent event) {
     _points[event.pointer] = event.position;
+    if (_points.length >= 2) widget.onActive?.call(true);
     _begin();
   }
 
@@ -69,12 +87,18 @@ class _PinchScaleState extends State<PinchScale> {
       _begin();
       return;
     }
-    widget.onScale(_fromScale * now / from);
+    // Damped, see [PinchScale._damping].
+    widget.onScale(
+      _fromScale * pow(now / from, PinchScale._damping).toDouble(),
+    );
   }
 
   void _up(int pointer) {
     _points.remove(pointer);
-    if (_points.length < 2) _fromDistance = null;
+    if (_points.length < 2) {
+      _fromDistance = null;
+      widget.onActive?.call(false);
+    }
   }
 
   @override

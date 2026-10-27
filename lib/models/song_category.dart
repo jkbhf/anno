@@ -43,12 +43,19 @@ class SongCategory {
   /// would be the wrong number to show: the decks have no gaps, so it only
   /// restates the span while hiding where the deck actually sits in time.
   String? get yearSpan {
-    if (_byYear.isEmpty) return null;
-    final years = _byYear.keys.toList()..sort();
-    final first = years.first;
-    final last = years.last;
+    final first = firstYear;
+    final last = lastYear;
+    if (first == null || last == null) return null;
     return first == last ? '$first' : '$first-$last';
   }
+
+  /// The ends of the span, null while the deck is empty. The game without
+  /// cards picks its years out of these, see `GameController.nextYear`.
+  int? get firstYear =>
+      _byYear.isEmpty ? null : _byYear.keys.reduce((a, b) => a < b ? a : b);
+
+  int? get lastYear =>
+      _byYear.isEmpty ? null : _byYear.keys.reduce((a, b) => a > b ? a : b);
 
   List<Song> songsForYear(int year) => _byYear[year] ?? const <Song>[];
 }

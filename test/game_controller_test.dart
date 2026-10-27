@@ -92,7 +92,131 @@ GameController buildGame({
   launcher: launcher ?? FakeLauncher(),
 );
 
+/// A deck with one song in each of [years].
+SongCategory deckOfYears(Iterable<int> years) => SongCategory(
+  id: 'esc',
+  name: 'ESC',
+  description: '',
+  songs: [
+    for (final year in years)
+      Song(
+        title: 'Song $year',
+        artist: 'Someone',
+        year: year,
+        spotifyTrackId: 'id$year',
+      ),
+  ],
+);
+
+/// A game that draws its own years, see `GameController.withoutCards`.
+GameController buildCardlessGame({
+  required int from,
+  required int to,
+  SongCategory? category,
+  Iterable<int> playedYears = const [],
+  Random? random,
+}) => GameController(
+  players: [GamePlayer(name: 'Anna')],
+  categories: [
+    category ?? deckOfYears([for (var y = from; y <= to; y++) y]),
+  ],
+  years: YearDatabase.inMemory(),
+  launcher: FakeLauncher(),
+  fromYear: from,
+  toYear: to,
+  playedYears: playedYears,
+  random: random,
+);
+
 void main() {
+  group('without cards', () {
+    test('every year of the range comes once before any comes again', () async {
+      final game = buildCardlessGame(from: 2001, to: 2005);
+      expect(game.withoutCards, isTrue);
+
+      final drawn = <int>[];
+      for (var round = 0; round < 5; round++) {
+        final next = game.nextYear()!;
+        expect(next.startedOver, isFalse);
+        drawn.add(next.year);
+        // A year only counts once the song has gone out, so the round has to
+        // be played rather than only drawn.
+        game.scan('${next.year}');
+        await game.startPlayback();
+        game.reveal();
+        game.nextRound();
+      }
+
+      expect(drawn.toSet().length, 5, reason: 'no year twice');
+      expect(drawn.toSet(), {2001, 2002, 2003, 2004, 2005});
+
+      // The sixth has nothing left, so the pass starts over and says so.
+      final again = game.nextYear()!;
+      expect(again.startedOver, isTrue);
+      expect(game.playedYears, isEmpty);
+    });
+
+    test('a year no deck has a song for is never drawn', () {
+      // 2003 is the hole: the range spans it, the deck does not.
+      final game = buildCardlessGame(
+        from: 2001,
+        to: 2005,
+        category: deckOfYears([2001, 2002, 2004, 2005]),
+      );
+
+      expect(game.playableYears, [2001, 2002, 2004, 2005]);
+      for (var round = 0; round < 20; round++) {
+        expect(game.nextYear()!.year, isNot(2003));
+      }
+    });
+
+    test('a range without a single song draws nothing', () {
+      final game = buildCardlessGame(
+        from: 1960,
+        to: 1965,
+        category: deckOfYears([2001]),
+      );
+
+      expect(game.playableYears, isEmpty);
+      expect(game.nextYear(), isNull);
+    });
+
+    test('the years it has drawn are part of the saved game', () async {
+      final game = buildCardlessGame(
+        from: 2001,
+        to: 2005,
+        playedYears: const [2002],
+      );
+
+      game.scan('2004');
+      await game.startPlayback();
+
+      expect(game.playedYears, {2002, 2004});
+      expect(game.snapshot.playedYears, unorderedEquals([2002, 2004]));
+      expect(game.snapshot.fromYear, 2001);
+      expect(game.snapshot.toYear, 2005);
+    });
+
+    test('a closed countdown costs the range no year', () {
+      final game = buildCardlessGame(from: 2001, to: 2005);
+
+      game.scan('2003');
+      game.cancelRound();
+
+      expect(game.playedYears, isEmpty);
+    });
+
+    test('a game with cards has no range and draws no year', () {
+      final game = buildGame();
+
+      expect(game.withoutCards, isFalse);
+      expect(game.playableYears, isEmpty);
+      expect(game.nextYear(), isNull);
+      expect(game.snapshot.fromYear, isNull);
+      expect(game.snapshot.playedYears, isEmpty);
+    });
+  });
+
   test('a known code starts the countdown', () {
     final game = buildGame();
 
