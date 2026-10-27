@@ -225,6 +225,58 @@ void main() {
     await CameraFacingStore.preload();
     expect(CameraFacingStore.facing, CameraFacing.front);
   });
+
+  testWidgets(
+    'a camera that cannot open the other side is said out loud, not saved',
+    (tester) async {
+      // The real bug (2026-10-28): `start` does not throw when the platform
+      // cannot open the requested side - it stores the failure on `value`
+      // and returns normally, which a `try`/`catch` around the call never
+      // sees. The flip has to read `value` after the `await`.
+      // The previous test leaves the store on the front side; pin it back
+      // down so this test's target side does not depend on test order.
+      SharedPreferences.setMockInitialValues({'camera.front': false});
+      await CameraFacingStore.preload();
+      const channel = MethodChannel(
+        'dev.steenbakker.mobile_scanner/scanner/method',
+      );
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        (_) async => null,
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          channel,
+          null,
+        ),
+      );
+      final camera = OneSidedCameraController();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ScannerView(controller: camera, onCode: (_) {}),
+          ),
+        ),
+      );
+      // Let the initial auto-start settle on the back camera, so the flip
+      // below has a known side to fall back to - same as a camera that was
+      // actually running before the tap.
+      await tester.pumpAndSettle();
+      expect(camera.value.cameraDirection, CameraFacing.back);
+
+      await tester.tap(find.byTooltip('Turn the camera around'));
+      // Not pumpAndSettle: that runs through the snack bar's own animation
+      // and its default auto-dismiss, so by the time it is idle again the
+      // message is already gone.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('No other camera: Not supported'), findsOneWidget);
+      // Back to the side that was actually running.
+      expect(camera.value.cameraDirection, CameraFacing.back);
+      expect(CameraFacingStore.isFront, isFalse);
+    },
+  );
 }
 
 /// A camera with two sides, which is what a phone or a tablet has.
@@ -243,6 +295,41 @@ class FlipCameraController extends FakeCameraController {
     starts++;
     final side = cameraDirection ?? CameraFacing.back;
     started.add(side);
-    value = value.copyWith(cameraDirection: side, isInitialized: true);
+    value = value.copyWith(
+      cameraDirection: side,
+      isInitialized: true,
+      isRunning: true,
+    );
+  }
+}
+
+/// A camera with one side, which is what some tablets have - and which
+/// `start` reports by storing an error on `value` rather than throwing, same
+/// as the real plugin.
+class OneSidedCameraController extends FakeCameraController {
+  @override
+  Future<void> start({
+    CameraFacing? cameraDirection,
+    CameraLensType? cameraLensType,
+  }) async {
+    starts++;
+    final side = cameraDirection ?? CameraFacing.back;
+    if (side == CameraFacing.back) {
+      value = value.copyWith(
+        cameraDirection: side,
+        isInitialized: true,
+        isRunning: true,
+      );
+      return;
+    }
+    value = value.copyWith(
+      cameraDirection: CameraFacing.unknown,
+      isInitialized: true,
+      isRunning: false,
+      error: const MobileScannerException(
+        errorCode: MobileScannerErrorCode.genericError,
+        errorDetails: MobileScannerErrorDetails(message: 'Not supported'),
+      ),
+    );
   }
 }

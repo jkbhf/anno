@@ -218,6 +218,15 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
   /// what the camera says it is on, or from the saved side where it says
   /// nothing - and the restart is asked for directly.
   ///
+  /// **`start` does not throw on a camera it cannot open** (2026-10-28, same
+  /// tablet, still broken after the above): it catches its own
+  /// `MobileScannerException` internally and returns normally with
+  /// `value.error` set and `isRunning` false, so a `try`/`catch` around it
+  /// here never ran - the failure was saved to [CameraFacingStore] as if it
+  /// had worked, and every scanner after it opened on a side that does not
+  /// exist. The check has to read `value` after the `await`, not a thrown
+  /// exception.
+  ///
   /// A failure is said out loud rather than swallowed, and the old side is
   /// started again so a refusal does not leave a black box. The side that was
   /// reached is saved for the next scanner, see [CameraFacingStore]:
@@ -232,22 +241,22 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
       _ => CameraFacingStore.isFront ? CameraFacing.back : CameraFacing.front,
     };
 
-    try {
-      await _controller.stop();
-      await _controller.start(cameraDirection: target);
-    } on MobileScannerException catch (error) {
+    await _controller.stop();
+    await _controller.start(cameraDirection: target);
+    final failure = _controller.value.error;
+    if (failure != null || !_controller.value.isRunning) {
       if (mounted) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          SnackBar(content: Text('No other camera: ${_explain(error)}')),
+          SnackBar(
+            content: Text(
+              'No other camera: ${failure != null ? _explain(failure) : 'could not start it'}',
+            ),
+          ),
         );
       }
       // Back to the picture there was, or the box stays black.
       if (was == CameraFacing.front || was == CameraFacing.back) {
-        try {
-          await _controller.start(cameraDirection: was);
-        } on MobileScannerException {
-          // Nothing left to try - the error view says what it says.
-        }
+        await _controller.start(cameraDirection: was);
       }
       return;
     }
