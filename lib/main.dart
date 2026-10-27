@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'data/camera_facing_store.dart';
 import 'data/game_store.dart';
 import 'data/music_service_store.dart';
+import 'data/playback_device_store.dart';
 import 'data/roster_store.dart';
 import 'data/song_repository.dart';
 import 'data/year_database.dart';
@@ -28,6 +29,8 @@ Future<void> main() async {
   // where there is nothing to await, so the side it opens on has to be
   // readable there.
   await CameraFacingStore.preload();
+  // Same reason: the session reads it while it is handing a song over.
+  await PlaybackDeviceStore.preload();
 
   // Picks a login back up - either the redirect the browser just came back
   // with, or a token from an earlier visit. Not awaited: the game starts

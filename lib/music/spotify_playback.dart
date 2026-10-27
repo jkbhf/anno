@@ -20,6 +20,34 @@ enum SpotifyConnection {
   failed,
 }
 
+/// One of the places a session could play the round, for the picker on the
+/// remote control.
+///
+/// Only a session that commands another app has more than one of these - the
+/// SDK is its own device and the link has none - so the list is empty
+/// everywhere but in `ConnectSpotifySession`.
+class PlaybackDevice {
+  const PlaybackDevice({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.isActive,
+  });
+
+  final String id;
+
+  /// What Spotify calls it, which is what the room calls it: `Jakobs iPhone`,
+  /// `Samsung TV`, `Küche`.
+  final String name;
+
+  /// Spotify's own word - `Smartphone`, `TV`, `Speaker`, `Computer`. Only used
+  /// to put an icon next to the name.
+  final String type;
+
+  /// Whether Spotify is playing on it right now.
+  final bool isActive;
+}
+
 /// Plays songs inside the app instead of handing them over to Spotify.
 ///
 /// Web only. Spotify's Web Playback SDK turns the game tab itself into a
@@ -100,6 +128,33 @@ abstract class SpotifySession extends ChangeNotifier {
 
   /// Ends the round's music.
   Future<void> stop();
+
+  /// Whether where the song comes out of is a question at all - and so
+  /// whether the remote shows the button that asks it. True only for a
+  /// session that commands another app: the SDK is the device itself.
+  bool get canPickDevice => false;
+
+  /// The devices the round could come out of, as they were last looked up.
+  List<PlaybackDevice> get devices => const [];
+
+  /// The one that was picked by hand, null while the game picks for itself.
+  String? get pickedDeviceId => null;
+
+  /// Asks the service for its devices again. The picker does it as it opens,
+  /// because a device is only listed while its app is running.
+  Future<void> refreshDevices() async {}
+
+  /// Plays on [id] from here on - a running song moves over - or, with null,
+  /// hands the choice back to the game.
+  Future<void> pickDevice(String? id) async {}
+
+  /// The game is over: stop the music and let go of the device it came out of.
+  ///
+  /// Not the same as [stop], which ends a round. A speaker or a television
+  /// that the game was playing on must not stay coupled to a game that has
+  /// finished - the next one looks the device up again, and the room gets its
+  /// speaker back.
+  Future<void> releasePlayback() => stop();
 
   /// Takes this page off the account as a speaker, and keeps the login.
   ///

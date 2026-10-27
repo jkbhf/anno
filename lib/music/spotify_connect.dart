@@ -5,18 +5,19 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+import '../data/playback_device_store.dart';
 import '../models/song.dart';
 import 'spotify_api.dart';
 import 'spotify_auth.dart';
 import 'spotify_playback.dart';
 
 /// One of the devices the account can play on, as the API lists them.
-class ConnectDevice {
+class ConnectDevice extends PlaybackDevice {
   const ConnectDevice({
-    required this.id,
-    required this.name,
-    required this.type,
-    required this.isActive,
+    required super.id,
+    required super.name,
+    required super.type,
+    required super.isActive,
     required this.isRestricted,
   });
 
@@ -27,11 +28,6 @@ class ConnectDevice {
     isActive: json['is_active'] as bool? ?? false,
     isRestricted: json['is_restricted'] as bool? ?? false,
   );
-
-  final String id;
-  final String name;
-  final String type;
-  final bool isActive;
 
   /// Spotify says this device refuses commands from the Web API - a car, a
   /// games console, some speakers. Playing to it answers 204 and then nothing
@@ -131,6 +127,10 @@ class ConnectSpotifySession extends SpotifySession {
   String? _deviceId;
   String? _deviceName;
 
+  /// The account's devices as they were last listed, for the picker on the
+  /// remote. Only the usable ones get out, see [devices].
+  List<ConnectDevice> _listed = const [];
+
   /// True from a song that started until the round's music is stopped. The
   /// poll runs only then: nothing else on this page wants the position, and a
   /// timer that outlives the round is a request a minute for nothing.
@@ -190,6 +190,91 @@ class ConnectSpotifySession extends SpotifySession {
   /// The device the round plays on, for whoever wants to know which speaker
   /// just lit up. Null until one was found.
   String? get deviceName => _deviceName;
+
+  /// This is the session where it is a question: the song comes out of another
+  /// app, and the account can have several that could take it.
+  @override
+  bool get canPickDevice => true;
+
+  @override
+  List<PlaybackDevice> get devices => [
+    for (final device in _listed)
+      if (device.isUsable) device,
+  ];
+
+  @override
+  String? get pickedDeviceId => PlaybackDeviceStore.id;
+
+  @override
+  Future<void> refreshDevices() async {
+    final token = await _auth.freshToken();
+    if (token == null) return;
+    await _lookUp(token);
+  }
+
+  /// Plays on [id] from here on, or hands the choice back to
+  /// [pickConnectDevice] with null.
+  ///
+  /// A song that is running moves over rather than starting again: Spotify's
+  /// transfer keeps the position, and the room is in the middle of a round.
+  @override
+  Future<void> pickDevice(String? id) async {
+    ConnectDevice? device;
+    for (final listed in _listed) {
+      if (listed.id == id) device = listed;
+    }
+    await PlaybackDeviceStore.save(id: id, name: device?.name);
+
+    if (id == null) {
+      // Not simply cleared: the round that is on could still be moved, and
+      // the next one has to find something.
+      final token = await _auth.freshToken();
+      if (token == null) {
+        _deviceId = null;
+        _deviceName = null;
+        notifyListeners();
+        return;
+      }
+      final next = await _lookUp(token);
+      if (next != null && _isPlaying) await _transfer(next, token: token);
+      return;
+    }
+
+    _deviceId = id;
+    _deviceName = device?.name;
+    notifyListeners();
+    if (_isPlaying) await _transfer(id);
+  }
+
+  /// Hands the running song over to [id], which is how a pick mid-round
+  /// reaches the new speaker. The poll puts the position right either way.
+  Future<void> _transfer(String id, {String? token}) async {
+    final bearer = token ?? await _auth.freshToken();
+    if (bearer == null) return;
+    final status = await _put(
+      '/me/player',
+      token: bearer,
+      body: jsonEncode({
+        'device_ids': [id],
+        'play': true,
+      }),
+    );
+    // 404 is a device that has gone away between the list and the tap. The
+    // round goes on where it is rather than falling silent.
+    if (status == 404) await _lookUp(bearer);
+  }
+
+  /// The game is over: the music stops and the device is let go of, so a
+  /// television or a speaker is not still held by a game nobody is playing.
+  /// What was picked by hand stays picked - that is a setting of the room's.
+  @override
+  Future<void> releasePlayback() async {
+    await stop();
+    if (_deviceId == null && _deviceName == null) return;
+    _deviceId = null;
+    _deviceName = null;
+    notifyListeners();
+  }
 
   void _moveTo(SpotifyConnection next, {String? error}) {
     _connection = next;
@@ -350,19 +435,39 @@ class ConnectSpotifySession extends SpotifySession {
     if (_deviceId != null && !again) return _deviceId;
     final bearer = token ?? await _auth.freshToken();
     if (bearer == null) return null;
+    return _lookUp(bearer);
+  }
 
-    final body = await _get('/me/player/devices', token: bearer);
+  /// Lists the account's devices, keeps the list for the picker and settles on
+  /// one: what was picked by hand where it is there, otherwise
+  /// [pickConnectDevice].
+  ///
+  /// A pick that is not in the list is a device whose app is not running - a
+  /// television that is off, a phone that has not been touched since this
+  /// morning. It stays saved and the round goes to the automatic pick, which
+  /// is the phone: better the wrong speaker than a round with no sound.
+  Future<String?> _lookUp(String token) async {
+    final body = await _get('/me/player/devices', token: token);
     if (body == null) return null;
 
     final list = (body['devices'] as List? ?? const [])
         .cast<Map<String, dynamic>>()
-        .map(ConnectDevice.fromJson);
-    final device = pickConnectDevice(list);
+        .map(ConnectDevice.fromJson)
+        .toList();
+    _listed = list;
 
-    final before = _deviceId;
+    final want = PlaybackDeviceStore.id;
+    ConnectDevice? device;
+    if (want != null) {
+      for (final listed in list) {
+        if (listed.id == want && listed.isUsable) device = listed;
+      }
+    }
+    device ??= pickConnectDevice(list);
+
     _deviceId = device?.id;
     _deviceName = device?.name;
-    if (before != _deviceId) notifyListeners();
+    notifyListeners();
     return _deviceId;
   }
 

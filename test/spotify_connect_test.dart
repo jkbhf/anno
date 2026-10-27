@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:anno/data/playback_device_store.dart';
 import 'package:anno/models/song.dart';
 import 'package:anno/music/spotify_auth.dart';
 import 'package:anno/music/spotify_connect.dart';
@@ -7,6 +8,7 @@ import 'package:anno/music/spotify_playback.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// A login that is simply there. The real one is PKCE in a browser; nothing
 /// about the player depends on how the token was got.
@@ -75,6 +77,13 @@ Map<String, Object?> _deviceJson(
 };
 
 void main() {
+  // The picked device lives in a static store, so every test starts from
+  // nobody having picked one.
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    await PlaybackDeviceStore.preload();
+  });
+
   group('pickConnectDevice', () {
     // The phone is what this session exists for, and the account's other
     // devices are a television and a speaker standing around: the round has to
@@ -352,6 +361,114 @@ void main() {
       // Which device the round comes out of is the one thing nobody can work
       // out from the game screen when it turns out to be the wrong one.
       expect(session.hint, 'The song plays on Phone.');
+    });
+
+    test('a device picked by hand takes the round', () async {
+      final plays = <String?>[];
+      final session = ConnectSpotifySession(
+        auth: _FakeAuth(),
+        client: MockClient((request) async {
+          if (request.url.path.endsWith('/devices')) {
+            return http.Response(
+              _devicesBody([
+                _deviceJson('phone'),
+                _deviceJson('tv', type: 'TV'),
+              ]),
+              200,
+            );
+          }
+          if (request.url.path.endsWith('/play')) {
+            plays.add(request.url.queryParameters['device_id']);
+          }
+          return http.Response('', 204);
+        }),
+      );
+      addTearDown(session.dispose);
+
+      await session.restore();
+      expect(session.devices.map((device) => device.id), ['phone', 'tv']);
+      // Without a pick the phone takes it, see `pickConnectDevice`.
+      await session.play(_song);
+      expect(plays, ['phone']);
+
+      await session.pickDevice('tv');
+      expect(session.pickedDeviceId, 'tv');
+      expect(PlaybackDeviceStore.id, 'tv');
+
+      // And it survives the look-up the next round starts with.
+      await session.releasePlayback();
+      await session.play(_song);
+      expect(plays.last, 'tv');
+
+      // Handing the choice back goes to the phone again.
+      await session.pickDevice(null);
+      expect(PlaybackDeviceStore.id, isNull);
+      await session.releasePlayback();
+      await session.play(_song);
+      expect(plays.last, 'phone');
+    });
+
+    test('a pick mid-song moves the song over', () async {
+      final transfers = <String>[];
+      final session = ConnectSpotifySession(
+        auth: _FakeAuth(),
+        client: MockClient((request) async {
+          if (request.url.path.endsWith('/devices')) {
+            return http.Response(
+              _devicesBody([
+                _deviceJson('phone'),
+                _deviceJson('tv', type: 'TV'),
+              ]),
+              200,
+            );
+          }
+          if (request.url.path == '/v1/me/player') {
+            transfers.add((request as http.Request).body);
+          }
+          return http.Response('', 204);
+        }),
+      );
+      addTearDown(session.dispose);
+
+      await session.restore();
+      await session.play(_song);
+      await session.pickDevice('tv');
+
+      // The room is in the middle of a round: Spotify's transfer keeps the
+      // position, where a fresh play would start the song again.
+      expect(transfers, [
+        jsonEncode({
+          'device_ids': ['tv'],
+          'play': true,
+        }),
+      ]);
+      expect(session.isPlaying, isTrue);
+    });
+
+    test('the end of the game lets the device go', () async {
+      final calls = <String>[];
+      final session = ConnectSpotifySession(
+        auth: _FakeAuth(),
+        poll: const Duration(milliseconds: 5),
+        client: MockClient((request) async {
+          if (request.url.path.endsWith('/devices')) {
+            return http.Response(_devicesBody([_deviceJson('dev1')]), 200);
+          }
+          if (request.method == 'PUT') calls.add(request.url.path);
+          return http.Response('', 204);
+        }),
+      );
+      addTearDown(session.dispose);
+
+      await session.play(_song);
+      expect(session.deviceName, 'Phone');
+
+      await session.releasePlayback();
+      // The speaker is paused and not held any more: the next game looks a
+      // device up again instead of playing to one nobody is sitting at.
+      expect(calls.last, '/v1/me/player/pause');
+      expect(session.isPlaying, isFalse);
+      expect(session.deviceName, isNull);
     });
 
     test('stop pauses and ends the poll', () async {

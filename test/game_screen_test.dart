@@ -2240,6 +2240,90 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  group('the cast button', () {
+    testWidgets('is in the corner, beside the menu', (tester) async {
+      usePhoneScreen(tester);
+      final session = _PickySession();
+      final game = buildGame(launcher: const InTabLauncher());
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game, spotify: session));
+      await tester.pump();
+
+      // Where the song comes out of is a question for whoever runs the game,
+      // and one worth reaching between rounds as well as during one - so it
+      // sits with the menu rather than in the controls of a running song.
+      expect(find.byTooltip('Where the song plays'), findsOne);
+    });
+
+    testWidgets('a session with nothing to pick draws none', (tester) async {
+      usePhoneScreen(tester);
+      final game = buildGame(launcher: const InTabLauncher());
+      await reveal(game);
+
+      await tester.pumpWidget(
+        wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+      );
+      await tester.pump();
+
+      expect(find.byTooltip('Where the song plays'), findsNothing);
+    });
+
+    testWidgets('the game being over lets the device go', (tester) async {
+      usePhoneScreen(tester);
+      final session = _PickySession();
+      final game = buildGame(players: 1, launcher: const InTabLauncher());
+      await reveal(game);
+
+      await tester.pumpWidget(wrap(game, spotify: session));
+      await tester.pump();
+
+      // The points that win it: the game is over, and the speaker it played
+      // on must not stay coupled to it.
+      for (var i = 0; i < game.targetScore; i++) {
+        game.addPoint(game.players.first);
+      }
+      game.nextRound();
+      await tester.pump();
+
+      expect(game.phase, RoundPhase.finished);
+      expect(session.released, 1);
+    });
+  });
+}
+
+/// A session that can be asked where to play, like Spotify Connect.
+class _PickySession extends FakeSession {
+  _PickySession() : super(SpotifyConnection.ready);
+
+  final List<String?> picked = <String?>[];
+  int released = 0;
+
+  @override
+  bool get canPickDevice => true;
+
+  @override
+  List<PlaybackDevice> get devices => const [
+    PlaybackDevice(
+      id: 'phone',
+      name: 'Jakobs Phone',
+      type: 'Smartphone',
+      isActive: false,
+    ),
+    PlaybackDevice(
+      id: 'tv',
+      name: 'Living room TV',
+      type: 'TV',
+      isActive: false,
+    ),
+  ];
+
+  @override
+  Future<void> pickDevice(String? id) async => picked.add(id);
+
+  @override
+  Future<void> releasePlayback() async => released++;
 }
 
 class _FlakyLyrics implements LyricsSource {

@@ -30,6 +30,7 @@ import 'app_scope.dart';
 import 'category_screen.dart';
 import 'centered_body.dart';
 import 'countdown_screen.dart';
+import 'device_picker.dart';
 import 'fullscreen/fullscreen.dart';
 import 'haptics/haptics.dart';
 import 'layout.dart';
@@ -557,7 +558,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _syncFlashOff?.cancel();
     unawaited(WakeLock.release());
     _spotify?.removeListener(_onSessionChanged);
-    unawaited(_spotify?.stop());
+    // Left, reset, a new game: the game is over for this screen, so the
+    // speaker it was playing on is let go of rather than only paused.
+    unawaited(_spotify?.releasePlayback());
     _game.removeListener(_onPhaseChanged);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -595,7 +598,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // being handed out.
     if (phase != _lastPhase &&
         (phase == RoundPhase.idle || phase == RoundPhase.finished)) {
-      unawaited(_spotify?.stop());
+      // And a game that is over lets go of the device as well: a television
+      // or a speaker must not stay coupled to a game nobody is playing. See
+      // `SpotifySession.releasePlayback`.
+      unawaited(
+        phase == RoundPhase.finished
+            ? _spotify?.releasePlayback()
+            : _spotify?.stop(),
+      );
     }
     _lastPhase = phase;
   }
@@ -906,6 +916,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   Future<void> _onMenu(String value) async {
     switch (value) {
+      case 'devices':
+        await showDevicePicker(context, AppScope.of(context).spotify);
       case 'reset':
         final ok = await _confirm(
           'Reset scores?',
@@ -1115,13 +1127,21 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                         ? _game.categories.single.name
                         : '${_game.categories.length} categories',
                   ),
-                  actions: [_menu(wide: false)],
+                  actions: [_cast(), _menu(wide: false)],
                 ),
           body: SafeArea(child: body),
         );
       },
     );
   }
+
+  /// The cast button, beside the menu: where the song comes out of.
+  ///
+  /// Next to the menu rather than down in the controls, because it is the one
+  /// control here that is worth reaching between rounds as well - and the
+  /// corner is the place no round needs. It draws nothing where there is
+  /// nothing to pick, see [CastButton].
+  Widget _cast() => CastButton(session: AppScope.of(context).spotify);
 
   /// The menu, in the bar on a phone and in the side column on a wide screen.
   ///
@@ -1160,6 +1180,15 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           value: 'words.sync',
           child: Text(_syncMode ? 'Done syncing the words' : 'Sync the words'),
         ),
+        // The same sheet the cast button opens. In here too because that
+        // button is small and in a corner, and this is the one setting a
+        // player goes looking for when the sound comes out of the wrong
+        // thing.
+        if (AppScope.of(context).spotify.canPickDevice)
+          const PopupMenuItem(
+            value: 'devices',
+            child: Text('Where the song plays'),
+          ),
         const PopupMenuItem(value: 'reset', child: Text('Reset scores')),
         const PopupMenuItem(value: 'category', child: Text('Change category')),
         const PopupMenuItem(value: 'years', child: Text('Year database')),
@@ -1205,7 +1234,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     return Stack(
       children: [
         Positioned.fill(child: _wideRound(context)),
-        Positioned(top: 8, right: 12, child: _menu(wide: true)),
+        Positioned(
+          top: 8,
+          right: 12,
+          child: Row(children: [_cast(), _menu(wide: true)]),
+        ),
       ],
     );
   }

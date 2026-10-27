@@ -534,12 +534,46 @@ without Premium in the tab can still command its own desktop app. A
 which is worse than the link.
 
 So **a Connect speaker is not picked while a phone is listed**, and that half
-is deliberate: the way to play through a speaker is the speaker being the
-phone's own output, which sits below Spotify and is none of this function's
-business. The device that was picked is said on the setup card
-(`ConnectSpotifySession.hint`) - the round coming out of the wrong speaker is
-not something anybody can work out from the game screen, so the name is on the
-card before the first card is scanned.
+is deliberate: the automatic pick is the one the room gets without saying
+anything, and the room is at the phone. The device that was picked is said on
+the setup card (`ConnectSpotifySession.hint`) - the round coming out of the
+wrong speaker is not something anybody can work out from the game screen, so
+the name is on the card before the first card is scanned.
+
+**And it can be said by hand: the cast button** (`lib/ui/device_picker.dart`,
+`PlaybackDeviceStore`, 2026-10-27). The automatic pick is a rule for a room
+that has not been asked, not a verdict - a television with Spotify on it or a
+speaker in the kitchen is a perfectly good place for the round, and only the
+room knows which. So the remote has a button for it and the pick is
+remembered per device, like the music service and the size of the words:
+it is a statement about the room and outlives every game.
+
+Four things about it:
+
+- **It sits beside the menu, in the corner**, not down in the song's controls.
+  It is worth reaching between rounds as well as during one, and the corner is
+  the place no round needs - the same argument the menu itself won. The menu
+  carries `Where the song plays` too, because a corner icon is not where
+  somebody looks when the sound comes out of the wrong thing.
+- **The automatic pick is one of the choices**, the first one, rather than
+  something you leave by picking a device. Handing it back is how a room that
+  played on the television last week gets its phone back tonight.
+- **A pick mid-round moves the song**, it does not start it again: Spotify's
+  own transfer keeps the position, and the room is in the middle of guessing.
+- **A pick that is not in the list is not an error.** Spotify lists a device
+  only while its app is running, so a television that is off is simply absent;
+  the pick stays saved and that round goes to the automatic one. Better the
+  wrong speaker than a round with no sound. The sheet says as much, because
+  "my TV is not in the list" has exactly one cause and nobody can guess it.
+
+**The game being over lets the device go** (`SpotifySession.releasePlayback`).
+A round ends with `stop`, which pauses; a *game* ends with this, which pauses
+and then drops the device the game was holding. Leaving the game screen, a new
+game and the last point of a game all go through it - a speaker or a
+television still coupled to a game nobody is playing is the room's device
+being held hostage by a closed tab. What was picked by hand stays picked: the
+next game looks the device up again and finds it, or finds it gone and plays
+on the phone.
 
 **A second screen is not a speaker.** The television runs the same app, so on
 a laptop or a television browser it would build the Web Playback SDK and
