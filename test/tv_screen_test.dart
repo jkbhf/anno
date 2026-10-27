@@ -227,6 +227,46 @@ void main() {
       expect(find.byType(WideRound), findsNothing);
     });
 
+    testWidgets('the code screen has the way back out', (tester) async {
+      final link = TvLink.paired(role: LinkRole.screen, code: 'QRS789');
+      addTearDown(link.dispose);
+
+      await tester.pumpWidget(
+        AppScope(
+          years: YearDatabase.inMemory(),
+          categories: [esc],
+          spotify: NoSpotifySession(),
+          link: link,
+          service: ValueNotifier(MusicService.spotify),
+          child: MaterialApp(
+            theme: buildTheme(),
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: TextButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => TvScreen(link: link),
+                    ),
+                  ),
+                  child: const Text('Be the television'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Be the television'));
+      await tester.pumpAndSettle();
+      expect(find.text('Q R S 7 8 9'), findsOne);
+
+      // This screen has no app bar to carry a back arrow, so the button is
+      // under the code.
+      await tester.tap(find.text('Back'));
+      await tester.pumpAndSettle();
+      expect(find.text('Q R S 7 8 9'), findsNothing);
+      expect(find.text('Be the television'), findsOne);
+    });
+
     testWidgets('draws the round, and no camera box', (tester) async {
       tester.view.physicalSize = const Size(1280, 720);
       tester.view.devicePixelRatio = 1;

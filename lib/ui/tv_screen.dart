@@ -308,8 +308,8 @@ class _Pairing extends StatelessWidget {
       ),
       LinkState.waiting || LinkState.paired => (
         'Anno on this screen',
-        'Open the game on your phone, choose "Play on a television" and '
-            'type this code in.',
+        'Open the game on your phone, press the cast button in the top bar '
+            'and type this code in.',
       ),
     };
 
@@ -352,17 +352,35 @@ class _Pairing extends StatelessWidget {
               ),
             ),
           ],
-          if (Fullscreen.isSupported) ...[
-            const SizedBox(height: 32),
-            // Here and nowhere else on this screen: a browser grants
-            // fullscreen to a gesture, and this is the one moment somebody is
-            // standing in front of the television with a remote in hand.
-            OutlinedButton.icon(
-              onPressed: Fullscreen.toggle,
-              icon: const Icon(Icons.fullscreen),
-              label: const Text('Fullscreen'),
-            ),
-          ],
+          const SizedBox(height: 32),
+          // Both the same kind of button on one row, centred under the code.
+          // The way out is here because this screen has no app bar to carry
+          // one, and a device that turned itself into a television by one
+          // press has to be able to stop being one by another - a build with
+          // the wrong relay in it would otherwise be a page to reload.
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              if (Navigator.of(context).canPop())
+                OutlinedButton.icon(
+                  onPressed: Navigator.of(context).pop,
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text('Back'),
+                ),
+              // Fullscreen here and nowhere else on this screen: a browser
+              // grants it to a gesture, and this is the one moment somebody is
+              // standing in front of the television with a remote in hand.
+              if (Fullscreen.isSupported)
+                OutlinedButton.icon(
+                  onPressed: Fullscreen.toggle,
+                  icon: const Icon(Icons.fullscreen),
+                  label: const Text('Fullscreen'),
+                ),
+            ],
+          ),
         ],
       ),
     );

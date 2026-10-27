@@ -38,13 +38,14 @@ Widget wrap({
   SpotifySession? spotify,
   List<String> roster = const [],
   ValueNotifier<MusicService>? service,
+  TvLink? link,
 }) => AppScope(
   years: YearDatabase.inMemory(),
   categories: [
     SongCategory(id: 'esc', name: 'ESC', description: '', songs: const []),
   ],
   spotify: spotify ?? NoSpotifySession(),
-  link: TvLink(url: ''),
+  link: link ?? TvLink(url: ''),
   service: service ?? ValueNotifier(MusicService.spotify),
   child: MaterialApp(
     theme: buildTheme(),
@@ -62,6 +63,33 @@ Future<void> scrollTo(WidgetTester tester, String text) =>
     );
 
 void main() {
+  testWidgets('the cast button holds the two ends of the second screen', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final link = TvLink(url: 'wss://relay.example.com/');
+    addTearDown(link.dispose);
+    await tester.pumpWidget(wrap(link: link));
+    await tester.pumpAndSettle();
+
+    // In the bar, not in the body: the card that used to stand above the
+    // players is gone.
+    expect(find.text('Play on a television'), findsNothing);
+    await tester.tap(find.byTooltip('Play on a television'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Play on a television'), findsOne);
+    expect(find.text('Type the code'), findsOne);
+    expect(find.text('This screen is the television'), findsOne);
+  });
+
+  testWidgets('no relay, no cast button', (tester) async {
+    await tester.pumpWidget(wrap());
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Play on a television'), findsNothing);
+  });
+
   testWidgets('the score target dialog survives its closing animation', (
     tester,
   ) async {
