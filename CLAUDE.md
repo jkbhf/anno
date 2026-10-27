@@ -617,12 +617,18 @@ one, because there the bar sits under the reveal card, which is the one thing
 on that screen the room is meant to go for.
 
 The band is kept 8 pixels off the bottom edge, because a drag down there fights
-the phone's own home gesture. It shows while `playingInApp` and its room is
-held while a launch is still out (`_looksInApp`), the same rule the column used
-- so a swap does not pull the floor out from under the stage. A link or YouTube
-round has neither band nor reserved room: nothing to scrub, so the words get
-those 50 pixels instead. The swap stays in the column, where the rest of the
-round's controls are.
+the phone's own home gesture. **It shows while `_looksInApp`** - a round in the
+tab, and a round whose launch is still out on a session that plays here, which
+is what a swap is for a moment. That was two rules before: the band while
+`playingInApp` and an invisible copy of it holding the room while the launch
+was out. The room was the right idea and the hiding was not - the track and its
+buttons blinked out and back on every press of `Nobody knows it` (2026-10-27).
+The bar reads the session, and the session is still playing through the
+handover, so there is nothing to hide. The phone's own bar in `_SongControls`
+was the same two rules and is now the same one. A link or YouTube round has no
+band and no room kept for one: nothing to scrub, so the words get those 50
+pixels instead. The swap stays in the column, where the rest of the round's
+controls are.
 
 **The swap is a button, and the open-in-Spotify beside it does not flicker**
 (2026-10-27). `Nobody knows it` was a text button in the middle of the
@@ -924,6 +930,10 @@ comes straight out of the laptop. The words have to leave that much earlier to
 arrive with the song. The browser never tells a page that it is being
 mirrored, so nothing can measure this - it is a number for the room and its
 equipment, kept per device like the lyrics scale.
+
+**The range is -1000 to 3000 milliseconds.** It was -500 to 2000 and both ends
+were hit in a real room (2026-10-27), which is the only argument that counts
+here: a chain nobody can measure is not one to draw a limit around tightly.
 
 **It is set against the running song, and every attempt to make it measurable
 away from the song failed.** There was a dialog for this, twice. The first

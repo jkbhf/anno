@@ -21,9 +21,13 @@ class LyricsSyncStore {
   static const int casting = 300;
 
   /// Below zero for a picture that somehow arrives first, far enough up for
-  /// the slowest mirroring there is.
-  static const int min = -500;
-  static const int max = 2000;
+  /// the slowest mirroring there is - a Chromecast over a busy network, or a
+  /// television that adds its own processing on top.
+  ///
+  /// Both ends were tighter (-500 and 2000) and both were reached in a real
+  /// room, so there is no point defending them.
+  static const int min = -1000;
+  static const int max = 3000;
 
   /// What one press of less or more moves.
   static const int step = 100;

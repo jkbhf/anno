@@ -1501,10 +1501,16 @@ class _SongControls extends StatelessWidget {
           )
         : null;
 
-    // The bar's room while the launch is still out, see [_looksInApp]. Once
-    // it has answered the room follows it: a link round has no bar, hidden or
-    // not.
-    final keepBarRoom = !inApp && _looksInApp(game, spotify);
+    // Whether the player belongs on the screen at all, see [_looksInApp]: a
+    // round in the tab, and a round whose launch is still out on a session
+    // that plays here - which is what a swap is for a moment.
+    //
+    // It used to be the bar while `playingInApp` and an invisible copy of it
+    // keeping the room while the launch was out. The room was right and the
+    // hiding was not: every press of "nobody knows it" blinked the track and
+    // its buttons out and back (2026-10-27). The bar reads the session, and
+    // the session is still there during the handover.
+    final band = _looksInApp(game, spotify);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1515,22 +1521,8 @@ class _SongControls extends StatelessWidget {
         // which is what the button is for: an in-app round never lost one.
         if (inColumn) ...[
           if (!inApp) ?openButton,
-        ] else if (inApp)
+        ] else if (band)
           SongProgressBar(session: spotify)
-        else if (keepBarRoom)
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Visibility(
-                visible: false,
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                child: SongProgressBar(session: spotify),
-              ),
-              ?openButton,
-            ],
-          )
         else
           ?openButton,
         if (lyrics != null)
@@ -2289,10 +2281,13 @@ class _WideRound extends StatelessWidget {
     // row high, buttons on the left where the column's controls are, and the
     // track takes the rest of the screen - four times the width it had in the
     // column, which is the difference between finding a chorus and guessing
-    // at it. The room above it is kept while a launch is still out, so a swap
-    // does not pull the floor out from under the stage.
-    final bar = game.playingInApp;
-    final barRoom = bar || (playing && _looksInApp(game, spotify));
+    // at it.
+    //
+    // It stays through a swap, launch and all: the room was always kept for
+    // it, but the band itself was hidden while the launch was out, so the
+    // track and the buttons blinked out and back on every press of "nobody
+    // knows it" (2026-10-27). See [_looksInApp].
+    final band = game.playingInApp || _looksInApp(game, spotify);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -2439,7 +2434,7 @@ class _WideRound extends StatelessWidget {
           ],
         );
 
-        if (!barRoom) return round;
+        if (!band) return round;
 
         return Column(
           children: [
@@ -2450,13 +2445,7 @@ class _WideRound extends StatelessWidget {
               // band reads as the floor of the screen rather than as the
               // next row of the column.
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              child: Visibility(
-                visible: bar,
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                child: SongProgressBar(session: spotify, inOneRow: true),
-              ),
+              child: SongProgressBar(session: spotify, inOneRow: true),
             ),
           ],
         );

@@ -1726,6 +1726,41 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('the band stays through a swap', (tester) async {
+      useWideScreen(tester, size: const Size(1024, 768));
+      final launches = <Completer<LaunchResult>>[];
+      final game = buildGame(
+        launcher: _QueuedLauncher(launches),
+        categories: [twoSongs],
+      );
+      game.scan(card);
+      final first = game.startPlayback();
+      launches.single.complete(const LaunchResult.inTab());
+      await first;
+
+      await tester.pumpWidget(
+        wrap(game, spotify: FakeSession(SpotifyConnection.ready)),
+      );
+      await tester.pumpAndSettle();
+      final track = tester.getRect(find.byType(Slider));
+
+      await tester.tap(find.text('Nobody knows it'));
+      await tester.pump();
+
+      // The launch of the new song is still out, so the round is not in the
+      // tab - and the band is still exactly where it was. Hidden for those
+      // frames, it blinked out and back on every swap (2026-10-27).
+      expect(game.playingInApp, isFalse);
+      expect(find.byType(Slider), findsOneWidget);
+      expect(find.byTooltip('Pause'), findsOneWidget);
+      expect(tester.getRect(find.byType(Slider)), track);
+
+      launches.last.complete(const LaunchResult.inTab());
+      await tester.pumpAndSettle();
+      expect(tester.getRect(find.byType(Slider)), track);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('a link round gets no band, and the stage the height', (
       tester,
     ) async {
