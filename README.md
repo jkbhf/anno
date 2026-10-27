@@ -401,6 +401,13 @@ next device or back into `assets/qr_years.json`.
 When the scanner hits an unknown code, the app asks for the year right away and
 carries on. A QR code that only contains a year works without an entry too.
 
+**A new batch of cards should carry a plain number as the code**, not a link -
+a scanned card still accepts whatever its QR holds, but the manual "Enter
+code" field (for a card the camera will not read) opens a phone's number pad
+only, which a link cannot be typed on. Any digit string works, so long as it
+is not the year itself - the point is a code a glance at the card cannot
+guess, not a particular length or shape.
+
 ### Song catalog: which song belongs to a year and category
 
 One JSON file per category under `assets/songs/`, listed in `categoryAssets`

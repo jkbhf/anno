@@ -427,6 +427,27 @@ void main() {
       expect(find.byType(SyncFlash), findsOne);
       expect(find.textContaining('100'), findsOne);
     });
+
+    testWidgets(
+      'a step moves the column, the slot and the screen - and is kept',
+      (tester) async {
+        SharedPreferences.setMockInitialValues({});
+        final link = TvLink.paired(role: LinkRole.screen);
+        addTearDown(link.dispose);
+        await tester.pumpWidget(wrapTv(link, YearDatabase.inMemory()));
+        await tester.pumpAndSettle();
+
+        link.onMessage!(const RemoteCommand(RemoteStep.columnWider));
+        link.onMessage!(const RemoteCommand(RemoteStep.slotTaller));
+        link.onMessage!(const RemoteCommand(RemoteStep.uiBigger));
+        await tester.pumpAndSettle();
+
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getDouble('column.share'), greaterThan(0.28));
+        expect(prefs.getDouble('column.slot'), greaterThan(0.36));
+        expect(prefs.getDouble('ui.scale'), greaterThan(1));
+      },
+    );
   });
 
   group('the remote', () {
@@ -525,6 +546,44 @@ void main() {
 
       final steps = sent.whereType<RemoteCommand>().map((c) => c.step);
       expect(steps, [RemoteStep.wordsEarlier, RemoteStep.wordsLater]);
+    });
+
+    testWidgets('steps the television\'s own handles, never a drag here', (
+      tester,
+    ) async {
+      final game = buildGame();
+      addTearDown(game.dispose);
+      final sent = <SyncMessage>[];
+      final link = TvLink.paired(role: LinkRole.remote, onSend: sent.add);
+      addTearDown(link.dispose);
+
+      await tester.pumpWidget(wrapRemote(game, link, _Playing()));
+      await tester.pumpAndSettle();
+      await closeAutoScanner(tester);
+
+      for (final label in [
+        'Wider column',
+        'Narrower column',
+        'Taller reveal',
+        'Shorter reveal',
+        'Bigger screen',
+        'Smaller screen',
+      ]) {
+        await tester.tap(find.byTooltip('Menu'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(label));
+        await tester.pumpAndSettle();
+      }
+
+      final steps = sent.whereType<RemoteCommand>().map((c) => c.step);
+      expect(steps, [
+        RemoteStep.columnWider,
+        RemoteStep.columnNarrower,
+        RemoteStep.slotTaller,
+        RemoteStep.slotShorter,
+        RemoteStep.uiBigger,
+        RemoteStep.uiSmaller,
+      ]);
     });
   });
 }

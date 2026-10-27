@@ -24,10 +24,10 @@ class LyricsSyncStore {
   /// the slowest mirroring there is - a Chromecast over a busy network, or a
   /// television that adds its own processing on top.
   ///
-  /// Both ends were tighter (-500 and 2000) and both were reached in a real
-  /// room, so there is no point defending them.
-  static const int min = -1000;
-  static const int max = 3000;
+  /// Widened twice now (-500/2000, then -1000/3000) and both earlier ends were
+  /// reached in a real room, so there is no point defending them either.
+  static const int min = -5000;
+  static const int max = 5000;
 
   /// What one press of less or more moves.
   static const int step = 100;

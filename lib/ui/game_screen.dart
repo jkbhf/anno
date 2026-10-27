@@ -266,6 +266,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Whether the scoreboard is on the screen, see [ShowScoresStore].
   bool _showScores = true;
 
+  /// Whether a point has been given since the last reveal, in the wide
+  /// layout's column - where scores live there, the camera that opens itself
+  /// waits behind them until one has, see [WideRound.scoreGiven].
+  bool _scoreGivenSinceReveal = false;
+
   /// How much of the screen the side column takes, see [ColumnWidthStore].
   double _columnShare = ColumnWidthStore.normal;
 
@@ -484,6 +489,31 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     unawaited(ShowScoresStore.save(shown: _showScores));
   }
 
+  /// A tap in the column's own score box - see [_scoreGivenSinceReveal].
+  /// Either direction counts: the point a touch away from being right is
+  /// corrected the same way a wrong tap is, and both say the room is done
+  /// with the tiles for this round, which is what the camera waiting behind
+  /// them was for - the same scan the reveal would have started by itself
+  /// with the scores off.
+  void _scoreGivenInColumn() {
+    if (_scoreGivenSinceReveal) return;
+    setState(() => _scoreGivenSinceReveal = true);
+    if (_wide && _inlineScan == null && !_game.withoutCards) {
+      _autoScanAt = DateTime.now();
+      unawaited(_nextRound());
+    }
+  }
+
+  void _giveColumnPoint(GamePlayer player) {
+    _givePoint(_game, player);
+    _scoreGivenInColumn();
+  }
+
+  void _takeColumnPoint(GamePlayer player) {
+    _takePoint(_game, player);
+    _scoreGivenInColumn();
+  }
+
   /// A press of smaller or bigger in the menu. It is the same room and the
   /// same wall next time, so the size is kept.
   void _stepLyricsScale({required bool bigger}) {
@@ -588,7 +618,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       // Without cards there is nothing to hold up to a lens, and drawing the
       // next year here would start its song over the points still being
       // handed out. There the next round is the tap it says it is.
-      if (_wide && _inlineScan == null && !_game.withoutCards) {
+      //
+      // With the scores on screen, that slot is theirs first - the column
+      // has no room for both, and giving the point is what ends the round as
+      // far as the room is concerned. `_scoreGivenInColumn` opens the camera
+      // once one lands; `_showScores` off leaves nothing to wait for.
+      if (_wide && _inlineScan == null && !_game.withoutCards && !_showScores) {
         _autoScanAt = DateTime.now();
         unawaited(_nextRound());
       }
@@ -787,6 +822,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
         return;
       case ScanOutcome.started:
+        _scoreGivenSinceReveal = false;
         _prefetchLyrics();
         if (!await _runCountdown()) {
           _game.cancelRound();
@@ -971,6 +1007,18 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         _stepLyricsScale(bigger: false);
       case 'words.sync':
         _toggleSyncMode();
+      case 'column.wider':
+        _link?.send(const RemoteCommand(RemoteStep.columnWider));
+      case 'column.narrower':
+        _link?.send(const RemoteCommand(RemoteStep.columnNarrower));
+      case 'slot.taller':
+        _link?.send(const RemoteCommand(RemoteStep.slotTaller));
+      case 'slot.shorter':
+        _link?.send(const RemoteCommand(RemoteStep.slotShorter));
+      case 'ui.bigger':
+        _link?.send(const RemoteCommand(RemoteStep.uiBigger));
+      case 'ui.smaller':
+        _link?.send(const RemoteCommand(RemoteStep.uiSmaller));
       case 'fullscreen':
         // A gesture is what the browser grants it to, and this is one.
         await Fullscreen.toggle();
@@ -1180,6 +1228,33 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           value: 'words.sync',
           child: Text(_syncMode ? 'Done syncing the words' : 'Sync the words'),
         ),
+        // The television's own handles, which a remote has no pointer to
+        // drag - so the phone steps them instead, the same way it already
+        // steps the words. Only worth showing while a television is paired:
+        // the layout played directly still has a mouse for its own handles.
+        if (_remote) ...[
+          const PopupMenuItem(
+            value: 'column.wider',
+            child: Text('Wider column'),
+          ),
+          const PopupMenuItem(
+            value: 'column.narrower',
+            child: Text('Narrower column'),
+          ),
+          const PopupMenuItem(
+            value: 'slot.taller',
+            child: Text('Taller reveal'),
+          ),
+          const PopupMenuItem(
+            value: 'slot.shorter',
+            child: Text('Shorter reveal'),
+          ),
+          const PopupMenuItem(value: 'ui.bigger', child: Text('Bigger screen')),
+          const PopupMenuItem(
+            value: 'ui.smaller',
+            child: Text('Smaller screen'),
+          ),
+        ],
         // The same sheet the cast button opens. In here too because that
         // button is small and in a corner, and this is the one setting a
         // player goes looking for when the sound comes out of the wrong
@@ -1271,6 +1346,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onColumnShare: _setColumnShare,
       slotShare: _slotShare,
       onSlotShare: _setSlotShare,
+      scoreGiven: _scoreGivenSinceReveal,
+      onColumnGivePoint: _giveColumnPoint,
+      onColumnTakePoint: _takeColumnPoint,
     );
   }
 
@@ -2202,13 +2280,23 @@ class _RevealBody extends StatelessWidget {
 }
 
 class _PlayerGrid extends StatelessWidget {
-  const _PlayerGrid({required this.game, this.onTap, this.onLongPress});
+  const _PlayerGrid({
+    required this.game,
+    this.onTap,
+    this.onLongPress,
+    this.large = false,
+  });
 
   final GameController game;
 
   /// Null outside the reveal: the same tiles then only report the score.
   final void Function(GamePlayer player)? onTap;
   final void Function(GamePlayer player)? onLongPress;
+
+  /// Shrinks its content rather than overflowing - a grid cell forced
+  /// smaller than the name and score need, the column's own score box being
+  /// the case that needs it ([_ColumnScoreBox]).
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
@@ -2233,6 +2321,7 @@ class _PlayerGrid extends StatelessWidget {
             targetScore: game.targetScore,
             onTap: tap == null ? null : () => tap(player),
             onLongPress: longPress == null ? null : () => longPress(player),
+            large: large,
           ),
       ],
     );
@@ -2386,6 +2475,9 @@ class WideRound extends StatelessWidget {
     required this.slotShare,
     required this.onSlotShare,
     this.cameraless = false,
+    this.scoreGiven = false,
+    this.onColumnGivePoint,
+    this.onColumnTakePoint,
     super.key,
   });
 
@@ -2437,6 +2529,13 @@ class WideRound extends StatelessWidget {
   /// a third of the column to say nothing.
   final bool cameraless;
 
+  /// Whether a point has been given since this reveal, see
+  /// [_ColumnScoreBox] - the camera waits behind the scores until one has,
+  /// where there is a camera to wait with at all.
+  final bool scoreGiven;
+  final ValueChanged<GamePlayer>? onColumnGivePoint;
+  final ValueChanged<GamePlayer>? onColumnTakePoint;
+
   @override
   Widget build(BuildContext context) {
     final playing = game.phase == RoundPhase.playing;
@@ -2479,10 +2578,25 @@ class WideRound extends StatelessWidget {
           constraints.maxHeight * 0.33,
         );
 
+        // Scores move into the column where there is a real camera to share
+        // the slot with - the television has no camera to wait with, so it
+        // keeps them on the stage instead, see [showScores] below.
+        final scoresInColumn = !cameraless && showScores;
+        // The camera the room's own tap would open (a scan asked for by
+        // hand) always wins; the one that opens itself at the reveal waits
+        // behind the scores until a point has been given, so the two do not
+        // have to fight over the one slot.
+        final waitingForScore =
+            scoresInColumn &&
+            game.isRevealed &&
+            !scoreGiven &&
+            !game.withoutCards;
+
         // Closed and between rounds there is nothing to look at, so the box
         // goes rather than sitting there as a grey placeholder. After a reveal
         // it stays as the way back to a camera that was closed by hand.
-        final showCamera = !cameraless && (camera != null || game.isRevealed);
+        final showCamera =
+            !cameraless && (camera != null || (game.isRevealed && !waitingForScore));
 
         final round = Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2571,6 +2685,18 @@ class WideRound extends StatelessWidget {
                                   onNextRound: onNextRound,
                                   withoutCards: game.withoutCards,
                                 ),
+                              )
+                            else if (waitingForScore)
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                height: min(cameraHeight, box.maxHeight),
+                                child: _ColumnScoreBox(
+                                  game: game,
+                                  onTap: onColumnGivePoint,
+                                  onLongPress: onColumnTakePoint,
+                                ),
                               ),
                           ],
                         ),
@@ -2592,7 +2718,10 @@ class WideRound extends StatelessWidget {
                 lyricsScale: lyricsScale,
                 onLyricsScale: onLyricsScale,
                 lyricsSync: lyricsSync,
-                showScores: showScores,
+                // Only at the reveal do they move into the column, to share
+                // the slot with the camera - during the round itself there is
+                // nothing there to share it with, so the stage keeps them.
+                showScores: showScores && !(scoresInColumn && game.isRevealed),
               ),
             ),
           ],
@@ -3208,6 +3337,57 @@ class _CameraBox extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Where the camera would open, right after the reveal - a chance to give
+/// the point first, since there is no room for both in one slot. The moment
+/// either tap lands it gives way to the camera, see
+/// `_WideRound.waitingForScore`.
+class _ColumnScoreBox extends StatelessWidget {
+  const _ColumnScoreBox({
+    required this.game,
+    required this.onTap,
+    required this.onLongPress,
+  });
+
+  final GameController game;
+  final ValueChanged<GamePlayer>? onTap;
+  final ValueChanged<GamePlayer>? onLongPress;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final radius = BorderRadius.circular(24);
+
+    return Material(
+      color: theme.colorScheme.surfaceContainerHighest,
+      shape: RoundedRectangleBorder(borderRadius: radius),
+      clipBehavior: Clip.antiAlias,
+      // Scrollable rather than sized to the grid: eight players still have to
+      // fit a slot capped at a third of the column, the same cap the camera
+      // lives under.
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Who got it right?',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleSmall,
+            ),
+            const SizedBox(height: 10),
+            _PlayerGrid(
+              game: game,
+              onTap: onTap,
+              onLongPress: onLongPress,
+              large: true,
+            ),
+          ],
         ),
       ),
     );

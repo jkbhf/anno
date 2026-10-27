@@ -1277,9 +1277,16 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(game.isRevealed, isTrue);
-      // The year went to the stage, the camera came up in the slot by itself.
-      // Only in the column: the stage keeps the words.
+      // The year went to the stage. Only in the column: the stage keeps the
+      // words.
       expect(find.text('2005'), findsOneWidget);
+
+      // The scores share the camera's slot and come first - giving the
+      // point is what opens it now.
+      await tester.tap(find.text('Player 1'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
+
       expect(find.text('Scan the card'), findsOneWidget);
       // The camera has its own place at the foot of the column, under the
       // slot that just became the year. Neither displaces the other.
@@ -1343,6 +1350,13 @@ void main() {
 
       game.reveal();
       await tester.pumpAndSettle();
+
+      // The scores share the camera's slot and come first - give the point
+      // before the preview that covers the keys can come up at all. A scan
+      // is now waiting on the fake camera forever, so a bounded pump flushes
+      // the tile's own flash instead of the unsettled `pumpAndSettle`.
+      await tester.tap(find.text('Player 1'));
+      await tester.pump(const Duration(milliseconds: 300));
 
       // The preview is an overlay at the foot of the column, so the keys stay
       // down where they were and are covered. They used to be pushed up by
@@ -1412,6 +1426,10 @@ void main() {
       await tester.tap(find.byKey(revealInColumnKey));
       await tester.pumpAndSettle();
 
+      // The scores share the slot the camera opens in and come first.
+      await tester.tap(find.text('Player 1'));
+      await tester.pumpAndSettle();
+
       // The card that was just played is lying in front of the camera. It
       // would otherwise start its own round again, right over the reveal.
       await tester.tap(find.text('Scan the card'));
@@ -1458,13 +1476,16 @@ void main() {
       await tester.tap(find.byKey(revealInColumnKey));
       await tester.pumpAndSettle();
 
-      // The camera is already waiting when the winning point is given.
+      // The winning point is given from the scores sharing the camera's
+      // slot - the scan it would otherwise have started never happens, the
+      // game being over by then. A bounded pump rather than `pumpAndSettle`:
+      // the tile's own flash is a real timer and nothing is left pending on
+      // a scan to unsettle it.
       await tester.tap(find.text('Player 1'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Scan another'));
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
 
-      // The card goes unused: what comes next is the finish.
+      expect(find.text('Scan another'), findsNothing);
       expect(game.phase, RoundPhase.finished);
       expect(find.text('Player 1 wins'), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -2062,7 +2083,9 @@ void main() {
       final game = buildGame();
       await reveal(game);
 
-      await tester.pumpWidget(wrap(game));
+      // Giving the point below opens the camera's slot now, so a stand-in
+      // is needed - the real scanner would otherwise try to build itself.
+      await tester.pumpWidget(wrap(game, camera: fakeCamera));
       await tester.pumpAndSettle();
 
       // Only in the column: the stage keeps the words.
@@ -2081,6 +2104,7 @@ void main() {
       );
 
       await tester.tap(find.text('Player 1'));
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
       expect(game.players.first.score, 1);
       expect(tester.takeException(), isNull);
@@ -2090,13 +2114,29 @@ void main() {
       tester,
     ) async {
       useWideScreen(tester);
-      final game = buildGame();
+      final game = buildGame(
+        years: const {'182ca01194a98f0b': 2005, '91bd5e0e2c7a4f31': 2005},
+      );
       await reveal(game);
 
-      await tester.pumpWidget(wrap(game, camera: fakeCamera));
+      // A fresh card, not `fakeCamera`'s own: giving the point below arms
+      // the stale-card guard exactly as the auto-scan would, and `card` is
+      // the one it is guarding against.
+      await tester.pumpWidget(
+        wrap(
+          game,
+          camera: (context, onCode) => TextButton(
+            onPressed: () => onCode(otherCard),
+            child: const Text('Scan the card'),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Next round'));
+      // The scores share the camera's slot and come first - giving the
+      // point is what opens it, not a button of its own any more.
+      await tester.tap(find.text('Player 1'));
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
 
       expect(find.text('Scan the card'), findsOneWidget);
@@ -2120,7 +2160,10 @@ void main() {
       await tester.pumpWidget(wrap(game, camera: fakeCamera));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Next round'));
+      // The scores share the camera's slot and come first - giving the
+      // point is what opens it, not a button of its own any more.
+      await tester.tap(find.text('Player 1'));
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Close the camera'));
       await tester.pumpAndSettle();
@@ -2235,7 +2278,15 @@ void main() {
       }
       // Readable from the back of the room: rendered size, scale included.
       expect(tester.getRect(find.text('Player 1')).height, greaterThan(16));
-      // The camera opened itself, so the slot holds it rather than a button.
+      // The scores share the camera's slot and come first, so it is not a
+      // button yet.
+      expect(find.text('Scan the card'), findsNothing);
+
+      await tester.tap(find.text('Player 1'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
+
+      // Giving the point is what opens the camera now.
       expect(find.text('Scan the card'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });

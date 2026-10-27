@@ -292,7 +292,25 @@ class PlaybackTick extends SyncMessage {
 /// statements about this room and this screen - how far the sofa is, what the
 /// television does to the picture - so they live where the words are drawn and
 /// the remote only nudges them. A second screen brings its own.
-enum RemoteStep { wordsBigger, wordsSmaller, wordsEarlier, wordsLater }
+///
+/// `columnWider`/`columnNarrower` and `slotTaller`/`slotShorter` are the same
+/// idea for the column's own two handles: a television has no pointer to
+/// drag them with, so the phone steps them instead, exactly as it already
+/// does for the words. `uiBigger`/`uiSmaller` cover the rest of the layout -
+/// a Fire TV Stick sits closer to the room than a projector does, and the
+/// furniture sized for one looks oversized on the other.
+enum RemoteStep {
+  wordsBigger,
+  wordsSmaller,
+  wordsEarlier,
+  wordsLater,
+  columnWider,
+  columnNarrower,
+  slotTaller,
+  slotShorter,
+  uiBigger,
+  uiSmaller,
+}
 
 class RemoteCommand extends SyncMessage {
   const RemoteCommand(this.step);

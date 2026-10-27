@@ -997,6 +997,38 @@ as on the web anywhere else.
 back, but Flutter web shows the browser's context menu on every right click.
 Long press works with a mouse too.
 
+**With a real camera, the scores move into the column and the camera waits
+behind them** (2026-10-28). Played directly with a camera (`!cameraless` -
+the television is cameraless and unaffected, see below), the scores used to
+sit on the stage the whole round and the camera opened itself the moment the
+reveal happened. Now, while the scores are on at all, they move into the
+column instead - the same bottom slot the camera uses - and the camera that
+would have opened itself waits there until a point is actually given. Giving
+or taking one (`_scoreGivenInColumn` in `lib/ui/game_screen.dart`) is what
+opens it, the same call the reveal itself used to make. With the scores
+hidden there is nothing to wait for, so the camera still opens itself exactly
+as before - the wait is the scores' own, not the reveal's.
+
+The point of moving them is the same point the whole column already serves:
+the stage is the room's, and what used to sit there - who has how many
+points, with tiles to tap - was whoever runs the game reading their own
+screen rather than the wall. On the stage, the scores now only show for the
+television, which is cameraless and has nothing to wait behind in the first
+place (`_Stage`'s `showScores` is suppressed in the column's place only
+while `!cameraless` and the round is revealed - during the round itself nothing
+changes, there is no camera to share the slot with yet).
+
+`_PlayerGrid` gained a `large` flag for this (`_ColumnScoreBox`): the grid was
+built for the phone's whole screen and does not shrink what it holds, where
+the strip on the stage already did (`_PlayerTile(large: true)`, a `_FitBody`
+that scales down instead of overflowing). The column's box is capped the same
+way the camera's is - a third of the column's height - so it needs the same
+guarantee.
+
+A scan that is already waiting (the room's own tap, or a card still being
+held up) is untouched by any of this: `waitingForScore` only suppresses the
+camera opening *itself*, never one already open.
+
 ## The television is a mirror, and the phone is the game
 
 `lib/sync/`, `lib/ui/tv_screen.dart` and `packages/anno_relay` (2026-10-27).
@@ -1090,6 +1122,38 @@ and then checks what each screen draws. The one seam for the widget tests is
 does with a paired line is a different question from whether the socket works,
 and real I/O inside a widget test answers it slower and less reliably.
 
+**A television has no pointer, so its own handles are stepped from the
+phone** (`RemoteStep.columnWider`/`columnNarrower`,
+`slotTaller`/`slotShorter`, 2026-10-28) - the same arrangement the words'
+size and sync already use. `_SplitHandle` and `_SlotHandle` still drag fine
+on a laptop played directly, which has a mouse; a Fire TV Stick's remote has
+no way to start that gesture at all, so the phone's menu carries `Wider
+column`, `Narrower column`, `Taller reveal` and `Shorter reveal` and sends a
+step rather than a value - exactly why the words' own steps work that way:
+the phone does not know the television's current share, only the direction
+to nudge it. Both stores gained a `step` (0.02) and a `stepped()` to match
+`LyricsScaleStore`'s shape. The four entries only appear in the menu while a
+television is paired (`_remote`): the layout run directly has its mouse, and
+showing a step that does nothing there would be worse than not showing it.
+
+**The television's own furniture can be too big or too small for it, and
+that is a setting of its own** (`UiScaleStore`, `RemoteStep.uiBigger`/
+`uiSmaller`, 2026-10-28). Most of the wide layout scales with the screen -
+shares of the height, shares of the width - but the fixed-pixel furniture
+inside it (padding, icon sizes) was tuned for a projector at a room's
+distance, and a Fire TV Stick sits at a television's distance instead, where
+that furniture reads as oversized. `UiScale` (`lib/ui/ui_scale.dart`) is the
+fix: it hands its child a box of `size / factor` and paints that box at
+`factor`, which leaves anything sized as a share of the box exactly as big as
+it was and only shrinks or grows the fixed-pixel furniture - the same trick
+a phone's own layout already relies on, just applied from outside instead of
+baked into each block. It wraps `WideRound` on the television alone
+(`TvScreen._round`); the layout played directly has no such furniture
+problem of its own, so it never needed a factor to begin with. Stepped from
+the phone's menu (`Bigger screen`/`Smaller screen`, shown only while a
+television is paired, same reasoning as the column and slot steps above) and
+kept on the television like the lyrics scale and the column width are.
+
 ## Keyboard shortcuts: eight moves, and the keys are taken
 
 `GameShortcut` in `lib/ui/game_screen.dart` is the one list - the bindings and
@@ -1164,9 +1228,10 @@ arrive with the song. The browser never tells a page that it is being
 mirrored, so nothing can measure this - it is a number for the room and its
 equipment, kept per device like the lyrics scale.
 
-**The range is -1000 to 3000 milliseconds.** It was -500 to 2000 and both ends
-were hit in a real room (2026-10-27), which is the only argument that counts
-here: a chain nobody can measure is not one to draw a limit around tightly.
+**The range is -5000 to 5000 milliseconds.** It was -500 to 2000, then -1000
+to 3000, and every earlier pair of ends was hit in a real room (2026-10-28),
+which is the only argument that counts here: a chain nobody can measure is not
+one to draw a limit around tightly.
 
 **It is set against the running song, and every attempt to make it measurable
 away from the song failed.** There was a dialog for this, twice. The first

@@ -263,10 +263,15 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
   Future<void> _enterManually() async {
     final code = await showDialog<String>(
       context: context,
+      // A number is what a code is from here on, so a numeric keypad is what
+      // should open - but not enforced past that: an older card's link still
+      // has to be typeable by hand too, just on a keyboard it has to be
+      // switched to itself.
       builder: (_) => const TextInputDialog(
         title: 'Enter code',
         confirmLabel: 'Continue',
-        hintText: 'Link from the card, or a year',
+        hintText: 'The number from the card, or a year',
+        keyboardType: TextInputType.number,
       ),
     );
     if (code != null && code.isNotEmpty) _submit(code);

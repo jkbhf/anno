@@ -21,7 +21,14 @@ class SlotHeightStore {
   static const double min = 0.18;
   static const double max = 0.6;
 
+  /// One step of a remote command - a television has no pointer to drag the
+  /// handle with, so the phone's menu steps it instead.
+  static const double step = 0.02;
+
   static double clamp(double share) => share.clamp(min, max);
+
+  static double stepped(double share, {required bool taller}) =>
+      clamp(share + (taller ? step : -step));
 
   static Future<double> load() async {
     try {

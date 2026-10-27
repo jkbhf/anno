@@ -7,6 +7,7 @@ import '../data/lyrics_scale_store.dart';
 import '../data/lyrics_sync_store.dart';
 import '../data/slot_height_store.dart';
 import '../data/tv_room_store.dart';
+import '../data/ui_scale_store.dart';
 import '../game/game_controller.dart';
 import '../music/lyrics.dart';
 import '../sync/mirror_game.dart';
@@ -16,6 +17,7 @@ import 'app_scope.dart';
 import 'centered_body.dart';
 import 'fullscreen/fullscreen.dart';
 import 'game_screen.dart';
+import 'ui_scale.dart';
 import 'wake_lock/wake_lock.dart';
 
 /// The television: the landscape layout with the camera taken out of it, fed
@@ -47,6 +49,7 @@ class _TvScreenState extends State<TvScreen> {
   double _columnShare = ColumnWidthStore.normal;
   double _slotShare = SlotHeightStore.normal;
   int _lyricsSync = LyricsSyncStore.none;
+  double _uiScale = UiScaleStore.normal;
   bool _showScores = true;
   bool? _hasLyrics;
 
@@ -94,12 +97,14 @@ class _TvScreenState extends State<TvScreen> {
     final share = await ColumnWidthStore.load();
     final slot = await SlotHeightStore.load();
     final sync = await LyricsSyncStore.load();
+    final ui = await UiScaleStore.load();
     if (!mounted) return;
     setState(() {
       _lyricsScale = scale;
       _columnShare = share;
       _slotShare = slot;
       _lyricsSync = sync;
+      _uiScale = ui;
     });
   }
 
@@ -144,6 +149,33 @@ class _TvScreenState extends State<TvScreen> {
         if (next == _lyricsSync) return;
         setState(() => _lyricsSync = next);
         unawaited(LyricsSyncStore.save(next));
+      case RemoteStep.columnWider:
+      case RemoteStep.columnNarrower:
+        final next = ColumnWidthStore.stepped(
+          _columnShare,
+          wider: step == RemoteStep.columnWider,
+        );
+        if (next == _columnShare) return;
+        setState(() => _columnShare = next);
+        unawaited(ColumnWidthStore.save(next));
+      case RemoteStep.slotTaller:
+      case RemoteStep.slotShorter:
+        final next = SlotHeightStore.stepped(
+          _slotShare,
+          taller: step == RemoteStep.slotTaller,
+        );
+        if (next == _slotShare) return;
+        setState(() => _slotShare = next);
+        unawaited(SlotHeightStore.save(next));
+      case RemoteStep.uiBigger:
+      case RemoteStep.uiSmaller:
+        final next = UiScaleStore.stepped(
+          _uiScale,
+          bigger: step == RemoteStep.uiBigger,
+        );
+        if (next == _uiScale) return;
+        setState(() => _uiScale = next);
+        unawaited(UiScaleStore.save(next));
     }
   }
 
@@ -234,34 +266,37 @@ class _TvScreenState extends State<TvScreen> {
   }
 
   Widget _round(MirrorGame game) {
-    return WideRound(
-      game: game,
-      spotify: _session,
-      lyrics: sharedLyrics,
-      // The lens is on the phone. Everything else about the column stays.
-      camera: null,
-      cameraless: true,
-      onCode: (_) {},
-      onCloseCamera: () {},
-      onScan: () {},
-      onNextRound: () {},
-      onRedraw: () {},
-      onUndoRedraw: () {},
-      lyricsScale: _lyricsScale,
-      onLyricsScale: _setLyricsScale,
-      lyricsSync: _lyricsSync,
-      // The arrows are on the phone, where the thumb is. What belongs here is
-      // the answer, and that is the flash over the words.
-      syncMode: false,
-      onSync: (_) {},
-      hasLyrics: _hasLyrics,
-      showScores: _showScores,
-      // A key nobody in the room can press, written on the wall.
-      shortcuts: false,
-      columnShare: _columnShare,
-      onColumnShare: _setColumnShare,
-      slotShare: _slotShare,
-      onSlotShare: _setSlotShare,
+    return UiScale(
+      factor: _uiScale,
+      child: WideRound(
+        game: game,
+        spotify: _session,
+        lyrics: sharedLyrics,
+        // The lens is on the phone. Everything else about the column stays.
+        camera: null,
+        cameraless: true,
+        onCode: (_) {},
+        onCloseCamera: () {},
+        onScan: () {},
+        onNextRound: () {},
+        onRedraw: () {},
+        onUndoRedraw: () {},
+        lyricsScale: _lyricsScale,
+        onLyricsScale: _setLyricsScale,
+        lyricsSync: _lyricsSync,
+        // The arrows are on the phone, where the thumb is. What belongs here
+        // is the answer, and that is the flash over the words.
+        syncMode: false,
+        onSync: (_) {},
+        hasLyrics: _hasLyrics,
+        showScores: _showScores,
+        // A key nobody in the room can press, written on the wall.
+        shortcuts: false,
+        columnShare: _columnShare,
+        onColumnShare: _setColumnShare,
+        slotShare: _slotShare,
+        onSlotShare: _setSlotShare,
+      ),
     );
   }
 }
