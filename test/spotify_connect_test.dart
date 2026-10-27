@@ -423,7 +423,7 @@ void main() {
             );
           }
           if (request.url.path == '/v1/me/player') {
-            transfers.add((request as http.Request).body);
+            transfers.add(request.body);
           }
           return http.Response('', 204);
         }),
