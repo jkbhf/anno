@@ -902,6 +902,90 @@ as on the web anywhere else.
 back, but Flutter web shows the browser's context menu on every right click.
 Long press works with a mouse too.
 
+## The television is a mirror, and the phone is the game
+
+`lib/sync/`, `lib/ui/tv_screen.dart` and `packages/anno_relay` (2026-10-27).
+The television opens the page, presses one button and shows the round; the
+phone runs the game and is the remote control. Everything about it follows from
+one decision:
+
+**The phone is the only place the game exists.** It has the camera, the
+Spotify login, `PlayedSongsStore`, the saved game. The television gets
+snapshots and draws them, and nothing comes back. The alternative - the
+television as the host - would have meant a Spotify login typed in with a
+television remote and every rule about the played memory kept in two places.
+A screen that reloads, sleeps or is switched off then costs no game at all: it
+reconnects and is sent the whole round again.
+
+**The television draws the landscape layout itself, not a copy of it.**
+`WideRound` is public and is handed a `MirrorGame` - a `GameController` whose
+fields are set from the wire and whose every action is dead. That was the
+choice: a value object of its own would have meant this layout written twice,
+and the second copy starts drifting the day a block moves in the first. What
+makes it safe is that nothing a finger could reach does anything -
+`MirrorGame.reveal`, the points, the swap are all no-ops, because nobody can
+tap a television but a laptop standing in for one can be tapped.
+
+So the television shows the reveal button, the swap and the song's buttons as
+**labels**: the room reads what is about to happen. The camera is the one thing
+taken out (`cameraless`), because the lens is on the phone and a grey panel in
+its place would take a third of the column to say nothing. The keyboard hints
+go too - a key nobody in the room can press, written on the wall.
+
+**Three messages and no more.** The round (`GameSnapshot`, on every
+`notifyListeners` - a handful of times a round), where the song is
+(`PlaybackTick`, every two seconds while it plays), and a step for a setting
+that belongs to the screen (`RemoteCommand`). The position is a correction and
+not a stream: the television carries it forward on its own clock between two
+answers, exactly as both Spotify sessions carry their own reports forward.
+**The arrival is the timestamp, never the phone's** - two devices are two
+clocks and can be seconds apart, and what that trip costs is absorbed by the
+sync offset the room sets against the picture anyway.
+
+**The size of the words and the sync belong to the television.** They are
+statements about this screen and this room - the distance to the sofa, what the
+set does to the picture - so they live where the words are drawn and the phone
+only sends a step. The phone therefore cannot know the number, and must not
+pretend to: the sync panel on the remote has no number on it and its arrows
+never grey out (`blind`), the television clamps, and it says the number over
+its own words with `SyncFlash`, which is where whoever pressed is looking. A
+second television brings its own settings.
+
+**The relay forwards and knows nothing.** `packages/anno_relay` is a
+`dart:io` HttpServer with no dependencies: a room is its sockets, a code is
+six characters from an alphabet without O/0 and I/1, and the room dies with
+its last socket - a room that outlived an evening would be a code somebody
+else's phone could walk into. It deliberately does **not** know the game's
+messages, so a field added to a snapshot is not a service to redeploy on a
+machine in a cupboard. The one thing it does know: a screen may come back to
+the room it had (`host=1`), because the code exists nowhere but in the room
+and on the phone, and a television that reloads would otherwise strand the
+phone holding it.
+
+**Why there is no QR code on the television.** The phone has a camera and the
+television has six characters on it, so scanning would be the obvious move -
+but the phone also has a keyboard, and six characters typed in beat a camera
+pointed at a lit screen in a dark room. It also keeps `_handleCode` from
+having to tell a pairing code from a year card.
+
+**The relay URL is compiled in** (`ANNO_RELAY_URL`), the same arrangement the
+client id has: a build without it has no second screen in it rather than one
+that fails. It has to be `wss://` - the page is https, and a browser refuses a
+plain socket from there.
+
+**The countdown is the one phase the television does not mirror.** The round is
+drawn but not started, so the layout would say `Scan a card` again for three
+seconds, and a screen flashing back to the state before the card reads as a
+card that did not take. It says `Here it comes` instead.
+
+**Tested at both ends against each other, not against a fake of one of them.**
+`relay_test` is the server, `tv_link_test` is the link against the real server,
+and `tv_screen_test` runs a real game through a real relay into a real mirror
+and then checks what each screen draws. The one seam for the widget tests is
+`TvLink.paired`, a line that is up without a socket under it: what a screen
+does with a paired line is a different question from whether the socket works,
+and real I/O inside a widget test answers it slower and less reliably.
+
 ## Keyboard shortcuts: eight moves, and the keys are taken
 
 `GameShortcut` in `lib/ui/game_screen.dart` is the one list - the bindings and

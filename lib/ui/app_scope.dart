@@ -4,6 +4,7 @@ import '../data/year_database.dart';
 import '../models/song_category.dart';
 import '../music/music_service.dart';
 import '../music/spotify_session.dart';
+import '../sync/tv_link.dart';
 
 /// Passes the data loaded at startup down the tree.
 class AppScope extends InheritedWidget {
@@ -11,6 +12,7 @@ class AppScope extends InheritedWidget {
     required this.years,
     required this.categories,
     required this.spotify,
+    required this.link,
     required this.service,
     required super.child,
     super.key,
@@ -22,6 +24,11 @@ class AppScope extends InheritedWidget {
   /// The in-app player. Unavailable on everything but the web, and there only
   /// once a client id is compiled in and somebody has logged in.
   final SpotifySession spotify;
+
+  /// The line to a second screen. Lives above every screen because it has to
+  /// outlive all of them: pairing happens on the setup screen and the round
+  /// it carries is on the game screen.
+  final TvLink link;
 
   /// Where this device plays songs, switched on the setup screen and read when
   /// a game starts. A notifier rather than a value, so switching it does not
@@ -39,5 +46,6 @@ class AppScope extends InheritedWidget {
       years != oldWidget.years ||
       categories != oldWidget.categories ||
       spotify != oldWidget.spotify ||
+      link != oldWidget.link ||
       service != oldWidget.service;
 }

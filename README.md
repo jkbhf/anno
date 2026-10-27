@@ -88,6 +88,14 @@ switched back, and the popup blocker is out of the picture. The reveal then
 waits for the "Reveal now" button, which is what that button was already there
 for.
 
+**On a phone it is Spotify Connect instead.** Spotify does not support the SDK
+in a mobile browser, so there the app commands the Spotify app the phone
+already has: the same position, the same seek, the same words following the
+song, only the sound comes out of the other app. It needs the same login and
+the same Premium, and it needs the Spotify app to have been open once - until
+then there is no device to play to and the round goes out by link, which opens
+it. This is what makes a phone usable as the remote control of a television.
+
 It costs three things, and all three are why it is off by default:
 
 - **Spotify Premium.** The SDK refuses free accounts. The app catches that as
@@ -203,6 +211,54 @@ lyrics follow it, and the year waits for the button. For the most room, put the
 browser in fullscreen - F11, or "Fullscreen" in the menu, which is also the way
 to get a phone's browser bars out of the picture.
 
+## On a television, with the phone as the remote
+
+A Samsung or LG television has a browser, and that browser is a Chromium from
+a few years ago on a slow chip - but it has nothing to compute here. It opens
+the page, presses **This screen is the television**, and from then on it only
+draws what the phone sends it: the landscape layout above, the words, the year,
+the scores, the player's band along the bottom. Everything else stays on the
+phone, which is also where the music comes from and where every control is.
+
+How an evening goes:
+
+1. On the television, open the page and press **This screen is the
+   television**. It shows six characters. (Fullscreen is offered right there,
+   which is the one moment somebody is standing in front of it with a remote.)
+2. On the phone, **Play on a television** on the setup screen, **Type the
+   code**, those six characters.
+3. Start the game as usual. The phone scans the cards, reveals the year, swaps
+   a song nobody knows, moves around in it, hands out the points - and the
+   television shows the room all of it.
+
+The phone's own layout changes while it is paired: no words, no year card, no
+scoreboard during the song. Those are on the wall, and what is left gets the
+whole phone instead of a quarter of a landscape screen - the one action of the
+round as a panel, the song's controls under it, the tiles at the reveal.
+
+Two things are worth knowing because they are decisions rather than accidents:
+
+- **The size of the words and how far they run ahead of the song belong to the
+  television.** The menu entries on the phone send a step, the television
+  applies it, and it says the new number over its own words - which is where
+  whoever pressed is looking. A second television brings its own settings.
+- **Nothing comes back from the television.** It draws and nothing else, so a
+  television that reloads, sleeps or is switched off costs no game: it
+  reconnects to the code it had and the phone sends it the whole round again.
+
+It needs a relay, because two browsers cannot find each other on their own.
+That is `packages/anno_relay`, 200 lines of `dart:io` with no dependencies,
+and it has to be reachable over `wss://` - see its README for the systemd unit
+and the proxy in front of it. Build with
+`--dart-define=ANNO_RELAY_URL=wss://.../`; without it the app has no second
+screen in it and nothing else changes.
+
+**The music.** The phone is where the song plays, which on a phone means
+Spotify Connect rather than the in-app player - see
+[Playing in the tab](#playing-in-the-tab). The Spotify app has to have been
+open once for Spotify to list it as a device; until it is, the first round goes
+out by link, which opens the app, and every round after that plays here.
+
 ## Deploying to GitHub Pages
 
 `.github/workflows/pages.yml` builds the web app on every push to `main` and
@@ -229,6 +285,9 @@ Two more things are set once and then forgotten:
   secret only makes the build log harder to read. Without it the build still
   succeeds and the page simply has no in-app player.
 - **The redirect URI** in the Spotify dashboard, see above.
+- A repository variable `ANNO_RELAY_URL`, the `wss://` address of the relay.
+  Without it the build succeeds and the page simply cannot pair with a
+  television.
 
 The client *secret* has no business here. It belongs to the resolver script and
 lives in the environment; a PKCE login in a browser must never carry one.

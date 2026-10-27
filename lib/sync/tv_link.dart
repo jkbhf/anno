@@ -52,8 +52,33 @@ class TvLink extends ChangeNotifier {
     this.retryTo = const Duration(seconds: 10),
   }) : _connect = connector ?? WebSocketChannel.connect;
 
+  /// A line that is up without a socket under it, for the widget tests.
+  ///
+  /// The socket itself is tested against the real relay in `tv_link_test`;
+  /// what a screen does with a line that is already paired is a different
+  /// question, and waiting on real I/O inside a widget test answers it
+  /// slower and less reliably.
+  @visibleForTesting
+  factory TvLink.paired({
+    required LinkRole role,
+    String code = 'ABC123',
+    void Function(SyncMessage message)? onSend,
+  }) {
+    final link = TvLink(url: 'test');
+    link._role = role;
+    link._code = code;
+    link._peers = 2;
+    link._left = false;
+    link._sent = onSend;
+    link._state = LinkState.paired;
+    return link;
+  }
+
   final String url;
   final WebSocketChannel Function(Uri) _connect;
+
+  /// Where [send] goes when there is no socket, see [TvLink.paired].
+  void Function(SyncMessage message)? _sent;
 
   /// How long after a dropped socket the next try is, doubling up to the cap.
   final Duration retryFrom;
@@ -214,6 +239,11 @@ class TvLink extends ChangeNotifier {
   /// there - the snapshot that matters is the one sent when a peer turns up.
   void send(SyncMessage message) {
     if (_state != LinkState.paired) return;
+    final test = _sent;
+    if (test != null) {
+      test(message);
+      return;
+    }
     try {
       _channel?.sink.add(jsonEncode(message.toJson()));
     } on Object catch (error) {

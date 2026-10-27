@@ -22,6 +22,9 @@ import '../music/in_app_launcher.dart';
 import '../music/lyrics.dart';
 import '../music/music_service.dart';
 import '../music/spotify_session.dart';
+import '../sync/game_broadcast.dart';
+import '../sync/sync_messages.dart';
+import '../sync/tv_link.dart';
 import '../music/youtube_music_launcher.dart';
 import 'app_scope.dart';
 import 'category_screen.dart';
@@ -295,6 +298,21 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   bool? _hasLyrics;
   String? _lyricsFor;
 
+  /// The line to a television, and the thing that keeps its copy of the round
+  /// in step. Both are there whether or not anybody paired: the broadcast
+  /// sends into a line that is down without noticing, and a television that
+  /// turns up mid-game is answered with the whole round.
+  TvLink? _link;
+  GameBroadcast? _broadcast;
+
+  /// Whether this phone is the remote control of a television right now.
+  ///
+  /// Read in a dozen places and deliberately one question: paired, and this
+  /// end is the phone. A screen that paired as the television never gets here
+  /// - it has no game of its own to run.
+  bool get _remote =>
+      _link?.isPaired == true && _link?.role == LinkRole.remote;
+
   /// Whether the layout the last frame drew was the wide one. Read by the
   /// phase listener, which runs outside a build and must not go looking for a
   /// MediaQuery of its own.
@@ -386,12 +404,29 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// the screen for a moment, so the keys can be pressed without looking away
   /// from the words.
   void _nudgeSync({required bool earlier}) {
+    if (_remote) {
+      // The number belongs to the screen the words are on, so what goes over
+      // the line is the step and not a value - this phone does not know what
+      // it is stepping from, and must not pretend to.
+      _link?.send(
+        RemoteCommand(
+          earlier ? RemoteStep.wordsEarlier : RemoteStep.wordsLater,
+        ),
+      );
+      return;
+    }
     _setLyricsSync(
       _lyricsSync + (earlier ? LyricsSyncStore.step : -LyricsSyncStore.step),
     );
   }
 
+  /// What the panel's two arrows asked for. They hand over a value; on the
+  /// remote only its direction survives the trip, see [_nudgeSync].
   void _setLyricsSync(int ms) {
+    if (_remote) {
+      _nudgeSync(earlier: ms > _lyricsSync);
+      return;
+    }
     final next = LyricsSyncStore.clamp(ms);
     if (next == _lyricsSync) {
       // Still say the number: at the end of the range a press that does
@@ -451,8 +486,17 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   /// A press of smaller or bigger in the menu. It is the same room and the
   /// same wall next time, so the size is kept.
-  void _stepLyricsScale({required bool bigger}) =>
-      _setLyricsScale(LyricsScaleStore.stepped(_lyricsScale, bigger: bigger));
+  void _stepLyricsScale({required bool bigger}) {
+    if (_remote) {
+      _link?.send(
+        RemoteCommand(
+          bigger ? RemoteStep.wordsBigger : RemoteStep.wordsSmaller,
+        ),
+      );
+      return;
+    }
+    _setLyricsScale(LyricsScaleStore.stepped(_lyricsScale, bigger: bigger));
+  }
 
   /// What two fingers on the words asked for, see [PinchScale]. Saved on the
   /// way like the column's width: a write per frame is cheap next to one more
@@ -472,10 +516,42 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       _spotify?.removeListener(_onSessionChanged);
       _spotify = spotify..addListener(_onSessionChanged);
     }
+
+    final link = AppScope.of(context).link;
+    if (!identical(link, _link)) {
+      _broadcast?.stop();
+      _link?.removeListener(_onLinkChanged);
+      _link = link..addListener(_onLinkChanged);
+      _broadcast = GameBroadcast(
+        link: link,
+        game: _game,
+        session: spotify,
+        snapshot: _snapshot,
+      )..start();
+    }
+  }
+
+  /// The round as the television draws it. Half of it is the game's and half
+  /// of it belongs to this screen - whether the scores are up, whether the
+  /// song has words - which is why the snapshot is built here rather than in
+  /// the broadcast.
+  GameSnapshot _snapshot() => GameSnapshot.of(
+    _game,
+    showScores: _showScores,
+    sessionReady: _spotify?.isReady ?? false,
+    syncMode: _syncMode,
+    hasLyrics: _hasLyrics,
+  );
+
+  /// Pairing changes the layout, so the screen has to be built again.
+  void _onLinkChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    _broadcast?.stop();
+    _link?.removeListener(_onLinkChanged);
     // Lets the round that waits on it run out, instead of hanging on.
     _inlineScan?.complete();
     _inlineScan = null;
@@ -990,7 +1066,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   Widget _scaffold(BuildContext context) {
-    final wide = isWideScreen(MediaQuery.sizeOf(context));
+    // Paired, the phone is the column of the wide layout and the television
+    // is the rest of it. The size of this screen decides nothing then.
+    final wide = !_remote && isWideScreen(MediaQuery.sizeOf(context));
     _wide = wide;
     // A window made narrow while the camera waits in the side column has no
     // side column left to show it in.
@@ -1006,7 +1084,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         // The finish has one thing to say, and says it the same everywhere.
         final round = wide && _game.phase != RoundPhase.finished
             ? _wideBody(context)
-            : CenteredBody(child: _body(context));
+            : CenteredBody(
+                child: _remote && _game.phase != RoundPhase.finished
+                    ? _remoteBody(context)
+                    : _body(context),
+              );
         // The number says itself over whatever is on the screen, so a press
         // of the keys is answered where the words are.
         final body = Stack(
@@ -1017,7 +1099,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                 top: 12,
                 left: 0,
                 right: 0,
-                child: Center(child: _SyncFlash(offsetMs: ms)),
+                child: Center(child: SyncFlash(offsetMs: ms)),
               ),
           ],
         );
@@ -1095,7 +1177,25 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
-  /// The round on a wide screen, see [_WideRound].
+  /// The round on the phone while a television has the room's half, see
+  /// [_RemoteRound].
+  Widget _remoteBody(BuildContext context) {
+    // The countdown is a route over this screen, and the phone has nothing to
+    // draw behind it - exactly as in the other two layouts.
+    if (_game.phase == RoundPhase.countdown) return const SizedBox.shrink();
+    return _RemoteRound(
+      game: _game,
+      spotify: AppScope.of(context).spotify,
+      onScan: _startRound,
+      onNextRound: _nextRound,
+      onRedraw: _redraw,
+      onUndoRedraw: _undoRedraw,
+      showScores: _showScores,
+      sync: _syncPanel(),
+    );
+  }
+
+  /// The round on a wide screen, see [WideRound].
   Widget _wideBody(BuildContext context) {
     // As on the phone: the countdown is up over the screen, or the song is
     // starting within the frame.
@@ -1112,7 +1212,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   Widget _wideRound(BuildContext context) {
-    return _WideRound(
+    return WideRound(
       game: _game,
       spotify: AppScope.of(context).spotify,
       lyrics: widget.lyrics ?? sharedLyrics,
@@ -1146,7 +1246,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// phone there is no column to put them in, so they go into the round's own
   /// stack of blocks and come out of it again when the mode ends.
   Widget? _syncPanel() => _syncMode
-      ? _SyncPanel(offsetMs: _lyricsSync, onSync: _setLyricsSync)
+      ? _SyncPanel(
+          offsetMs: _lyricsSync,
+          onSync: _setLyricsSync,
+          blind: _remote,
+        )
       : null;
 
   Widget _body(BuildContext context) {
@@ -1183,7 +1287,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           sync: _syncPanel(),
         );
       case RoundPhase.finished:
-        return _FinishedBody(
+        return FinishedBody(
           game: _game,
           onUndo: _game.undoFinish,
           onRematch: _game.resetScores,
@@ -1665,10 +1769,20 @@ class _NoLyrics extends StatelessWidget {
 /// against the music, so the song has to go on playing while it is being set.
 /// A finger on the arrows is the same step the keys make.
 class _SyncPanel extends StatelessWidget {
-  const _SyncPanel({required this.offsetMs, required this.onSync});
+  const _SyncPanel({
+    required this.offsetMs,
+    required this.onSync,
+    this.blind = false,
+  });
 
   final int offsetMs;
   final ValueChanged<int> onSync;
+
+  /// On the remote control, where the number belongs to the television and
+  /// nothing comes back from it. Then the arrows never grey out - the screen
+  /// clamps, and says the number over its own words, which is where whoever
+  /// pressed is looking anyway - and there is no number to print here.
+  final bool blind;
 
   @override
   Widget build(BuildContext context) {
@@ -1696,7 +1810,7 @@ class _SyncPanel extends StatelessWidget {
             children: [
               IconButton.filledTonal(
                 tooltip: 'The words later',
-                onPressed: offsetMs <= LyricsSyncStore.min
+                onPressed: !blind && offsetMs <= LyricsSyncStore.min
                     ? null
                     : () => onSync(offsetMs - LyricsSyncStore.step),
                 icon: const Icon(Icons.arrow_back),
@@ -1705,7 +1819,9 @@ class _SyncPanel extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    '${offsetMs > 0 ? '+' : ''}$offsetMs ms',
+                    blind
+                        ? 'on the screen'
+                        : '${offsetMs > 0 ? '+' : ''}$offsetMs ms',
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: scheme.primary,
@@ -1716,7 +1832,7 @@ class _SyncPanel extends StatelessWidget {
               ),
               IconButton.filledTonal(
                 tooltip: 'The words earlier',
-                onPressed: offsetMs >= LyricsSyncStore.max
+                onPressed: !blind && offsetMs >= LyricsSyncStore.max
                     ? null
                     : () => onSync(offsetMs + LyricsSyncStore.step),
                 icon: const Icon(Icons.arrow_forward),
@@ -1734,8 +1850,11 @@ class _SyncPanel extends StatelessWidget {
 /// A press of the keys happens while somebody is watching the words, which is
 /// the whole point of setting it there - so the answer comes to the words
 /// rather than making them look for a panel.
-class _SyncFlash extends StatelessWidget {
-  const _SyncFlash({required this.offsetMs});
+///
+/// Public for the television: there the words are on the wall, so that is
+/// where the number has to say itself when the phone steps it.
+class SyncFlash extends StatelessWidget {
+  const SyncFlash({required this.offsetMs, super.key});
 
   final int offsetMs;
 
@@ -2204,8 +2323,14 @@ class _PlayerTileState extends State<_PlayerTile> {
 /// on the left is for whoever runs the game: the camera opens there, small,
 /// instead of as a page over everything, and the controls for the song sit
 /// under it.
-class _WideRound extends StatelessWidget {
-  const _WideRound({
+/// The round on a wide screen: the stage for the room, the column for
+/// whoever runs the game, the player across the bottom of both.
+///
+/// Public because the television draws it too, from a `MirrorGame` instead of
+/// from a game of its own - the same widgets down to the handles, rather than
+/// a second copy of this layout that starts drifting the day a block moves.
+class WideRound extends StatelessWidget {
+  const WideRound({
     required this.game,
     required this.spotify,
     required this.lyrics,
@@ -2228,6 +2353,8 @@ class _WideRound extends StatelessWidget {
     required this.onColumnShare,
     required this.slotShare,
     required this.onSlotShare,
+    this.cameraless = false,
+    super.key,
   });
 
   final GameController game;
@@ -2272,6 +2399,11 @@ class _WideRound extends StatelessWidget {
   /// The share of the column the reveal card takes, and its own handle.
   final double slotShare;
   final ValueChanged<double> onSlotShare;
+
+  /// No camera box at all, and no room kept for one. That is the television:
+  /// the lens is on the phone, and a grey panel standing in for it would take
+  /// a third of the column to say nothing.
+  final bool cameraless;
 
   @override
   Widget build(BuildContext context) {
@@ -2318,7 +2450,7 @@ class _WideRound extends StatelessWidget {
         // Closed and between rounds there is nothing to look at, so the box
         // goes rather than sitting there as a grey placeholder. After a reveal
         // it stays as the way back to a camera that was closed by hand.
-        final showCamera = camera != null || game.isRevealed;
+        final showCamera = !cameraless && (camera != null || game.isRevealed);
 
         final round = Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2454,6 +2586,119 @@ class _WideRound extends StatelessWidget {
   }
 }
 
+/// The phone while a television is showing the round.
+///
+/// It is the column of the wide layout and nothing else - the half that was
+/// always for whoever runs the game. What the room reads is on the wall, so
+/// none of it is repeated here: no words, no year card, no scoreboard while
+/// the song runs. What is left gets the whole phone instead of a quarter of a
+/// landscape screen, which is the point of the mode: every control a round
+/// needs, at the size a thumb wants it, in the dark.
+///
+/// The one thing that does appear twice is the answer, small, at the top -
+/// whoever is holding the phone has to know what the room is looking at.
+class _RemoteRound extends StatelessWidget {
+  const _RemoteRound({
+    required this.game,
+    required this.spotify,
+    required this.onScan,
+    required this.onNextRound,
+    required this.onRedraw,
+    required this.onUndoRedraw,
+    required this.showScores,
+    this.sync,
+  });
+
+  final GameController game;
+  final SpotifySession spotify;
+  final VoidCallback onScan;
+  final VoidCallback onNextRound;
+  final VoidCallback onRedraw;
+  final VoidCallback onUndoRedraw;
+
+  /// Whether points are being kept at all, see [ShowScoresStore]. Switched
+  /// off, the tiles go here too - there is nothing to tap them for.
+  final bool showScores;
+
+  /// The arrows for the sync, where the mode is on.
+  final Widget? sync;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final playing = game.phase == RoundPhase.playing;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+      children: [
+        // The one action of the round, as tall as the column's own and with
+        // the camera named where it really comes up on a phone.
+        SizedBox(
+          height: 180,
+          child: _ActionSlot(
+            game: game,
+            onScan: onScan,
+            onReveal: game.reveal,
+            opensBelow: false,
+          ),
+        ),
+        if (playing || game.isRevealed) ...[
+          const SizedBox(height: 16),
+          _SongControls(
+            game: game,
+            spotify: spotify,
+            onRedraw: onRedraw,
+            onUndoRedraw: onUndoRedraw,
+            // The words are on the wall. No button for them here, and no
+            // line about a song without any - that is the room's business.
+            hasLyrics: null,
+          ),
+        ],
+        if (sync case final panel?) ...[
+          const SizedBox(height: 16),
+          panel,
+        ],
+        if (game.isRevealed) ...[
+          const SizedBox(height: 24),
+          if (showScores) ...[
+            Text(
+              'Who had it?',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Tap to give a point, long press to take one away.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _PlayerGrid(
+              game: game,
+              onTap: (player) => _givePoint(game, player),
+              onLongPress: (player) => _takePoint(game, player),
+            ),
+            const SizedBox(height: 24),
+          ],
+          // The camera opens by itself at the reveal, so this is the way on
+          // for a camera that was closed by hand - and the whole way on in a
+          // game played without the cards.
+          FilledButton.icon(
+            onPressed: onNextRound,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(64),
+            ),
+            icon: const Icon(Icons.skip_next),
+            label: Text(
+              game.withoutCards ? 'The next year' : 'The next card',
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 /// What the keys do, for the one device that has them.
 ///
 /// It sits at the foot of the column's controls rather than on the stage: a
@@ -2543,11 +2788,16 @@ class _ActionSlot extends StatelessWidget {
     required this.game,
     required this.onScan,
     required this.onReveal,
+    this.opensBelow = true,
   });
 
   final GameController game;
   final VoidCallback onScan;
   final VoidCallback onReveal;
+
+  /// Whether the camera comes up in the box under this one. False on the
+  /// remote control, where it is a page of its own over the whole phone.
+  final bool opensBelow;
 
   @override
   Widget build(BuildContext context) {
@@ -2566,8 +2816,8 @@ class _ActionSlot extends StatelessWidget {
             Icons.visibility_outlined,
             'Reveal the year',
             game.withoutCards
-                ? 'The next year waits below'
-                : 'The camera then opens below',
+                ? (opensBelow ? 'The next year waits below' : 'Then the next year')
+                : (opensBelow ? 'The camera then opens below' : 'The camera then opens'),
             onReveal,
           )
         : game.withoutCards
@@ -2582,7 +2832,7 @@ class _ActionSlot extends StatelessWidget {
         : (
             Icons.qr_code_scanner,
             'Scan a card',
-            'Opens the camera below',
+            opensBelow ? 'Opens the camera below' : 'Opens the camera',
             onScan,
           );
 
@@ -3194,18 +3444,23 @@ class _ScoreStrip extends StatelessWidget {
   }
 }
 
-class _FinishedBody extends StatelessWidget {
-  const _FinishedBody({
+/// The end of the game. Public for the television, which shows the winners
+/// and none of the buttons - those belong to whoever runs the game.
+class FinishedBody extends StatelessWidget {
+  const FinishedBody({
     required this.game,
-    required this.onUndo,
-    required this.onRematch,
-    required this.onHome,
+    this.onUndo,
+    this.onRematch,
+    this.onHome,
+    super.key,
   });
 
   final GameController game;
-  final VoidCallback onUndo;
-  final VoidCallback onRematch;
-  final Future<void> Function() onHome;
+
+  /// All three null on a screen nobody can reach - the television.
+  final VoidCallback? onUndo;
+  final VoidCallback? onRematch;
+  final Future<void> Function()? onHome;
 
   @override
   Widget build(BuildContext context) {
@@ -3247,7 +3502,7 @@ class _FinishedBody extends StatelessWidget {
           ),
           // The last point was a slip of the finger more than once: the way
           // back to the reveal, where it can be taken away again.
-          if (game.canUndoFinish) ...[
+          if (game.canUndoFinish && onUndo != null) ...[
             TextButton.icon(
               onPressed: onUndo,
               icon: const Icon(Icons.undo),
@@ -3255,12 +3510,15 @@ class _FinishedBody extends StatelessWidget {
             ),
             const SizedBox(height: 8),
           ],
-          FilledButton(
-            onPressed: onRematch,
-            child: const Text('Play again, same players'),
-          ),
-          const SizedBox(height: 16),
-          OutlinedButton(onPressed: onHome, child: const Text('Back to start')),
+          if (onRematch case final rematch?)
+            FilledButton(
+              onPressed: rematch,
+              child: const Text('Play again, same players'),
+            ),
+          if (onHome case final home?) ...[
+            const SizedBox(height: 16),
+            OutlinedButton(onPressed: home, child: const Text('Back to start')),
+          ],
         ],
       ),
     );

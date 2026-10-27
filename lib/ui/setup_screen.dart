@@ -15,6 +15,7 @@ import 'game_screen.dart';
 import '../music/spotify_session.dart';
 import 'route_observer.dart';
 import 'spotify_card.dart';
+import 'tv_card.dart';
 import 'text_input_dialog.dart';
 import 'year_database_screen.dart';
 
@@ -260,6 +261,10 @@ class _SetupScreenState extends State<SetupScreen> with RouteAware {
                   ? SpotifyCard(session: AppScope.of(context).spotify)
                   : const SizedBox.shrink(),
             ),
+            // Where the round is shown, if not on this phone. Above the
+            // players because it is the one decision about the evening that
+            // is made before anybody's name is typed in.
+            const TvCard(),
             Text("Who's playing?", style: theme.textTheme.headlineSmall),
             const SizedBox(height: 4),
             Text(

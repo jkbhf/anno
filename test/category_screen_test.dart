@@ -2,6 +2,7 @@
 // game of its own like any other: its span stands on the card, and a card
 // outside it only brings up a note. The rule lives in `canCarryGame`.
 import 'package:flutter/material.dart';
+import 'package:anno/sync/tv_link.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:anno/data/year_database.dart';
 import 'package:anno/models/player.dart';
@@ -44,6 +45,7 @@ Widget wrap(List<SongCategory> categories) => AppScope(
   years: YearDatabase.inMemory(),
   categories: categories,
   spotify: NoSpotifySession(),
+  link: TvLink(url: ''),
   service: ValueNotifier(MusicService.spotify),
   child: MaterialApp(
     theme: buildTheme(),

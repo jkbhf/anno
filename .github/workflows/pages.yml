@@ -40,6 +40,12 @@ jobs:
         run: >
           echo "::warning::SPOTIFY_CLIENT_ID is not set - this build has no
           in-app Spotify player."
+      # Same arrangement: without it the second screen is simply not in the
+      # build, and nothing else changes.
+      - if: vars.ANNO_RELAY_URL == ''
+        run: >
+          echo "::warning::ANNO_RELAY_URL is not set - this build cannot pair
+          with a television."
       # The client id is public by design - PKCE, no secret in the browser.
       # Set it as a repository variable (Settings -> Secrets and variables ->
       # Actions -> Variables). Missing it only drops the in-app player.
@@ -48,6 +54,7 @@ jobs:
           flutter build web --release
           --base-href /
           --dart-define=SPOTIFY_CLIENT_ID=${{ vars.SPOTIFY_CLIENT_ID }}
+          --dart-define=ANNO_RELAY_URL=${{ vars.ANNO_RELAY_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

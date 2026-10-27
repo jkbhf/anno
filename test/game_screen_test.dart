@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:anno/sync/tv_link.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/column_width_store.dart';
@@ -207,6 +208,7 @@ Widget wrap(
   years: game.years,
   categories: game.categories,
   spotify: spotify ?? NoSpotifySession(),
+  link: TvLink(url: ''),
   service: ValueNotifier(game.service),
   child: MaterialApp(
     theme: buildTheme(),
@@ -951,6 +953,7 @@ void main() {
         years: game.years,
         categories: game.categories,
         spotify: NoSpotifySession(),
+        link: TvLink(url: ''),
         service: ValueNotifier(game.service),
         child: MaterialApp(
           theme: buildTheme(),

@@ -11,6 +11,7 @@ import 'data/year_database.dart';
 import 'models/song_category.dart';
 import 'music/music_service.dart';
 import 'music/spotify_session.dart';
+import 'sync/tv_link.dart';
 import 'ui/app_scope.dart';
 import 'ui/route_observer.dart';
 import 'ui/setup_screen.dart';
@@ -34,6 +35,10 @@ Future<void> main() async {
   final spotify = createSpotifySession();
   unawaited(spotify.restore());
 
+  // Nothing is connected until somebody pairs: the line is built here only
+  // because it has to outlive the screens that use it.
+  final link = TvLink();
+
   runApp(
     PlayApp(
       years: years,
@@ -41,6 +46,7 @@ Future<void> main() async {
       savedGame: savedGame,
       roster: roster,
       spotify: spotify,
+      link: link,
       service: service,
     ),
   );
@@ -51,6 +57,7 @@ class PlayApp extends StatefulWidget {
     required this.years,
     required this.categories,
     required this.spotify,
+    required this.link,
     this.service = MusicService.spotify,
     this.savedGame,
     this.roster = const [],
@@ -60,6 +67,9 @@ class PlayApp extends StatefulWidget {
   final YearDatabase years;
   final List<SongCategory> categories;
   final SpotifySession spotify;
+
+  /// The line to a television, see [TvLink].
+  final TvLink link;
 
   /// The service picked on this device last time, from [MusicServiceStore].
   final MusicService service;
@@ -90,6 +100,7 @@ class _PlayAppState extends State<PlayApp> {
       years: widget.years,
       categories: widget.categories,
       spotify: widget.spotify,
+      link: widget.link,
       service: _service,
       child: MaterialApp(
         title: 'Anno',

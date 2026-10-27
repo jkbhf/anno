@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:anno/sync/tv_link.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:anno/data/game_store.dart';
@@ -43,6 +44,7 @@ Widget wrap({
     SongCategory(id: 'esc', name: 'ESC', description: '', songs: const []),
   ],
   spotify: spotify ?? NoSpotifySession(),
+  link: TvLink(url: ''),
   service: service ?? ValueNotifier(MusicService.spotify),
   child: MaterialApp(
     theme: buildTheme(),
@@ -256,6 +258,7 @@ void main() {
       years: YearDatabase.inMemory(),
       categories: [esc],
       spotify: NoSpotifySession(),
+      link: TvLink(url: ''),
       service: ValueNotifier(MusicService.spotify),
       child: MaterialApp(
         theme: buildTheme(),
