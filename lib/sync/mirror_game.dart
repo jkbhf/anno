@@ -40,7 +40,10 @@ class MirrorGame extends GameController {
   bool _canRedraw = false;
   bool _canUndoRedraw = false;
   bool _launching = false;
-  bool _withoutCards = false;
+  int? _fromYear;
+  int? _toYear;
+  List<int> _playedYears = const [];
+  List<int> _playableYears = const [];
 
   /// True once a snapshot has arrived. Before that the screen has a code to
   /// show and nothing else.
@@ -59,8 +62,21 @@ class MirrorGame extends GameController {
   @override
   bool get launching => _launching;
 
+  /// The range comes off the wire, and with it [withoutCards], which the
+  /// controller reads off these two. The years the mirror can play are the
+  /// phone's as well: the catalogs are over there, so working them out from
+  /// this screen's empty placeholder deck would answer `0 of 0`.
   @override
-  bool get withoutCards => _withoutCards;
+  int? get fromYear => _fromYear;
+
+  @override
+  int? get toYear => _toYear;
+
+  @override
+  Set<int> get playedYears => {..._playedYears};
+
+  @override
+  List<int> get playableYears => _playableYears;
 
   /// Takes the round over from the phone.
   void apply(GameSnapshot snapshot) {
@@ -75,7 +91,10 @@ class MirrorGame extends GameController {
     _canRedraw = snapshot.canRedraw;
     _canUndoRedraw = snapshot.canUndoRedraw;
     _launching = snapshot.launching;
-    _withoutCards = snapshot.withoutCards;
+    _fromYear = snapshot.fromYear;
+    _toYear = snapshot.toYear;
+    _playedYears = snapshot.playedYears;
+    _playableYears = snapshot.playableYears;
     _applyRoster(snapshot);
     notifyListeners();
   }

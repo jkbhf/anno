@@ -311,6 +311,38 @@ void main() {
       expect(find.text('Reveal the year'), findsOne);
     });
 
+    testWidgets('a game without cards says which range it is in', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(1280, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      final link = TvLink.paired(role: LinkRole.screen);
+      addTearDown(link.dispose);
+      await tester.pumpWidget(wrapTv(link, YearDatabase.inMemory()));
+      await tester.pumpAndSettle();
+
+      // The range and the count are the phone's: the catalogs are over
+      // there, so this screen can only read what it was sent.
+      link.onMessage!(
+        const GameSnapshot(
+          phase: RoundPhase.idle,
+          players: [(name: 'Anthony', score: 0)],
+          targetScore: 10,
+          showScores: true,
+          fromYear: 1970,
+          toYear: 2026,
+          playedYears: [1981, 2004],
+          playableYears: [1970, 1981, 2004, 2026],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Draw a year'), findsOne);
+      expect(find.text('1970 to 2026, 2 of 4 played'), findsOne);
+    });
+
     testWidgets('the winners, and none of the buttons', (tester) async {
       final link = TvLink.paired(role: LinkRole.screen);
       addTearDown(link.dispose);

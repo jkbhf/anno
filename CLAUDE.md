@@ -942,6 +942,15 @@ answers, exactly as both Spotify sessions carry their own reports forward.
 clocks and can be seconds apart, and what that trip costs is absorbed by the
 sync offset the room sets against the picture anyway.
 
+**Anything the layout reads off the catalogs has to ride along.** The mirror's
+deck is empty, so a line it works out for itself answers nothing - a game
+without cards said `null to null, 0 of 0 played` where the phone says
+`1970 to 2026, 4 of 57 played` (2026-10-27). The range and both counts are in
+the snapshot now (`fromYear`, `toYear`, `playedYears`, `playableYears`, which
+`MirrorGame` overrides and `withoutCards` is read off), and that is the test
+for anything new on the stage or in the column: if the phone computes it from
+`categories` or `years`, the television cannot.
+
 **The size of the words and the sync belong to the television.** They are
 statements about this screen and this room - the distance to the sofa, what the
 set does to the picture - so they live where the words are drawn and the phone

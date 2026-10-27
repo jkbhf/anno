@@ -50,7 +50,10 @@ class GameSnapshot extends SyncMessage {
     this.launching = false,
     this.canRedraw = false,
     this.canUndoRedraw = false,
-    this.withoutCards = false,
+    this.fromYear,
+    this.toYear,
+    this.playedYears = const [],
+    this.playableYears = const [],
     this.syncMode = false,
   });
 
@@ -84,7 +87,10 @@ class GameSnapshot extends SyncMessage {
       launching: game.launching,
       canRedraw: game.canRedraw,
       canUndoRedraw: game.canUndoRedraw,
-      withoutCards: game.withoutCards,
+      fromYear: game.fromYear,
+      toYear: game.toYear,
+      playedYears: game.playedYears.toList(),
+      playableYears: game.playableYears,
       syncMode: syncMode,
     );
   }
@@ -117,7 +123,16 @@ class GameSnapshot extends SyncMessage {
     launching: json['launching'] as bool? ?? false,
     canRedraw: json['canRedraw'] as bool? ?? false,
     canUndoRedraw: json['canUndoRedraw'] as bool? ?? false,
-    withoutCards: json['withoutCards'] as bool? ?? false,
+    fromYear: json['fromYear'] as int?,
+    toYear: json['toYear'] as int?,
+    playedYears: [
+      for (final year in (json['playedYears'] as List? ?? const []))
+        if (year is int) year,
+    ],
+    playableYears: [
+      for (final year in (json['playableYears'] as List? ?? const []))
+        if (year is int) year,
+    ],
     syncMode: json['syncMode'] as bool? ?? false,
   );
 
@@ -155,7 +170,19 @@ class GameSnapshot extends SyncMessage {
   final bool launching;
   final bool canRedraw;
   final bool canUndoRedraw;
-  final bool withoutCards;
+
+  /// The range of a game without cards, and how far through it the game is -
+  /// the screen says `1970 to 2026, 4 of 57 played` where the card game says
+  /// `Scan a card`, and it cannot work any of that out itself: the catalogs
+  /// are on the phone. Both years null is a game played with the cards, which
+  /// is what [withoutCards] reads.
+  final int? fromYear;
+  final int? toYear;
+  final List<int> playedYears;
+  final List<int> playableYears;
+
+  bool get withoutCards => fromYear != null && toYear != null;
+
   final bool syncMode;
 
   /// The song of the round as a [Song] again, so the screen can hand it to
@@ -215,7 +242,10 @@ class GameSnapshot extends SyncMessage {
     'launching': launching,
     'canRedraw': canRedraw,
     'canUndoRedraw': canUndoRedraw,
-    'withoutCards': withoutCards,
+    if (fromYear != null) 'fromYear': fromYear,
+    if (toYear != null) 'toYear': toYear,
+    if (playedYears.isNotEmpty) 'playedYears': playedYears,
+    if (playableYears.isNotEmpty) 'playableYears': playableYears,
     'syncMode': syncMode,
   };
 }
