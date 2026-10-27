@@ -54,6 +54,17 @@ abstract class SpotifySession extends ChangeNotifier {
   /// never came. Cleared by the next `play`.
   String? get playbackError;
 
+  /// What connecting buys the room, in words for the card that offers it.
+  ///
+  /// The two sessions buy different things - the SDK plays the song out of
+  /// this page, Connect commands the Spotify app next to it - and a card that
+  /// promises the wrong one is a card that lies on half the devices.
+  String get offer;
+
+  /// Something the player has to do before a song can play here, although
+  /// the login is fine. Null when there is nothing to say.
+  String? get hint => null;
+
   bool get isReady => connection == SpotifyConnection.ready;
 
   bool get isAvailable => connection != SpotifyConnection.unavailable;
@@ -110,6 +121,9 @@ class NoSpotifySession extends SpotifySession {
 
   @override
   String? get playbackError => null;
+
+  @override
+  String get offer => '';
 
   @override
   Future<void> restore() async {}

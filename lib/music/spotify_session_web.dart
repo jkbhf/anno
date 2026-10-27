@@ -1,20 +1,44 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'dart:math';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:web/web.dart' as web;
 
 import '../models/song.dart';
+import 'spotify_api.dart';
+import 'spotify_auth.dart';
+import 'spotify_auth_web.dart';
 import 'spotify_config.dart';
+import 'spotify_connect.dart';
 import 'spotify_playback.dart';
 
-SpotifySession createSpotifySession() =>
-    spotifyClientId.isEmpty ? NoSpotifySession() : WebSpotifySession();
+/// The session for this device, and the one place the two players are chosen
+/// between.
+///
+/// The Web Playback SDK is a desktop thing: Spotify does not support it in a
+/// mobile browser, and where it loads at all it answers the first track with a
+/// `playback_error`. A phone therefore goes straight to Spotify Connect, which
+/// commands the Spotify app the phone already has - that is also the player a
+/// phone needs when it is the remote control for a TV. The laptop keeps the
+/// SDK, where the song comes out of the tab itself.
+///
+/// Both end at the link where they cannot play - see `InAppSpotifyLauncher`.
+SpotifySession createSpotifySession() {
+  if (spotifyClientId.isEmpty) return NoSpotifySession();
+  return _isPhone
+      ? ConnectSpotifySession(auth: WebSpotifyAuth())
+      : WebSpotifySession();
+}
+
+/// On the web `defaultTargetPlatform` is the operating system, so a phone and
+/// a tablet say Android or iOS and every laptop says something else - the same
+/// reading `hasKeyboard` makes in `lib/ui/layout.dart`.
+bool get _isPhone =>
+    defaultTargetPlatform == TargetPlatform.android ||
+    defaultTargetPlatform == TargetPlatform.iOS;
 
 /// `new Spotify.Player(...)`, the device the SDK builds inside the page.
 @JS('Spotify.Player')
@@ -33,37 +57,11 @@ extension type _SdkPlayer._(JSObject _) implements JSObject {
   external JSPromise<JSAny?> activateElement();
 }
 
-/// How a request to the token endpoint ended.
-///
-/// Two ways of failing, and they must not be confused: a token Spotify refused
-/// is spent and has to go, while a request that never got an answer says
-/// nothing about the token - dropping it there logs the room out over a
-/// wobbly Wi-Fi.
-enum _TokenResult { ok, rejected, unreachable }
-
 /// The in-app player: Spotify's Web Playback SDK plus the login it needs.
-///
-/// The login is Authorization Code with PKCE. A browser cannot keep a client
-/// secret, so PKCE replaces it with a one-shot verifier: the app sends the
-/// hash on the way out and the verifier itself when redeeming the code, and
-/// only the page that started the login can finish it.
 class WebSpotifySession extends SpotifySession {
-  static const String _authorizeUrl = 'https://accounts.spotify.com/authorize';
-  static const String _tokenUrl = 'https://accounts.spotify.com/api/token';
-  static const String _apiUrl = 'https://api.spotify.com/v1';
+  WebSpotifySession({SpotifyAuth? auth}) : _auth = auth ?? WebSpotifyAuth();
 
-  /// `streaming` is what makes the tab a device; the player endpoints need the
-  /// two `playback-state` scopes, and the SDK insists on the profile pair.
-  static const String _scopes =
-      'streaming user-read-email user-read-private '
-      'user-modify-playback-state user-read-playback-state';
-
-  static const String _refreshKey = 'spotify.refresh_token';
-  static const String _verifierKey = 'spotify.pkce_verifier';
-  static const String _stateKey = 'spotify.auth_state';
-
-  static const String _unreachable =
-      'Spotify is not reachable right now. Check the connection and try again.';
+  final SpotifyAuth _auth;
 
   SpotifyConnection _connection = SpotifyConnection.disconnected;
   String? _error;
@@ -75,15 +73,6 @@ class WebSpotifySession extends SpotifySession {
   int _positionMs = 0;
   int _durationMs = 0;
   DateTime _positionAt = DateTime.now();
-
-  String? _accessToken;
-  DateTime? _expiresAt;
-  String? _refreshToken;
-
-  /// The refresh that is on its way. Two at once would send the same refresh
-  /// token twice, and Spotify rotates it - the second one would come back
-  /// refused and log the session out.
-  Future<String?>? _refreshing;
 
   _SdkPlayer? _player;
   String? _deviceId;
@@ -101,6 +90,11 @@ class WebSpotifySession extends SpotifySession {
   String? get playbackError => _playbackError;
 
   @override
+  String get offer =>
+      'Connect Spotify Premium and the song comes out of this page - no '
+      'new tab, no switching back.';
+
+  @override
   Duration get duration => Duration(milliseconds: _durationMs);
 
   @override
@@ -115,8 +109,7 @@ class WebSpotifySession extends SpotifySession {
 
   /// Where Spotify sends the browser back to. Must be registered in the
   /// developer dashboard exactly as it reads here.
-  static String get redirectUri =>
-      web.window.location.origin + web.window.location.pathname;
+  static String get redirectUri => WebSpotifyAuth.redirectUri;
 
   void _moveTo(SpotifyConnection next, {String? error}) {
     _connection = next;
@@ -126,54 +119,23 @@ class WebSpotifySession extends SpotifySession {
 
   @override
   Future<void> restore() async {
-    final params = Uri.parse(web.window.location.href).queryParameters;
-
-    if (params['error'] != null) {
-      _clearQuery();
-      _moveTo(
-        SpotifyConnection.failed,
-        error: 'Spotify login: ${params['error']}',
-      );
-      return;
-    }
-
-    final code = params['code'];
-    if (code != null) {
-      final expected = _read(_stateKey);
-      final verifier = _read(_verifierKey);
-      _remove(_stateKey);
-      _remove(_verifierKey);
-      _clearQuery();
-
-      if (verifier == null || expected == null || params['state'] != expected) {
-        _moveTo(SpotifyConnection.failed, error: 'Login came back mismatched.');
-        return;
-      }
-      _moveTo(SpotifyConnection.connecting);
-      final ok = await _redeem(code, verifier);
-      if (ok) await _startPlayer();
-      return;
-    }
-
-    _refreshToken = _read(_refreshKey);
-    if (_refreshToken == null) {
+    if (!_auth.hasPendingRedirect && !_auth.hasLogin) {
       _moveTo(SpotifyConnection.disconnected);
       return;
     }
-    await _resume();
+    _moveTo(SpotifyConnection.connecting);
+    await _after(await _auth.restore());
   }
 
-  /// Picks the stored login back up. A refresh token that is still there
-  /// afterwards means Spotify was not reached rather than refused, and that is
-  /// worth a "try again" instead of a new login.
-  Future<void> _resume() async {
-    _moveTo(SpotifyConnection.connecting);
-    if (await _refresh() != null) {
-      await _startPlayer();
-    } else if (_refreshToken != null) {
-      _moveTo(SpotifyConnection.failed, error: _unreachable);
-    } else {
-      _moveTo(SpotifyConnection.disconnected);
+  /// What a login that came back is worth to the player.
+  Future<void> _after(LoginResult result) async {
+    switch (result.state) {
+      case LoginState.loggedIn:
+        await _startPlayer();
+      case LoginState.noLogin:
+        _moveTo(SpotifyConnection.disconnected);
+      case LoginState.failed:
+        _moveTo(SpotifyConnection.failed, error: result.message);
     }
   }
 
@@ -181,34 +143,13 @@ class WebSpotifySession extends SpotifySession {
   Future<void> connect() async {
     // "Try again" after a network failure: the login is still good, so going
     // through Spotify's login page again would only cost the room a detour.
-    _refreshToken ??= _read(_refreshKey);
-    if (_refreshToken != null && _player == null) {
-      await _resume();
+    if (_auth.hasLogin && _player == null) {
+      _moveTo(SpotifyConnection.connecting);
+      await _after(await _auth.resume());
       if (_connection != SpotifyConnection.disconnected) return;
     }
-
-    final verifier = _randomString(64);
-    final state = _randomString(16);
-    _write(_verifierKey, verifier);
-    _write(_stateKey, state);
-
-    final challenge = base64Url
-        .encode(sha256.convert(ascii.encode(verifier)).bytes)
-        .replaceAll('=', '');
-
-    final target = Uri.parse(_authorizeUrl).replace(
-      queryParameters: {
-        'client_id': spotifyClientId,
-        'response_type': 'code',
-        'redirect_uri': redirectUri,
-        'scope': _scopes,
-        'code_challenge_method': 'S256',
-        'code_challenge': challenge,
-        'state': state,
-      },
-    );
     _moveTo(SpotifyConnection.connecting);
-    web.window.location.href = target.toString();
+    await _auth.beginLogin();
   }
 
   @override
@@ -217,10 +158,7 @@ class WebSpotifySession extends SpotifySession {
     _player?.disconnect();
     _player = null;
     _deviceId = null;
-    _accessToken = null;
-    _expiresAt = null;
-    _refreshToken = null;
-    _remove(_refreshKey);
+    await _auth.forget();
     _moveTo(SpotifyConnection.disconnected);
   }
 
@@ -247,23 +185,16 @@ class WebSpotifySession extends SpotifySession {
     final device = _deviceId;
     if (device == null) return false;
     try {
-      final token = await _freshToken();
+      final token = await _auth.freshToken();
       if (token == null) return false;
 
-      final uri = song.spotifyTrackId != null
-          ? 'spotify:track:${song.spotifyTrackId}'
-          : await _searchUri(token, song);
+      final uri = await spotifyTrackUri(http.Client(), token, song);
       if (uri == null) return false;
 
       final response = await http.put(
-        Uri.parse('$_apiUrl/me/player/play?device_id=$device'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'uris': [uri],
-        }),
+        Uri.parse('$spotifyApiUrl/me/player/play?device_id=$device'),
+        headers: spotifyHeaders(token),
+        body: spotifyPlayBody(uri),
       );
       if (response.statusCode == 204 || response.statusCode == 202) {
         _isPlaying = true;
@@ -324,136 +255,6 @@ class WebSpotifySession extends SpotifySession {
     }
   }
 
-  /// The song for a catalog entry that has no track id yet - the same search
-  /// the reveal would otherwise send the player to by hand.
-  ///
-  /// Quoted like the resolver's: `track:Diese Welt` unquoted searches for
-  /// "Diese" alone and would play some other song in the tab.
-  Future<String?> _searchUri(String token, Song song) async {
-    final query = Uri.encodeQueryComponent(
-      'track:"${song.title}" artist:"${song.artist}"',
-    );
-    try {
-      final response = await http.get(
-        Uri.parse('$_apiUrl/search?q=$query&type=track&limit=1'),
-        headers: {'Authorization': 'Bearer $token'},
-      );
-      if (response.statusCode != 200) return null;
-      final items = (jsonDecode(response.body)['tracks']['items'] as List)
-          .cast<Map<String, dynamic>>();
-      return items.isEmpty ? null : items.first['uri'] as String;
-    } on Object catch (error) {
-      debugPrint('Search failed: $error');
-      return null;
-    }
-  }
-
-  // --- tokens ---------------------------------------------------------------
-
-  Future<String?> _freshToken() async {
-    final token = _accessToken;
-    final expires = _expiresAt;
-    if (token != null && expires != null && DateTime.now().isBefore(expires)) {
-      return token;
-    }
-    return _refresh();
-  }
-
-  Future<bool> _redeem(String code, String verifier) async {
-    final result = await _token({
-      'grant_type': 'authorization_code',
-      'code': code,
-      'redirect_uri': redirectUri,
-      'client_id': spotifyClientId,
-      'code_verifier': verifier,
-    });
-    switch (result) {
-      case _TokenResult.ok:
-        return true;
-      case _TokenResult.rejected:
-        _moveTo(SpotifyConnection.failed, error: 'Spotify refused the login.');
-      case _TokenResult.unreachable:
-        _moveTo(SpotifyConnection.failed, error: _unreachable);
-    }
-    return false;
-  }
-
-  Future<String?> _refresh() {
-    return _refreshing ??= _refreshOnce().whenComplete(
-      () => _refreshing = null,
-    );
-  }
-
-  Future<String?> _refreshOnce() async {
-    final sent = _refreshToken;
-    if (sent == null) return null;
-
-    switch (await _refreshWith(sent)) {
-      case _TokenResult.ok:
-        return _accessToken;
-      case _TokenResult.unreachable:
-        // Nothing is known about the token - keep it for the next attempt.
-        return null;
-      case _TokenResult.rejected:
-        break;
-    }
-
-    // Another tab of the game may have rotated the token in the meantime and
-    // stored the new one. That one is good, and deleting it would log both out.
-    final stored = _read(_refreshKey);
-    if (stored != null && stored != sent) {
-      _refreshToken = stored;
-      final retry = await _refreshWith(stored);
-      if (retry == _TokenResult.ok) return _accessToken;
-      if (retry == _TokenResult.unreachable) return null;
-    }
-
-    // The stored token is spent or was revoked - back to a fresh login.
-    _refreshToken = null;
-    if (_read(_refreshKey) == stored) _remove(_refreshKey);
-    return null;
-  }
-
-  Future<_TokenResult> _refreshWith(String token) => _token({
-    'grant_type': 'refresh_token',
-    'refresh_token': token,
-    'client_id': spotifyClientId,
-  });
-
-  Future<_TokenResult> _token(Map<String, String> body) async {
-    try {
-      final response = await http.post(
-        Uri.parse(_tokenUrl),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: body,
-      );
-      if (response.statusCode != 200) {
-        debugPrint('Token failed (${response.statusCode}): ${response.body}');
-        // 400 is `invalid_grant` - the token is spent. Anything else, a 5xx or
-        // a rate limit, is Spotify having a moment.
-        return response.statusCode == 400 || response.statusCode == 401
-            ? _TokenResult.rejected
-            : _TokenResult.unreachable;
-      }
-      final json = jsonDecode(response.body) as Map<String, dynamic>;
-      _accessToken = json['access_token'] as String;
-      _expiresAt = DateTime.now().add(
-        // A minute of slack, so a token never expires mid-round.
-        Duration(seconds: (json['expires_in'] as int) - 60),
-      );
-      // Spotify rotates the refresh token; keeping the old one locks us out.
-      final rotated = json['refresh_token'] as String?;
-      if (rotated != null) {
-        _refreshToken = rotated;
-        _write(_refreshKey, rotated);
-      }
-      return _TokenResult.ok;
-    } on Object catch (error) {
-      debugPrint('Token failed: $error');
-      return _TokenResult.unreachable;
-    }
-  }
-
   // --- the SDK --------------------------------------------------------------
 
   Future<void> _startPlayer() async {
@@ -503,7 +304,7 @@ class WebSpotifySession extends SpotifySession {
       'getOAuthToken'.toJS,
       ((JSFunction give) {
         unawaited(
-          _freshToken().then((token) {
+          _auth.freshToken().then((token) {
             give.callAsFunction(null, (token ?? '').toJS);
           }),
         );
@@ -593,29 +394,6 @@ class WebSpotifySession extends SpotifySession {
       return;
     }
     _moveTo(SpotifyConnection.failed, error: message);
-  }
-
-  // --- browser bits ---------------------------------------------------------
-
-  /// Takes `?code=...` back out of the address bar, so a reload does not try
-  /// to redeem a code that is already spent.
-  void _clearQuery() => web.window.history.replaceState(null, '', redirectUri);
-
-  String? _read(String key) => web.window.localStorage.getItem(key);
-
-  void _write(String key, String value) =>
-      web.window.localStorage.setItem(key, value);
-
-  void _remove(String key) => web.window.localStorage.removeItem(key);
-
-  static String _randomString(int length) {
-    const alphabet =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    final random = Random.secure();
-    return String.fromCharCodes([
-      for (var i = 0; i < length; i++)
-        alphabet.codeUnitAt(random.nextInt(alphabet.length)),
-    ]);
   }
 
   @override

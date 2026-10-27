@@ -487,6 +487,51 @@ change to the playing screen or the round flow has to keep working without a
 session - the widget tests cover both branches. Never make the in-app player a
 requirement, and never let a failure in it end a round without music.
 
+**There are two sessions behind that one launcher, and the device picks**
+(`createSpotifySession`, 2026-10-27). Spotify's Web Playback SDK is a desktop
+thing - it is not supported in a mobile browser, and where it loads at all the
+first track comes back a `playback_error`, which is the phone's half of the
+fallback above. So a phone gets `ConnectSpotifySession` instead: the song comes
+out of the Spotify app the phone already has, and this page only commands it
+over the Web API. A laptop keeps the SDK and nothing about it changes.
+
+What the two buy is the same thing, and that is the point of having the second
+one: the game knows the position, can seek and pause, so the seek bar means
+something and the words can follow the song. Only the speaker is somewhere
+else. Hence `LaunchResult.inApp` and `playingInApp` mean **the game is in
+control of the music**, not "the sound comes out of this tab" - every one of
+the four things they decide (the band, the keys, what a `resumed` reveals, the
+"Open in Spotify" button) wants the first reading.
+
+Three things are different about Connect and each one is load-bearing:
+
+- **There has to be a device**, and a device is an app that has been open.
+  Spotify lists nothing for an app that never ran, so that round falls back to
+  the link - which opens the Spotify app, and from the next round on there is
+  a device. The first round of an evening going out by link and the rest
+  playing here is the mode working, not failing. `hint` on the session is what
+  says so on the setup card, because it is the one thing a player has to do
+  and could not guess.
+- **Nothing is pushed, so the position is polled** every two seconds and
+  carried forward by the clock in between, exactly as the SDK's own reports
+  are. The poll runs only while a round plays, and only notifies when
+  something changed by more than the clock would have moved it - at 80ms the
+  words would otherwise rebuild the screen off every answer.
+- **A failure is a status, not an event.** There is no `playback_error` after
+  the fact: 404 means the device went away (looked up once more, then the
+  link), 403 means Premium. `playbackError` is therefore always null here.
+
+Which device of the account plays is `pickConnectDevice`: the one already
+playing first, because somebody set the evening up that way, then a phone,
+which is what this session exists for. A `is_restricted` device is never
+picked - it answers 204 and then does nothing, which is worse than the link.
+
+The login is shared (`SpotifyAuth`, `WebSpotifyAuth`): one PKCE flow, one
+rotating refresh token, the same scopes for both sessions, so a device that
+switches between them never asks for consent again. The delicate part of this
+file used to sit inside the SDK session; it is out of there because copying it
+for the second session is how a room gets logged out over a wobbly Wi-Fi.
+
 **Branch on what the launch did, never on the session.** A session reports
 itself `ready` and still refuses a track - one the account cannot play, one the
 market does not carry, a device another Spotify Connect client took over. The

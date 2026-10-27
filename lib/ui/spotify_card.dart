@@ -34,8 +34,7 @@ class SpotifyCard extends StatelessWidget {
       SpotifyConnection.disconnected => (
         Icons.music_note_outlined,
         'Play in the app',
-        'Connect Spotify Premium and the song comes out of this page - no '
-            'new tab, no switching back.',
+        session.offer,
         FilledButton.icon(
           onPressed: session.connect,
           icon: const Icon(Icons.link),
@@ -48,9 +47,15 @@ class SpotifyCard extends StatelessWidget {
         'One moment - the player is starting up.',
         null,
       ),
-      // Nothing to say once it works: the way back out lives in the app
-      // bar, see [SpotifyMenuButton].
-      SpotifyConnection.ready => (Icons.check_circle_outline, '', '', null),
+      // Nothing to say once it works - except where the session knows of
+      // something standing in the way, which is Connect without a device.
+      // The way back out lives in the app bar, see [SpotifyMenuButton].
+      SpotifyConnection.ready => (
+        Icons.check_circle_outline,
+        session.hint == null ? '' : 'Spotify is connected',
+        session.hint ?? '',
+        null,
+      ),
       SpotifyConnection.failed => (
         Icons.error_outline,
         'Spotify could not start',
