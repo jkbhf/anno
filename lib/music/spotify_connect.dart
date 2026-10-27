@@ -102,6 +102,7 @@ class ConnectSpotifySession extends SpotifySession {
     http.Client? client,
     DateTime Function() now = DateTime.now,
     this.poll = const Duration(seconds: 2),
+    this.followGrace = const Duration(seconds: 6),
   }) : _auth = auth,
        _client = client ?? http.Client(),
        _now = now;
@@ -111,6 +112,10 @@ class ConnectSpotifySession extends SpotifySession {
   /// answers - and slow enough that an evening stays well inside Spotify's
   /// rate limit.
   final Duration poll;
+
+  /// How long a poll gives a just-set device the benefit of the doubt before
+  /// treating a different one as the room's own doing - see [_deviceLockedAt].
+  final Duration followGrace;
 
   final SpotifyAuth _auth;
   final http.Client _client;
@@ -126,6 +131,14 @@ class ConnectSpotifySession extends SpotifySession {
 
   String? _deviceId;
   String? _deviceName;
+
+  /// When [_deviceId] was last set by a pick or a look-up, so the poll below
+  /// can tell "the room moved the music elsewhere" from "Spotify has not
+  /// caught up with the transfer we just sent" - the second one is common
+  /// moving to a phone, which takes longer to pick its player back up than an
+  /// always-on speaker does, and answering it by bouncing straight back to
+  /// the old device undoes the pick before it had a chance to land.
+  DateTime? _deviceLockedAt;
 
   /// The account's devices as they were last listed, for the picker on the
   /// remote. Only the usable ones get out, see [devices].
@@ -242,6 +255,7 @@ class ConnectSpotifySession extends SpotifySession {
 
     _deviceId = id;
     _deviceName = device?.name;
+    _deviceLockedAt = _now();
     notifyListeners();
     if (_isPlaying) await _transfer(id);
   }
@@ -488,6 +502,7 @@ class ConnectSpotifySession extends SpotifySession {
 
     _deviceId = device?.id;
     _deviceName = device?.name;
+    _deviceLockedAt = _now();
     notifyListeners();
     return _deviceId;
   }
@@ -532,11 +547,15 @@ class ConnectSpotifySession extends SpotifySession {
       _positionMs = progress;
       _durationMs = length;
       _positionAt = _now();
-      if (deviceId != null && deviceId != _deviceId) {
+      final lockedAt = _deviceLockedAt;
+      final stillSettling =
+          lockedAt != null && _now().difference(lockedAt) < followGrace;
+      if (deviceId != null && deviceId != _deviceId && !stillSettling) {
         // The room moved the music to another speaker. Follow it, or every
         // command after this would go to a device nobody is listening to.
         _deviceId = deviceId;
         _deviceName = device?['name'] as String?;
+        _deviceLockedAt = _now();
       }
       if (changed) notifyListeners();
     }

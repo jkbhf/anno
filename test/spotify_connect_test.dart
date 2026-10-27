@@ -445,6 +445,78 @@ void main() {
       expect(session.isPlaying, isTrue);
     });
 
+    test(
+      'a pick survives the poll catching up slower than the transfer',
+      () async {
+        // Spotify's own report of "who is playing" still says the old
+        // speaker for a moment after the transfer - moving to a phone in
+        // particular can take longer to take hold than an always-on speaker
+        // does. A poll landing in that window must not bounce the pick back.
+        final session = ConnectSpotifySession(
+          auth: _FakeAuth(),
+          poll: const Duration(milliseconds: 5),
+          followGrace: const Duration(milliseconds: 40),
+          client: MockClient((request) async {
+            if (request.url.path.endsWith('/devices')) {
+              return http.Response(
+                _devicesBody([
+                  {
+                    'id': 'speaker',
+                    'name': 'Speaker',
+                    'type': 'Speaker',
+                    'is_active': true,
+                    'is_restricted': false,
+                  },
+                  {
+                    'id': 'phone',
+                    'name': 'Phone',
+                    'type': 'Smartphone',
+                    'is_active': false,
+                    'is_restricted': false,
+                  },
+                ]),
+                200,
+              );
+            }
+            if (request.method == 'GET') {
+              return http.Response(
+                jsonEncode({
+                  'is_playing': true,
+                  'progress_ms': 0,
+                  'item': {'duration_ms': 10000},
+                  'device': {'id': 'speaker', 'name': 'Speaker'},
+                }),
+                200,
+              );
+            }
+            return http.Response('', 204);
+          }),
+        );
+        addTearDown(session.dispose);
+
+        await session.restore();
+        await session.play(_song);
+        // Past play()'s own one-off delay before its first poll, so what is
+        // left to measure is the grace window and not that start-up wait.
+        await Future<void>.delayed(const Duration(milliseconds: 650));
+        expect(session.deviceName, 'Speaker');
+
+        await session.pickDevice('phone');
+        expect(session.deviceName, 'Phone');
+
+        // A poll or two still reporting the old speaker, inside the grace
+        // window, must not undo the pick.
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        expect(session.deviceName, 'Phone');
+
+        // Past the grace window the old speaker is still reported, which by
+        // then really does mean the room moved it back by hand - so it is
+        // followed.
+        await Future<void>.delayed(const Duration(milliseconds: 60));
+        expect(session.deviceName, 'Speaker');
+      },
+    );
+
     test('the end of the game lets the device go', () async {
       final calls = <String>[];
       final session = ConnectSpotifySession(

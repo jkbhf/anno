@@ -521,6 +521,19 @@ Three things are different about Connect and each one is load-bearing:
   the fact: 404 means the device went away (looked up once more, then the
   link), 403 means Premium. `playbackError` is therefore always null here.
 
+**The poll can undo a pick before it has landed, and did** (2026-10-28). A
+transfer to the phone asked Spotify to move the song there, but `/me/player`
+kept answering with the old speaker for a moment - a phone takes longer to
+pick its player back up than a speaker that is always listening - and the
+poll read that as the room moving the music by hand and dutifully followed it
+straight back, so picking the phone looked like it did nothing at all and the
+round stayed on the speaker. `_deviceLockedAt` on `ConnectSpotifySession` is
+the fix: for `followGrace` (6 seconds, a few polls) after a pick or an
+automatic look-up sets the device, a poll reporting a different one is read as
+Spotify still catching up rather than the room's own move, and is ignored.
+Past that window the same mismatch is followed as before - a speaker that is
+still reported after six seconds really was moved there by hand.
+
 Which device of the account plays is `pickConnectDevice`, and **the phone wins,
 even over a device that is already playing** (2026-10-27). It was the other way
 round at first - whatever plays is where the room is listening, somebody set
