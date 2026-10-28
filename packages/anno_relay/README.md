@@ -20,8 +20,8 @@ One WebSocket per device, one room per screen.
 | --- | --- |
 | `GET /` | Not an upgrade: answers 200 and the number of rooms, for a health check. |
 | `GET /?` | The screen: opens a room and is told its code. |
-| `GET /?room=ABC123` | The phone: joins that room, refused where there is none. |
-| `GET /?room=ABC123&host=1` | The screen coming back to the room it had. |
+| `GET /?room=123456` | The phone: joins that room, refused where there is none. |
+| `GET /?room=123456&host=1` | The screen coming back to the room it had. |
 
 The server sends `{"t":"room","code":…,"peers":n}` on arrival,
 `{"t":"peers","count":n}` to the others whenever that number changes, and
