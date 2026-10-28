@@ -357,6 +357,10 @@ void main() {
         lessThan(tester.getRect(find.byType(LyricsView)).left),
       );
       expect(find.text('+1'), findsNothing);
+      // The way to the win is read beside the number.
+      expect(find.text('/10'), findsOneWidget);
+      // The swap is the phone's: a label for it says nothing to the room.
+      expect(find.text('Nobody knows it'), findsNothing);
 
       link.onMessage!(snapshot(3));
       await tester.pump(const Duration(milliseconds: 150));

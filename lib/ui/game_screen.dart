@@ -1634,6 +1634,7 @@ class _SongControls extends StatelessWidget {
     this.onLyrics,
     this.hasLyrics,
     this.inColumn = false,
+    this.showSwap = true,
   });
 
   final GameController game;
@@ -1655,6 +1656,10 @@ class _SongControls extends StatelessWidget {
   /// turned over and the sentence wraps to four lines there, and the player
   /// is not here at all - it is the band across the bottom of the screen.
   final bool inColumn;
+
+  /// False on the television: nobody there can press it, and a button that is
+  /// only a label for the phone's swap says nothing the room needs.
+  final bool showSwap;
 
   @override
   Widget build(BuildContext context) {
@@ -1750,7 +1755,7 @@ class _SongControls extends StatelessWidget {
         // with a ripple: it is pressed in the middle of a round, often in the
         // dark, and as a text button it was both hard to hit and the one
         // thing on the panel that looked like it had been left there.
-        if (game.canRedraw) ...[
+        if (showSwap && game.canRedraw) ...[
           const SizedBox(height: 12),
           // The undo sits in the same row, so it comes and goes without
           // moving anything.
@@ -2444,9 +2449,15 @@ class _PlayerGrid extends StatelessWidget {
     this.onTap,
     this.onLongPress,
     this.large = false,
+    this.fill = false,
   });
 
   final GameController game;
+
+  /// Fills the height it is given with as many rows as the players need,
+  /// instead of a grid with a fixed shape: the column's box has a height and
+  /// no room to grow, and four or eight players have to fit it all the same.
+  final bool fill;
 
   /// Null outside the reveal: the same tiles then only report the score.
   final void Function(GamePlayer player)? onTap;
@@ -2466,6 +2477,40 @@ class _PlayerGrid extends StatelessWidget {
     // gets scaled down until the names are too small to read across a table.
     final wide = game.players.length > 4;
 
+    if (fill) {
+      final count = game.players.length;
+      // Wider rather than taller as the table grows: every tile keeps a shape
+      // the name and the score can scale into.
+      final columns = count <= 4 ? 2 : (count <= 9 ? 3 : 4);
+      final rows = (count / columns).ceil();
+      const gap = 8.0;
+      return Column(
+        children: [
+          for (var row = 0; row < rows; row++) ...[
+            if (row > 0) const SizedBox(height: gap),
+            Expanded(
+              child: Row(
+                children: [
+                  for (var col = 0; col < columns; col++) ...[
+                    if (col > 0) const SizedBox(width: gap),
+                    Expanded(
+                      child: row * columns + col < count
+                          ? _tile(
+                              game.players[row * columns + col],
+                              tap,
+                              longPress,
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
     return GridView.count(
       crossAxisCount: wide ? 3 : 2,
       shrinkWrap: true,
@@ -2474,17 +2519,23 @@ class _PlayerGrid extends StatelessWidget {
       crossAxisSpacing: wide ? 12 : 16,
       childAspectRatio: wide ? 0.95 : 1.45,
       children: [
-        for (final player in game.players)
-          _PlayerTile(
-            player: player,
-            targetScore: game.targetScore,
-            onTap: tap == null ? null : () => tap(player),
-            onLongPress: longPress == null ? null : () => longPress(player),
-            large: large,
-          ),
+        for (final player in game.players) _tile(player, tap, longPress),
       ],
     );
   }
+
+  Widget _tile(
+    GamePlayer player,
+    void Function(GamePlayer player)? tap,
+    void Function(GamePlayer player)? longPress,
+  ) => _PlayerTile(
+    player: player,
+    targetScore: game.targetScore,
+    onTap: tap == null ? null : () => tap(player),
+    onLongPress: longPress == null ? null : () => longPress(player),
+    large: large,
+    dense: fill && game.players.length > 4,
+  );
 }
 
 class _PlayerTile extends StatefulWidget {
@@ -2494,6 +2545,7 @@ class _PlayerTile extends StatefulWidget {
     this.onTap,
     this.onLongPress,
     this.large = false,
+    this.dense = false,
   });
 
   final GamePlayer player;
@@ -2505,6 +2557,10 @@ class _PlayerTile extends StatefulWidget {
   /// holds rather than overflowing - eight of them in a row on a 720p
   /// projector are short.
   final bool large;
+
+  /// Five players or more in the column's box: smaller type, no bar and less
+  /// padding, so the name and the score stay readable in a short tile.
+  final bool dense;
 
   @override
   State<_PlayerTile> createState() => _PlayerTileState();
@@ -2583,46 +2639,93 @@ class _PlayerTileState extends State<_PlayerTile> {
           player.name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: large
+          style: large && !widget.dense
               ? theme.textTheme.titleLarge
               : theme.textTheme.titleMedium,
         ),
         const SizedBox(height: 4),
-        AnimatedScale(
-          scale: _flashing ? (_burst > 0 ? 1.35 : 1.15) : 1,
-          duration: const Duration(milliseconds: 280),
-          curve: Curves.easeOutBack,
-          // The new number drops in with a bounce while the old one fades, so
-          // a change is seen even from the back of the room.
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: ScaleTransition(
-                scale: CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.elasticOut,
-                ),
-                child: child,
-              ),
-            ),
-            child: Text(
-              '${player.score}',
-              key: ValueKey(player.score),
-              style:
-                  (large
-                          ? theme.textTheme.displayMedium
-                          : theme.textTheme.displaySmall)
-                      ?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: foreground,
+        // Scales down instead of overflowing: eight tiles on a phone are
+        // narrow, and "3 /10" is wider than the number alone.
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              AnimatedScale(
+                scale: _flashing ? (_burst > 0 ? 1.35 : 1.15) : 1,
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.easeOutBack,
+                // The new number drops in with a bounce while the old one fades, so
+                // a change is seen even from the back of the room.
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(
+                      scale: CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.elasticOut,
                       ),
-            ),
+                      child: child,
+                    ),
+                  ),
+                  child: Text(
+                    '${player.score}',
+                    key: ValueKey(player.score),
+                    style:
+                        (large
+                                ? (widget.dense
+                                      ? theme.textTheme.headlineLarge
+                                      : theme.textTheme.displayMedium)
+                                : theme.textTheme.displaySmall)
+                            ?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: foreground,
+                            ),
+                  ),
+                ),
+              ),
+              // How far it is to the win, read next to the number: "3 /10".
+              if (widget.targetScore > 0) ...[
+                const SizedBox(width: 4),
+                Text(
+                  '/${widget.targetScore}',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: foreground.withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
+        if (large && !widget.dense && widget.targetScore > 0) ...[
+          const SizedBox(height: 8),
+          // The same distance as a bar that fills as the points come in.
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: SizedBox(
+              width: 120,
+              height: 8,
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(
+                  end: (player.score / widget.targetScore).clamp(0, 1),
+                ),
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, _) => LinearProgressIndicator(
+                  value: value,
+                  color: foreground,
+                  backgroundColor: foreground.withValues(alpha: 0.18),
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
     );
-    const padding = EdgeInsets.all(12);
+    final padding = EdgeInsets.all(widget.dense ? 6 : 12);
     final content = large
         ? _FitBody(padding: padding, child: column)
         : Padding(padding: padding, child: column);
@@ -2837,6 +2940,10 @@ class WideRound extends StatelessWidget {
         // are for whoever runs the game. The next card is the tap on the
         // revealed year, which opens the camera over them.
         final scoreBox = scoresInColumn && camera == null;
+        // A table of five or more gets a taller box than the camera's third:
+        // three rows of tiles at a third of the column are too small to read
+        // from the sofa.
+        final scoreGrowth = game.players.length > 4 ? 1.5 : 1.0;
 
         // Closed and between rounds there is nothing to look at, so the box
         // goes rather than sitting there as a grey placeholder. After a reveal
@@ -2893,7 +3000,10 @@ class WideRound extends StatelessWidget {
                                       padding: EdgeInsets.only(
                                         top: 16,
                                         bottom: scoreBox
-                                            ? min(cameraHeight, box.maxHeight) +
+                                            ? min(
+                                                    cameraHeight * scoreGrowth,
+                                                    box.maxHeight,
+                                                  ) +
                                                   8
                                             : 0,
                                       ),
@@ -2916,6 +3026,7 @@ class WideRound extends StatelessWidget {
                                               onUndoRedraw: onUndoRedraw,
                                               hasLyrics: hasLyrics,
                                               inColumn: true,
+                                              showSwap: !cameraless,
                                             ),
                                         ],
                                       ),
@@ -2947,7 +3058,10 @@ class WideRound extends StatelessWidget {
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                height: min(cameraHeight, box.maxHeight),
+                                height: min(
+                                  cameraHeight * scoreGrowth,
+                                  box.maxHeight,
+                                ),
                                 child: _ColumnScoreBox(
                                   game: game,
                                   onTap: onColumnGivePoint,
@@ -3635,11 +3749,11 @@ class _ColumnScoreBox extends StatelessWidget {
       color: theme.colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(borderRadius: radius),
       clipBehavior: Clip.antiAlias,
-      // Scrollable rather than sized to the grid: eight players still have to
-      // fit a slot capped at a third of the column, the same cap the camera
-      // lives under.
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      // No scrolling: the grid fills the box and the tiles scale what they
+      // hold, so eight players fit the third of the column the box is capped
+      // at just as two do.
+      child: Padding(
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -3648,12 +3762,15 @@ class _ColumnScoreBox extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.titleSmall,
             ),
-            const SizedBox(height: 10),
-            _PlayerGrid(
-              game: game,
-              onTap: onTap,
-              onLongPress: onLongPress,
-              large: true,
+            const SizedBox(height: 8),
+            Expanded(
+              child: _PlayerGrid(
+                game: game,
+                onTap: onTap,
+                onLongPress: onLongPress,
+                large: true,
+                fill: true,
+              ),
             ),
           ],
         ),

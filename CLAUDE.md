@@ -1025,6 +1025,16 @@ arrive, so the animation hangs off the change and not off a tap. The previous
 score is kept in the tile's state: the mirror updates its players in place, so
 the old and the new widget hold the same object.
 
+**Many players, and the way to the win** (2026-10-28): the box is a grid that
+fills its height (`_PlayerGrid.fill`) - two columns up to four players, three
+up to nine, four beyond - with no scrolling; the tiles scale what they hold. From five players on the box is
+1.5 times the camera's height and the tiles go `dense` (smaller type, no bar,
+less padding), because three rows in a third of the column came out at an
+unreadable 10 pixels. Every tile says `3 /10` - the target beside the score -
+and a large one carries a bar that fills towards it. The television has no
+`Nobody knows it` (`_SongControls.showSwap`): it is a label for a button
+nobody in the room can press.
+
 `UiScale` hands its child an `OverflowBox` of `size / factor`. A `SizedBox`
 there is clamped to the constraints it is given, which below 1 left the scaled
 picture with empty margins at the bottom and the right.
