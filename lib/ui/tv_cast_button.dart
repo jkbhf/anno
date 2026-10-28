@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../data/tv_room_store.dart';
 import '../sync/tv_link.dart';
@@ -108,16 +109,21 @@ class _TvSheetState extends State<_TvSheet> {
           builder: (context) => TextInputDialog(
             title: 'Code from the television',
             confirmLabel: 'Pair',
-            hintText: 'ABC123',
+            hintText: '123456',
             monospace: true,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(6),
+            ],
             helper: const Text(
               'Open anno on the television, press the cast button in the top '
               'bar and then "This screen is the television". It shows six '
-              'characters.',
+              'digits.',
             ),
             validator: (value) => value.trim().length == 6
                 ? null
-                : 'Six characters, as they stand on the screen.',
+                : 'Six digits, as they stand on the screen.',
           ),
         );
     if (code == null || !mounted) return;

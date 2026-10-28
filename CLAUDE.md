@@ -1079,7 +1079,7 @@ second television brings its own settings.
 
 **The relay forwards and knows nothing.** `packages/anno_relay` is a
 `dart:io` HttpServer with no dependencies: a room is its sockets, a code is
-six characters from an alphabet without O/0 and I/1, and the room dies with
+six digits (so the phone opens only a number pad), and the room dies with
 its last socket - a room that outlived an evening would be a code somebody
 else's phone could walk into. It deliberately does **not** know the game's
 messages, so a field added to a snapshot is not a service to redeploy on a
@@ -1089,8 +1089,8 @@ and on the phone, and a television that reloads would otherwise strand the
 phone holding it.
 
 **Why there is no QR code on the television.** The phone has a camera and the
-television has six characters on it, so scanning would be the obvious move -
-but the phone also has a keyboard, and six characters typed in beat a camera
+television has six digits on it, so scanning would be the obvious move -
+but the phone also has a keyboard, and six digits typed in beat a camera
 pointed at a lit screen in a dark room. It also keeps `_handleCode` from
 having to tell a pairing code from a year card.
 

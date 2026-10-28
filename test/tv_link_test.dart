@@ -128,7 +128,7 @@ void main() {
 
   test('a code nobody is waiting for says so and stops trying', () async {
     final phone = link();
-    await phone.join('ZZZZZZ');
+    await phone.join('999999');
     await until(() => phone.state == LinkState.failed);
     expect(phone.problem, contains('No screen'));
 

@@ -482,6 +482,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void _toggleScores() {
     setState(() => _showScores = !_showScores);
     unawaited(ShowScoresStore.save(shown: _showScores));
+    // The television only hears about the round when it changes; the
+    // scoreboard is this screen's own, so it has to be sent by hand.
+    _link?.send(_snapshot());
   }
 
   /// A tap in the column's own score box - see [_scoreGivenSinceReveal].

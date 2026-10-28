@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// An [AlertDialog] with a single text field that owns its controller.
 ///
@@ -18,6 +19,7 @@ class TextInputDialog extends StatefulWidget {
     this.suffixText,
     this.helper,
     this.keyboardType,
+    this.inputFormatters,
     this.minLines = 1,
     this.maxLines = 1,
     this.monospace = false,
@@ -35,6 +37,7 @@ class TextInputDialog extends StatefulWidget {
   final Widget? helper;
 
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final int minLines;
   final int maxLines;
   final bool monospace;
@@ -89,6 +92,7 @@ class _TextInputDialogState extends State<TextInputDialog> {
               controller: _controller,
               autofocus: true,
               keyboardType: widget.keyboardType,
+              inputFormatters: widget.inputFormatters,
               minLines: widget.minLines,
               maxLines: widget.maxLines,
               style: widget.monospace

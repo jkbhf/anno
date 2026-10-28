@@ -226,7 +226,7 @@ void main() {
 
   group('the screen', () {
     testWidgets('shows the code until a phone is on it', (tester) async {
-      final link = TvLink.paired(role: LinkRole.screen, code: 'QRS789');
+      final link = TvLink.paired(role: LinkRole.screen, code: '472913');
       // Not paired yet: the code is the whole screen.
       final waiting = TvLink(url: '');
       addTearDown(link.dispose);
@@ -237,13 +237,13 @@ void main() {
 
       // Paired but nothing has arrived: still the code, and a word that it
       // is waiting for the first card.
-      expect(find.text('Q R S 7 8 9'), findsOne);
+      expect(find.text('4 7 2 9 1 3'), findsOne);
       expect(find.textContaining('Waiting for the first card'), findsOne);
       expect(find.byType(WideRound), findsNothing);
     });
 
     testWidgets('the code screen has the way back out', (tester) async {
-      final link = TvLink.paired(role: LinkRole.screen, code: 'QRS789');
+      final link = TvLink.paired(role: LinkRole.screen, code: '472913');
       addTearDown(link.dispose);
 
       await tester.pumpWidget(
@@ -272,13 +272,13 @@ void main() {
       );
       await tester.tap(find.text('Be the television'));
       await tester.pumpAndSettle();
-      expect(find.text('Q R S 7 8 9'), findsOne);
+      expect(find.text('4 7 2 9 1 3'), findsOne);
 
       // This screen has no app bar to carry a back arrow, so the button is
       // under the code.
       await tester.tap(find.text('Back'));
       await tester.pumpAndSettle();
-      expect(find.text('Q R S 7 8 9'), findsNothing);
+      expect(find.text('4 7 2 9 1 3'), findsNothing);
       expect(find.text('Be the television'), findsOne);
     });
 
@@ -365,7 +365,7 @@ void main() {
     });
 
     testWidgets('is not a speaker on the account', (tester) async {
-      final link = TvLink.paired(role: LinkRole.screen, code: 'QRS789');
+      final link = TvLink.paired(role: LinkRole.screen, code: '472913');
       addTearDown(link.dispose);
       final spotify = _Device();
       addTearDown(spotify.dispose);
@@ -582,6 +582,30 @@ void main() {
 
       final steps = sent.whereType<RemoteCommand>().map((c) => c.step);
       expect(steps, [RemoteStep.wordsEarlier, RemoteStep.wordsLater]);
+    });
+
+    testWidgets('hiding the scores reaches the television at once', (
+      tester,
+    ) async {
+      final game = buildGame();
+      addTearDown(game.dispose);
+      final sent = <SyncMessage>[];
+      final link = TvLink.paired(role: LinkRole.remote, onSend: sent.add);
+      addTearDown(link.dispose);
+
+      await tester.pumpWidget(wrapRemote(game, link, _Playing()));
+      await tester.pumpAndSettle();
+      await closeAutoScanner(tester);
+      sent.clear();
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Hide the scores'));
+      await tester.pumpAndSettle();
+
+      final snapshots = sent.whereType<GameSnapshot>().toList();
+      expect(snapshots, isNotEmpty);
+      expect(snapshots.last.showScores, isFalse);
     });
 
     testWidgets('a held button in the screen settings keeps stepping', (

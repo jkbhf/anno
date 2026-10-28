@@ -324,7 +324,7 @@ class _Starting extends StatelessWidget {
 
 /// The code, while there is nothing else to show.
 ///
-/// Six characters big enough to read from the sofa, and the one sentence that
+/// Six digits big enough to read from the sofa, and the one sentence that
 /// says what to do with them. Nothing is scanned here: the phone has a
 /// keyboard, and six characters typed beat a camera pointed at a television.
 class _Pairing extends StatelessWidget {

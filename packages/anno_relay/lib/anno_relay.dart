@@ -22,10 +22,10 @@ class RelayServer {
     Random? random,
   }) : _random = random ?? Random.secure();
 
-  /// A code of six of these is what somebody reads off a television across
-  /// the room. No O and no 0, no I and no 1: the two pairs nobody can tell
-  /// apart on a screen are the two that would be typed in wrong.
-  static const String alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  /// A code of six digits is what somebody reads off a television across
+  /// the room and types into a number pad - digits only, so the phone never
+  /// has to open a full keyboard for it.
+  static const String alphabet = '0123456789';
 
   /// Above this a message is dropped rather than forwarded. A snapshot is a
   /// few hundred bytes; anything near this is not the game.
@@ -195,8 +195,7 @@ class RelayServer {
   }
 
   bool _looksLikeCode(String code) =>
-      code.length == codeLength &&
-      code.split('').every(alphabet.contains);
+      code.length == codeLength && code.split('').every(alphabet.contains);
 
   String? _freshCode() {
     if (_rooms.length >= maxRooms) return null;

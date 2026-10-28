@@ -223,11 +223,11 @@ phone, which is also where the music comes from and where every control is.
 How an evening goes:
 
 1. On the television, open the page, press the cast button in the app bar and
-   then **This screen is the television**. It shows six characters.
+   then **This screen is the television**. It shows six digits.
    (Fullscreen is offered right there, which is the one moment somebody is
    standing in front of it with a remote, and so is the way back out.)
 2. On the phone, the same cast button, then **Type the code**, those six
-   characters.
+   digits.
 3. Start the game as usual. The phone scans the cards, reveals the year, swaps
    a song nobody knows, moves around in it, hands out the points - and the
    television shows the room all of it.

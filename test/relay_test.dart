@@ -101,7 +101,7 @@ void main() {
   });
 
   test('a code nobody is waiting for is refused in words', () async {
-    final stranger = await connect('ZZZZZZ');
+    final stranger = await connect('999999');
     final answer = await stranger.nextOf('refused');
     expect(answer['why'], contains('No screen'));
   });
@@ -153,7 +153,7 @@ void main() {
   });
 
   test('a code made up by a joiner is not a room', () async {
-    final stranger = await connect('ABCDEF');
+    final stranger = await connect('123456');
     addTearDown(stranger.close);
     await stranger.nextOf('refused');
   });
