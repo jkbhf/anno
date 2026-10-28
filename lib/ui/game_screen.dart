@@ -1468,12 +1468,13 @@ class _SectionHeading extends StatelessWidget {
       children: [
         Expanded(child: Text(title, style: theme.textTheme.titleLarge)),
         const SizedBox(width: 8),
-        Text(
-          '/ $targetScore',
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        if (targetScore > 0)
+          Text(
+            '/ $targetScore',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
-        ),
       ],
     );
   }
@@ -2644,7 +2645,8 @@ class _PlayerTileState extends State<_PlayerTile> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final player = widget.player;
-    final reached = player.score >= widget.targetScore;
+    final reached =
+        widget.targetScore > 0 && player.score >= widget.targetScore;
     final interactive = widget.onTap != null || widget.onLongPress != null;
     final accent = widget.accent ?? scheme.primary;
     final large = widget.large;

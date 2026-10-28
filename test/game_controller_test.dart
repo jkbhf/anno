@@ -366,6 +366,21 @@ void main() {
     expect(game.currentYear, isNull);
   });
 
+  test('a game without a limit has no winner however many points', () async {
+    final game = buildGame(targetScore: 0);
+    game.scan(card2005);
+    await game.startPlayback();
+    game.reveal();
+
+    for (var i = 0; i < 30; i++) {
+      game.addPoint(game.players.first);
+    }
+    game.nextRound();
+
+    expect(game.winners, isEmpty);
+    expect(game.phase, isNot(RoundPhase.finished));
+  });
+
   test('the score target ends the game', () async {
     final game = buildGame(targetScore: 2);
     game.scan(card2005);

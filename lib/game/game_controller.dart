@@ -223,7 +223,10 @@ class GameController extends ChangeNotifier {
       phase == RoundPhase.revealed || phase == RoundPhase.finished;
 
   /// Players at the highest score from the target upwards. Several on a tie.
+  /// A target of 0 is a game without a limit: nobody ever wins it, it is left
+  /// by hand.
   List<GamePlayer> get winners {
+    if (targetScore <= 0) return const [];
     final reached = players.where((p) => p.score >= targetScore).toList();
     if (reached.isEmpty) return const [];
     final best = reached.map((p) => p.score).reduce(max);

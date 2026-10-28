@@ -106,6 +106,22 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('no limit is a choice of its own', (tester) async {
+    await tester.pumpWidget(wrap());
+
+    await tester.tap(find.text('No limit'));
+    await tester.pumpAndSettle();
+
+    final chip = tester.widget<ChoiceChip>(
+      find.ancestor(
+        of: find.text('No limit'),
+        matching: find.byType(ChoiceChip),
+      ),
+    );
+    expect(chip.selected, isTrue);
+    expect(find.text('Other'), findsOneWidget);
+  });
+
   testWidgets('an implausible score target keeps the dialog open', (
     tester,
   ) async {

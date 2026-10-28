@@ -1030,6 +1030,13 @@ arrive, so the animation hangs off the change and not off a tap. The previous
 score is kept in the tile's state: the mirror updates its players in place, so
 the old and the new widget hold the same object.
 
+**A game can have no limit** (`targetScore` 0, the `No limit` chip on the setup
+screen, 2026-10-28): points are kept, nobody ever wins (`winners` is empty), the
+heading drops its `/ N` and the tiles do not fill or glow towards anything. It is
+a 0 in the same field rather than a flag, so the saved game and the snapshot
+carry it without a new key; anything that reads the target must treat 0 as
+"none", not as "reached".
+
 **Many players, and the way to the win** (2026-10-28): the box is a grid that
 fills its height (`_PlayerGrid.fill`) - two columns up to four players, three
 up to nine, four beyond - with no scrolling; the tiles scale what they hold. From five players on the box is

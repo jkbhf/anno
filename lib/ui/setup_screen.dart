@@ -344,10 +344,19 @@ class _SetupScreenState extends State<SetupScreen> with RouteAware {
                   ),
                 ChoiceChip(
                   label: Text(
-                    _presets.contains(_target) ? 'Other' : '$_target points',
+                    _presets.contains(_target) || _target == 0
+                        ? 'Other'
+                        : '$_target points',
                   ),
-                  selected: !_presets.contains(_target),
+                  selected: !_presets.contains(_target) && _target != 0,
                   onSelected: (_) => _chooseCustomTarget(),
+                ),
+                // 0 is the game without a limit: points are kept but nobody
+                // wins, and the tiles do not fill towards anything.
+                ChoiceChip(
+                  label: const Text('No limit'),
+                  selected: _target == 0,
+                  onSelected: (_) => setState(() => _target = 0),
                 ),
               ],
             ),
@@ -407,7 +416,7 @@ class _ResumeCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               '${categories.map((c) => c.name).join(', ')} '
-              '· to ${game.targetScore} points',
+              '· ${game.targetScore > 0 ? 'to ${game.targetScore} points' : 'no limit'}',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
