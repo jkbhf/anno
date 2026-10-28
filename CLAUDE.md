@@ -1015,6 +1015,16 @@ starts anything. With the scores hidden nothing changes: the camera opens
 itself at the reveal, and the `Next round` button is the way back after it was
 closed by hand - with the scores on there is no such button, the year is it.
 
+**The television has the same column box** (2026-10-28): it is cameraless, so
+nothing ever covers it, and the stage there is the words alone as well. On the
+phone as a remote the scores are on screen for the whole game while they are
+switched on, not only after the reveal. A score that changes is celebrated on
+`_PlayerTile` itself - the number drops in with a bounce, the tile flashes and
+a `+1` rises out of it - because the television only ever sees a new number
+arrive, so the animation hangs off the change and not off a tap. The previous
+score is kept in the tile's state: the mirror updates its players in place, so
+the old and the new widget hold the same object.
+
 `UiScale` hands its child an `OverflowBox` of `size / factor`. A `SizedBox`
 there is clamped to the constraints it is given, which below 1 left the scaled
 picture with empty margins at the bottom and the right.

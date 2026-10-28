@@ -2514,12 +2514,47 @@ class _PlayerTileState extends State<_PlayerTile> {
   /// A tap changes one digit somewhere on a screen four people are looking at.
   /// The flash is what tells the room which tile was hit.
   bool _flashing = false;
+  Timer? _flashOff;
 
-  void _flash() {
+  /// The last change of the score and a counter that restarts the floating
+  /// "+1": the television only ever sees a new number arrive, so the
+  /// celebration hangs off the change itself and not off a tap here.
+  int _delta = 0;
+  int _burst = 0;
+
+  /// Remembered here and not read off the old widget: the mirror updates its
+  /// players in place, so old and new widget hold the same object.
+  int _lastScore = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastScore = widget.player.score;
+  }
+
+  void _flash([Duration length = const Duration(milliseconds: 220)]) {
+    _flashOff?.cancel();
     setState(() => _flashing = true);
-    Future.delayed(const Duration(milliseconds: 220), () {
+    _flashOff = Timer(length, () {
       if (mounted) setState(() => _flashing = false);
     });
+  }
+
+  @override
+  void didUpdateWidget(_PlayerTile old) {
+    super.didUpdateWidget(old);
+    final change = widget.player.score - _lastScore;
+    if (change == 0) return;
+    _lastScore = widget.player.score;
+    _delta = change;
+    _burst++;
+    _flash(const Duration(milliseconds: 700));
+  }
+
+  @override
+  void dispose() {
+    _flashOff?.cancel();
+    super.dispose();
   }
 
   @override
@@ -2554,15 +2589,35 @@ class _PlayerTileState extends State<_PlayerTile> {
         ),
         const SizedBox(height: 4),
         AnimatedScale(
-          scale: _flashing ? 1.15 : 1,
-          duration: const Duration(milliseconds: 120),
-          child: Text(
-            '${player.score}',
-            style:
-                (large
-                        ? theme.textTheme.displayMedium
-                        : theme.textTheme.displaySmall)
-                    ?.copyWith(fontWeight: FontWeight.w700, color: foreground),
+          scale: _flashing ? (_burst > 0 ? 1.35 : 1.15) : 1,
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutBack,
+          // The new number drops in with a bounce while the old one fades, so
+          // a change is seen even from the back of the room.
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.elasticOut,
+                ),
+                child: child,
+              ),
+            ),
+            child: Text(
+              '${player.score}',
+              key: ValueKey(player.score),
+              style:
+                  (large
+                          ? theme.textTheme.displayMedium
+                          : theme.textTheme.displaySmall)
+                      ?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: foreground,
+                      ),
+            ),
           ),
         ),
       ],
@@ -2572,7 +2627,7 @@ class _PlayerTileState extends State<_PlayerTile> {
         ? _FitBody(padding: padding, child: column)
         : Padding(padding: padding, child: column);
 
-    return AnimatedContainer(
+    final tile = AnimatedContainer(
       duration: const Duration(milliseconds: 180),
       decoration: BoxDecoration(
         color: background,
@@ -2592,6 +2647,43 @@ class _PlayerTileState extends State<_PlayerTile> {
               child: content,
             )
           : content,
+    );
+
+    if (_burst == 0) return tile;
+    // The "+1" rises out of the tile and fades. Keyed on the burst, so every
+    // change starts it again from the bottom.
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Positioned.fill(child: tile),
+        Positioned(
+          top: 0,
+          right: 8,
+          child: IgnorePointer(
+            child: TweenAnimationBuilder<double>(
+              key: ValueKey(_burst),
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeOut,
+              builder: (context, t, _) => Opacity(
+                opacity: (1 - t).clamp(0, 1),
+                child: Transform.translate(
+                  offset: Offset(0, -6 - 34 * t),
+                  child: Text(
+                    _delta > 0 ? '+$_delta' : '$_delta',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: _delta > 0
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.error,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -2736,10 +2828,10 @@ class WideRound extends StatelessWidget {
           constraints.maxHeight * 0.33,
         );
 
-        // Scores move into the column where there is a real camera to share
-        // the slot with - the television has no camera to wait with, so it
-        // keeps them on the stage instead, see [showScores] below.
-        final scoresInColumn = !cameraless && showScores;
+        // The scores are the column's, on the television as well: the stage
+        // is the words alone. Where there is no camera the box simply never
+        // gets covered.
+        final scoresInColumn = showScores;
         // The scores sit at the foot of the column whenever no camera covers
         // them, in every phase: the room's wall is the words, and the scores
         // are for whoever runs the game. The next card is the tap on the
@@ -2979,25 +3071,30 @@ class _RemoteRound extends StatelessWidget {
           ),
         ],
         if (sync case final panel?) ...[const SizedBox(height: 16), panel],
+        // The scores are on the phone for the whole game while they are on at
+        // all, not only after the reveal - whoever runs the game keeps them.
+        if (showScores) ...[
+          const SizedBox(height: 24),
+          Text(
+            game.isRevealed ? 'Who had it?' : 'Scores',
+            style: theme.textTheme.titleMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Tap to give a point, long press to take one away.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _PlayerGrid(
+            game: game,
+            onTap: (player) => _givePoint(game, player),
+            onLongPress: (player) => _takePoint(game, player),
+          ),
+        ],
         if (game.isRevealed) ...[
           const SizedBox(height: 24),
-          if (showScores) ...[
-            Text('Who had it?', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              'Tap to give a point, long press to take one away.',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _PlayerGrid(
-              game: game,
-              onTap: (player) => _givePoint(game, player),
-              onLongPress: (player) => _takePoint(game, player),
-            ),
-            const SizedBox(height: 24),
-          ],
           // The camera opens by itself at the reveal, so this is the way on
           // for a camera that was closed by hand - and the whole way on in a
           // game played without the cards.

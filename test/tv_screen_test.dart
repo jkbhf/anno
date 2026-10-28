@@ -320,6 +320,51 @@ void main() {
       });
     }
 
+    testWidgets('the scores stand in the column and a change is celebrated', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(1280, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      final link = TvLink.paired(role: LinkRole.screen);
+      addTearDown(link.dispose);
+      await tester.pumpWidget(wrapTv(link, YearDatabase.inMemory()));
+      await tester.pumpAndSettle();
+
+      GameSnapshot snapshot(int score) => GameSnapshot(
+        phase: RoundPhase.playing,
+        players: [(name: 'Anthony', score: score)],
+        targetScore: 10,
+        showScores: true,
+        year: 2005,
+        title: 'My Number One',
+        artist: 'Helena Paparizou',
+        deck: 'ESC',
+        country: 'Greece',
+        place: 1,
+        playingInApp: true,
+        sessionReady: true,
+        hasLyrics: true,
+      );
+
+      link.onMessage!(snapshot(2));
+      await tester.pumpAndSettle();
+
+      // Left of the words, in the column - never on the stage.
+      expect(
+        tester.getCenter(find.text('Anthony')).dx,
+        lessThan(tester.getRect(find.byType(LyricsView)).left),
+      );
+      expect(find.text('+1'), findsNothing);
+
+      link.onMessage!(snapshot(3));
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(find.text('+1'), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.text('3'), findsOneWidget);
+    });
+
     testWidgets('draws the round, and no camera box', (tester) async {
       tester.view.physicalSize = const Size(1280, 720);
       tester.view.devicePixelRatio = 1;
