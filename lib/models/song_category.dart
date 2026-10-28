@@ -7,6 +7,7 @@ class SongCategory {
     required this.name,
     required this.description,
     required this.songs,
+    this.imported = false,
   }) : _byYear = <int, List<Song>>{} {
     for (final song in songs) {
       _byYear.putIfAbsent(song.year, () => <Song>[]).add(song);
@@ -22,6 +23,7 @@ class SongCategory {
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String? ?? '',
+      imported: json['imported'] == true,
       songs: [
         for (final entry in rawSongs)
           Song.fromJson(entry as Map<String, dynamic>),
@@ -33,6 +35,9 @@ class SongCategory {
   final String name;
   final String description;
   final List<Song> songs;
+
+  /// A deck the player brought in from a file, kept on this device only.
+  final bool imported;
 
   final Map<int, List<Song>> _byYear;
 

@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../data/csv_deck.dart';
 import '../models/player.dart';
 import '../models/song_category.dart';
 import 'app_scope.dart';
@@ -134,6 +137,34 @@ class _CategoryScreenState extends State<CategoryScreen> {
       if (_selected.contains(category.id)) category,
   ];
 
+  /// Reads a playlist export the player picks and keeps it as a deck of its
+  /// own on this device. The rows are taken as they are.
+  Future<void> _import() async {
+    final scope = AppScope.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    String message;
+    try {
+      final picked = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const ['csv'],
+      );
+      if (picked.isEmpty) return;
+      final file = picked.first;
+      final bytes = await file.readAsBytes();
+      final deck = CsvDeck.parse(
+        utf8.decode(bytes, allowMalformed: true),
+        name: CsvDeck.nameOf(file.name),
+      );
+      await scope.onImport?.call(deck);
+      message = '${deck.name}: ${deck.songs.length} songs imported';
+    } on FormatException catch (error) {
+      message = error.message;
+    } on Object catch (error) {
+      message = 'Import failed: $error';
+    }
+    messenger.showSnackBar(SnackBar(content: Text(message)));
+  }
+
   Future<void> _start(List<SongCategory> categories) async {
     final chosen = _chosen(categories);
     if (!canCarryGame(chosen)) return;
@@ -177,6 +208,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
           percent: chosen.length > 1 ? _percentOf(category, chosen) : null,
           onWeight: (weight) => _setWeight(category, weight),
           onTap: category.isEmpty ? null : () => _toggle(category),
+          onRemove: category.imported
+              ? () {
+                  setState(() => _selected.remove(category.id));
+                  AppScope.of(context).onRemoveImported?.call(category.id);
+                }
+              : null,
         ),
     ];
 
@@ -218,6 +255,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         padding: const EdgeInsets.only(bottom: 12),
                         child: card,
                       ),
+                  if (AppScope.of(context).onImport != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: OutlinedButton.icon(
+                        onPressed: _import,
+                        icon: const Icon(Icons.upload_file),
+                        label: const Text('Import a playlist (.csv)'),
+                      ),
+                    ),
                   // Last, because it is a question about the decks above it:
                   // the range it opens on is their span.
                   if (_range(chosen) case final range?)
@@ -409,6 +455,7 @@ class _CategoryCard extends StatelessWidget {
     required this.onWeight,
     this.percent,
     this.onTap,
+    this.onRemove,
   });
 
   final SongCategory category;
@@ -423,6 +470,9 @@ class _CategoryCard extends StatelessWidget {
   final int? percent;
 
   final VoidCallback? onTap;
+
+  /// Set for an imported deck: takes it off the device again.
+  final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -476,6 +526,13 @@ class _CategoryCard extends StatelessWidget {
                     weight: weight,
                     percent: percent!,
                     onChanged: onWeight,
+                  ),
+                if (onRemove != null)
+                  IconButton(
+                    tooltip: 'Remove this playlist',
+                    visualDensity: VisualDensity.compact,
+                    onPressed: onRemove,
+                    icon: const Icon(Icons.delete_outline),
                   ),
                 if (enabled)
                   Icon(

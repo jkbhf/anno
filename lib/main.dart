@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'data/camera_facing_store.dart';
 import 'data/game_store.dart';
+import 'data/imported_decks_store.dart';
 import 'data/music_service_store.dart';
 import 'data/playback_device_store.dart';
 import 'data/roster_store.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final years = await YearDatabase.load();
   final categories = await SongRepository.loadAll();
+  final imported = await ImportedDecksStore.load();
   final savedGame = await GameStore.load();
   final roster = await RosterStore.load();
   final service = await MusicServiceStore.load();
@@ -49,6 +51,7 @@ Future<void> main() async {
     PlayApp(
       years: years,
       categories: categories,
+      imported: imported,
       savedGame: savedGame,
       roster: roster,
       spotify: spotify,
@@ -65,6 +68,7 @@ class PlayApp extends StatefulWidget {
     required this.spotify,
     required this.link,
     this.service = MusicService.spotify,
+    this.imported = const [],
     this.savedGame,
     this.roster = const [],
     super.key,
@@ -73,6 +77,9 @@ class PlayApp extends StatefulWidget {
   final YearDatabase years;
   final List<SongCategory> categories;
   final SpotifySession spotify;
+
+  /// Decks the player imported on this device, behind the built-in ones.
+  final List<SongCategory> imported;
 
   /// The line to a television, see [TvLink].
   final TvLink link;
@@ -94,6 +101,29 @@ class _PlayAppState extends State<PlayApp> {
     widget.service,
   );
 
+  late List<SongCategory> _imported = [...widget.imported];
+
+  Future<void> _import(SongCategory deck) async {
+    setState(() {
+      _imported = [
+        for (final d in _imported)
+          if (d.id != deck.id) d,
+        deck,
+      ];
+    });
+    await ImportedDecksStore.save(_imported);
+  }
+
+  Future<void> _remove(String id) async {
+    setState(
+      () => _imported = [
+        for (final d in _imported)
+          if (d.id != id) d,
+      ],
+    );
+    await ImportedDecksStore.save(_imported);
+  }
+
   @override
   void dispose() {
     _service.dispose();
@@ -104,7 +134,9 @@ class _PlayAppState extends State<PlayApp> {
   Widget build(BuildContext context) {
     return AppScope(
       years: widget.years,
-      categories: widget.categories,
+      categories: [...widget.categories, ..._imported],
+      onImport: _import,
+      onRemoveImported: _remove,
       spotify: widget.spotify,
       link: widget.link,
       service: _service,

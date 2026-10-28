@@ -15,6 +15,8 @@ class AppScope extends InheritedWidget {
     required this.link,
     required this.service,
     required super.child,
+    this.onImport,
+    this.onRemoveImported,
     super.key,
   });
 
@@ -34,6 +36,13 @@ class AppScope extends InheritedWidget {
   /// a game starts. A notifier rather than a value, so switching it does not
   /// rebuild the whole tree.
   final ValueNotifier<MusicService> service;
+
+  /// Adds a deck read from a file to the ones on this device. Null where the
+  /// app was not built with the import (tests).
+  final Future<void> Function(SongCategory deck)? onImport;
+
+  /// Takes an imported deck, by id, off the device again.
+  final Future<void> Function(String id)? onRemoveImported;
 
   static AppScope of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<AppScope>();
