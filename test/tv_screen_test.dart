@@ -282,6 +282,44 @@ void main() {
       expect(find.text('Be the television'), findsOne);
     });
 
+    for (final scale in [0.6, 1.4]) {
+      testWidgets('a screen size of $scale still fills the screen', (
+        tester,
+      ) async {
+        SharedPreferences.setMockInitialValues({'ui.scale': scale});
+        tester.view.physicalSize = const Size(1280, 720);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+
+        final link = TvLink.paired(role: LinkRole.screen);
+        addTearDown(link.dispose);
+        await tester.pumpWidget(wrapTv(link, YearDatabase.inMemory()));
+        await tester.pumpAndSettle();
+        link.onMessage!(
+          GameSnapshot(
+            phase: RoundPhase.playing,
+            players: const [(name: 'Anthony', score: 2)],
+            targetScore: 10,
+            showScores: true,
+            year: 2005,
+            title: 'My Number One',
+            artist: 'Helena Paparizou',
+            deck: 'ESC',
+            country: 'Greece',
+            place: 1,
+            playingInApp: true,
+            sessionReady: true,
+            hasLyrics: true,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final rect = tester.getRect(find.byType(WideRound));
+        expect(rect.right, closeTo(1280, 1));
+        expect(rect.bottom, closeTo(720, 1));
+      });
+    }
+
     testWidgets('draws the round, and no camera box', (tester) async {
       tester.view.physicalSize = const Size(1280, 720);
       tester.view.devicePixelRatio = 1;
