@@ -3647,24 +3647,26 @@ class _ColumnYear extends StatelessWidget {
                   ],
                 );
 
-          return _FitBody(
-            padding: const EdgeInsets.all(16),
-            child: nextLabel == null
-                ? body
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      body,
-                      const SizedBox(height: 8),
-                      Text(
-                        '$nextLabel  ›',
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: accent,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+          final card = _FitBody(padding: const EdgeInsets.all(16), child: body);
+          if (nextLabel == null) return card;
+
+          // In the corner, like the pill on the top slot: the year keeps the
+          // whole card and the way on is where a thumb looks for it.
+          return Stack(
+            children: [
+              Positioned.fill(child: card),
+              Positioned(
+                right: 14,
+                bottom: 8,
+                child: Text(
+                  '$nextLabel  ›',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: accent,
+                    fontWeight: FontWeight.w700,
                   ),
+                ),
+              ),
+            ],
           );
         },
       ),
