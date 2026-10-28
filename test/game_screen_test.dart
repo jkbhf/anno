@@ -677,6 +677,9 @@ void main() {
       await tester.tap(find.byKey(revealInColumnKey));
       await tester.pumpAndSettle();
 
+      // Four years in the range, the running one already counted.
+      expect(find.text('3 left'), findsOneWidget);
+
       // The revealed year is the way on: it draws the next one.
       expect(find.text('Scan the card'), findsNothing);
 

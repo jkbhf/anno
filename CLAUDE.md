@@ -465,6 +465,11 @@ sentence with nothing behind it when there is no card to draw. The range opens
 on the span of the chosen decks for the same reason, and the count under the
 slider is the length of the pass the room is in for.
 
+**The years left in the pass are said on the top slot** (`_ActionSlot`, a small
+`N left` pill in its top right corner, 2026-10-28), in every state of the round
+and on the remote too: it is the playable years this pass has not played yet,
+and the year of the running round already counts as played.
+
 **The reveal does not draw the next year by itself**, although the camera does
 open by itself in a game with cards. A camera that comes up over a reveal costs
 nothing; a song that starts over the points still being handed out costs the

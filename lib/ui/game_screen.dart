@@ -3372,6 +3372,49 @@ class _ActionSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final card = _card(context);
+    if (!game.withoutCards) return card;
+
+    // Without cards the range is the deck: how many years this pass still
+    // has is what tells the room how long the evening goes on. The year of
+    // the running round is already counted as played.
+    final left = game.playableYears
+        .where((year) => !game.playedYears.contains(year))
+        .length;
+    final theme = Theme.of(context);
+    return Stack(
+      children: [
+        Positioned.fill(child: card),
+        Positioned(
+          top: 10,
+          right: 14,
+          child: IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface.withValues(alpha: 0.85),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 3,
+                ),
+                child: Text(
+                  '$left left',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _card(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final radius = BorderRadius.circular(24);
