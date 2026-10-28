@@ -1072,6 +1072,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Runs a shortcut, or nothing where it would do nothing anyway - see
   /// [GameShortcut.isLive], the same rule the hint line reads.
   void _runShortcut(GameShortcut shortcut) {
+    // Enter after the reveal is the revealed year's tap: the next card, or the
+    // next year in a game without cards. Only the wide layout has that tap.
+    if (shortcut == GameShortcut.reveal &&
+        _wide &&
+        _game.phase == RoundPhase.revealed) {
+      _nextFromYear();
+      return;
+    }
     if (!shortcut.isLive(_game)) return;
     final spotify = _spotify;
     switch (shortcut) {
@@ -3424,7 +3432,12 @@ class _ActionSlot extends StatelessWidget {
     // The year for whoever runs the game, beside the one on the stage: the
     // room reads the wall, and this says what the camera is about to replace.
     if (game.isRevealed) {
-      final card = _ColumnYear(game: game);
+      final card = _ColumnYear(
+        game: game,
+        nextLabel: onNext == null
+            ? null
+            : (game.withoutCards ? 'Next year' : 'Next round'),
+      );
       if (onNext == null) return card;
       return Material(
         type: MaterialType.transparency,
@@ -3520,9 +3533,13 @@ class _ActionSlot extends StatelessWidget {
 /// this box is on the same wall anyway, so the room reads it here; next to it
 /// the camera is already waiting for the next card.
 class _ColumnYear extends StatelessWidget {
-  const _ColumnYear({required this.game});
+  const _ColumnYear({required this.game, this.nextLabel});
 
   final GameController game;
+
+  /// What a tap on the card does, written on it - without it the card looks
+  /// like an answer and not like the way on.
+  final String? nextLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -3599,39 +3616,53 @@ class _ColumnYear extends StatelessWidget {
             ],
           ];
 
+          final body = beside
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: FittedBox(fit: BoxFit.scaleDown, child: yearText),
+                    ),
+                    const SizedBox(width: 20),
+                    // Flexible rather than Expanded: expanded, the name
+                    // took the whole rest of the card and its left-aligned
+                    // text left all the air on the right, which is the
+                    // off-centre the card looked. Now the two of them are
+                    // one block and the Row centres it.
+                    Flexible(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: name,
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FittedBox(fit: BoxFit.scaleDown, child: yearText),
+                    ...name,
+                  ],
+                );
+
           return _FitBody(
             padding: const EdgeInsets.all(16),
-            child: beside
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: yearText,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      // Flexible rather than Expanded: expanded, the name
-                      // took the whole rest of the card and its left-aligned
-                      // text left all the air on the right, which is the
-                      // off-centre the card looked. Now the two of them are
-                      // one block and the Row centres it.
-                      Flexible(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: name,
-                        ),
-                      ),
-                    ],
-                  )
+            child: nextLabel == null
+                ? body
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FittedBox(fit: BoxFit.scaleDown, child: yearText),
-                      ...name,
+                      body,
+                      const SizedBox(height: 8),
+                      Text(
+                        '$nextLabel  ›',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: accent,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ],
                   ),
           );
