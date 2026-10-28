@@ -2443,6 +2443,19 @@ class _RevealBody extends StatelessWidget {
   }
 }
 
+/// One colour per seat at the table, so a player is a colour as well as a
+/// name - on a projector the tile is found by its colour before it is read.
+const _playerColors = [
+  Color(0xFFEF5350),
+  Color(0xFF42A5F5),
+  Color(0xFF66BB6A),
+  Color(0xFFFFCA28),
+  Color(0xFFAB47BC),
+  Color(0xFFFF7043),
+  Color(0xFF26C6DA),
+  Color(0xFFEC407A),
+];
+
 class _PlayerGrid extends StatelessWidget {
   const _PlayerGrid({
     required this.game,
@@ -2535,6 +2548,12 @@ class _PlayerGrid extends StatelessWidget {
     onLongPress: longPress == null ? null : () => longPress(player),
     large: large,
     dense: fill && game.players.length > 4,
+    accent: _playerColors[game.players.indexOf(player) % _playerColors.length],
+    // Everybody on the top score wears the trophy, but only once somebody
+    // has scored at all.
+    leading:
+        player.score > 0 &&
+        player.score == game.players.map((p) => p.score).reduce(max),
   );
 }
 
@@ -2546,6 +2565,8 @@ class _PlayerTile extends StatefulWidget {
     this.onLongPress,
     this.large = false,
     this.dense = false,
+    this.accent,
+    this.leading = false,
   });
 
   final GamePlayer player;
@@ -2561,6 +2582,11 @@ class _PlayerTile extends StatefulWidget {
   /// Five players or more in the column's box: smaller type, no bar and less
   /// padding, so the name and the score stay readable in a short tile.
   final bool dense;
+
+  /// The player's own colour, and whether they are ahead - see
+  /// [_PlayerGrid._tile].
+  final Color? accent;
+  final bool leading;
 
   @override
   State<_PlayerTile> createState() => _PlayerTileState();
@@ -2616,129 +2642,141 @@ class _PlayerTileState extends State<_PlayerTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final player = widget.player;
     final reached = player.score >= widget.targetScore;
     final interactive = widget.onTap != null || widget.onLongPress != null;
-
-    final background = _flashing
-        ? theme.colorScheme.primary
-        : reached
-        ? theme.colorScheme.primaryContainer
-        : theme.colorScheme.surfaceContainerHighest;
-    final foreground = _flashing
-        ? theme.colorScheme.onPrimary
-        : reached
-        ? theme.colorScheme.onPrimaryContainer
-        : theme.colorScheme.primary;
-
+    final accent = widget.accent ?? scheme.primary;
     final large = widget.large;
+    final dense = widget.dense;
+    final progress = widget.targetScore > 0
+        ? (player.score / widget.targetScore).clamp(0.0, 1.0)
+        : 0.0;
+
     final column = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          player.name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: large && !widget.dense
-              ? theme.textTheme.titleLarge
-              : theme.textTheme.titleMedium,
-        ),
-        const SizedBox(height: 4),
-        // Scales down instead of overflowing: eight tiles on a phone are
-        // narrow, and "3 /10" is wider than the number alone.
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              AnimatedScale(
-                scale: _flashing ? (_burst > 0 ? 1.35 : 1.15) : 1,
-                duration: const Duration(milliseconds: 280),
-                curve: Curves.easeOutBack,
-                // The new number drops in with a bounce while the old one fades, so
-                // a change is seen even from the back of the room.
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: ScaleTransition(
-                      scale: CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.elasticOut,
-                      ),
-                      child: child,
-                    ),
-                  ),
-                  child: Text(
-                    '${player.score}',
-                    key: ValueKey(player.score),
-                    style:
-                        (large
-                                ? (widget.dense
-                                      ? theme.textTheme.headlineLarge
-                                      : theme.textTheme.displayMedium)
-                                : theme.textTheme.displaySmall)
-                            ?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: foreground,
-                            ),
-                  ),
-                ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // The leader wears a trophy, the way a scoreboard shows who is
+            // ahead without anybody reading a number.
+            if (widget.leading) ...[
+              Icon(
+                Icons.emoji_events_rounded,
+                size: dense ? 18 : 24,
+                color: const Color(0xFFFFC107),
               ),
-              // How far it is to the win, read next to the number: "3 /10".
-              if (widget.targetScore > 0) ...[
-                const SizedBox(width: 4),
-                Text(
-                  '/${widget.targetScore}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: foreground.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
+              const SizedBox(width: 6),
             ],
-          ),
-        ),
-        if (large && !widget.dense && widget.targetScore > 0) ...[
-          const SizedBox(height: 8),
-          // The same distance as a bar that fills as the points come in.
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: SizedBox(
-              width: 120,
-              height: 8,
-              child: TweenAnimationBuilder<double>(
-                tween: Tween(
-                  end: (player.score / widget.targetScore).clamp(0, 1),
-                ),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutCubic,
-                builder: (context, value, _) => LinearProgressIndicator(
-                  value: value,
-                  color: foreground,
-                  backgroundColor: foreground.withValues(alpha: 0.18),
-                ),
+            Flexible(
+              child: Text(
+                player.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    (large && !dense
+                            ? theme.textTheme.titleLarge
+                            : theme.textTheme.titleMedium)
+                        ?.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
+          ],
+        ),
+        SizedBox(height: dense ? 2 : 4),
+        AnimatedScale(
+          scale: _flashing ? (_burst > 0 ? 1.35 : 1.15) : 1,
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutBack,
+          // The new number drops in with a bounce while the old one fades, so
+          // a change is seen even from the back of the room.
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.elasticOut,
+                ),
+                child: child,
+              ),
+            ),
+            child: Text(
+              '${player.score}',
+              key: ValueKey(player.score),
+              style:
+                  (large
+                          ? (dense
+                                ? theme.textTheme.displaySmall
+                                : theme.textTheme.displayLarge)
+                          : theme.textTheme.displaySmall)
+                      ?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        height: 1,
+                        color: scheme.onSurface,
+                      ),
+            ),
           ),
-        ],
+        ),
       ],
     );
-    final padding = EdgeInsets.all(widget.dense ? 6 : 12);
+    final padding = EdgeInsets.all(dense ? 6 : 12);
     final content = large
         ? _FitBody(padding: padding, child: column)
         : Padding(padding: padding, child: column);
 
+    // The tile is a vessel that fills with the player's colour as the points
+    // come in: how far each one is from winning is read off the tiles
+    // themselves, without a number or a bar.
     final tile = AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
+      duration: const Duration(milliseconds: 250),
       decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(18),
+        color: scheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: _flashing || reached ? accent : accent.withValues(alpha: 0.35),
+          width: _flashing || reached ? 3 : 1.5,
+        ),
+        boxShadow: [
+          if (_flashing || reached)
+            BoxShadow(
+              color: accent.withValues(alpha: 0.55),
+              blurRadius: _flashing ? 28 : 18,
+              spreadRadius: _flashing ? 2 : 0,
+            ),
+        ],
       ),
       clipBehavior: Clip.antiAlias,
-      child: interactive
-          ? InkWell(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(end: progress),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, _) => FractionallySizedBox(
+                heightFactor: value,
+                widthFactor: 1,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        accent.withValues(alpha: _flashing ? 0.85 : 0.55),
+                        accent.withValues(alpha: _flashing ? 0.55 : 0.25),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (interactive)
+            InkWell(
               onTap: () {
                 _flash();
                 widget.onTap?.call();
@@ -2749,7 +2787,10 @@ class _PlayerTileState extends State<_PlayerTile> {
               },
               child: content,
             )
-          : content,
+          else
+            content,
+        ],
+      ),
     );
 
     if (_burst == 0) return tile;
@@ -2774,11 +2815,9 @@ class _PlayerTileState extends State<_PlayerTile> {
                   offset: Offset(0, -6 - 34 * t),
                   child: Text(
                     _delta > 0 ? '+$_delta' : '$_delta',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: _delta > 0
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.error,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: _delta > 0 ? accent : scheme.error,
                     ),
                   ),
                 ),

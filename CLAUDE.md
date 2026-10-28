@@ -1030,8 +1030,10 @@ fills its height (`_PlayerGrid.fill`) - two columns up to four players, three
 up to nine, four beyond - with no scrolling; the tiles scale what they hold. From five players on the box is
 1.5 times the camera's height and the tiles go `dense` (smaller type, no bar,
 less padding), because three rows in a third of the column came out at an
-unreadable 10 pixels. Every tile says `3 /10` - the target beside the score -
-and a large one carries a bar that fills towards it. The television has no
+unreadable 10 pixels. A tile is a vessel (2026-10-28, replacing the "3 /10"
+and the bar, which looked flat): it fills from the bottom with the player's
+colour (`_playerColors`, one per seat) as the points approach the target, the
+leaders wear a trophy, and a change or a reached target glows. The television has no
 `Nobody knows it` (`_SongControls.showSwap`): it is a label for a button
 nobody in the room can press.
 
