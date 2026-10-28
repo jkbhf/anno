@@ -1126,6 +1126,16 @@ to nudge it. Both stores gained a `step` (0.02) and a `stepped()` to match
 television is paired (`_remote`): the layout run directly has its mouse, and
 showing a step that does nothing there would be worse than not showing it.
 
+**The steps live in one sheet** (`_RemoteSettingsSheet`, 2026-10-28): the menu
+has a single `Screen settings` entry while a television is paired, in place of
+the six loose entries that each closed the menu after one press. A row per
+setting - words, words sync, column, reveal card, screen size - with a step
+either way, held to repeat, the sheet open between presses. Steps rather than
+sliders on purpose: the numbers belong to the television and nothing comes
+back, so a slider would draw a position this phone cannot know. Played
+directly (no television) the menu is unchanged, because there the sync mode
+has to sit beside the words.
+
 **The television's own furniture can be too big or too small for it, and
 that is a setting of its own** (`UiScaleStore`, `RemoteStep.uiBigger`/
 `uiSmaller`, 2026-10-28). Most of the wide layout scales with the screen -

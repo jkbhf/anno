@@ -499,7 +499,9 @@ void main() {
 
       await tester.tap(find.byTooltip('Menu'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Bigger words'));
+      await tester.tap(find.text('Screen settings'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Bigger words'));
       await tester.pumpAndSettle();
 
       final steps = sent.whereType<RemoteCommand>().toList();
@@ -532,12 +534,8 @@ void main() {
 
       await tester.tap(find.byTooltip('Menu'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Sync the words'));
+      await tester.tap(find.text('Screen settings'));
       await tester.pumpAndSettle();
-
-      // No number on the remote: it cannot know the screen's, and a wrong
-      // one would be worse than none.
-      expect(find.text('on the screen'), findsOne);
 
       await tester.tap(find.byTooltip('The words earlier'));
       await tester.pumpAndSettle();
@@ -546,6 +544,36 @@ void main() {
 
       final steps = sent.whereType<RemoteCommand>().map((c) => c.step);
       expect(steps, [RemoteStep.wordsEarlier, RemoteStep.wordsLater]);
+    });
+
+    testWidgets('a held button in the screen settings keeps stepping', (
+      tester,
+    ) async {
+      final game = buildGame();
+      addTearDown(game.dispose);
+      final sent = <SyncMessage>[];
+      final link = TvLink.paired(role: LinkRole.remote, onSend: sent.add);
+      addTearDown(link.dispose);
+
+      await tester.pumpWidget(wrapRemote(game, link, _Playing()));
+      await tester.pumpAndSettle();
+      await closeAutoScanner(tester);
+
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Screen settings'));
+      await tester.pumpAndSettle();
+
+      final hold = await tester.startGesture(
+        tester.getCenter(find.byTooltip('Bigger words')),
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+      await hold.up();
+      await tester.pumpAndSettle();
+
+      final steps = sent.whereType<RemoteCommand>().map((c) => c.step);
+      expect(steps.length, greaterThan(2));
+      expect(steps.toSet(), {RemoteStep.wordsBigger});
     });
 
     testWidgets('steps the television\'s own handles, never a drag here', (
@@ -561,6 +589,11 @@ void main() {
       await tester.pumpAndSettle();
       await closeAutoScanner(tester);
 
+      await tester.tap(find.byTooltip('Menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Screen settings'));
+      await tester.pumpAndSettle();
+      // One sheet, left open between the presses.
       for (final label in [
         'Wider column',
         'Narrower column',
@@ -569,9 +602,7 @@ void main() {
         'Bigger screen',
         'Smaller screen',
       ]) {
-        await tester.tap(find.byTooltip('Menu'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(label));
+        await tester.tap(find.byTooltip(label));
         await tester.pumpAndSettle();
       }
 

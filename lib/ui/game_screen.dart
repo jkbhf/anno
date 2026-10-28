@@ -501,6 +501,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     unawaited(_nextRound());
   }
 
+  void _sendStep(RemoteStep step) => _link?.send(RemoteCommand(step));
+
   /// A press of smaller or bigger in the menu. It is the same room and the
   /// same wall next time, so the size is kept.
   void _stepLyricsScale({required bool bigger}) {
@@ -986,6 +988,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
       case 'scores':
         _toggleScores();
+      case 'tv.settings':
+        await showModalBottomSheet<void>(
+          context: context,
+          showDragHandle: true,
+          isScrollControlled: true,
+          builder: (context) => _RemoteSettingsSheet(send: _sendStep),
+        );
       case 'words.bigger':
         _stepLyricsScale(bigger: true);
       case 'words.smaller':
@@ -1190,54 +1199,40 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           value: 'scores',
           child: Text(_showScores ? 'Hide the scores' : 'Show the scores'),
         ),
-        // The size of the words on the stage. A press closes the menu, which
-        // is the cost of having it in here rather than as a row in the column
-        // - it is set once for the room and then left alone, so a second trip
-        // through the menu for a second step is a fair price for the space.
-        // Two fingers on the words do the same thing without the trip, which
-        // is why the percentage is not written down here any more.
-        PopupMenuItem(
-          value: 'words.bigger',
-          enabled: _lyricsScale < LyricsScaleStore.max,
-          child: const Text('Bigger words'),
-        ),
-        PopupMenuItem(
-          value: 'words.smaller',
-          enabled: _lyricsScale > LyricsScaleStore.min,
-          child: const Text('Smaller words'),
-        ),
-        // The mode, not a dialog: the number is found against the running
-        // song, so what it needs is a pair of arrows beside the words rather
-        // than a window over them.
-        PopupMenuItem(
-          value: 'words.sync',
-          child: Text(_syncMode ? 'Done syncing the words' : 'Sync the words'),
-        ),
-        // The television's own handles, which a remote has no pointer to
-        // drag - so the phone steps them instead, the same way it already
-        // steps the words. Only worth showing while a television is paired:
-        // the layout played directly still has a mouse for its own handles.
-        if (_remote) ...[
+        // On a paired television everything that is a setting of the screen
+        // lives in one sheet with a row per setting, see
+        // [_RemoteSettingsSheet]: the loose steps used to be six menu entries
+        // that each closed the menu after one press.
+        if (_remote)
           const PopupMenuItem(
-            value: 'column.wider',
-            child: Text('Wider column'),
+            value: 'tv.settings',
+            child: Text('Screen settings'),
+          )
+        else ...[
+          // The size of the words on the stage. A press closes the menu, which
+          // is the cost of having it in here rather than as a row in the column
+          // - it is set once for the room and then left alone, so a second trip
+          // through the menu for a second step is a fair price for the space.
+          // Two fingers on the words do the same thing without the trip, which
+          // is why the percentage is not written down here any more.
+          PopupMenuItem(
+            value: 'words.bigger',
+            enabled: _lyricsScale < LyricsScaleStore.max,
+            child: const Text('Bigger words'),
           ),
-          const PopupMenuItem(
-            value: 'column.narrower',
-            child: Text('Narrower column'),
+          PopupMenuItem(
+            value: 'words.smaller',
+            enabled: _lyricsScale > LyricsScaleStore.min,
+            child: const Text('Smaller words'),
           ),
-          const PopupMenuItem(
-            value: 'slot.taller',
-            child: Text('Taller reveal'),
-          ),
-          const PopupMenuItem(
-            value: 'slot.shorter',
-            child: Text('Shorter reveal'),
-          ),
-          const PopupMenuItem(value: 'ui.bigger', child: Text('Bigger screen')),
-          const PopupMenuItem(
-            value: 'ui.smaller',
-            child: Text('Smaller screen'),
+          // The mode, not a dialog: the number is found against the running
+          // song, so what it needs is a pair of arrows beside the words rather
+          // than a window over them.
+          PopupMenuItem(
+            value: 'words.sync',
+            child: Text(
+              _syncMode ? 'Done syncing the words' : 'Sync the words',
+            ),
           ),
         ],
         // The same sheet the cast button opens. In here too because that
@@ -1935,6 +1930,182 @@ class _SyncPanel extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Everything the phone can set on the television, in one sheet: a row per
+/// setting with a step either way, and a press that is held repeats.
+///
+/// Steps, not sliders, and that is not a shortcut: the numbers belong to the
+/// television and nothing comes back from it, so a slider would have to draw a
+/// position this phone cannot know. The television says the value over its own
+/// picture where whoever presses is looking. The sheet stays open between
+/// presses - the point of bundling is that a setting takes several.
+class _RemoteSettingsSheet extends StatelessWidget {
+  const _RemoteSettingsSheet({required this.send});
+
+  final ValueChanged<RemoteStep> send;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    Widget row(
+      String label,
+      IconData less,
+      IconData more,
+      RemoteStep lessStep,
+      RemoteStep moreStep,
+      String lessTip,
+      String moreTip,
+    ) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: theme.textTheme.titleMedium)),
+          _RepeatButton(
+            tooltip: lessTip,
+            icon: less,
+            onStep: () => send(lessStep),
+          ),
+          const SizedBox(width: 12),
+          _RepeatButton(
+            tooltip: moreTip,
+            icon: more,
+            onStep: () => send(moreStep),
+          ),
+        ],
+      ),
+    );
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('Screen settings', style: theme.textTheme.titleLarge),
+            const SizedBox(height: 4),
+            Text(
+              'Hold a button to keep stepping. The screen says the value.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            row(
+              'Words',
+              Icons.text_decrease,
+              Icons.text_increase,
+              RemoteStep.wordsSmaller,
+              RemoteStep.wordsBigger,
+              'Smaller words',
+              'Bigger words',
+            ),
+            row(
+              'Words sync',
+              Icons.arrow_back,
+              Icons.arrow_forward,
+              RemoteStep.wordsLater,
+              RemoteStep.wordsEarlier,
+              'The words later',
+              'The words earlier',
+            ),
+            row(
+              'Column',
+              Icons.chevron_left,
+              Icons.chevron_right,
+              RemoteStep.columnNarrower,
+              RemoteStep.columnWider,
+              'Narrower column',
+              'Wider column',
+            ),
+            row(
+              'Reveal card',
+              Icons.unfold_less,
+              Icons.unfold_more,
+              RemoteStep.slotShorter,
+              RemoteStep.slotTaller,
+              'Shorter reveal',
+              'Taller reveal',
+            ),
+            row(
+              'Screen size',
+              Icons.zoom_out,
+              Icons.zoom_in,
+              RemoteStep.uiSmaller,
+              RemoteStep.uiBigger,
+              'Smaller screen',
+              'Bigger screen',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A round button that steps once on a tap and keeps stepping while held.
+class _RepeatButton extends StatefulWidget {
+  const _RepeatButton({
+    required this.tooltip,
+    required this.icon,
+    required this.onStep,
+  });
+
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback onStep;
+
+  @override
+  State<_RepeatButton> createState() => _RepeatButtonState();
+}
+
+class _RepeatButtonState extends State<_RepeatButton> {
+  Timer? _timer;
+
+  void _start() {
+    widget.onStep();
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      const Duration(milliseconds: 140),
+      (_) => widget.onStep(),
+    );
+  }
+
+  void _stop() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    // A raw pointer, not onPressed: the hold needs the down and the up, and a
+    // tap is the down followed at once by the up, so one press is one step.
+    return Tooltip(
+      message: widget.tooltip,
+      child: Listener(
+        onPointerDown: (_) => _start(),
+        onPointerUp: (_) => _stop(),
+        onPointerCancel: (_) => _stop(),
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: scheme.secondaryContainer,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(widget.icon, color: scheme.onSecondaryContainer),
+        ),
       ),
     );
   }
