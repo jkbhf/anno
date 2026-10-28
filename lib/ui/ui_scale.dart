@@ -26,9 +26,16 @@ class UiScale extends StatelessWidget {
           child: Transform.scale(
             scale: factor,
             alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: size.width / factor,
-              height: size.height / factor,
+            // An OverflowBox, not a SizedBox: a SizedBox is clamped to the
+            // constraints it is given, so below 1 the box stayed at the
+            // screen's size and the scaled picture left empty margins at the
+            // bottom and the right.
+            child: OverflowBox(
+              alignment: Alignment.topLeft,
+              minWidth: size.width / factor,
+              maxWidth: size.width / factor,
+              minHeight: size.height / factor,
+              maxHeight: size.height / factor,
               child: child,
             ),
           ),

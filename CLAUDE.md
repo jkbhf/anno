@@ -997,37 +997,27 @@ as on the web anywhere else.
 back, but Flutter web shows the browser's context menu on every right click.
 Long press works with a mouse too.
 
-**With a real camera, the scores move into the column and the camera waits
-behind them** (2026-10-28). Played directly with a camera (`!cameraless` -
-the television is cameraless and unaffected, see below), the scores used to
-sit on the stage the whole round and the camera opened itself the moment the
-reveal happened. Now, while the scores are on at all, they move into the
-column instead - the same bottom slot the camera uses - and the camera that
-would have opened itself waits there until a point is actually given. Giving
-or taking one (`_scoreGivenInColumn` in `lib/ui/game_screen.dart`) is what
-opens it, the same call the reveal itself used to make. With the scores
-hidden there is nothing to wait for, so the camera still opens itself exactly
-as before - the wait is the scores' own, not the reveal's.
+**With a real camera, the scores live at the foot of the column, always, and
+the revealed year is the button for the next card** (2026-10-28, replacing the
+first version of this, where the scores took the camera's slot only at the
+reveal and giving a point opened the camera). Played directly with a camera
+(`!cameraless` - the television is cameraless and unaffected), the stage never
+carries scores: it is the words. The box (`_ColumnScoreBox`) sits where the
+camera sits, in every phase, and the controls above it scale into what it
+leaves (`_FitBody` padding) rather than going under it. The camera, when it
+opens, covers the box.
 
-The point of moving them is the same point the whole column already serves:
-the stage is the room's, and what used to sit there - who has how many
-points, with tiles to tap - was whoever runs the game reading their own
-screen rather than the wall. On the stage, the scores now only show for the
-television, which is cameraless and has nothing to wait behind in the first
-place (`_Stage`'s `showScores` is suppressed in the column's place only
-while `!cameraless` and the round is revealed - during the round itself nothing
-changes, there is no camera to share the slot with yet).
+What opens it is a tap on the revealed year in the top slot
+(`WideRound.onYearTap`, `_nextFromYear`): the next card, or the next year in a
+game without cards. It arms `_autoScanAt` like the auto-scan does, because the
+card of the round is still in front of the lens. A point given no longer
+starts anything. With the scores hidden nothing changes: the camera opens
+itself at the reveal, and the `Next round` button is the way back after it was
+closed by hand - with the scores on there is no such button, the year is it.
 
-`_PlayerGrid` gained a `large` flag for this (`_ColumnScoreBox`): the grid was
-built for the phone's whole screen and does not shrink what it holds, where
-the strip on the stage already did (`_PlayerTile(large: true)`, a `_FitBody`
-that scales down instead of overflowing). The column's box is capped the same
-way the camera's is - a third of the column's height - so it needs the same
-guarantee.
-
-A scan that is already waiting (the room's own tap, or a card still being
-held up) is untouched by any of this: `waitingForScore` only suppresses the
-camera opening *itself*, never one already open.
+`UiScale` hands its child an `OverflowBox` of `size / factor`. A `SizedBox`
+there is clamped to the constraints it is given, which below 1 left the scaled
+picture with empty margins at the bottom and the right.
 
 ## The television is a mirror, and the phone is the game
 

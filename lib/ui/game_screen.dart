@@ -266,11 +266,6 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Whether the scoreboard is on the screen, see [ShowScoresStore].
   bool _showScores = true;
 
-  /// Whether a point has been given since the last reveal, in the wide
-  /// layout's column - where scores live there, the camera that opens itself
-  /// waits behind them until one has, see [WideRound.scoreGiven].
-  bool _scoreGivenSinceReveal = false;
-
   /// How much of the screen the side column takes, see [ColumnWidthStore].
   double _columnShare = ColumnWidthStore.normal;
 
@@ -495,23 +490,15 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// with the tiles for this round, which is what the camera waiting behind
   /// them was for - the same scan the reveal would have started by itself
   /// with the scores off.
-  void _scoreGivenInColumn() {
-    if (_scoreGivenSinceReveal) return;
-    setState(() => _scoreGivenSinceReveal = true);
+  /// A tap on the revealed year in the column: the next card. The camera
+  /// that opens is the one this tap asked for, so the card of the round that
+  /// is still in front of it is ignored for a moment like any other camera
+  /// that opens by itself, see [_staleCard].
+  void _nextFromYear() {
     if (_wide && _inlineScan == null && !_game.withoutCards) {
       _autoScanAt = DateTime.now();
-      unawaited(_nextRound());
     }
-  }
-
-  void _giveColumnPoint(GamePlayer player) {
-    _givePoint(_game, player);
-    _scoreGivenInColumn();
-  }
-
-  void _takeColumnPoint(GamePlayer player) {
-    _takePoint(_game, player);
-    _scoreGivenInColumn();
+    unawaited(_nextRound());
   }
 
   /// A press of smaller or bigger in the menu. It is the same room and the
@@ -619,10 +606,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       // next year here would start its song over the points still being
       // handed out. There the next round is the tap it says it is.
       //
-      // With the scores on screen, that slot is theirs first - the column
-      // has no room for both, and giving the point is what ends the round as
-      // far as the room is concerned. `_scoreGivenInColumn` opens the camera
-      // once one lands; `_showScores` off leaves nothing to wait for.
+      // With the scores on screen they hold the foot of the column and the
+      // camera waits for a tap on the revealed year ([_nextFromYear]);
+      // `_showScores` off leaves nothing to wait for.
       if (_wide && _inlineScan == null && !_game.withoutCards && !_showScores) {
         _autoScanAt = DateTime.now();
         unawaited(_nextRound());
@@ -822,7 +808,6 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         );
         return;
       case ScanOutcome.started:
-        _scoreGivenSinceReveal = false;
         _prefetchLyrics();
         if (!await _runCountdown()) {
           _game.cancelRound();
@@ -1346,9 +1331,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onColumnShare: _setColumnShare,
       slotShare: _slotShare,
       onSlotShare: _setSlotShare,
-      scoreGiven: _scoreGivenSinceReveal,
-      onColumnGivePoint: _giveColumnPoint,
-      onColumnTakePoint: _takeColumnPoint,
+      onYearTap: _nextFromYear,
+      onColumnGivePoint: (player) => _givePoint(_game, player),
+      onColumnTakePoint: (player) => _takePoint(_game, player),
     );
   }
 
@@ -2475,7 +2460,7 @@ class WideRound extends StatelessWidget {
     required this.slotShare,
     required this.onSlotShare,
     this.cameraless = false,
-    this.scoreGiven = false,
+    this.onYearTap,
     this.onColumnGivePoint,
     this.onColumnTakePoint,
     super.key,
@@ -2529,10 +2514,9 @@ class WideRound extends StatelessWidget {
   /// a third of the column to say nothing.
   final bool cameraless;
 
-  /// Whether a point has been given since this reveal, see
-  /// [_ColumnScoreBox] - the camera waits behind the scores until one has,
-  /// where there is a camera to wait with at all.
-  final bool scoreGiven;
+  /// A tap on the revealed year: the next card (or year). Null where nothing
+  /// can be tapped, the television.
+  final VoidCallback? onYearTap;
   final ValueChanged<GamePlayer>? onColumnGivePoint;
   final ValueChanged<GamePlayer>? onColumnTakePoint;
 
@@ -2582,21 +2566,18 @@ class WideRound extends StatelessWidget {
         // the slot with - the television has no camera to wait with, so it
         // keeps them on the stage instead, see [showScores] below.
         final scoresInColumn = !cameraless && showScores;
-        // The camera the room's own tap would open (a scan asked for by
-        // hand) always wins; the one that opens itself at the reveal waits
-        // behind the scores until a point has been given, so the two do not
-        // have to fight over the one slot.
-        final waitingForScore =
-            scoresInColumn &&
-            game.isRevealed &&
-            !scoreGiven &&
-            !game.withoutCards;
+        // The scores sit at the foot of the column whenever no camera covers
+        // them, in every phase: the room's wall is the words, and the scores
+        // are for whoever runs the game. The next card is the tap on the
+        // revealed year, which opens the camera over them.
+        final scoreBox = scoresInColumn && camera == null;
 
         // Closed and between rounds there is nothing to look at, so the box
         // goes rather than sitting there as a grey placeholder. After a reveal
         // it stays as the way back to a camera that was closed by hand.
         final showCamera =
-            !cameraless && (camera != null || (game.isRevealed && !waitingForScore));
+            !cameraless &&
+            (camera != null || (game.isRevealed && !scoresInColumn));
 
         final round = Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2614,6 +2595,7 @@ class WideRound extends StatelessWidget {
                         game: game,
                         onScan: onScan,
                         onReveal: game.reveal,
+                        onNext: onYearTap,
                       ),
                     ),
                     // The reveal card's own grip, for the same reason the
@@ -2640,7 +2622,15 @@ class WideRound extends StatelessWidget {
                                   Expanded(
                                     child: _FitBody(
                                       center: false,
-                                      padding: const EdgeInsets.only(top: 16),
+                                      // The controls scale into what the
+                                      // scores leave, never under them.
+                                      padding: EdgeInsets.only(
+                                        top: 16,
+                                        bottom: scoreBox
+                                            ? min(cameraHeight, box.maxHeight) +
+                                                  8
+                                            : 0,
+                                      ),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
@@ -2686,7 +2676,7 @@ class WideRound extends StatelessWidget {
                                   withoutCards: game.withoutCards,
                                 ),
                               )
-                            else if (waitingForScore)
+                            else if (scoreBox)
                               Positioned(
                                 left: 0,
                                 right: 0,
@@ -2718,10 +2708,9 @@ class WideRound extends StatelessWidget {
                 lyricsScale: lyricsScale,
                 onLyricsScale: onLyricsScale,
                 lyricsSync: lyricsSync,
-                // Only at the reveal do they move into the column, to share
-                // the slot with the camera - during the round itself there is
-                // nothing there to share it with, so the stage keeps them.
-                showScores: showScores && !(scoresInColumn && game.isRevealed),
+                // Never on the stage when there is a column to hold them: the
+                // stage is the words.
+                showScores: showScores && !scoresInColumn,
               ),
             ),
           ],
@@ -2941,12 +2930,17 @@ class _ActionSlot extends StatelessWidget {
     required this.game,
     required this.onScan,
     required this.onReveal,
+    this.onNext,
     this.opensBelow = true,
   });
 
   final GameController game;
   final VoidCallback onScan;
   final VoidCallback onReveal;
+
+  /// What a tap on the revealed year does: the next round. Null leaves the
+  /// card as a plain answer.
+  final VoidCallback? onNext;
 
   /// Whether the camera comes up in the box under this one. False on the
   /// remote control, where it is a page of its own over the whole phone.
@@ -2961,7 +2955,12 @@ class _ActionSlot extends StatelessWidget {
     // The year for whoever runs the game, beside the one on the stage: the
     // room reads the wall, and this says what the camera is about to replace.
     if (game.isRevealed) {
-      return _ColumnYear(game: game);
+      final card = _ColumnYear(game: game);
+      if (onNext == null) return card;
+      return Material(
+        type: MaterialType.transparency,
+        child: InkWell(borderRadius: radius, onTap: onNext, child: card),
+      );
     }
 
     final (icon, title, hint, onTap) = game.phase == RoundPhase.playing
@@ -3343,10 +3342,8 @@ class _CameraBox extends StatelessWidget {
   }
 }
 
-/// Where the camera would open, right after the reveal - a chance to give
-/// the point first, since there is no room for both in one slot. The moment
-/// either tap lands it gives way to the camera, see
-/// `_WideRound.waitingForScore`.
+/// The scores at the foot of the column, where the camera would open. The
+/// camera covers them once the revealed year is tapped for the next card.
 class _ColumnScoreBox extends StatelessWidget {
   const _ColumnScoreBox({
     required this.game,
@@ -3376,7 +3373,7 @@ class _ColumnScoreBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Who got it right?',
+              game.isRevealed ? 'Who got it right?' : 'Scores',
               textAlign: TextAlign.center,
               style: theme.textTheme.titleSmall,
             ),
