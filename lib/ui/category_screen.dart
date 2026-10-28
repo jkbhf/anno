@@ -144,10 +144,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final messenger = ScaffoldMessenger.of(context);
     String message;
     try {
-      final picked = await FilePicker.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: const ['csv'],
-      );
+      // No extension filter: a phone's picker matches `.csv` against the
+      // MIME type the file was saved with, and an export downloaded on
+      // Android or iOS is often stored as text/plain or octet-stream - it
+      // then shows greyed out and cannot be picked at all. What is not an
+      // export is refused by [CsvDeck.parse] with a message instead.
+      final picked = await FilePicker.pickFiles(type: FileType.any);
       if (picked.isEmpty) return;
       final file = picked.first;
       final bytes = await file.readAsBytes();
