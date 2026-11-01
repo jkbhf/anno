@@ -218,6 +218,11 @@ class _LyricsViewState extends State<LyricsView> {
       _loaded = null;
       _current = -1;
       _lyrics = _load();
+      // The list is the same one for the next song: without this the new
+      // words start wherever the last ones were left.
+      if (oldWidget.song.key != widget.song.key && _scroll.hasClients) {
+        _scroll.jumpTo(0);
+      }
     }
     if (!identical(oldWidget.session, widget.session)) {
       oldWidget.session?.removeListener(_onSession);
