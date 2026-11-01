@@ -129,11 +129,12 @@ class LrclibLyrics implements LyricsSource {
 
   /// LRCLIB throttles with a 429 and is a single server that now and then
   /// answers late or not at all. Each try gets [_timeout], and a failed one is
-  /// tried again before the sheet gives up.
-  static const int _attempts = 3;
-  static const Duration _timeout = Duration(seconds: 8);
+  /// tried again, up to six times, before the sheet gives up.
+  static const int _attempts = 6;
+  static const Duration _timeout = Duration(seconds: 12);
   static const Duration _retryDelay = Duration(seconds: 1);
   static const Duration _maxRetryAfter = Duration(seconds: 5);
+  static const Duration _maxBackoff = Duration(seconds: 4);
 
   @override
   Future<Lyrics?> find(Song song, {Duration? duration}) async {
@@ -156,6 +157,7 @@ class LrclibLyrics implements LyricsSource {
     Object? last;
     for (var attempt = 1; attempt <= _attempts; attempt++) {
       Duration wait = _baseDelay * attempt;
+      if (wait > _maxBackoff) wait = _maxBackoff;
       try {
         final response = await _client.get(uri).timeout(_timeout);
         if (response.statusCode == 200) {

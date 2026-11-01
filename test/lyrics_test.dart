@@ -159,7 +159,7 @@ void main() {
       );
 
       await expectLater(source.find(song), throwsA(isA<LyricsUnavailable>()));
-      expect(calls, 3);
+      expect(calls, 6);
 
       down = false;
       expect((await source.find(song))!.lines.single.text, 'words');
