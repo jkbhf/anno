@@ -27,8 +27,29 @@
     'wasm-unsafe-eval' lets CanvasKit and the QR reader compile their
     WebAssembly. A new script host has to be added here, or it is blocked -
     the browser console names it.
+
+    The policy is written by this script rather than standing as a tag,
+    because older engines do not know 'wasm-unsafe-eval': they drop it and
+    then refuse all WebAssembly, and the page stays black. Chromium before 97
+    is what an LG TV runs (webOS 22 is Chromium 87), Safari before 16 is an
+    old iPhone. Those get 'unsafe-eval' instead - the only keyword they
+    accept for WebAssembly - and every newer browser keeps the strict policy.
+    A meta policy only tightens, so the choice has to be made before it is
+    written, and it has to stay the first script in the page.
   -->
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'wasm-unsafe-eval' https://www.gstatic.com https://sdk.scdn.co; object-src 'none'; base-uri 'self'">
+  <script>
+    (function () {
+      var ua = navigator.userAgent;
+      var chrome = /Chrom(?:e|ium)\/(\d+)/.exec(ua);
+      var safari = !chrome && /AppleWebKit/.test(ua) &&
+          (/Version\/(\d+)/.exec(ua) || /OS (\d+)_\d+(?:_\d+)? like Mac OS X/.exec(ua));
+      var old = (chrome && +chrome[1] < 97) || (safari && +safari[1] < 16);
+      var wasm = old ? "'unsafe-eval'" : "'wasm-unsafe-eval'";
+      document.write('<meta http-equiv="Content-Security-Policy" content="' +
+          "script-src 'self' " + wasm + ' https://www.gstatic.com https://sdk.scdn.co; ' +
+          "object-src 'none'; base-uri 'self'" + '">');
+    })();
+  </script>
   <meta name="description" content="Music guessing game: scan a QR card, hear the song in Spotify, guess the year.">
   <meta name="theme-color" content="#12101A">
 

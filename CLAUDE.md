@@ -1326,6 +1326,16 @@ script may come from: this site, `www.gstatic.com` (CanvasKit) and
 script host that is not added there is blocked silently in production - the
 browser console names it.
 
+**The policy is written by a script, not a tag**, and the reason is a TV
+(2026-11-06): WebAssembly is allowed through `'wasm-unsafe-eval'`, which
+Chromium only knows from 97 and Safari from 16. An older engine drops the
+keyword, refuses CanvasKit, and the page stays black - an LG TV on webOS 22 is
+Chromium 87. So the first script in `<head>` reads the engine version off the
+user agent and gives those engines `'unsafe-eval'` instead, the only keyword
+they accept for WebAssembly; every newer browser keeps the strict policy. A
+meta policy can only tighten, never loosen, so nothing may run before that
+script, and a change to the policy happens inside it.
+
 That is also why the QR reader is served from `web/zxing/` instead of the CDN
 `mobile_scanner` would use: `reader.js` and `zxing_reader.wasm` are zxing-wasm
 at the version `mobile_scanner` pins, and `mobile_scanner` is pinned exactly in
