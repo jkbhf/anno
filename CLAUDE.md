@@ -32,12 +32,24 @@ session played on a narrow range (2005-2026 is what actually gets played) puts
 every round into ~22 years, so a thin year is heard out within two evenings.
 What a device has played is remembered for good (`PlayedSongsStore`, merged
 into `_played` in `GameController`): a song does not come back, not in the
-same game and not next week, while its year in its deck still holds one this
-device has not played. Only a used up year starts over, and its songs leave the
+same game and not next week, while its year in any selected deck still holds
+one this device has not played. Only a used up year starts over, and its songs leave the
 memory again - that is what keeps a thin year from turning into a dead card,
 and why this could replace the old weight (the last 300 songs drawn a quarter
 as often) on 2026-10-17. The pool size still sets how many evenings a year
 lasts before it repeats.
+
+**A used up deck waits for the others** (2026-11-06). The deck of a round is
+drawn by its weight times its *unplayed* songs for the year, and a year starts
+over in every selected deck at once, only when none of them has anything
+unplayed left. With Anthony All and Jakob at 45% and German Songs at 10%, a
+1973 card plays Jakob's four songs and then the German ones, instead of
+repeating Jakob's four while the German ones wait. The weight sets the order a
+year is heard in, not a share a used up deck fills with repeats. This turns
+back 2026-10-25, when every deck kept its share played or not: that was a
+fix for a loop that came from starting over *one* deck at a time - the
+restarted deck was the only fresh one and took every card - and starting all
+of them together is what fixes it.
 
 **"Best known" is the only filter, the place is not one.** The room has to
 guess the *year*; a song nobody recognises turns the round into a coin flip.

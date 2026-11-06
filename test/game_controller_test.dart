@@ -648,28 +648,53 @@ void main() {
       expect(game.currentCategory, isNull);
     });
 
-    test('a deck that used up the year keeps its share', () {
-      final hits = categoryWith('hits', 'A');
-      final library = categoryWith('library', 'B');
+    test('the share counts only the songs not played yet', () {
+      final library = deckOf('library', 10);
       final game = GameController(
         players: [GamePlayer(name: 'Anna')],
-        categories: [hits, library],
+        categories: [library, deckOf('hits', 10)],
         years: YearDatabase.inMemory(defaults: {'182ca01194a98f0b': 2005}),
         launcher: FakeLauncher(),
-        played: {GameController.playedKey(hits, hits.songs.single)},
+        played: {
+          for (final song in library.songs.take(8))
+            GameController.playedKey(library, song),
+        },
         random: Random(1),
       );
 
-      var fromHits = 0;
-      const rounds = 400;
-      for (var round = 0; round < rounds; round++) {
-        game.scan(card2005);
-        if (game.currentCategory!.id == 'hits') fromHits++;
-        game.cancelRound();
+      // 2 unplayed against 10.
+      expect(shareOf(game, 'library'), closeTo(2 / 12, 0.04));
+    });
+
+    test('a deck that used up the year waits for the others', () async {
+      // Jakob's two songs heard, German Songs at a tenth of the weight: the
+      // German ones still all come before either of Jakob's comes back.
+      final game = withDecks(
+        [deckOf('jakob', 2), deckOf('german', 5)],
+        weights: {'jakob': 9},
+      );
+      final heard = <String>[];
+      for (var round = 0; round < 7; round++) {
+        heard.add((await playRound(game)).title);
       }
 
-      // The unplayed song of the other deck used to take every round.
-      expect(fromHits / rounds, closeTo(0.5, 0.08));
+      expect(heard.toSet(), hasLength(7));
+      expect(heard.where((t) => t.startsWith('jakob')), hasLength(2));
+    });
+
+    test('a used up year starts over in every deck at once', () async {
+      final game = withDecks([deckOf('jakob', 1), deckOf('german', 3)]);
+      for (var round = 0; round < 4; round++) {
+        await playRound(game);
+      }
+
+      // Starting over only the drawn deck would leave the other one used up,
+      // and the restarted one would take every card until it is used again.
+      final second = <String>[];
+      for (var round = 0; round < 4; round++) {
+        second.add((await playRound(game)).title);
+      }
+      expect(second.toSet(), hasLength(4));
     });
   });
 

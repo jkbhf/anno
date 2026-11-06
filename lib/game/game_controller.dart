@@ -652,22 +652,24 @@ class GameController extends ChangeNotifier {
   /// Draws a song for that year: first a category at random, then one of its
   /// songs.
   ///
-  /// The chance of a category is [weightOf] times its songs for the year,
-  /// counted up to [_fullYear]: past that a well filled deck does not crowd
-  /// out a thin one, below it a year of two songs does not take half the
-  /// cards and play them to death. It does not depend on what has been
-  /// played: a deck that has used up the year keeps its part and starts the
-  /// year over, otherwise the one deck with something unplayed would take
-  /// every card of that year. A deck without a song for the year drops out
-  /// and the others share its part.
+  /// The chance of a category is [weightOf] times its songs for the year
+  /// that have not been played, counted up to [_fullYear]: past that a well
+  /// filled deck does not crowd out a thin one, below it a year of two songs
+  /// does not take half the cards. A deck that has used up the year waits
+  /// while another deck still has something unplayed for it - with Jakob's
+  /// four 1973 songs heard, the ten German ones come before any of them
+  /// again. The weight sets the order the decks are heard in, not a share
+  /// that a used up deck would fill with repeats. A deck without a song for
+  /// the year drops out and the others share its part.
   ///
   /// Within the category the song is drawn by [_weightOf]: the core of a year
   /// comes up [_tierOneWeight] times as often as its long tail. In a game a
   /// year is usually scanned once or twice, so the tier decides which of its
   /// songs the room gets to hear at all.
   ///
-  /// Played means played across games: nothing comes back while its year in
-  /// its deck still holds a song this device has not played.
+  /// Played means played across games: nothing comes back while its year,
+  /// in any of the selected decks, still holds a song this device has not
+  /// played.
   ///
   /// Played is counted per deck, but a song played in another deck waits too
   /// while its deck has something played nowhere: Anthony and Anthony All
@@ -675,8 +677,9 @@ class GameController extends ChangeNotifier {
   /// it twice in an evening. That only changes the order - it never starts a
   /// year over or keeps a song out that its deck still needs.
   ///
-  /// Once everything is used up the year starts over: a repeat beats a dead
-  /// card. Over means over - the year's songs leave [_played], so it runs
+  /// Once every deck has used up the year, all of them start it over
+  /// together: a repeat beats a dead card. Over means over - the year's songs
+  /// leave [_played], so it runs
   /// through all of them again before the next repeat instead of drawing with
   /// replacement from then on. Only the song it just ended on sits out.
   ///
@@ -688,32 +691,45 @@ class GameController extends ChangeNotifier {
         if (_playedKey(category, song) != exclude) song,
     ];
 
-    final candidates = [
+    final pools = {
       for (final category in categories)
-        if (poolOf(category).isNotEmpty) category,
-    ];
-    if (candidates.isEmpty) return null;
+        if (poolOf(category) case final pool when pool.isNotEmpty)
+          category: pool,
+    };
+    if (pools.isEmpty) return null;
 
-    final category = _pickCategory({
-      for (final category in candidates)
-        category: weightOf(category) * min(poolOf(category).length, _fullYear),
-    });
-    final pool = poolOf(category);
-    var songs = [
-      for (final song in pool)
-        if (!_played.contains(_playedKey(category, song))) song,
-    ];
-    if (songs.isEmpty) {
-      for (final song in songsFor(category, year)) {
-        _played.remove(_playedKey(category, song));
+    var unplayed = {
+      for (final MapEntry(key: category, value: pool) in pools.entries)
+        category: [
+          for (final song in pool)
+            if (!_played.contains(_playedKey(category, song))) song,
+        ],
+    };
+    if (unplayed.values.every((songs) => songs.isEmpty)) {
+      // Every deck at once: one deck starting over alone would take every
+      // card of the year until it is used up again, and the next one after it.
+      for (final category in pools.keys) {
+        for (final song in songsFor(category, year)) {
+          _played.remove(_playedKey(category, song));
+        }
       }
       _onPlayedChanged?.call({..._played});
-      songs = [
-        for (final song in pool)
-          if (_playedKey(category, song) != _lastPlayedKey) song,
-      ];
-      if (songs.isEmpty) songs = pool;
+      unplayed = {
+        for (final MapEntry(key: category, value: pool) in pools.entries)
+          category: [
+            for (final song in pool)
+              if (_playedKey(category, song) != _lastPlayedKey) song,
+          ],
+      };
+      if (unplayed.values.every((songs) => songs.isEmpty)) unplayed = pools;
     }
+
+    final category = _pickCategory({
+      for (final MapEntry(key: category, value: songs) in unplayed.entries)
+        if (songs.isNotEmpty)
+          category: weightOf(category) * min(songs.length, _fullYear),
+    });
+    final songs = unplayed[category]!;
 
     // After a start over, so the year's own songs no longer count.
     final playedAnywhere = {
