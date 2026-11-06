@@ -186,7 +186,11 @@ void main() {
 
       game.scan(card);
       await game.startPlayback();
-      await until(() => mirror.currentSong != null);
+      // The countdown's snapshot already carries the song, and playing and
+      // in the tab can come in two more: wait for the last of them.
+      await until(
+        () => mirror.phase == RoundPhase.playing && mirror.playingInApp,
+      );
 
       expect(mirror.phase, RoundPhase.playing);
       expect(mirror.currentYear, 2005);
