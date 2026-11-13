@@ -110,10 +110,7 @@ void main() {
     // The span of the chosen deck, and what that means for the evening.
     expect(find.text('1990'), findsOneWidget);
     expect(find.text('1993'), findsOneWidget);
-    expect(
-      find.text('4 years, each one once before any comes again'),
-      findsOneWidget,
-    );
+    expect(find.text('4 years, every one at least once'), findsOneWidget);
     expect(
       find.widgetWithText(FilledButton, 'Start without cards'),
       findsOneWidget,
@@ -124,10 +121,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('2016'), findsWidgets);
     // 1990 to 2016 with songs in five of those years.
-    expect(
-      find.text('5 years, each one once before any comes again'),
-      findsOneWidget,
-    );
+    expect(find.text('5 years, every one at least once'), findsOneWidget);
   });
 
   testWidgets('with nothing picked Start is off', (tester) async {

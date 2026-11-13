@@ -395,8 +395,7 @@ class _WithoutCardsCard extends StatelessWidget {
               Text(
                 playableYears == 1
                     ? 'One year to play'
-                    : '$playableYears years, each one once before any '
-                          'comes again',
+                    : '$playableYears years, every one at least once',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: on
