@@ -63,8 +63,13 @@ class GameController extends ChangeNotifier {
     this.fromYear,
     this.toYear,
     Iterable<int> playedYears = const [],
+    this.yearRepeatChance = 0.2,
     Random? random,
   }) : assert(categories.isNotEmpty, 'A game needs at least one category.'),
+       assert(
+         yearRepeatChance >= 0 && yearRepeatChance < 1,
+         'At 1 a pass would never reach a fresh year.',
+       ),
        _launcher = launcher,
        _linkLauncher = linkLauncher ?? launcher,
        _persist = persist,
@@ -120,6 +125,17 @@ class GameController extends ChangeNotifier {
   /// remembered ([_played]), and deliberately so. A range of thirty years
   /// would otherwise be used up for good after two evenings.
   final Set<int> _playedYears = <int>{};
+
+  /// The year the last round played, which a new pass must not open on and
+  /// a repeat must not land on.
+  int? _lastPlayedYear;
+
+  /// How often a game without cards draws a year this pass has already
+  /// played instead of a fresh one. Without it the pass is a list the room
+  /// can tick off: five years left, four of them heard, so the last card is
+  /// known before the song starts. A repeat now and then makes any year a
+  /// possible answer at any time. 0 turns it off.
+  final double yearRepeatChance;
 
   Set<int> get playedYears => {..._playedYears};
 
@@ -280,7 +296,8 @@ class GameController extends ChangeNotifier {
 
   /// The next year of a game without cards, picked at random among those the
   /// range has not played yet - and null where the range holds no playable
-  /// year at all.
+  /// year at all. Now and then ([yearRepeatChance]) it is a year this pass
+  /// has already played instead, so the room cannot work out the rest.
   ///
   /// `startedOver` is true for the draw that empties the memory again: every
   /// year of the range has been heard, so the next pass begins. The screen
@@ -295,9 +312,27 @@ class GameController extends ChangeNotifier {
         if (!_playedYears.contains(year)) year,
     ];
     var startedOver = false;
+    if (pool.isNotEmpty && _random.nextDouble() < yearRepeatChance) {
+      // A year already heard in this pass, but never the one just played -
+      // the same year twice in a row reads as a slip, not as a game. It does
+      // not count towards the pass: the fresh years still all come.
+      final heard = [
+        for (final year in playable)
+          if (_playedYears.contains(year) && year != _lastPlayedYear) year,
+      ];
+      if (heard.isNotEmpty) {
+        return (year: heard[_random.nextInt(heard.length)], startedOver: false);
+      }
+    }
     if (pool.isEmpty) {
       _playedYears.clear();
-      pool = playable;
+      // Not the year just played, or the seam between two passes is the one
+      // place the same year comes twice in a row.
+      pool = [
+        for (final year in playable)
+          if (year != _lastPlayedYear) year,
+      ];
+      if (pool.isEmpty) pool = playable;
       startedOver = true;
     }
     return (year: pool[_random.nextInt(pool.length)], startedOver: startedOver);
@@ -351,7 +386,10 @@ class GameController extends ChangeNotifier {
     // cost the range one of its years. Saved with the game, or a resume would
     // start the range over.
     final year = currentYear;
-    if (withoutCards && year != null && _playedYears.add(year)) _save();
+    if (withoutCards && year != null) {
+      _lastPlayedYear = year;
+      if (_playedYears.add(year)) _save();
+    }
     notifyListeners();
 
     final result = await _launch(_launcher, song);

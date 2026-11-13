@@ -457,6 +457,18 @@ among the years of the range that this game has not played, and only when
 there are none left does it clear the memory and say so (`startedOver`, a snack
 bar on the screen). Without that a range of thirty years would play the same
 four all evening - the room is guessing years, so the spread *is* the game.
+A new pass does not open on the year the last one ended on, or the seam
+between two passes would be the one place a year comes twice in a row.
+
+**But now and then a year comes back inside the pass** (`yearRepeatChance`,
+0.2, 2026-11-13). A pass with no repeats is a list the room can tick off:
+with five years left and four of them heard, the last card is known before
+the song starts. So about one draw in five is a year this pass has already
+played - never the one just played, never the first draw of a pass, and
+with a different song, because `_draw` still prefers what is unplayed. A
+repeat does not count towards the pass: every fresh year still comes before
+it starts over, a 10 year range just takes about 12 rounds instead of 10.
+The screen says nothing about a repeat - that is the point of it.
 
 **The memory is the game's, not the device's**, and that is the opposite of how
 the songs are remembered (`PlayedSongsStore`). A song is one of hundreds and

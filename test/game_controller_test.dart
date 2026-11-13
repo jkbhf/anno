@@ -114,6 +114,7 @@ GameController buildCardlessGame({
   required int to,
   SongCategory? category,
   Iterable<int> playedYears = const [],
+  double yearRepeatChance = 0,
   Random? random,
 }) => GameController(
   players: [GamePlayer(name: 'Anna')],
@@ -125,6 +126,7 @@ GameController buildCardlessGame({
   fromYear: from,
   toYear: to,
   playedYears: playedYears,
+  yearRepeatChance: yearRepeatChance,
   random: random,
 );
 
@@ -153,6 +155,81 @@ void main() {
       // The sixth has nothing left, so the pass starts over and says so.
       final again = game.nextYear()!;
       expect(again.startedOver, isTrue);
+      expect(game.playedYears, isEmpty);
+    });
+
+    test(
+      'a new pass does not open on the year the last one ended on',
+      () async {
+        final game = buildCardlessGame(from: 2001, to: 2002);
+
+        int? last;
+        for (var round = 0; round < 20; round++) {
+          final next = game.nextYear()!;
+          expect(next.year, isNot(last), reason: 'round $round');
+          last = next.year;
+          game.scan('${next.year}');
+          await game.startPlayback();
+          game.reveal();
+          game.nextRound();
+        }
+      },
+    );
+
+    test('a range of one year can still repeat it', () async {
+      final game = buildCardlessGame(from: 2001, to: 2001);
+
+      game.scan('${game.nextYear()!.year}');
+      await game.startPlayback();
+      game.reveal();
+      game.nextRound();
+
+      expect(game.nextYear()!.year, 2001);
+    });
+
+    test(
+      'with repeats on, a heard year comes back without costing the pass',
+      () async {
+        final game = buildCardlessGame(
+          from: 2001,
+          to: 2010,
+          yearRepeatChance: 0.5,
+          random: Random(7),
+        );
+
+        var draws = 0;
+        int? last;
+        // Five passes: in each one every year of the range still comes.
+        for (var pass = 0; pass < 5; pass++) {
+          final fresh = <int>{};
+          while (true) {
+            final next = game.nextYear()!;
+            if (next.startedOver && fresh.isNotEmpty) break;
+            expect(next.year, isNot(last), reason: 'never twice in a row');
+            last = next.year;
+            fresh.add(next.year);
+            draws++;
+            game.scan('${next.year}');
+            await game.startPlayback();
+            game.reveal();
+            game.nextRound();
+          }
+          expect(fresh, {for (var y = 2001; y <= 2010; y++) y});
+        }
+
+        expect(draws, greaterThan(50), reason: 'some years came twice');
+      },
+    );
+
+    test('a repeat is never the first draw of a pass', () {
+      final game = buildCardlessGame(
+        from: 2001,
+        to: 2005,
+        yearRepeatChance: 0.99,
+      );
+
+      // Nothing heard yet, so there is nothing to repeat.
+      expect(game.nextYear()!.startedOver, isFalse);
       expect(game.playedYears, isEmpty);
     });
 
