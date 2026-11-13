@@ -3391,6 +3391,14 @@ class _ActionSlot extends StatelessWidget {
     final left = game.playableYears
         .where((year) => !game.playedYears.contains(year))
         .length;
+    // A heard year comes back now and then ([GameController.yearRepeatChance])
+    // and does not count towards the pass, so the rounds are an estimate:
+    // the fresh years spread over the share of draws that are fresh.
+    final repeats = game.yearRepeatChance;
+    final rounds = (left / (1 - repeats)).round();
+    final label = repeats > 0
+        ? '~$rounds ${rounds == 1 ? 'round' : 'rounds'} left'
+        : '$left left';
     final theme = Theme.of(context);
     return Stack(
       children: [
@@ -3410,7 +3418,7 @@ class _ActionSlot extends StatelessWidget {
                   vertical: 3,
                 ),
                 child: Text(
-                  '$left left',
+                  label,
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
