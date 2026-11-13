@@ -62,6 +62,9 @@ GameController buildGame({
   Map<String, int> years = const {'182ca01194a98f0b': 2005},
   int? fromYear,
   int? toYear,
+  // Off unless a test is about it: a repeat is random, and a test that plays
+  // through a range needs to know when the pass is over.
+  double yearRepeatChance = 0,
 }) => GameController(
   players: [
     for (var i = 0; i < players; i++) GamePlayer(name: 'Player ${i + 1}'),
@@ -72,6 +75,7 @@ GameController buildGame({
   service: service,
   fromYear: fromYear,
   toYear: toYear,
+  yearRepeatChance: yearRepeatChance,
 );
 
 /// A deck with one song in each year from 2001 to 2004, for a game that draws
@@ -658,6 +662,9 @@ void main() {
         launcher: const InTabLauncher(),
         fromYear: 2001,
         toYear: 2004,
+        // The second draw cannot be a repeat - the only year heard is the
+        // one just played - so the count below stays exact.
+        yearRepeatChance: 0.2,
       );
 
       await tester.pumpWidget(
